@@ -1,19 +1,47 @@
 import logo from './logo.svg';
 import './App.css';
-import Button from "@mui/material/Button";
+import 'antd/dist/antd.css'
+import {Button, Layout, Menu} from 'antd';
+import { Row, Col } from 'antd';
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link} from "react-router-dom";
 import Results from "./results/Results"
 
+
+const { Header, Content, Footer } = Layout;
 
 function App() {
   return (
       <div className="App">
+          <Layout className="layout">
+              <Header>
+                  <Row>
+                      <Col span={8} style={{display: 'flex', justifyContent: 'flex-start'}}>
+                          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                              <Menu.Item>PAF analysis</Menu.Item>
+                          </Menu>
+                      </Col>
+                      <Col span={8} style={{display: 'flex', justifyContent: 'center'}}>
+                          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                              <Menu.Item>Results</Menu.Item>
+                              <Menu.Item>Analysis</Menu.Item>
+                          </Menu>
+                      </Col>
+                      <Col span={8} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+                              <Menu.Item>User</Menu.Item>
+                          </Menu>
+                      </Col>
+
+                  </Row>
+
+              </Header>
         <h1>Welcome to React Router!</h1>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="about" element={<About />} />
         </Routes>
+          </Layout>
       </div>
   );
 }
@@ -27,6 +55,7 @@ function Home() {
         </main>
         <nav>
           <Link to="/about">About</Link>
+            <Button type="primary">Cuicuic</Button>
         </nav>
       </>
   );
