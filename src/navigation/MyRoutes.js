@@ -1,12 +1,12 @@
-import {Col, Layout, Menu, Row} from "antd";
-import {Link, Route, Routes} from "react-router-dom";
+import {Layout} from "antd";
+import {Route, Routes} from "react-router-dom";
 import Results from "../results/Results";
 import Navbar from "./Navbar";
 import Home from "../home/Home";
 import Analysis from "../analysis/Analysis";
 import React from "react";
 
-const {Header, Content, Footer} = Layout;
+const {Header} = Layout;
 
 class MyRoutes extends React.Component {
     render() {
