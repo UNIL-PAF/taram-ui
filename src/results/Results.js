@@ -1,7 +1,6 @@
 import React from "react";
 import {Layout, Space, Table} from 'antd';
 import axios from 'axios';
-import _ from 'lodash'
 
 const {Content} = Layout;
 

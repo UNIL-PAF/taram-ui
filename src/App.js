@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import 'antd/dist/antd.css'
-import {Button, Layout, Menu} from 'antd';
+import {Layout} from 'antd';
 import React from "react";
 import MyRoutes from "./navigation/MyRoutes";
 
