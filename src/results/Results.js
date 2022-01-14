@@ -1,6 +1,8 @@
 import React from "react";
-import {Layout, Space, Table} from 'antd';
+import {Layout, Space} from 'antd';
 import axios from 'axios';
+import ResultsTable from "./ResultsTable";
+import BrowseResults from "./BrowseResults";
 
 const {Content} = Layout;
 
@@ -10,29 +12,6 @@ class Results extends React.Component {
         super(props);
         this.state = {results: []};
     }
-
-    columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Type',
-            dataIndex: 'type',
-            key: 'type',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-        },
-        {
-            title: 'File',
-            dataIndex: 'resFile',
-            key: 'resFile',
-        }
-    ]
 
     componentDidMount() {
         this.getResults()
@@ -64,7 +43,8 @@ class Results extends React.Component {
             <Content>
                 <Space direction="vertical">
                     <h1>Results</h1>
-                    <Table dataSource={this.state.results} columns={this.columns}/>;
+                    <BrowseResults/>
+                    <ResultsTable results={this.state.results}/>
                 </Space>
             </Content>
         );
