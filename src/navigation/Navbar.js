@@ -21,8 +21,8 @@ class Navbar extends React.Component {
 
         return (
             <Row>
-                <Col span={8} style={{display: 'flex', justifyContent: 'flex-start'}}>
-                    <Menu theme="dark" mode="horizontal" selectedKeys={[]}>
+                <Col span={6} style={{display: 'flex', justifyContent: 'flex-start'}}>
+                    <Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
                         <Menu.Item key={"home"} onClick={() => this.clickHome()}>
                             <Link to=
                                       {"/"}>
@@ -32,8 +32,8 @@ class Navbar extends React.Component {
                     </Menu>
                 </Col>
                 <span style={{color: 'white'}}>{this.selectedTab}</span>
-                <Col span={8} style={{display: 'flex', justifyContent: 'center'}}>
-                    <Menu theme="dark" mode="horizontal" selectedKeys={this.state.selectedTab}>
+                <Col span={12} style={{display: 'flex', justifyContent: 'center'}}>
+                    <Menu theme="dark" mode="horizontal" selectedKeys={this.state.selectedTab} disabledOverflow={true}>
                         <Menu.Item key={"results"} onClick={(payload) => this.clickMainMenu(payload)}>
                             <Link to=
                                       {"/results"}>
@@ -48,8 +48,8 @@ class Navbar extends React.Component {
                         </Menu.Item>
                     </Menu>
                 </Col>
-                <Col span={8} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                    <Menu theme="dark" mode="horizontal" selectedKeys={[]}>
+                <Col span={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
                         <Menu.Item key={"user"}>User</Menu.Item>
                     </Menu>
                 </Col>
