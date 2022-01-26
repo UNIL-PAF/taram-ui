@@ -1,11 +1,8 @@
-import React, {useState} from "react";
-import {Row, Col, Button, Modal, Form, Input, Checkbox, Select, Radio} from 'antd';
+import React from "react";
+import {Col, Row} from 'antd';
 import {BrowseResultsModal} from "./BrowseResultsModal"
 
-const {Option} = Select;
-
 class BrowseResults extends React.Component {
-
 
     constructor(props) {
         super(props);

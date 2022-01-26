@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import { Button, Modal, Form, Input, Radio, Select } from 'antd';
+import React, {useState} from 'react';
+import {Button, Form, Input, Modal, Radio, Select} from 'antd';
+import getAvailableDirs from "./GetAvailableDirs"
+import _ from "lodash"
+
 const { Option } = Select;
 
-const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
+const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) => {
     const [form] = Form.useForm();
 
     return (
@@ -66,6 +68,11 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
                     >
+                        {
+                            _.map(availableDirs, (dir, i) => {
+                                return <Option key={i} value={i}>{dir.path}</Option>
+                        })
+                        }
                         <Option value="jack">Lopez 14084-87-14120-23 and total digest/14030-14033_SP3 digestion/proteinGroups.txt</Option>
                         <Option value="lucy">Lopez 14084-87-14120-23 and total digest/total in solution digests/proteinGroups.txt</Option>
                         <Option value="tom">TIMS our instrument - test DEMO 2020 samples/txt/proteinGroups.txt</Option>
@@ -83,9 +90,9 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
 
 export function BrowseResultsModal({buttonText}){
     const [visible, setVisible] = useState(false);
+    const [availableDirs, setAvailableDirs] = useState(false);
 
     const onCreate = (values) => {
-        console.log('Received values of form: ', values);
         setVisible(false);
     };
 
@@ -93,9 +100,7 @@ export function BrowseResultsModal({buttonText}){
         <div>
             <Button
                 type="primary"
-                onClick={() => {
-                    setVisible(true);
-                }}
+                onClick={() => getAvailableDirs(setVisible,setAvailableDirs)}
             >
                 {buttonText}
             </Button>
@@ -105,6 +110,7 @@ export function BrowseResultsModal({buttonText}){
                 onCancel={() => {
                     setVisible(false);
                 }}
+                availableDirs={availableDirs}
             />
         </div>
     );
