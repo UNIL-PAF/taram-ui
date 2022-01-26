@@ -24,4 +24,30 @@ function getAvailableDirs(setVisible, setAvailableDirs){
         });
 }
 
-export {getAvailableDirs}
+
+
+function getResults(setState) {
+    axios.get(globalConfig.urlBackend + 'result/list')
+        .then((response) => {
+            // handle success
+            console.log(response);
+            // add a unique key
+            const results = response.data.map((r) => {
+                r.key = r.id
+                return r
+            })
+            setState(results)
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+}
+
+
+
+
+export {getAvailableDirs, getResults}

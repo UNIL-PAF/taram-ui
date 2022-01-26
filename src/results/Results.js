@@ -3,7 +3,7 @@ import {Layout, Space} from 'antd';
 import axios from 'axios';
 import ResultsTable from "./ResultsTable";
 import BrowseResults from "./BrowseResults";
-import globalConfig from "../globalConfig";
+import {getResults} from "./BackendResults"
 
 const {Content} = Layout;
 
@@ -15,28 +15,7 @@ class Results extends React.Component {
     }
 
     componentDidMount() {
-        this.getResults()
-    }
-
-    getResults() {
-        axios.get(globalConfig.urlBackend + 'result/list')
-            .then((response) => {
-                // handle success
-                console.log(response);
-                // add a unique key
-                const results = response.data.map((r) => {
-                    r.key = r.id
-                    return r
-                })
-                this.setState({results: results})
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                // always executed
-            });
+        getResults((results) => this.setState({results: results}))
     }
 
     render() {
