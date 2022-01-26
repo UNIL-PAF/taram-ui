@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Form, Input, Modal, Radio, Select} from 'antd';
-import {getAvailableDirs} from "./BackendResults"
+import {getAvailableDirs, addResult} from "./BackendResults"
 import _ from "lodash"
 
 const { Option } = Select;
@@ -37,7 +37,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                 }}
             >
                 <Form.Item
-                    name="resultName"
+                    name="name"
                     label="Name"
                     rules={[
                         {
@@ -73,14 +73,11 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                                 return <Option key={i} value={i}>{dir.path}</Option>
                         })
                         }
-                        <Option value="jack">Lopez 14084-87-14120-23 and total digest/14030-14033_SP3 digestion/proteinGroups.txt</Option>
-                        <Option value="lucy">Lopez 14084-87-14120-23 and total digest/total in solution digests/proteinGroups.txt</Option>
-                        <Option value="tom">TIMS our instrument - test DEMO 2020 samples/txt/proteinGroups.txt</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={"maxquant"}>
+                <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={"MaxQuant"}>
                     <Radio.Group>
-                        <Radio value="maxquant">MaxQuant</Radio>
+                        <Radio value="MaxQuant">MaxQuant</Radio>
                     </Radio.Group>
                 </Form.Item>
             </Form>
@@ -95,6 +92,7 @@ export function BrowseResultsModal({buttonText}){
     const onCreate = (values) => {
         console.log(values)
         console.log(availableDirs[values.resDir])
+        addResult(values)
         setVisible(false);
     };
 
