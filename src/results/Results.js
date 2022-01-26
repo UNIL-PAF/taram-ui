@@ -3,6 +3,7 @@ import {Layout, Space} from 'antd';
 import axios from 'axios';
 import ResultsTable from "./ResultsTable";
 import BrowseResults from "./BrowseResults";
+import globalConfig from "../globalConfig";
 
 const {Content} = Layout;
 
@@ -18,7 +19,7 @@ class Results extends React.Component {
     }
 
     getResults() {
-        axios.get('http://localhost:8080/result/list')
+        axios.get(globalConfig.urlBackend + 'result/list')
             .then((response) => {
                 // handle success
                 console.log(response);

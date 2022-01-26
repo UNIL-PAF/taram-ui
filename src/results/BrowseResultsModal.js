@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Form, Input, Modal, Radio, Select} from 'antd';
-import getAvailableDirs from "./GetAvailableDirs"
+import {getAvailableDirs} from "./BackendResults"
 import _ from "lodash"
 
 const { Option } = Select;
@@ -93,6 +93,8 @@ export function BrowseResultsModal({buttonText}){
     const [availableDirs, setAvailableDirs] = useState(false);
 
     const onCreate = (values) => {
+        console.log(values)
+        console.log(availableDirs[values.resDir])
         setVisible(false);
     };
 

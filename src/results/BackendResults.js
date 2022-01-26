@@ -1,8 +1,9 @@
 import axios from 'axios';
+import globalConfig from "../globalConfig";
 
 function getAvailableDirs(setVisible, setAvailableDirs){
 
-    axios.get('http://localhost:8080/result/available-dirs')
+    axios.get(globalConfig.urlBackend + "result/available-dirs")
         .then((response) => {
             // handle success
             console.log(response);
@@ -23,4 +24,4 @@ function getAvailableDirs(setVisible, setAvailableDirs){
         });
 }
 
-export default getAvailableDirs
+export {getAvailableDirs}
