@@ -90,9 +90,14 @@ export function BrowseResultsModal({buttonText}){
     const [availableDirs, setAvailableDirs] = useState(false);
 
     const onCreate = (values) => {
+        const selDir = availableDirs[values.resDir]
         console.log(values)
-        console.log(availableDirs[values.resDir])
-        addResult(values)
+        console.log(selDir)
+        let localVals = values
+        localVals.path = selDir.path
+        localVals.resFile = selDir.resFile
+        localVals.fileCreationDate = selDir.fileCreationDate
+        addResult(localVals)
         setVisible(false);
     };
 

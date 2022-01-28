@@ -18,7 +18,9 @@ class MyRoutes extends React.Component {
                 <Routes>
                     <Route path="/" element={<Home/>}/>
                     <Route path="results" element={<Results/>}/>
-                    <Route path="analysis" element={<Analysis/>}/>
+                    <Route path="analysis" element={<Analysis/>}>
+                        <Route path=":analysisId" element={<Analysis />} />
+                    </Route>
                 </Routes>
             </>
         )

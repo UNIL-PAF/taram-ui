@@ -3,15 +3,12 @@ import {Table} from 'antd';
 
 class ResultsTable extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     columns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            render: (text, record) => <a href={'/analysis/'+ record.id}>{text}</a>,
         },
         {
             title: 'Type',
@@ -24,14 +21,27 @@ class ResultsTable extends React.Component {
             key: 'status',
         },
         {
-            title: 'File',
-            dataIndex: 'resFile',
-            key: 'resFile',
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'File path',
+            dataIndex: 'path',
+            key: 'path',
+        },
+        {
+            title: 'File creation date',
+            dataIndex: 'fileCreationDate',
+            key: 'fileCreationDate',
         }
     ]
 
 
     render() {
+
+        console.log(this.props.results)
+
         return (
             <>
                 <Table dataSource={this.props.results} columns={this.columns}/>;

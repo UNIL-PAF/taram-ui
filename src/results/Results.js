@@ -1,6 +1,5 @@
 import React from "react";
 import {Layout, Space} from 'antd';
-import axios from 'axios';
 import ResultsTable from "./ResultsTable";
 import BrowseResults from "./BrowseResults";
 import {getResults} from "./BackendResults"
