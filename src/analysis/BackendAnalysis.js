@@ -1,29 +1,24 @@
 import axios from 'axios';
 import globalConfig from "../globalConfig";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
-function getAnalysis(analysisId, setAnalysis, setIsLoading, setError){
-    setIsLoading(true)
-
-    axios.get(globalConfig.urlBackend + "analysis/" + analysisId)
-        .then((response) => {
-            // handle success
-            console.log(response);
-            // add a unique key
-            const results = response.data.map((r) => {
-                r.key = r.id
-                return r
-            })
-            setAnalysis(results)
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-            setError(error)
-        })
-        .then(function () {
-            setIsLoading(false)
-        });
+function getAnalysisByResultId(resultId){
+    console.log(resultId)
+    return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
 }
 
-
-export {getAnalysis}
+export const fetchAnalysisByResultId = createAsyncThunk(
+    'analysis/fetchById',
+    async (resultId, { rejectWithValue }) => {
+        try {
+            const response = await getAnalysisByResultId(resultId)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
