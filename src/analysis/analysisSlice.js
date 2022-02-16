@@ -6,7 +6,13 @@ export const analysisSlice = createSlice({
     initialState: {
         data: null,
         status: 'idle',
-        error: null
+        error: null,
+        cols: [1]
+    },
+    reducers: {
+        addCol: state => {
+            state.cols.push(state.cols[state.cols.length - 1] + 1)
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -27,5 +33,7 @@ export const analysisSlice = createSlice({
             })
     },
 })
+
+export const { addCol } = analysisSlice.actions
 
 export default analysisSlice.reducer

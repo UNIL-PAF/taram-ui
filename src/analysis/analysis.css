@@ -1,0 +1,13 @@
+.analysis-container {
+    display: flex;
+    overflow: scroll;
+}
+
+.analysis-col {
+    /*position: relative;
+    bottom: 0;*/
+    margin: 25px 10px 10px 10px;
+    width: 500px;
+    min-width: 500px;
+    max-width: 100%;
+}
