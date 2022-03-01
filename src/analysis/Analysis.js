@@ -4,9 +4,9 @@ import './analysis.css'
 import {message, Collapse, Alert} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
-import {addCol} from "./analysisSlice";
-
-const { Panel } = Collapse;
+import AnalysisStep from "../analysis_steps/AnalysisStep";
+import {createSelector} from "@reduxjs/toolkit";
+import {selectCols} from "./analysisSlice";
 
 export default function Analysis() {
     const dispatch = useDispatch();
@@ -14,26 +14,27 @@ export default function Analysis() {
     const analysisStatus = useSelector(state => state.analysis.status)
     const analysisData = useSelector(state => state.analysis.data)
     const analysisError = useSelector(state => state.analysis.error)
+    const cols = useSelector(state => selectCols(state))
 
     console.log(analysisStatus)
+    console.log(cols)
 
-    const cols = useSelector(state => state.analysis.cols)
     let hideLoading;
 
     useEffect(() => {
         if (analysisStatus === 'idle') {
             dispatch(fetchAnalysisByResultId(params.resultId))
             message.config({top: 60})
-        }else if(analysisStatus === 'loading'){
+        } else if (analysisStatus === 'loading') {
             hideLoading = message.loading("Loading data", 0)
-        }else{
+        } else {
             message.destroy(hideLoading)
         }
     }, [analysisStatus, dispatch, params.resultId])
 
     return (
         <div>
-            { analysisError && <Alert
+            {analysisError && <Alert
                 message="Error"
                 description={analysisError}
                 type="error"
@@ -42,23 +43,14 @@ export default function Analysis() {
             />}
             <h1>Analysis</h1>
 
-            <div className={"analysis-container"}>
+            {analysisData && <div className={"analysis-container"}>
                 {
-                    cols.map( c => {
-                        return   <Collapse accordion className={"analysis-col"}>
-                            <Panel header="This is panel header 1" key="1">
-                                <p>{"text"}</p>
-                            </Panel>
-                            <Panel header={<div>coucou <button>bobo</button></div>} key="2">
-                                <p>{"text"}</p>
-                            </Panel>
-                            <Panel header="This is panel header 3" key="3">
-                                <p>{"hoho"}</p>
-                            </Panel>
-                        </Collapse>
+                    cols.map(colId => {
+                        return <AnalysisStep data={analysisData[colId]} key={colId}/>
                     })
                 }
             </div>
+            }
         </div>
     );
 }

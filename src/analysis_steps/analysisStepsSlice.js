@@ -1,12 +1,18 @@
-import {createSelector, createSlice} from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import {fetchAnalysisByResultId} from './BackendAnalysis'
 
-export const analysisSlice = createSlice({
-    name: 'analysis',
+export const analysisStepsSlice = createSlice({
+    name: 'analysis_steps',
     initialState: {
         data: null,
         status: 'idle',
         error: null,
+        cols: [1]
+    },
+    reducers: {
+        addCol: state => {
+            state.cols.push(state.cols[state.cols.length - 1] + 1)
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -28,13 +34,6 @@ export const analysisSlice = createSlice({
     },
 })
 
-export let selectCols = createSelector([state => state.analysis.data], (d) => {
-    if(d){
-        return d.map( i => i.idx)
-    }else{
-        return []
-    }
+export const { addCol } = analysisStepsSlice.actions
 
-})
-
-export default analysisSlice.reducer
+export default analysisStepsSlice.reducer
