@@ -1,5 +1,4 @@
 import React from "react";
-import {Collapse} from 'antd';
 import InitialResult from "./initial_result/InitialResult";
 
 export default function AnalysisStep(props) {
@@ -11,9 +10,10 @@ export default function AnalysisStep(props) {
             <div>
                 {
                     props.data.analysisSteps.map(step => {
-                        switch(step.type){
-                            case 'initial_result': return <InitialResult data={step} key={step.id}/>
-                            break
+                        switch (step.type) {
+                            case 'initial_result':
+                                return <InitialResult data={step} key={step.id}/>
+                                break
                         }
                     })
                 }

@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import './analysis.css'
-import {message, Collapse, Alert} from 'antd';
+import {Alert, message} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
 import AnalysisStep from "../analysis_steps/AnalysisStep";
-import {createSelector} from "@reduxjs/toolkit";
 import {selectCols} from "./analysisSlice";
 
 export default function Analysis() {
@@ -15,9 +14,6 @@ export default function Analysis() {
     const analysisData = useSelector(state => state.analysis.data)
     const analysisError = useSelector(state => state.analysis.error)
     const cols = useSelector(state => selectCols(state))
-
-    console.log(analysisStatus)
-    console.log(cols)
 
     let hideLoading;
 

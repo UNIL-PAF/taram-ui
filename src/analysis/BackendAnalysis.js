@@ -8,8 +8,8 @@ function getAnalysisByResultId(resultId){
 }
 
 export const fetchAnalysisByResultId = createAsyncThunk(
-    'analysis/fetchById',
-    async (resultId, { rejectWithValue }) => {
+    'analysis/fetch-by-result-id',
+    async (resultId, thunkApi) => {
         try {
             const response = await getAnalysisByResultId(resultId)
             return response.data
@@ -18,7 +18,7 @@ export const fetchAnalysisByResultId = createAsyncThunk(
             if (!error.response) {
                 throw err
             }
-            return rejectWithValue(error.response.data)
+            return thunkApi.rejectWithValue(error.response.data)
         }
     }
 )

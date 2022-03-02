@@ -91,8 +91,6 @@ export function BrowseResultsModal({buttonText}){
 
     const onCreate = (values) => {
         const selDir = availableDirs[values.resDir]
-        console.log(values)
-        console.log(selDir)
         let localVals = values
         localVals.path = selDir.path
         localVals.resFile = selDir.resFile

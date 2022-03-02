@@ -4,6 +4,7 @@ import {fetchAnalysisByResultId} from './BackendAnalysis'
 export const analysisSlice = createSlice({
     name: 'analysis',
     initialState: {
+        resultId: null,
         data: null,
         status: 'idle',
         error: null,
