@@ -39,9 +39,6 @@ class ResultsTable extends React.Component {
 
 
     render() {
-
-        console.log(this.props.results)
-
         return (
             <>
                 <Table dataSource={this.props.results} columns={this.columns}/>;

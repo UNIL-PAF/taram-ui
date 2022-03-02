@@ -4,8 +4,6 @@ import {PlusCircleOutlined, BarChartOutlined} from '@ant-design/icons';
 import AnalysisMenu from "../AnalysisMenu"
 
 export default function InitialResult(props) {
-    console.log(props)
-
     const results = JSON.parse(props.data.results)
     return (
         <Card title={"Initial Result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={

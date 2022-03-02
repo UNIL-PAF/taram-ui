@@ -2,8 +2,6 @@ import React from "react";
 import InitialResult from "./initial_result/InitialResult";
 
 export default function AnalysisStep(props) {
-    console.log(props)
-
     return (
         <div className={"analysis-col"}>
             <h3>Analysis #{props.data.idx + 1}</h3>

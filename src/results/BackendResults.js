@@ -5,7 +5,6 @@ function getAvailableDirs(setVisible, setAvailableDirs){
     axios.get(globalConfig.urlBackend + "result/available-dirs")
         .then((response) => {
             // handle success
-            console.log(response);
             // add a unique key
             const results = response.data.map((r) => {
                 r.key = r.id
@@ -27,7 +26,6 @@ function getResults(setState) {
     axios.get(globalConfig.urlBackend + 'result/list')
         .then((response) => {
             // handle success
-            console.log(response);
             // add a unique key
             const results = response.data.map((r) => {
                 r.key = r.id

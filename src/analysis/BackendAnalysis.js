@@ -3,7 +3,6 @@ import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
 function getAnalysisByResultId(resultId){
-    console.log(resultId)
     return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
 }
 

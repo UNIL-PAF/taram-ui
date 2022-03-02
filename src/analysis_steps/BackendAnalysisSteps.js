@@ -4,9 +4,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {fetchAnalysisByResultId} from "../analysis/BackendAnalysis";
 
 function addAnalysisStepCall(stepObj){
-    console.log(stepObj)
     return axios.post(globalConfig.urlBackend + "analysis-step/add-to/" + stepObj.stepId, stepObj.newStep)
-    //return axios.post(globalConfig.urlBackend + "analysis-step/add", a)
 }
 
 export const addAnalysisStep = createAsyncThunk(

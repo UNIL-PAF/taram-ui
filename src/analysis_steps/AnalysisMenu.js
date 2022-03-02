@@ -6,8 +6,6 @@ import {addAnalysisStep} from "./BackendAnalysisSteps";
 export default function AnalysisMenu(props) {
     const dispatch = useDispatch();
 
-    console.log(props)
-
     const clickQualityControl = function (stepId, type, resultId) {
         const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
         dispatch(addAnalysisStep(stepObj))
