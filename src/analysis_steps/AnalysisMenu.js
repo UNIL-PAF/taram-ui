@@ -7,14 +7,13 @@ export default function AnalysisMenu(props) {
     const dispatch = useDispatch();
 
     const clickQualityControl = function (stepId, type) {
-        console.log("click QualityControl", stepId, type)
-        const stepObj = {stepId: stepId, type: type}
+        const stepObj = {stepId: stepId, newStep:  {type: type}}
         dispatch(addAnalysisStep(stepObj))
     }
 
     return (
         <Menu>
-            <Menu.Item onClick={() => clickQualityControl(props.stepId, "quality_control")} key={'quality_control'}>
+            <Menu.Item onClick={() => clickQualityControl(props.stepId, "quality-control")} key={'quality-control'}>
                 <span>Quality Control</span>
             </Menu.Item>
         </Menu>
