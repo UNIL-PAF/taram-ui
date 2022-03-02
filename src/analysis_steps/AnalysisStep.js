@@ -12,7 +12,7 @@ export default function AnalysisStep(props) {
                     props.data.analysisSteps.map(step => {
                         switch (step.type) {
                             case 'initial_result':
-                                return <InitialResult data={step} key={step.id}/>
+                                return <InitialResult resultId={props.data.resultId} data={step} key={step.id}/>
                                 break
                         }
                     })
