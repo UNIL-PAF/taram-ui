@@ -1,6 +1,5 @@
 import React from "react";
-import {Button, Card, Dropdown} from 'antd';
-import {PlusCircleOutlined, BarChartOutlined} from '@ant-design/icons';
+import {Card} from 'antd';
 import AnalysisMenu from "../AnalysisMenu"
 
 export default function InitialResult(props) {
