@@ -5,6 +5,8 @@ import {addAnalysisStep} from "./BackendAnalysisSteps";
 import {BarChartOutlined, PlusCircleOutlined} from "@ant-design/icons";
 
 export default function AnalysisMenu(props) {
+    console.log(props.stepId, props.status)
+
     const dispatch = useDispatch();
 
     const clickQualityControl = function (stepId, type, resultId) {
