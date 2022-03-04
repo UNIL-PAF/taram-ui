@@ -7,13 +7,7 @@ export default function InitialResult(props) {
     const results = JSON.parse(props.data.results)
     return (
         <Card title={"Initial Result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
-            <div>
-                <Button type={"text"} icon={<BarChartOutlined/>}></Button>
-                <Dropdown overlay={<AnalysisMenu stepId={props.data.id} resultId={props.resultId}/>} placement="bottomLeft" arrow>
-                    <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
-                </Dropdown>
-            </div>
-
+                <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}/>
         }>
             <p key={results.id}>version {results.maxQuantParameters.version}</p>
         </Card>

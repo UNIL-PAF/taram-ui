@@ -1,19 +1,15 @@
 import React from "react";
-import {Button, Card, Dropdown} from 'antd';
-import {PlusCircleOutlined, BarChartOutlined} from '@ant-design/icons';
+import {Card, Spin} from 'antd';
 import AnalysisMenu from "../AnalysisMenu"
 
 export default function QualityControl(props) {
-    const results = JSON.parse(props.data.results)
-    return (
-        <Card title={"Quality Control"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
-            <div>
-                <Button type={"text"} icon={<BarChartOutlined/>}></Button>
-                <Dropdown overlay={<AnalysisMenu stepId={props.data.id} resultId={props.resultId}/>} placement="bottomLeft" arrow>
-                    <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
-                </Dropdown>
-            </div>
+    console.log(props.data)
 
+    return (
+        <Card title={<span>Quality Control {props.data.status && <Spin style={{paddingLeft: "30px"}}/>}</span>} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
+            <span>
+                <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}/>
+            </span>
         }>
             <p>Something</p>
         </Card>

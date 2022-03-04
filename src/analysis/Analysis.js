@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import './analysis.css'
-import {Alert, message} from 'antd';
+import {Alert, message, Space} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
 import AnalysisStep from "../analysis_steps/AnalysisStep";
@@ -47,6 +47,7 @@ export default function Analysis() {
                 }
             </div>
             }
+
         </div>
     );
 }
