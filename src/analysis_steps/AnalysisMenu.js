@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Dropdown, Menu, Modal} from 'antd';
+import {Button, Dropdown, Menu, Modal, Rate} from 'antd';
 import {useDispatch} from "react-redux";
 import {addAnalysisStep} from "./BackendAnalysisSteps";
 import {BarChartOutlined, PlusCircleOutlined, SettingOutlined} from "@ant-design/icons";
@@ -19,8 +19,6 @@ export default function AnalysisMenu(props) {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-
-    console.log(props.stepId, props.status)
 
     const dispatch = useDispatch();
 
@@ -46,6 +44,7 @@ export default function AnalysisMenu(props) {
 
     return (
         <>
+            <Rate count={1}/>
             <Button type={"text"} icon={<SettingOutlined />} disabled={buttonsDisabled} onClick={() => clickParams()}></Button>
             <Button type={"text"} icon={<BarChartOutlined/>} disabled={buttonsDisabled}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
