@@ -42,7 +42,7 @@ export default function Analysis() {
             {analysisData && <div className={"analysis-container"}>
                 {
                     cols.map(colId => {
-                        return <AnalysisStep data={analysisData[colId]} key={colId}/>
+                        return <AnalysisStep analysisIdx={colId} data={analysisData[colId]} key={colId}/>
                     })
                 }
             </div>

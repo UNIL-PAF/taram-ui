@@ -11,9 +11,9 @@ export default function AnalysisStep(props) {
                     props.data.analysisSteps && props.data.analysisSteps.map(step => {
                         switch (step.type) {
                             case 'initial-result':
-                                return <InitialResult resultId={props.data.resultId} data={step} key={step.id}/>
+                                return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.resultId} data={step} key={step.id}/>
                             case 'quality-control':
-                                return <QualityControl resultId={props.data.resultId} data={step} key={step.id}/>
+                                return <QualityControl analysisIdx={props.analysisIdx} resultId={props.data.resultId} data={step} key={step.id}/>
                             default:
                                 return null
                         }

@@ -1,13 +1,32 @@
-import React from "react";
-import {Button, Dropdown, Menu} from 'antd';
+import React, {useState} from "react";
+import {Button, Dropdown, Menu, Modal} from 'antd';
 import {useDispatch} from "react-redux";
 import {addAnalysisStep} from "./BackendAnalysisSteps";
-import {BarChartOutlined, PlusCircleOutlined} from "@ant-design/icons";
+import {BarChartOutlined, PlusCircleOutlined, SettingOutlined} from "@ant-design/icons";
 
 export default function AnalysisMenu(props) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
     console.log(props.stepId, props.status)
 
     const dispatch = useDispatch();
+
+    const clickParams = function(){
+        setIsModalVisible(true);
+    }
 
     const clickQualityControl = function (stepId, type, resultId) {
         const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
@@ -26,14 +45,17 @@ export default function AnalysisMenu(props) {
     const buttonsDisabled = props.status != "done"
 
     return (
-
-        <div>
+        <>
+            <Button type={"text"} icon={<SettingOutlined />} disabled={buttonsDisabled} onClick={() => clickParams()}></Button>
             <Button type={"text"} icon={<BarChartOutlined/>} disabled={buttonsDisabled}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
                       arrow disabled={buttonsDisabled}>
                 <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
             </Dropdown>
-        </div>
+            <Modal title="Parameters" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                {props.paramComponent}
+            </Modal>
+        </>
 
 
     );
