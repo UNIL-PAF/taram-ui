@@ -22,7 +22,7 @@ export default function AnalysisMenu(props) {
 
     const dispatch = useDispatch();
 
-    const clickParams = function(){
+    const clickParams = function () {
         setIsModalVisible(true);
     }
 
@@ -45,13 +45,15 @@ export default function AnalysisMenu(props) {
     return (
         <>
             <Rate count={1}/>
-            <Button type={"text"} icon={<SettingOutlined />} disabled={buttonsDisabled} onClick={() => clickParams()}></Button>
+            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
+                    onClick={() => clickParams()}></Button>
             <Button type={"text"} icon={<BarChartOutlined/>} disabled={buttonsDisabled}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
                       arrow disabled={buttonsDisabled}>
                 <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
             </Dropdown>
-            <Modal title="Parameters" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Parameters" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={1000}
+            >
                 {props.paramComponent}
             </Modal>
         </>

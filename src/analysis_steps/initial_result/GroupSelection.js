@@ -1,13 +1,14 @@
-import React from "react";
+import React, {useState} from "react";
 import {Transfer, Tabs} from 'antd';
-const { TabPane } = Tabs;
+import GroupNameInput from "./GroupNameInput";
 
+const {TabPane} = Tabs;
 
 export default function GroupSelection(props) {
-    console.log(props.data)
+    const [tabs, setTabs] = useState([{name: "Condition", alreadySet: false}])
+    const [selectedSources, setSelectedSources] = useState([])
 
-    const dataSource = props.data.columnMapping.experiments.map((exp, i) => {
-        console.log(i)
+    const dataSource = props.data.columnMapping.experiments.map((exp) => {
         return {key: exp, title: exp}
     })
 
@@ -15,33 +16,68 @@ export default function GroupSelection(props) {
         console.log("onTabSwitch")
     }
 
-    const add = () => {
-        const {panes} = this.state;
-        const activeKey = `newTab${this.newTabIndex++}`;
-        const newPanes = [...panes];
-        newPanes.push({title: 'New Tab', content: 'Content of new Tab', key: activeKey});
-        this.setState({
-            panes: newPanes,
-            activeKey,
-        });
+    const addTab = () => {
+        setTabs(tabs.concat({name: "Condition", alreadySet: false}))
     };
+
+    const removeTab = (tabKey) => {
+        const tabIdx = Number(tabKey)
+        const newTabs = tabs.filter((t, i) => {
+            return i !== tabIdx
+        })
+        setTabs(newTabs)
+    }
+
+    const onEdit = (targetKey, action) => {
+        if (action === "add") {
+            addTab()
+        } else if (action === "remove") {
+            removeTab(targetKey)
+        }
+    };
+
+    const onInputChange = (newVal, idx) => {
+        let newTabs = tabs.map((t, i) => {
+            if (i === idx) {
+                return {name: newVal, alreadySet: true}
+            } else {
+                return t
+            }
+        })
+        setTabs(newTabs)
+    }
+
+    const renderTab = (tabObj, i) => {
+        return (
+            <TabPane
+                tab={<GroupNameInput onChange={onInputChange} alreadySet={tabObj.alreadySet} idx={i}/>}
+                key={i.toString()} closable={true}>
+                {renderTransfer(tabObj)}
+            </TabPane>
+        )
+    }
+
+    const renderTransfer = (tabObj) => {
+        return <Transfer
+            dataSource={dataSource}
+            titles={['', tabObj.name]}
+            render={item => item.title}
+            disabled={true}
+            listStyle={{width: 450}}
+        >
+        </Transfer>
+    }
 
     return (
         <>
             <Tabs
                 type="editable-card"
                 onChange={onTabSwitch}
-                activeKey={"pane.key"}
+                onEdit={onEdit}
             >
-                <TabPane tab={"pane.title"} key={"pane.key"} closable={true}>
-                    <Transfer
-                        dataSource={dataSource}
-                        titles={['', 'Target']}
-                        render={item => item.title}
-                        disabled={true}
-                    >
-                    </Transfer>
-                </TabPane>
+                {tabs.map((t, i) => {
+                    return renderTab(t, i)
+                })}
             </Tabs>
         </>
     )
