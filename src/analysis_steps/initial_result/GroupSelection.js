@@ -1,23 +1,42 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Transfer, Tabs} from 'antd';
 import GroupNameInput from "./GroupNameInput";
 
 const {TabPane} = Tabs;
 
 export default function GroupSelection(props) {
-    const [tabs, setTabs] = useState([{name: "Condition", alreadySet: false}])
-    const [selectedSources, setSelectedSources] = useState([])
+    const [tabs, setTabs] = useState()
 
-    const dataSource = props.data.columnMapping.experiments.map((exp) => {
-        return {key: exp, title: exp}
-    })
+    useEffect(() => {
+        setTabs([{
+            name: "Condition",
+            alreadySet: false,
+            targetKeys: [],
+            dataSource: props.data.columnMapping.experiments.map((exp) => {
+                return {key: exp, title: exp}
+            })
+        }]);
+    }, [props])
+
+    const [selectedKeys, setSelectedKeys] = useState([])
+
+    const getRemainingDataSource = (targetKeys, selKeys) => {
+        return props.data.columnMapping.experiments.map((exp) => {
+            return {key: exp, title: exp, disabled: (! targetKeys.includes(exp)) && selKeys.includes(exp)}
+        })
+    }
 
     const onTabSwitch = () => {
         console.log("onTabSwitch")
     }
 
     const addTab = () => {
-        setTabs(tabs.concat({name: "Condition", alreadySet: false}))
+        setTabs(tabs.concat({
+            name: "Condition",
+            alreadySet: false,
+            targetKeys: [],
+            dataSource: getRemainingDataSource([], selectedKeys)
+        }))
     };
 
     const removeTab = (tabKey) => {
@@ -39,7 +58,7 @@ export default function GroupSelection(props) {
     const onInputChange = (newVal, idx) => {
         let newTabs = tabs.map((t, i) => {
             if (i === idx) {
-                return {name: newVal, alreadySet: true}
+                return {...t, name: newVal, alreadySet: true}
             } else {
                 return t
             }
@@ -52,18 +71,36 @@ export default function GroupSelection(props) {
             <TabPane
                 tab={<GroupNameInput onChange={onInputChange} alreadySet={tabObj.alreadySet} idx={i}/>}
                 key={i.toString()} closable={true}>
+                <span>{tabObj.name}</span>
                 {renderTransfer(tabObj)}
             </TabPane>
         )
     }
 
+    const somethingIsTransfered = (nextTargetKeys, tabObj) => {
+        const selKeys = nextTargetKeys.concat(selectedKeys)
+        setSelectedKeys(selKeys)
+
+        let newTabs = tabs.map((t) => {
+            if (t.name === tabObj.name) {
+                return {...t, targetKeys: nextTargetKeys}
+            } else {
+                return {...t, dataSource: getRemainingDataSource(t.targetKeys, selKeys)}
+            }
+        })
+
+        setTabs(newTabs)
+    }
+
     const renderTransfer = (tabObj) => {
         return <Transfer
-            dataSource={dataSource}
+            dataSource={tabObj.dataSource}
             titles={['', tabObj.name]}
             render={item => item.title}
-            disabled={true}
+            disabled={!tabObj.alreadySet}
+            targetKeys={tabObj.targetKeys}
             listStyle={{width: 450}}
+            onChange={(nextnextTargetKeys) => somethingIsTransfered(nextnextTargetKeys, tabObj)}
         >
         </Transfer>
     }
@@ -75,7 +112,7 @@ export default function GroupSelection(props) {
                 onChange={onTabSwitch}
                 onEdit={onEdit}
             >
-                {tabs.map((t, i) => {
+                {tabs && tabs.map((t, i) => {
                     return renderTab(t, i)
                 })}
             </Tabs>
