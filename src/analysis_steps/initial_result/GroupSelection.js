@@ -12,7 +12,7 @@ export default function GroupSelection(props) {
             name: "Condition",
             alreadySet: false,
             targetKeys: [],
-            dataSource: props.data.columnMapping.experiments.map((exp) => {
+            dataSource: props.data.columnMapping.experimentNames.map((exp) => {
                 return {key: exp, title: exp}
             })
         }]);
@@ -21,7 +21,7 @@ export default function GroupSelection(props) {
     const [selectedKeys, setSelectedKeys] = useState([])
 
     const getRemainingDataSource = (targetKeys, selKeys) => {
-        return props.data.columnMapping.experiments.map((exp) => {
+        return props.data.columnMapping.experimentNames.map((exp) => {
             return {key: exp, title: exp, disabled: (! targetKeys.includes(exp)) && selKeys.includes(exp)}
         })
     }
