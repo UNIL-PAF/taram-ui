@@ -31,7 +31,7 @@ export default function InitialResultParams(props) {
             <Divider/>
             <h3>Group selection</h3>
             <GroupSelection analysisIdx={props.analysisIdx}
-                            data={props.data}></GroupSelection>
+                            data={expData}></GroupSelection>
         </>
     );
 }

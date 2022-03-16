@@ -123,8 +123,7 @@ export default function ExperimentsSelection(props) {
     ];
 
     const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        onChange: (selectedRowKeys) => {
             props.onExpSelection(selectedRowKeys)
         },
     };

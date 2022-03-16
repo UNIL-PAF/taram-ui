@@ -8,21 +8,23 @@ export default function GroupSelection(props) {
     const [tabs, setTabs] = useState()
 
     useEffect(() => {
-        setTabs([{
-            name: "Condition",
-            alreadySet: false,
-            targetKeys: [],
-            dataSource: props.data.columnMapping.experimentNames.map((exp) => {
-                return {key: exp, title: exp}
-            })
-        }]);
+        if(props.data) {
+            setTabs([{
+                name: "Condition",
+                alreadySet: false,
+                targetKeys: [],
+                dataSource: props.data.map((exp) => {
+                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
+                })
+            }]);
+        }
     }, [props])
 
     const [selectedKeys, setSelectedKeys] = useState([])
 
     const getRemainingDataSource = (targetKeys, selKeys) => {
-        return props.data.columnMapping.experimentNames.map((exp) => {
-            return {key: exp, title: exp, disabled: (! targetKeys.includes(exp)) && selKeys.includes(exp)}
+        return props.data.map((exp) => {
+            return {key: exp.key, title: exp.name, disabled: (! targetKeys.includes(exp.key)) && selKeys.includes(exp.key)}
         })
     }
 
