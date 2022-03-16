@@ -5,17 +5,13 @@ const EditableContext = React.createContext(null);
 
 export default function ExperimentsSelection(props) {
 
-    const [data, setData] = useState()
-    const [selectedRowsState, setSelectedRowsState] = useState()
+    const [selKeys, setSelKeys] = useState()
 
     useEffect(() => {
-       setData(props.data.experimentNames.map((e) => {
-           const exp = props.data.experimentDetails[e]
-           return {name: exp.originalName,
-               fileName: exp.fileName, key: exp.name}
-       }))
-        setSelectedRowsState(props.data.experimentNames.map((e) => {
-           return  e}))
+        if(props.data){
+            const newSelKeys = props.data.filter((exp) => exp.isSelected).map((exp) => exp.key)
+            setSelKeys(newSelKeys)
+        }
     }, [props])
 
     const EditableCell = ({
@@ -129,7 +125,7 @@ export default function ExperimentsSelection(props) {
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            setSelectedRowsState(selectedRowKeys)
+            props.onExpSelection(selectedRowKeys)
         },
     };
 
@@ -146,12 +142,12 @@ export default function ExperimentsSelection(props) {
                 components={components}
                 rowSelection={{
                     type: 'checkbox',
-                    selectedRowKeys: selectedRowsState,
+                    selectedRowKeys: selKeys,
                     ...rowSelection,
                 }}
                 size={"small"}
                 columns={columns}
-                dataSource={data}
+                dataSource={props.data}
                 pagination={false}
             />
         </>
