@@ -34,6 +34,13 @@ class ResultsTable extends React.Component {
             title: 'File creation date',
             dataIndex: 'fileCreationDate',
             key: 'fileCreationDate',
+            sorter: (a, b) =>
+                a.fileCreationDate &&
+                a.fileCreationDate > b.fileCreationDate &&
+                b.fileCreationDate
+                    ? 1
+                    : -1,
+            defaultSortOrder: "ascend"
         }
     ]
 
