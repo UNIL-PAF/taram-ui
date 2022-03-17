@@ -1,12 +1,25 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, Modal, Radio, Select} from 'antd';
-import {getAvailableDirs, addResult} from "./BackendResults"
+import {addResult, getAvailableDirs} from "./BackendResults"
 import _ from "lodash"
 
 const { Option } = Select;
 
 const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) => {
     const [form] = Form.useForm();
+
+    const [fltDirs, setFltDirs] = useState(availableDirs);
+    const initialType = "MaxQuant"
+
+    useEffect(() => {
+        if(availableDirs){
+            setFltDirs(availableDirs.filter((a) => a.type === initialType))
+        }
+    }, [availableDirs])
+
+    const onChangeType = (e) => {
+        setFltDirs(availableDirs.filter((a) => a.type === e.target.value))
+    }
 
     return (
         <Modal
@@ -69,14 +82,14 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                         }
                     >
                         {
-                            _.map(availableDirs, (dir, i) => {
+                            _.map(fltDirs, (dir, i) => {
                                 return <Option key={i} value={i}>{dir.path}</Option>
                         })
                         }
                     </Select>
                 </Form.Item>
-                <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={"MaxQuant"}>
-                    <Radio.Group>
+                <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={initialType}>
+                    <Radio.Group onChange={onChangeType}>
                         <Radio value="MaxQuant">MaxQuant</Radio>
                         <Radio value="Spectronaut">Spectronaut</Radio>
                     </Radio.Group>
