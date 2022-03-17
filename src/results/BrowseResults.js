@@ -2,27 +2,14 @@ import React from "react";
 import {Col, Row} from 'antd';
 import {BrowseResultsModal} from "./BrowseResultsModal"
 
-class BrowseResults extends React.Component {
+export default function BrowseResults() {
 
-    constructor(props) {
-        super(props);
-        this.form = React.createRef();
-    }
+    return (
+        <Row justify="left">
+            <Col>
+                <BrowseResultsModal buttonText={'Add new result'}/>
+            </Col>
+        </Row>
+    );
 
-    state = {
-        loading: false,
-        visible: false,
-    };
-
-    render() {
-        return (
-            <Row justify="left">
-                <Col>
-                    <BrowseResultsModal buttonText={'Add new result'}/>
-                </Col>
-            </Row>
-        );
-    }
 }
-
-export default BrowseResults

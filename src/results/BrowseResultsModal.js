@@ -78,6 +78,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                 <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={"MaxQuant"}>
                     <Radio.Group>
                         <Radio value="MaxQuant">MaxQuant</Radio>
+                        <Radio value="Spectronaut">Spectronaut</Radio>
                     </Radio.Group>
                 </Form.Item>
             </Form>
