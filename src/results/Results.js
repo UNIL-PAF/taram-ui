@@ -6,12 +6,12 @@ import {getResults} from "./BackendResults"
 
 const {Content} = Layout;
 
-export default function Results() {
+export default function Results(props) {
     const [results, setResults] = useState([]);
 
     useEffect(() => {
         getResults((results) => setResults(results))
-    })
+    }, [props])
 
     return (
         <Content>
