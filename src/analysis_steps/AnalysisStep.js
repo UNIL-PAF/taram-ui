@@ -1,7 +1,7 @@
 import React from "react";
 import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
-import {PlayCircleOutlined, FilePdfOutlined, PlusOutlined, SaveOutlined, PlusCircleOutlined} from "@ant-design/icons";
+import {FilePdfOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined} from "@ant-design/icons";
 import {Button, Dropdown, Menu} from "antd";
 
 export default function AnalysisStep(props) {

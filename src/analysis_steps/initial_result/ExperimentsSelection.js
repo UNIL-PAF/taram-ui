@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useContext} from "react";
-import { Table, Input, Form } from 'antd';
+import {Table, Input, Form} from 'antd';
 
 const EditableContext = React.createContext(null);
 
@@ -8,7 +8,7 @@ export default function ExperimentsSelection(props) {
     const [selKeys, setSelKeys] = useState()
 
     useEffect(() => {
-        if(props.data){
+        if (props.data) {
             const newSelKeys = props.data.filter((exp) => exp.isSelected).map((exp) => exp.key)
             setSelKeys(newSelKeys)
         }
@@ -43,7 +43,7 @@ export default function ExperimentsSelection(props) {
             try {
                 const values = await form.validateFields();
                 toggleEdit();
-                handleSave({ ...record, ...values });
+                handleSave({...record, ...values});
             } catch (errInfo) {
                 console.log('Save failed:', errInfo);
             }
@@ -65,7 +65,7 @@ export default function ExperimentsSelection(props) {
                         },
                     ]}
                 >
-                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save}/>
                 </Form.Item>
             ) : (
                 <div
@@ -83,7 +83,7 @@ export default function ExperimentsSelection(props) {
         return <td {...restProps}>{childNode}</td>;
     };
 
-    const EditableRow = ({ index, ...props }) => {
+    const EditableRow = ({index, ...props}) => {
         const [form] = Form.useForm();
         return (
             <Form form={form} component={false}>
@@ -95,14 +95,8 @@ export default function ExperimentsSelection(props) {
     };
 
     const handleSave = (row) => {
-        console.log(row)
-        const newData = [...this.state.dataSource];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        this.setState({
-            dataSource: newData,
-        });
+        console.log("handle save")
+        props.onChangeExpName(row)
     };
 
 
@@ -110,11 +104,15 @@ export default function ExperimentsSelection(props) {
         {
             title: 'Experiment name',
             dataIndex: 'name',
-            onCell: (record) => ({
-                record,
-                editable: true,
-                handleSave: handleSave
-            }),
+            onCell: (record) => {
+                return {
+                    record,
+                    editable: true,
+                    dataIndex: 'name',
+                    title: 'Experiment name',
+                    handleSave: handleSave,
+                }
+            },
         },
         {
             title: 'File name',

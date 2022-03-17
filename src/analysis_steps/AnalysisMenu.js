@@ -7,11 +7,6 @@ import {BarChartOutlined, PlusCircleOutlined, SettingOutlined} from "@ant-design
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
     const handleOk = () => {
         setIsModalVisible(false);
     };
@@ -40,7 +35,7 @@ export default function AnalysisMenu(props) {
         </Menu>
     )
 
-    const buttonsDisabled = props.status != "done"
+    const buttonsDisabled = props.status !== "done"
 
     return (
         <>

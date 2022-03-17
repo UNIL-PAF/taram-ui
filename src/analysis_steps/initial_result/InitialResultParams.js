@@ -24,14 +24,25 @@ export default function InitialResultParams(props) {
         setExpData(newExpData)
     }
 
+    const onChangeExpName = (row) => {
+        const newExpData = expData.map(exp => {
+            if(exp.key === row.key){
+                return {...exp, name: row.name}
+            }else{
+                return exp
+            }
+        })
+        setExpData(newExpData)
+
+    }
+
     return (
         <>
             <h3>Experiments</h3>
-            <ExperimentsSelection data={expData} onExpSelection={onExpSelection}></ExperimentsSelection>
+            <ExperimentsSelection data={expData} onChangeExpName={onChangeExpName} onExpSelection={onExpSelection}></ExperimentsSelection>
             <Divider/>
             <h3>Group selection</h3>
-            <GroupSelection analysisIdx={props.analysisIdx}
-                            data={expData}></GroupSelection>
+            <GroupSelection data={expData}></GroupSelection>
         </>
     );
 }

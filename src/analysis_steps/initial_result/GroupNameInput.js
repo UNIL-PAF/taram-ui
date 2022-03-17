@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Transfer, Tabs, Input} from 'antd';
+import {Input} from 'antd';
 
 
 export default function GroupNameInput(props) {
