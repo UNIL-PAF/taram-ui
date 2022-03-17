@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Layout, Space} from 'antd';
 import ResultsTable from "./ResultsTable";
 import BrowseResults from "./BrowseResults";
@@ -6,28 +6,21 @@ import {getResults} from "./BackendResults"
 
 const {Content} = Layout;
 
-class Results extends React.Component {
+export default function Results() {
+    const [results, setResults] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {results: []};
-    }
+    useEffect(() => {
+        getResults((results) => setResults(results))
+    })
 
-    componentDidMount() {
-        getResults((results) => this.setState({results: results}))
-    }
+    return (
+        <Content>
+            <Space direction="vertical">
+                <h1>Results</h1>
+                <BrowseResults/>
+                <ResultsTable results={results}/>
+            </Space>
+        </Content>
+    );
 
-    render() {
-        return (
-            <Content>
-                <Space direction="vertical">
-                    <h1>Results</h1>
-                    <BrowseResults/>
-                    <ResultsTable results={this.state.results}/>
-                </Space>
-            </Content>
-        );
-    }
 }
-
-export default Results
