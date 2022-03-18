@@ -10,14 +10,18 @@ export default function Results(props) {
     const [results, setResults] = useState([]);
 
     useEffect(() => {
-        getResults((results) => setResults(results))
+        refreshResults()
     }, [props])
+
+    const refreshResults = () => {
+        getResults((results) => setResults(results))
+    }
 
     return (
         <Content>
             <Space direction="vertical">
                 <h1>Results</h1>
-                <BrowseResults/>
+                <BrowseResults refreshResults={refreshResults}/>
                 <ResultsTable results={results}/>
             </Space>
         </Content>

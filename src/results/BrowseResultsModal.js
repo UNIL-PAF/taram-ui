@@ -99,17 +99,17 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
     );
 };
 
-export function BrowseResultsModal({buttonText}){
+export function BrowseResultsModal({buttonText, refreshResults}){
     const [visible, setVisible] = useState(false);
-    const [availableDirs, setAvailableDirs] = useState(false);
+    const [availableDirs, setAvailableDirs] = useState();
 
     const onCreate = (values) => {
-        const selDir = availableDirs[values.resDir]
+        const selDir = availableDirs.filter((a) => a.type === values.type)[values.resDir]
         let localVals = values
         localVals.path = selDir.path
         localVals.resFile = selDir.resFile
         localVals.fileCreationDate = selDir.fileCreationDate
-        addResult(localVals)
+        addResult(localVals, refreshResults)
         setVisible(false);
     };
 

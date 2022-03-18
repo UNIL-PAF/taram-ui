@@ -42,7 +42,7 @@ function getResults(setState) {
         });
 }
 
-function addResult(result){
+function addResult(result, refreshResults){
     axios.post(globalConfig.urlBackend + 'result/add', result)
         .then((response) => {
             // handle success
@@ -54,7 +54,7 @@ function addResult(result){
             console.log(error);
         })
         .then(function () {
-            // always executed
+            refreshResults()
         });
 }
 
