@@ -115,6 +115,10 @@ export default function ExperimentsSelection(props) {
             },
         },
         {
+            title: 'Original name',
+            dataIndex: 'key',
+        },
+        {
             title: 'File name',
             dataIndex: 'fileName',
         },

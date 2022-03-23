@@ -12,7 +12,7 @@ export default function InitialResult(props) {
                           paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}
                                                           data={props.data}></InitialResultParams>}/>
         }>
-            <p>MaxQuant version: <strong>{results.maxQuantParameters.version}</strong></p>
+            {results.maxQuantParameters && <p>MaxQuant version: <strong>{results.maxQuantParameters.version}</strong></p>}
             <p>Protein groups: <strong>{results.nrProteinGroups}</strong></p>
         </Card>
     );
