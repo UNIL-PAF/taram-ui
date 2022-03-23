@@ -8,7 +8,7 @@ export default function InitialResultParams(props) {
     const [expData, setExpData] = useState()
 
     useEffect(() => {
-        const colMapping = props.data.columnMapping
+        const colMapping = props.data.columnInfo.columnMapping
 
         setExpData(colMapping.experimentNames.map((e) => {
             const exp = colMapping.experimentDetails[e]
