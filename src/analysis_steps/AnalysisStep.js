@@ -3,6 +3,7 @@ import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
 import {FilePdfOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined} from "@ant-design/icons";
 import {Button, Dropdown, Menu} from "antd";
+import BoxPlot from "./boxplot/BoxPlot";
 
 export default function AnalysisStep(props) {
 
@@ -42,10 +43,13 @@ export default function AnalysisStep(props) {
                 {props.data.analysisSteps && props.data.analysisSteps.map(step => {
                     switch (step.type) {
                         case 'initial-result':
-                            return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.resultId}
+                            return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                   data={step} key={step.id}/>
                         case 'quality-control':
-                            return <QualityControl analysisIdx={props.analysisIdx} resultId={props.data.resultId}
+                            return <QualityControl analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                   data={step} key={step.id}/>
+                        case 'boxplot':
+                            return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                    data={step} key={step.id}/>
                         default:
                             return null

@@ -21,16 +21,20 @@ export default function AnalysisMenu(props) {
         setIsModalVisible(true);
     }
 
-    const clickQualityControl = function (stepId, type, resultId) {
+    const clickAddStep = function (stepId, type, resultId) {
         const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
         dispatch(addAnalysisStep(stepObj))
     }
 
     const analysisMenuList = (
         <Menu>
-            <Menu.Item onClick={() => clickQualityControl(props.stepId, "quality-control", props.resultId)}
+            <Menu.Item onClick={() => clickAddStep(props.stepId, "quality-control", props.resultId)}
                        key={'quality-control'}>
-                <span>Quality Control</span>
+                <span>Quality control</span>
+            </Menu.Item>
+            <Menu.Item onClick={() => clickAddStep(props.stepId, "boxplot", props.resultId)}
+                       key={'boxplot'}>
+                <span>Boxplot</span>
             </Menu.Item>
         </Menu>
     )

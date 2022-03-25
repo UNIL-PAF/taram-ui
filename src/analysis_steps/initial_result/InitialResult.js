@@ -6,6 +6,8 @@ import InitialResultParams from "./InitialResultParams";
 export default function InitialResult(props) {
     const results = JSON.parse(props.data.results)
 
+    console.log(props)
+
     return (
         <Card title={"Initial Result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}

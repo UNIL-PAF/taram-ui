@@ -10,7 +10,6 @@ function addAnalysisStepCall(stepObj){
 export const addAnalysisStep = createAsyncThunk(
     'analysis-step/add-to',
     async (stepObj, thunkApi) => {
-
         try {
             const response = await addAnalysisStepCall(stepObj)
             return response.data
