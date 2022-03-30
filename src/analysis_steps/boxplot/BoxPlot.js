@@ -7,24 +7,55 @@ export default function BoxPlot(props) {
     const results = JSON.parse(props.data.results)
 
     const options = {
-        grid: { top: 8, right: 8, bottom: 24, left: 36 },
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        },
-        yAxis: {
-            type: 'value',
-        },
+        dataset: [
+            {
+                dimensions: ['min', 'Q1', 'median', 'Q3', 'max', 'sample'],
+                source: [[8, 15, 20, 25, 50, '0001'], [10, 15, 20, 25, 30, '0002']]
+            },
+            {
+                dimensions: ['min', 'Q1', 'median', 'Q3', 'max', 'sample'],
+                source: [[10, 15, 20, 25, 30, '0003'], [10, 15, 20, 25, 30, '0004']]
+            }
+        ],
         series: [
             {
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
-                type: 'line',
-                smooth: true,
+                name: 'WT',
+                datasetIndex: 0,
+                type: 'boxplot',
+                encode: {
+                    y: ['min', 'Q1', 'median', 'Q3', 'max'],
+                    x: 'sample',
+                },
+                xAxisIndex: 0
             },
+            {
+                name: 'KO',
+                datasetIndex: 1,
+                type: 'boxplot',
+                encode: {
+                    y: ['min', 'Q1', 'median', 'Q3', 'max'],
+                    x: 'sample',
+                },
+                xAxisIndex: 1
+            }
         ],
-        tooltip: {
-            trigger: 'axis',
+        legend: {},
+        xAxis: [{
+            type: 'category',
+            scale: true,
+            axisLabel: {interval: 0, rotate: 30},
+            show: true,
+            data: ['0001', '0002', '0003', '0004']
         },
+            {
+                type: 'category',
+                scale: true,
+                show: false,
+                data: ['0001', '0002', '0003', '0004']
+            },],
+        yAxis: {
+            name: 'Intensity'
+        }
     };
 
     return (
@@ -32,7 +63,7 @@ export default function BoxPlot(props) {
             <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}/>
         }>
             <p>Boxplot</p>
-            <ReactECharts option={options} />
+            <ReactECharts option={options}/>
         </Card>
     );
 }
