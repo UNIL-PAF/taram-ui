@@ -1,48 +1,38 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {Transfer, Tabs} from 'antd';
 import GroupNameInput from "./GroupNameInput";
+import {useDispatch, useSelector} from "react-redux";
+import {setData} from "../analysisStepParamsSlice";
 
 const {TabPane} = Tabs;
 
 export default function GroupSelection(props) {
-    const [tabs, setTabs] = useState()
-
-    useEffect(() => {
-        if(props.data) {
-            setTabs([{
-                name: "Condition",
-                alreadySet: false,
-                targetKeys: [],
-                dataSource: props.data.map((exp) => {
-                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
-                })
-            }]);
-        }
-    }, [props])
-
+    const data = useSelector((state) => state.analysisStepParams.data)
+    const dispatch = useDispatch();
     const [selectedKeys, setSelectedKeys] = useState([])
 
     const getRemainingDataSource = (targetKeys, selKeys) => {
-        return props.data.map((exp) => {
+        return data.expData.map((exp) => {
             return {key: exp.key, title: exp.name, disabled: (! targetKeys.includes(exp.key)) && selKeys.includes(exp.key)}
         })
     }
 
     const addTab = () => {
-        setTabs(tabs.concat({
+        const newTabs = data.groupData.concat({
             name: "Condition",
             alreadySet: false,
             targetKeys: [],
             dataSource: getRemainingDataSource([], selectedKeys)
-        }))
+        })
+        dispatch(setData({...data, groupData: newTabs}))
     };
 
     const removeTab = (tabKey) => {
         const tabIdx = Number(tabKey)
-        const newTabs = tabs.filter((t, i) => {
+        const newTabs = data.groupData.filter((t, i) => {
             return i !== tabIdx
         })
-        setTabs(newTabs)
+        dispatch(setData({...data, groupData: newTabs}))
     }
 
     const onEdit = (targetKey, action) => {
@@ -54,14 +44,14 @@ export default function GroupSelection(props) {
     };
 
     const onInputChange = (newVal, idx) => {
-        let newTabs = tabs.map((t, i) => {
+        let newTabs = data.groupData.map((t, i) => {
             if (i === idx) {
                 return {...t, name: newVal, alreadySet: true}
             } else {
                 return t
             }
         })
-        setTabs(newTabs)
+        dispatch(setData({...data, groupData: newTabs}))
     }
 
     const renderTab = (tabObj, i) => {
@@ -79,15 +69,14 @@ export default function GroupSelection(props) {
         const selKeys = nextTargetKeys.concat(selectedKeys)
         setSelectedKeys(selKeys)
 
-        let newTabs = tabs.map((t) => {
+        let newTabs = data.groupData.map((t) => {
             if (t.name === tabObj.name) {
                 return {...t, targetKeys: nextTargetKeys}
             } else {
                 return {...t, dataSource: getRemainingDataSource(t.targetKeys, selKeys)}
             }
         })
-
-        setTabs(newTabs)
+        dispatch(setData({...data, groupData: newTabs}))
     }
 
     const renderTransfer = (tabObj) => {
@@ -109,7 +98,7 @@ export default function GroupSelection(props) {
                 type="editable-card"
                 onEdit={onEdit}
             >
-                {tabs && tabs.map((t, i) => {
+                {data && data.groupData.map((t, i) => {
                     return renderTab(t, i)
                 })}
             </Tabs>

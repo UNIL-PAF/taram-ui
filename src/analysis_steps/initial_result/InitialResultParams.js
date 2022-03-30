@@ -7,22 +7,34 @@ import {setData} from "../analysisStepParamsSlice";
 
 export default function InitialResultParams(props) {
 
-    const [expData, setExpData] = useState()
     const dispatch = useDispatch();
     const data = useSelector((state) => state.analysisStepParams.data)
 
     useEffect(() => {
-        const colMapping = props.data.columnInfo.columnMapping
+        if(! data){
+            const colMapping = props.data.columnInfo.columnMapping
 
-        const expData = colMapping.experimentNames.map((e) => {
-            const exp = colMapping.experimentDetails[e]
-            return {
-                name: exp.name,
-                fileName: exp.fileName, key: exp.originalName, isSelected: exp.isSelected
-            }
-        })
+            const expData = colMapping.experimentNames.map((e) => {
+                const exp = colMapping.experimentDetails[e]
+                return {
+                    name: exp.name,
+                    fileName: exp.fileName,
+                    key: exp.originalName,
+                    isSelected: exp.isSelected
+                }
+            })
 
-        dispatch(setData({expData: expData}))
+            const groupData = [{
+                name: "Condition",
+                alreadySet: false,
+                targetKeys: [],
+                dataSource: expData.map((exp) => {
+                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
+                })
+            }]
+
+            dispatch(setData({expData: expData, groupData: groupData}))
+        }
     }, [props])
 
     const onExpSelection = (selRowKeys) => {
@@ -40,7 +52,19 @@ export default function InitialResultParams(props) {
                 return exp
             }
         })
-        dispatch(setData({...data, expData: newExpData}))
+        const newGroupData = data.groupData.map(tab => {
+            return {
+                ...tab, dataSource: tab.dataSource.map(d => {
+                    if (d.key === row.key) {
+                        return {...d, title: row.name}
+                    } else {
+                        return d
+                    }
+                })
+            }
+
+        })
+        dispatch(setData({groupData: newGroupData, expData: newExpData}))
     }
 
     return (
@@ -48,11 +72,11 @@ export default function InitialResultParams(props) {
             <h3>Experiments</h3>
             {data &&
                 <>
-                <ExperimentsSelection data={data.expData} onChangeExpName={onChangeExpName}
-                                           onExpSelection={onExpSelection}></ExperimentsSelection>
-                <Divider/>
-                <h3>Group selection</h3>
-                <GroupSelection data={data.expData}></GroupSelection>
+                    <ExperimentsSelection onChangeExpName={onChangeExpName}
+                                          onExpSelection={onExpSelection}></ExperimentsSelection>
+                    <Divider/>
+                    <h3>Group selection</h3>
+                    <GroupSelection></GroupSelection>
                 </>
             }
         </>

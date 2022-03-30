@@ -2,12 +2,17 @@ import React from "react";
 import {Card} from 'antd';
 import AnalysisMenu from "../AnalysisMenu"
 import InitialResultParams from "./InitialResultParams";
+import {setStepParameters} from "../BackendAnalysisSteps";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function InitialResult(props) {
     const results = JSON.parse(props.data.results)
+    const dispatch = useDispatch();
+    const paramsData = useSelector((state) => state.analysisStepParams.data)
 
     const onClickOk = () => {
         console.log("click OK")
+        dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: paramsData}))
     }
 
     return (
