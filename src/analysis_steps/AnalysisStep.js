@@ -4,6 +4,7 @@ import QualityControl from "./quality_control/QualityControl";
 import {FilePdfOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined} from "@ant-design/icons";
 import {Button, Dropdown, Menu} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
+import './AnalysisStep.css'
 
 export default function AnalysisStep(props) {
 
