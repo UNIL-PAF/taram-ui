@@ -9,6 +9,7 @@ export default function AnalysisMenu(props) {
 
     const handleOk = () => {
         setIsModalVisible(false);
+        props.onClickOk()
     };
 
     const handleCancel = () => {

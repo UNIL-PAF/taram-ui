@@ -28,10 +28,6 @@ export default function GroupSelection(props) {
         })
     }
 
-    const onTabSwitch = () => {
-        console.log("onTabSwitch")
-    }
-
     const addTab = () => {
         setTabs(tabs.concat({
             name: "Condition",
@@ -111,7 +107,6 @@ export default function GroupSelection(props) {
         <>
             <Tabs
                 type="editable-card"
-                onChange={onTabSwitch}
                 onEdit={onEdit}
             >
                 {tabs && tabs.map((t, i) => {
