@@ -11,7 +11,6 @@ export default function InitialResult(props) {
     const paramsData = useSelector((state) => state.analysisStepParams.data)
 
     const onClickOk = () => {
-        console.log("click OK")
         dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: paramsData}))
     }
 

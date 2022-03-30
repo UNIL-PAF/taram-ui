@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import GroupSelection from "./GroupSelection";
 import {Divider} from "antd";
 import ExperimentsSelection from "./ExperimentsSelection";
@@ -35,7 +35,7 @@ export default function InitialResultParams(props) {
 
             dispatch(setData({expData: expData, groupData: groupData}))
         }
-    }, [props])
+    }, [props, data, dispatch])
 
     const onExpSelection = (selRowKeys) => {
         const newExpData = data.expData.map((exp) => {

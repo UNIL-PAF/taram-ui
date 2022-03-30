@@ -1,5 +1,4 @@
-import {createSelector, createSlice} from '@reduxjs/toolkit'
-import {fetchAnalysisByResultId} from "../analysis/BackendAnalysis";
+import {createSlice} from '@reduxjs/toolkit'
 import {setStepParameters} from "./BackendAnalysisSteps";
 
 export const analysisStepParamsSlice = createSlice({
@@ -21,7 +20,7 @@ export const analysisStepParamsSlice = createSlice({
             })
             .addCase(setStepParameters.fulfilled, (state, action) => {
                 state.status = 'succeeded'
-                state.data = action.payload
+                state.data = null
             })
             .addCase(setStepParameters.rejected, (state, action) => {
                 state.status = 'failed'

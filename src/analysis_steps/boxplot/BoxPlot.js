@@ -4,7 +4,6 @@ import AnalysisMenu from "../AnalysisMenu";
 import ReactECharts from 'echarts-for-react';
 
 export default function BoxPlot(props) {
-    const results = JSON.parse(props.data.results)
 
     const options = {
         dataset: [

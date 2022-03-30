@@ -8,8 +8,16 @@ function addAnalysisStepCall(stepObj){
 }
 
 function setStepParametersCall(paramsObj){
-    console.log("paramsObj", paramsObj)
-    return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, paramsObj.params)
+    // format the data for the backend
+    const formattedParams = paramsObj.params.expData.reduce( (sum, d) => {
+        const group = paramsObj.params.groupData.find( (g) => {return g.targetKeys.includes(d.key)})
+        sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.key, group: (group ? group.name: null)}
+        return sum
+    }, {})
+
+    console.log(formattedParams)
+
+    return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, formattedParams)
 }
 
 export const addAnalysisStep = createAsyncThunk(
