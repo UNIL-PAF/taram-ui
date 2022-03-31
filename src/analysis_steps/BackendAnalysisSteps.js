@@ -11,11 +11,10 @@ function setStepParametersCall(paramsObj){
     // format the data for the backend
     const formattedParams = paramsObj.params.expData.reduce( (sum, d) => {
         const group = paramsObj.params.groupData.find( (g) => {return g.targetKeys.includes(d.key)})
-        sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.key, group: (group ? group.name: null)}
+        sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.key}
+        if(group) {sum[d.key].group = group.name}
         return sum
     }, {})
-
-    console.log(formattedParams)
 
     return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, formattedParams)
 }
