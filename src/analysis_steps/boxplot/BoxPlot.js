@@ -5,60 +5,76 @@ import ReactECharts from 'echarts-for-react';
 
 export default function BoxPlot(props) {
 
+    const results = JSON.parse(props.data.results)
+    console.log(results)
+
+    const newData = results.data.map(d => {
+        const dataWithName = d.data.map(box => {
+            return [box.name].concat(box.data)
+        })
+        return {
+            group: d.group ? d.group : null,
+            data: dataWithName
+        }
+    })
+
+    console.log(newData)
+    results.data = newData
+
+    const myDimensions = ['name', 'min', 'Q1', 'median', 'Q3', 'max']
+
+    const boxplotDataTest = {
+        experimentNames: ['0001', '0002'],
+        data: [
+            {
+                group: null,
+                data: [
+                    ['0001', 8, 15, 20, 25, 50],
+                    ['0002', 8, 15, 20, 25, 50]
+                ]
+            }
+        ]
+    }
+
+    const boxplotData = results
+
     const options = {
-        dataset: [
-            {
-                dimensions: ['min', 'Q1', 'median', 'Q3', 'max', 'sample'],
-                source: [[8, 15, 20, 25, 50, '0001'], [10, 15, 20, 25, 30, '0002']]
-            },
-            {
-                dimensions: ['min', 'Q1', 'median', 'Q3', 'max', 'sample'],
-                source: [[10, 15, 20, 25, 30, '0003'], [10, 15, 20, 25, 30, '0004']]
+        dataset: boxplotData.data.map(d => {
+            return {
+                dimensions: myDimensions,
+                source: d.data
             }
-        ],
-        series: [
-            {
-                name: 'WT',
-                datasetIndex: 0,
+        }),
+        series: boxplotData.data.map((d, i) => {
+            return {
+                name: d.group,
                 type: 'boxplot',
+                datasetIndex: i,
                 encode: {
-                    y: ['min', 'Q1', 'median', 'Q3', 'max'],
-                    x: 'sample',
+                    y: myDimensions.slice(1),
+                    x: 'name',
                 },
-                xAxisIndex: 0
-            },
-            {
-                name: 'KO',
-                datasetIndex: 1,
-                type: 'boxplot',
-                encode: {
-                    y: ['min', 'Q1', 'median', 'Q3', 'max'],
-                    x: 'sample',
-                },
-                xAxisIndex: 1
+                xAxisIndex: i
             }
-        ],
+        }),
         legend: {},
-        xAxis: [{
-            type: 'category',
-            scale: true,
-            axisLabel: {interval: 0, rotate: 30},
-            show: true,
-            data: ['0001', '0002', '0003', '0004']
-        },
-            {
+        xAxis: boxplotData.data.map((d, i) => {
+            return {
                 type: 'category',
                 scale: true,
-                show: false,
-                data: ['0001', '0002', '0003', '0004']
-            },],
+                axisLabel: {interval: 0, rotate: 30},
+                show: (i === 0 ? true : false),
+                data: boxplotData.experimentNames
+            }
+        }),
         yAxis: {
             name: 'Intensity'
         }
     };
 
     return (
-        <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
+        <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
+              bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}/>
         }>
             <p>Boxplot</p>
