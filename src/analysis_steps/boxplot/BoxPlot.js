@@ -9,11 +9,14 @@ import {useDispatch} from "react-redux";
 export default function BoxPlot(props) {
 
     const [selCol, setSelCol] = useState()
+    const [logScale, setLogScale] = useState(false)
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.data.parameters) {
-            setSelCol(JSON.parse(props.data.parameters).column)
+            const params = JSON.parse(props.data.parameters)
+            setSelCol(params.column)
+            setLogScale(params.logScale)
         } else {
             setSelCol(props.data.columnInfo.columnMapping.intColumn)
         }
@@ -72,7 +75,7 @@ export default function BoxPlot(props) {
     };
 
     const onClickOk = () => {
-        dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: {column: selCol}}))
+        dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: {column: selCol, logScale: logScale}}))
     }
 
     return (
@@ -82,7 +85,7 @@ export default function BoxPlot(props) {
                           onClickOk={onClickOk}
                           paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                          data={props.data} setSelCol={setSelCol}
-                                                         selCol={selCol}></BoxPlotParams>}/>
+                                                         selCol={selCol} setLogScale={setLogScale} logScale={logScale}></BoxPlotParams>}/>
         }>
             <p>Boxplot</p>
             <ReactECharts option={options}/>

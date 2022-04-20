@@ -1,5 +1,5 @@
 import React from "react";
-import {Select} from 'antd';
+import {Checkbox, Select} from 'antd';
 
 const {Option} = Select;
 
@@ -15,6 +15,11 @@ export default function BoxPlotParams(props) {
         props.setSelCol(numCols[value])
     }
 
+    function checkboxChange(e){
+        console.log(`checked = ${e.target.checked}`);
+        props.setLogScale(e.target.checked)
+    }
+
     return (
         <>
             <h3>Select data column for Boxplot</h3>
@@ -23,6 +28,11 @@ export default function BoxPlotParams(props) {
                     return <Option key={i} value={i}>{n}</Option>
                 })}
             </Select>
+            <br></br>
+            <Checkbox
+                onChange={checkboxChange} defaultChecked={props.logScale}>Use logarithmic scale (log2)
+            </Checkbox>
+
         </>
     );
 }
