@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card} from "antd";
 import AnalysisMenu from "../AnalysisMenu";
 import ReactECharts from 'echarts-for-react';
@@ -10,6 +10,14 @@ export default function BoxPlot(props) {
 
     const [selCol, setSelCol] = useState()
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (props.data.parameters) {
+            setSelCol(JSON.parse(props.data.parameters).column)
+        } else {
+            setSelCol(props.data.columnInfo.columnMapping.intColumn)
+        }
+    }, [props])
 
     const results = JSON.parse(props.data.results)
 
@@ -59,7 +67,7 @@ export default function BoxPlot(props) {
             }
         }),
         yAxis: {
-            name: 'Intensity'
+            name: selCol
         }
     };
 
@@ -73,7 +81,8 @@ export default function BoxPlot(props) {
             <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                           onClickOk={onClickOk}
                           paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
-                                                         data={props.data} setSelCol={setSelCol}></BoxPlotParams>}/>
+                                                         data={props.data} setSelCol={setSelCol}
+                                                         selCol={selCol}></BoxPlotParams>}/>
         }>
             <p>Boxplot</p>
             <ReactECharts option={options}/>

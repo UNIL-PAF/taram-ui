@@ -6,7 +6,10 @@ const {Option} = Select;
 export default function BoxPlotParams(props) {
 
     const numCols = props.data.columnInfo.columnMapping.numericalColumns
-    const intCol = numCols.findIndex(c => props.data.columnInfo.columnMapping.intColumn === c)
+    const intCol = numCols.findIndex(c => {
+         const selCol = props.selCol ? props.selCol : props.data.columnInfo.columnMapping.intColumn
+        return  selCol === c
+    })
 
     function handleChange(value) {
         props.setSelCol(numCols[value])
