@@ -1,12 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import {Card} from "antd";
 import AnalysisMenu from "../AnalysisMenu";
 import ReactECharts from 'echarts-for-react';
+import BoxPlotParams from "./BoxPlotParams";
+import {setStepParameters} from "../BackendAnalysisSteps";
+import {useDispatch} from "react-redux";
 
 export default function BoxPlot(props) {
 
+    const [selCol, setSelCol] = useState()
+    const dispatch = useDispatch();
+
     const results = JSON.parse(props.data.results)
-    console.log(results)
 
     const newData = results.data.map(d => {
         const dataWithName = d.data.map(box => {
@@ -18,23 +23,9 @@ export default function BoxPlot(props) {
         }
     })
 
-    console.log(newData)
     results.data = newData
 
     const myDimensions = ['name', 'min', 'Q1', 'median', 'Q3', 'max']
-
-    const boxplotDataTest = {
-        experimentNames: ['0001', '0002'],
-        data: [
-            {
-                group: null,
-                data: [
-                    ['0001', 8, 15, 20, 25, 50],
-                    ['0002', 8, 15, 20, 25, 50]
-                ]
-            }
-        ]
-    }
 
     const boxplotData = results
 
@@ -72,10 +63,17 @@ export default function BoxPlot(props) {
         }
     };
 
+    const onClickOk = () => {
+        dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: {column: selCol}}))
+    }
+
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}/>
+            <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
+                          onClickOk={onClickOk}
+                          paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
+                                                         data={props.data} setSelCol={setSelCol}></BoxPlotParams>}/>
         }>
             <p>Boxplot</p>
             <ReactECharts option={options}/>
