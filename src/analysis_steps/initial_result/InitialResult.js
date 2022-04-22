@@ -14,7 +14,7 @@ export default function InitialResult(props) {
         // format the data for the backend
         const formattedParams = paramsData.expData.reduce( (sum, d) => {
             const group = paramsData.groupData.find( (g) => {return g.targetKeys.includes(d.key)})
-            sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.key}
+            sum[d.key] = { fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName }
             if(group) {sum[d.key].group = group.name}
             return sum
         }, {})

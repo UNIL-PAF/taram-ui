@@ -64,7 +64,7 @@ export default function BoxPlot(props) {
             return {
                 type: 'category',
                 scale: true,
-                axisLabel: {interval: 0, rotate: 30},
+                axisLabel: {interval: 0, rotate: 50},
                 show: (i === 0 ? true : false),
                 data: boxplotData.experimentNames
             }
@@ -75,7 +75,11 @@ export default function BoxPlot(props) {
     };
 
     const onClickOk = () => {
-        dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: {column: selCol, logScale: logScale}}))
+        dispatch(setStepParameters({
+            resultId: props.resultId,
+            stepId: props.data.id,
+            params: {column: selCol, logScale: logScale}
+        }))
     }
 
     return (
@@ -85,7 +89,8 @@ export default function BoxPlot(props) {
                           onClickOk={onClickOk}
                           paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                          data={props.data} setSelCol={setSelCol}
-                                                         selCol={selCol} setLogScale={setLogScale} logScale={logScale}></BoxPlotParams>}/>
+                                                         selCol={selCol} setLogScale={setLogScale}
+                                                         logScale={logScale}></BoxPlotParams>}/>
         }>
             <p>Boxplot</p>
             <ReactECharts option={options}/>

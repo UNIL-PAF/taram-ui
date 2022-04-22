@@ -19,7 +19,8 @@ export default function InitialResultParams(props) {
                 return {
                     name: exp.name,
                     fileName: exp.fileName,
-                    key: exp.originalName,
+                    originalName: exp.originalName,
+                    key: e,
                     isSelected: exp.isSelected
                 }
             })

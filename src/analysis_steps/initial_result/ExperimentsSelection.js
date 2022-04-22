@@ -91,10 +91,8 @@ export default function ExperimentsSelection(props) {
     };
 
     const handleSave = (row) => {
-        console.log("handle save")
         props.onChangeExpName(row)
     };
-
 
     const columns = [
         {
@@ -112,7 +110,7 @@ export default function ExperimentsSelection(props) {
         },
         {
             title: 'Original name',
-            dataIndex: 'key',
+            dataIndex: 'originalName',
         },
         {
             title: 'File name',
