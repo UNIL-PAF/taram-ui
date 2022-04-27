@@ -18,7 +18,7 @@ export default function BoxPlot(props) {
             setSelCol(params.column)
             setLogScale(params.logScale)
         } else {
-            setSelCol(props.data.columnInfo.columnMapping.intColumn)
+            setSelCol(props.data.commonResult.intCol)
         }
     }, [props])
 

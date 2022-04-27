@@ -3,7 +3,7 @@ import {Checkbox, Select} from 'antd';
 
 const {Option} = Select;
 
-export default function BoxPlotParams(props) {
+export default function TransformationParams(props) {
 
     const numCols = props.data.commonResult.numericalColumns
     const intCol = numCols.findIndex(c => {

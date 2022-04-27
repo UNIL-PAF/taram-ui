@@ -5,6 +5,7 @@ import {FilePdfOutlined, PlayCircleOutlined, PlusOutlined, SaveOutlined} from "@
 import {Button, Dropdown, Menu} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
+import Transformation from "./transformation/Transformation";
 
 export default function AnalysisStep(props) {
 
@@ -52,6 +53,9 @@ export default function AnalysisStep(props) {
                         case 'boxplot':
                             return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                    data={step} key={step.id}/>
+                        case 'transformation':
+                            return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                            data={step} key={step.id}/>
                         default:
                             return null
                     }

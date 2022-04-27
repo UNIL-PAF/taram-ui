@@ -37,6 +37,10 @@ export default function AnalysisMenu(props) {
                        key={'boxplot'}>
                 <span>Boxplot</span>
             </Menu.Item>
+            <Menu.Item onClick={() => clickAddStep(props.stepId, "transformation", props.resultId)}
+                       key={'transformation'}>
+                <span>Transformation</span>
+            </Menu.Item>
         </Menu>
     )
 
