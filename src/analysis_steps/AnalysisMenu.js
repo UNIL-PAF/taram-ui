@@ -46,8 +46,11 @@ export default function AnalysisMenu(props) {
 
     const buttonsDisabled = props.status !== "done"
 
+    if(props.status === "error") console.log(props)
+
     return (
         <>
+            <span>{props.status}</span>
             <Rate count={1}/>
             <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
                     onClick={() => clickParams()}></Button>

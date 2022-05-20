@@ -58,7 +58,7 @@ export default function TransformationParams(props) {
             <h3>Imputation</h3>
             <Select defaultValue={props.localParams.imputationType} style={{width: 250}} onChange={impChange}>
                 <Option value={'none'}>None</Option>
-                <Option value={'nan'}>NaN (not a number)</Option>
+                <Option value={'nan'}>Replace by NaN</Option>
                 {/*<Option value={'normal'}>Normal distribution</Option>
                 <Option value={'value'}>Fix value</Option>*/}
             </Select>
