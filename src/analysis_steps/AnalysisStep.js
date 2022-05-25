@@ -6,11 +6,13 @@ import {Button, Dropdown, Menu} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
+import axios from "axios";
+import globalConfig from "../globalConfig";
 
 export default function AnalysisStep(props) {
 
     const clickCopy = () => {
-        console.log("clickCopy")
+        axios.post(globalConfig.urlBackend + "analysis/duplicate/" + props.data.id)
     }
 
     const analysisMenuList = (
