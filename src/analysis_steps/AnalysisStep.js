@@ -11,13 +11,17 @@ import globalConfig from "../globalConfig";
 
 export default function AnalysisStep(props) {
 
-    const clickCopy = () => {
+    const clickDuplicate = () => {
         axios.post(globalConfig.urlBackend + "analysis/duplicate/" + props.data.id)
+    }
+
+    const clickCopy = () => {
+        axios.post(globalConfig.urlBackend + "analysis/copy/" + props.data.id)
     }
 
     const analysisMenuList = (
         <Menu>
-            <Menu.Item onClick={() => clickCopy()}
+            <Menu.Item onClick={() => clickDuplicate()}
                        key={'copy-current'}>
                 <span>Copy current Analysis</span>
             </Menu.Item>
