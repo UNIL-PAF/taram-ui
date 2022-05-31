@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Menu, Modal, Rate} from 'antd';
 import {useDispatch} from "react-redux";
-import {addAnalysisStep} from "./BackendAnalysisSteps";
-import {PlusCircleOutlined, SettingOutlined, ZoomInOutlined} from "@ant-design/icons";
+import {addAnalysisStep, deleteAnalysisStep} from "./BackendAnalysisSteps";
+import {PlusCircleOutlined, SettingOutlined, ZoomInOutlined, DeleteOutlined} from "@ant-design/icons";
+import { Popconfirm, message } from 'antd';
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -16,6 +17,13 @@ export default function AnalysisMenu(props) {
         setIsModalVisible(false);
     };
 
+
+    const confirmDelete = (stepId) => {
+        deleteAnalysisStep(stepId)
+        console.log(stepId)
+        message.success('Delete step.');
+    };
+
     const dispatch = useDispatch();
 
     const clickParams = function () {
@@ -26,6 +34,7 @@ export default function AnalysisMenu(props) {
         const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
         dispatch(addAnalysisStep(stepObj))
     }
+
 
     const analysisMenuList = (
         <Menu>
@@ -53,6 +62,15 @@ export default function AnalysisMenu(props) {
             <span>{props.status}</span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <Rate count={1}/>
+            <Popconfirm
+                title="Are you sure to delete this step?"
+                onConfirm={() => confirmDelete(props.stepId)}
+                okText="Yes"
+                cancelText="Cancel"
+            >
+                <Button type={"text"} icon={<DeleteOutlined/>} disabled={buttonsDisabled}></Button>
+            </Popconfirm>
+
             <Button type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled}></Button>
             <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
                     onClick={() => clickParams()}></Button>

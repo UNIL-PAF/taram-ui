@@ -11,6 +11,11 @@ function setStepParametersCall(paramsObj){
     return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, paramsObj.params)
 }
 
+export function deleteAnalysisStep(id){
+    return axios.delete(globalConfig.urlBackend + "analysis-step/" + id)
+}
+
+
 export const addAnalysisStep = createAsyncThunk(
     'analysis-step/add-to',
     async (stepObj, thunkApi) => {
