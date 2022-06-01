@@ -6,6 +6,10 @@ function getAnalysisByResultId(resultId){
     return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
 }
 
+export function deleteAnalysis(analysisId){
+    return axios.delete(globalConfig.urlBackend + "analysis/" + analysisId)
+}
+
 export const fetchAnalysisByResultId = createAsyncThunk(
     'analysis/fetch-by-result-id',
     async (resultId, thunkApi) => {

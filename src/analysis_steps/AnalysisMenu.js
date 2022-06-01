@@ -17,10 +17,8 @@ export default function AnalysisMenu(props) {
         setIsModalVisible(false);
     };
 
-
     const confirmDelete = (stepId) => {
         deleteAnalysisStep(stepId)
-        console.log(stepId)
         message.success('Delete step.');
     };
 
