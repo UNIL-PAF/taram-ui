@@ -8,7 +8,6 @@ import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
 import axios from "axios";
 import globalConfig from "../globalConfig";
-import {deleteAnalysisStep} from "./BackendAnalysisSteps";
 import {deleteAnalysis} from "../analysis/BackendAnalysis";
 
 export default function AnalysisStep(props) {
