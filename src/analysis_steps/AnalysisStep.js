@@ -38,6 +38,20 @@ export default function AnalysisStep(props) {
         message.success('Delete step.');
     };
 
+    const downloadPdf = (analysisId) => {
+        fetch(globalConfig.urlBackend + 'analysis/pdf/' + analysisId)
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'analysis_' + analysisId + '.pdf';
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
+    }
+
     return (<div className={"analysis-col"}>
             <h3>Analysis #{props.data.idx + 1} <span style={{float: "right"}}>
                 <Popconfirm
@@ -52,7 +66,7 @@ export default function AnalysisStep(props) {
                 &nbsp;
                 <PlayCircleOutlined style={{fontSize: '24px'}}/>
                 &nbsp;
-                <FilePdfOutlined style={{fontSize: '24px'}}/>
+                <FilePdfOutlined onClick={() => downloadPdf(props.data.id)} style={{fontSize: '24px'}}/>
                 &nbsp;
                 <Dropdown overlay={analysisMenuList} placement="bottomLeft"
                           arrow>
