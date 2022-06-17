@@ -4,6 +4,7 @@ import AnalysisMenu from "../AnalysisMenu"
 import InitialResultParams from "./InitialResultParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch, useSelector} from "react-redux";
+import StepComment from "../StepComment";
 
 export default function InitialResult(props) {
     const results = JSON.parse(props.data.results)
@@ -31,6 +32,7 @@ export default function InitialResult(props) {
         }>
             {results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}
             <p>Protein groups: <strong>{results.nrProteinGroups}</strong></p>
+            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
 }
