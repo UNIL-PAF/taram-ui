@@ -76,7 +76,7 @@ export default function AnalysisMenu(props) {
                       arrow disabled={buttonsDisabled}>
                 <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
             </Dropdown>
-            <Modal title="Parameters" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={1000}
+            <Modal title="Parameters" visible={isModalVisible} onOk={() => handleOk()} onCancel={() => handleCancel()} width={1000}
             >
                 {props.paramComponent}
             </Modal>

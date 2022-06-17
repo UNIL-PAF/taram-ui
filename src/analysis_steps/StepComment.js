@@ -1,46 +1,58 @@
 import React, {useEffect, useState} from "react";
-import {Button, Input, Space} from 'antd';
+import {Button, Col, Input, Row, Space} from 'antd';
 import {updateComment} from "./BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
+import {CloseCircleOutlined} from "@ant-design/icons";
+import './AnalysisStep.css'
 
 const {TextArea} = Input;
 
 export default function StepComment(props) {
-
     const [isEditing, setIsEditing] = useState(false);
     const [commentText, setCommentText] = useState(null)
+    const [mouseOver, setMouseOver] = useState(false)
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.comment) {
-            console.log("set comment", props.comment)
+            console.log("adapt comment text")
             setCommentText(props.comment)
         }
-    }, [props])
-
-    const addOrEdit = () => {
-        setIsEditing(!isEditing)
-    };
+    }, [props.comment])
 
     const save = () => {
         const stepObj = {stepId: props.stepId, resultId: props.resultId, comment: commentText}
-        console.log("save", stepObj)
-        dispatch(updateComment(stepObj))
         setIsEditing(!isEditing)
+        dispatch(updateComment(stepObj))
+    }
+
+    const deleteComment = () => {
+        const stepObj = {stepId: props.stepId, resultId: props.resultId, comment: null}
+        dispatch(updateComment(stepObj))
     }
 
     const cancel = () => {
         setIsEditing(!isEditing)
     }
 
-
     return (
         <>
             {!isEditing &&
-                <div style={{whiteSpace: 'pre-wrap'}}>
-                    {props.comment && <p>{props.comment}</p>}
-                    <Button onClick={addOrEdit} size={"small"}>{(props.comment ? "Edit" : "Add") + " comment"}</Button>
-                </div>
+                <Row onMouseEnter={() => setMouseOver(true)}
+                     onMouseLeave={() => setMouseOver(false)}
+                     align="top"
+                >
+                    <Col span={21}>
+                        {props.comment && <p style={{whiteSpace: 'pre-wrap'}} onClick={() => setIsEditing(true)}>{props.comment}</p>}
+                        {!props.comment && <div><Button onClick={() => setIsEditing(true)} size={"small"}>Add comment</Button></div>}
+                    </Col>
+                    <Col span={3}>
+                        {props.comment && mouseOver && <div>
+                            <Button className={"comment-button"} type={"text"} icon={<CloseCircleOutlined/>}
+                                    onClick={() => deleteComment()}></Button>
+                        </div>}
+                    </Col>
+                </Row>
             }
             {isEditing &&
                 <div>
@@ -49,8 +61,8 @@ export default function StepComment(props) {
                               defaultValue={commentText}
                     ></TextArea>
                     <Space>
-                        <Button onClick={save}>Save</Button>
-                        <Button onClick={cancel} danger>Cancel</Button>
+                        <Button onClick={() => save()} size={"small"}>Save</Button>
+                        <Button onClick={() => cancel()} size={"small"} danger>Cancel</Button>
                     </Space>
                 </div>
             }

@@ -73,13 +73,17 @@ export const setStepParameters = createAsyncThunk(
 )
 
 function updateCommentCall(stepObj) {
-    return axios.post(globalConfig.urlBackend + "analysis-step/comment/" + stepObj.stepId, stepObj.comment,
-        {
-            headers: {
-                'Content-Type': 'application/text'
-            }
-        }
-    )
+    if(stepObj.comment != null){
+        return axios.post(globalConfig.urlBackend + "analysis-step/comment/" + stepObj.stepId, stepObj.comment,
+            {
+                headers: {
+                    'Content-Type': 'application/text'
+                }
+            })
+    }else{
+        return axios.delete(globalConfig.urlBackend + "analysis-step/comment/" + stepObj.stepId)
+    }
+
 }
 
 export const updateComment = createAsyncThunk(

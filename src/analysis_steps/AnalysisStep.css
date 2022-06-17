@@ -2,3 +2,11 @@
     margin-bottom: 10px;
     box-shadow: 2px 2px 5px 1px lightgrey;
 }
+
+.comment-button:hover {
+    color: #ff4d4f;
+}
+
+.comment-button {
+    color: rgba(0,0,0,0.4);;
+}

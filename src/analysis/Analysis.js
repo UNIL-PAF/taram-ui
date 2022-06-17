@@ -8,8 +8,6 @@ import AnalysisStep from "../analysis_steps/AnalysisStep";
 import {selectCols} from "./analysisSlice";
 
 export default function Analysis() {
-    const [hideLoading, setHideLoading] = useState();
-
     const dispatch = useDispatch();
     const params = useParams();
     const analysisStatus = useSelector(state => state.analysis.status)
@@ -21,12 +19,8 @@ export default function Analysis() {
         if (analysisStatus === 'idle') {
             dispatch(fetchAnalysisByResultId(params.resultId))
             message.config({top: 60})
-        } else if (analysisStatus === 'loading') {
-            setHideLoading(message.loading("Loading data", 0))
-        } else {
-            message.destroy(hideLoading)
         }
-    }, [analysisStatus, dispatch, params.resultId, hideLoading])
+    }, [analysisStatus, params.resultId, analysisData])
 
     return (
         <div>
