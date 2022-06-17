@@ -4,6 +4,7 @@ import AnalysisMenu from "../AnalysisMenu";
 import TransformationParams from "./TransformationParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
+import StepComment from "../StepComment";
 
 export default function Transformation(props) {
     const dispatch = useDispatch();
@@ -35,6 +36,7 @@ export default function Transformation(props) {
                     <p>Imputation: <strong>{params.imputationType}</strong></p>
                 </div>
             }
+            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
 }

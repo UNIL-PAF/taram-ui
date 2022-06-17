@@ -6,6 +6,7 @@ import BoxPlotParams from "./BoxPlotParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import {replacePlotIfChanged} from "../CommonStep";
+import StepComment from "../StepComment";
 
 export default function BoxPlot(props) {
 
@@ -99,6 +100,7 @@ export default function BoxPlot(props) {
         }>
             <p>Boxplot</p>
             {selCol && <ReactECharts option={options}/>}
+            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
 }
