@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import './analysis.css'
 import {Alert, message} from 'antd';
@@ -20,7 +20,7 @@ export default function Analysis() {
             dispatch(fetchAnalysisByResultId(params.resultId))
             message.config({top: 60})
         }
-    }, [analysisStatus, params.resultId, analysisData])
+    }, [analysisStatus, params.resultId, analysisData, dispatch])
 
     return (
         <div>

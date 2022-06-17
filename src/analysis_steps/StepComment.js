@@ -15,7 +15,6 @@ export default function StepComment(props) {
 
     useEffect(() => {
         if (props.comment) {
-            console.log("adapt comment text")
             setCommentText(props.comment)
         }
     }, [props.comment])
