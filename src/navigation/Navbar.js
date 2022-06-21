@@ -46,6 +46,12 @@ class Navbar extends React.Component {
                                 Analysis
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key={"templates"} onClick={(payload) => this.clickMainMenu(payload)}>
+                            <Link to=
+                                      {"/templates"}>
+                                Templates
+                            </Link>
+                        </Menu.Item>
                     </Menu>
                 </Col>
                 <Col span={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
