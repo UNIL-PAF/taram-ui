@@ -1,36 +1,74 @@
 import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchAllTemplates} from "./BackendTemplates";
+import {Alert, Layout, message, Space, Table} from 'antd';
+
+const {Content} = Layout;
 
 export default function Templates() {
-    /*
     const dispatch = useDispatch();
-    const params = useParams();
-    const analysisStatus = useSelector(state => state.analysis.status)
-    const analysisData = useSelector(state => state.analysis.data)
-    const analysisError = useSelector(state => state.analysis.error)
-    const cols = useSelector(state => selectCols(state))
+    const templatesData = useSelector(state => state.templates.data)
+    const templatesStatus = useSelector(state => state.templates.status)
+    const templatesError = useSelector(state => state.templates.error)
 
     useEffect(() => {
-        if (analysisStatus === 'idle') {
-            dispatch(fetchAnalysisByResultId(params.resultId))
+        if (templatesStatus === 'idle') {
+            dispatch(fetchAllTemplates())
             message.config({top: 60})
         }
-    }, [analysisStatus, params.resultId, analysisData, dispatch])
+    }, [templatesStatus, templatesData, dispatch])
+
+    const columns = [
+        {
+            title: 'Id',
+            dataIndex: 'id',
+            key: 'id',
+            render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Last modification',
+            dataIndex: 'lastModifDate',
+            key: 'lastModifDate',
+            sorter: (a, b) =>
+                a.lastModifDate &&
+                a.lastModifDate > b.lastModifDate &&
+                b.lastModifDate
+                    ? 1
+                    : -1,
+            defaultSortOrder: "ascend"
+        },
+        {
+            title: 'Nr of steps',
+            dataIndex: 'nrSteps',
+            key: 'nrSteps',
+        },
+    ]
 
 
-            {analysisError && <Alert
+    return (
+        <div>
+            {templatesError && <Alert
                 message="Error"
-                description={analysisError}
+                description={templatesError}
                 type="error"
                 showIcon
                 closable
             />}
-
-     */
-    return (
-        <div>
-
-            <h1>Templates</h1>
-
+            <Content>
+                <Space direction="vertical">
+                    <Table columns={columns} dataSource={templatesData}/>
+                </Space>
+            </Content>
         </div>
     );
 }
