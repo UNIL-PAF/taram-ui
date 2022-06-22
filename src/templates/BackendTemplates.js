@@ -7,9 +7,23 @@ function getAllTemplates() {
     return axios.get(globalConfig.urlBackend + "template")
 }
 
-export function deleteAnalysis(analysisId) {
-    return axios.delete(globalConfig.urlBackend + "analysis/" + analysisId)
+function deleteTemplateCall(templateId) {
+    return axios.delete(globalConfig.urlBackend + "template/" + templateId)
 }
+
+export const deleteTemplate = createAsyncThunk('templates/delete', async (templateId, thunkApi) => {
+    try {
+        await deleteTemplateCall(templateId)
+    } catch (err) {
+        let error = err // cast the error for access
+        if (!error.response) {
+            throw err
+        }
+        return thunkApi.rejectWithValue(error.response.data)
+    } finally {
+        thunkApi.dispatch(fetchAllTemplates())
+    }
+})
 
 export const fetchAllTemplates = createAsyncThunk('templates/fetch-all', async (resultId, thunkApi) => {
     try {

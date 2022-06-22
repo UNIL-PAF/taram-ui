@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Layout, message, Popconfirm, Space, Table, Input} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
-import {updateTemplate} from "./BackendTemplates";
+import {deleteTemplate, updateTemplate} from "./BackendTemplates";
 import {useDispatch} from "react-redux";
 
 const {Content} = Layout;
@@ -12,7 +12,7 @@ export default function TemplatesTable(props) {
     const dispatch = useDispatch();
 
     const confirmDelete = (templateId) => {
-        console.log("Delete " + templateId)
+        dispatch(deleteTemplate(templateId))
         message.success('Delete template [' + templateId + '].');
     };
 
