@@ -4,7 +4,7 @@ import './analysis.css'
 import {Alert, message} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
-import AnalysisStep from "../analysis_steps/AnalysisStep";
+import AnalysisSteps from "../analysis_steps/AnalysisSteps";
 import {selectCols} from "./analysisSlice";
 
 export default function Analysis() {
@@ -35,7 +35,7 @@ export default function Analysis() {
             {analysisData && <div className={"analysis-container"}>
                 {
                     cols.map(colId => {
-                        return <AnalysisStep analysisIdx={colId} data={analysisData[colId]} key={colId}/>
+                        return <AnalysisSteps analysisIdx={colId} data={analysisData[colId]} key={colId}/>
                     })
                 }
             </div>

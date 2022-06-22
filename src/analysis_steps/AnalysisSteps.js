@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
 import {EllipsisOutlined} from "@ant-design/icons";
@@ -8,11 +8,13 @@ import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
 import AnalysisMenu from "./AnalysisMenu";
 
-export default function AnalysisStep(props) {
+export default function AnalysisSteps(props) {
+    const [menuIsVisible, setMenuIsVisible] = useState(false)
+
 
     return (<div className={"analysis-col"}>
             <h3>Analysis #{props.data.idx + 1} <span style={{float: "right"}}>
-                <Dropdown trigger={['click']} overlay={<AnalysisMenu analysisId={props.data.id}></AnalysisMenu>} placement="bottomLeft"
+                <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)} overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}></AnalysisMenu>} placement="bottomLeft"
                           arrow>
                     <Button type={"text"} icon={<EllipsisOutlined style={{fontSize: '24px'}}/>}></Button>
                 </Dropdown>
