@@ -1,12 +1,24 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import globalConfig from "../globalConfig";
-import {Button, Menu, Modal, Popconfirm} from "antd";
+import {Alert, Button, Menu, message, Modal, Popconfirm} from "antd";
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchAllTemplates} from "../templates/BackendTemplates";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch();
+
+    const templatesData = useSelector(state => state.templates.data)
+    const templatesStatus = useSelector(state => state.templates.status)
+    const templatesError = useSelector(state => state.templates.error)
+
+    useEffect(() => {
+        if (templatesStatus === 'idle') {
+            dispatch(fetchAllTemplates())
+            message.config({top: 60})
+        }
+    }, [templatesStatus, templatesData, dispatch])
 
     const handleModalOk = () => {
         setIsModalVisible(false);
@@ -53,6 +65,13 @@ export default function AnalysisMenu(props) {
 
     return (
         <div align={"right"}>
+            {templatesError && <Alert
+                message="Error"
+                description={templatesError}
+                type="error"
+                showIcon
+                closable
+            />}
             <Button onClick={() => closeMenu()}>Close</Button>
             <Menu selectable={false} onClick={() => closeMenu()} >
                 <Menu.Item onClick={() => downloadPdf()}
@@ -72,7 +91,7 @@ export default function AnalysisMenu(props) {
                 <Menu.Divider key={'divider-2'}></Menu.Divider>
                 <Menu.Item onClick={() => loadTemplate(99)}
                            key={'load-template'}>
-                    <span>Run analysis from template</span>
+                    <span>Run analysis from template {templatesData ? templatesData.length : 0}</span>
                 </Menu.Item>
                 <Menu.Item onClick={() => setIsModalVisible(true)}
                            key={'save-template'}>
