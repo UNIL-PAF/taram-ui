@@ -11,10 +11,12 @@ import AnalysisMenu from "./AnalysisMenu";
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
 
-
     return (<div className={"analysis-col"}>
             <h3>Analysis #{props.data.idx + 1} <span style={{float: "right"}}>
-                <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)} overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}></AnalysisMenu>} placement="bottomLeft"
+                <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
+                          overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
+                                                 resultsId={props.data.result.id}></AnalysisMenu>}
+                          placement="bottomLeft"
                           arrow>
                     <Button type={"text"} icon={<EllipsisOutlined style={{fontSize: '24px'}}/>}></Button>
                 </Dropdown>
@@ -31,10 +33,10 @@ export default function AnalysisSteps(props) {
                                                    data={step} key={step.id}/>
                         case 'boxplot':
                             return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                   data={step} key={step.id}/>
+                                            data={step} key={step.id}/>
                         case 'transformation':
                             return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                            data={step} key={step.id}/>
+                                                   data={step} key={step.id}/>
                         default:
                             return null
                     }

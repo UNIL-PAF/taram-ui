@@ -6,6 +6,7 @@ import {DeleteOutlined, PlusCircleOutlined, SettingOutlined, ZoomInOutlined} fro
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const handleOk = () => {
         setIsModalVisible(false);
@@ -20,8 +21,6 @@ export default function AnalysisStepMenu(props) {
         deleteAnalysisStep(stepId)
         message.success('Delete step.');
     };
-
-    const dispatch = useDispatch();
 
     const clickParams = function () {
         setIsModalVisible(true);

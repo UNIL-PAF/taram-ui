@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import axios from "axios";
 import globalConfig from "../globalConfig";
 import {Button, Menu, Modal, Popconfirm} from "antd";
-import {deleteAnalysis} from "../analysis/BackendAnalysis";
+import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
+import {useDispatch} from "react-redux";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const handleModalOk = () => {
         setIsModalVisible(false);
@@ -15,12 +16,16 @@ export default function AnalysisMenu(props) {
         setIsModalVisible(false);
     };
 
+    const clickDelete = () => {
+        dispatch(deleteAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
+    }
+
     const clickDuplicate = () => {
-        axios.post(globalConfig.urlBackend + "analysis/duplicate/" + props.analysisId)
+        dispatch(duplicateAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
     }
 
     const clickCopy = () => {
-        axios.post(globalConfig.urlBackend + "analysis/copy/" + props.analysisId)
+        dispatch(copyAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
     }
 
     const downloadPdf = () => {
@@ -77,7 +82,7 @@ export default function AnalysisMenu(props) {
                 <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
                         title="Are you sure you want to delete this analysis?"
-                        onConfirm={() => deleteAnalysis()}
+                        onConfirm={() => clickDelete()}
                         okText="Yes"
                         cancelText="Cancel"
                     >

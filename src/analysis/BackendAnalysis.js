@@ -2,12 +2,31 @@ import axios from 'axios';
 import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
-function getAnalysisByResultId(resultId){
-    return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
+function callDeleteAnalysis(analysisId){
+    return axios.delete(globalConfig.urlBackend + "analysis/" + analysisId)
 }
 
-export function deleteAnalysis(analysisId){
-    return axios.delete(globalConfig.urlBackend + "analysis/" + analysisId)
+export const deleteAnalysis = createAsyncThunk(
+    'analysis/delete-analysis',
+    async (analysisObj, thunkApi) => {
+        try {
+            const response = await callDeleteAnalysis(analysisObj.analysisId)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        }finally {
+            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+        }
+    }
+)
+
+
+function getAnalysisByResultId(resultId){
+    return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
 }
 
 export const fetchAnalysisByResultId = createAsyncThunk(
@@ -22,6 +41,50 @@ export const fetchAnalysisByResultId = createAsyncThunk(
                 throw err
             }
             return thunkApi.rejectWithValue(error.response.data)
+        }
+    }
+)
+
+function callDuplicateAnalysis(analysisId){
+    axios.post(globalConfig.urlBackend + "analysis/duplicate/" + analysisId)
+}
+
+export const duplicateAnalysis = createAsyncThunk(
+    'analysis/duplicate-analysis',
+    async (analysisObj, thunkApi) => {
+        try {
+            const response = await callDuplicateAnalysis(analysisObj.analysisId)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        }finally {
+            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+        }
+    }
+)
+
+function callCopyAnalysis(analysisId){
+    axios.post(globalConfig.urlBackend + "analysis/copy/" + analysisId)
+}
+
+export const copyAnalysis = createAsyncThunk(
+    'analysis/copy-analysis',
+    async (analysisObj, thunkApi) => {
+        try {
+            const response = await callCopyAnalysis(analysisObj.analysisId)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        }finally {
+            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
         }
     }
 )
