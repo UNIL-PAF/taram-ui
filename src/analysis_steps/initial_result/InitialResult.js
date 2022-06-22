@@ -1,6 +1,6 @@
 import React from "react";
 import {Card} from 'antd';
-import AnalysisMenu from "../AnalysisMenu"
+import AnalysisStepMenu from "../AnalysisStepMenu"
 import InitialResultParams from "./InitialResultParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch, useSelector} from "react-redux";
@@ -25,9 +25,9 @@ export default function InitialResult(props) {
 
     return (
         <Card className={"analysis-step-card"} title={"Initial Result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                          onClickOk={onClickOk}
-                          paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}
+            <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
+                              onClickOk={onClickOk}
+                              paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}
                                                           data={props.data}></InitialResultParams>}/>
         }>
             {results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Card} from "antd";
-import AnalysisMenu from "../AnalysisMenu";
+import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import BoxPlotParams from "./BoxPlotParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
@@ -91,9 +91,9 @@ export default function BoxPlot(props) {
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                          onClickOk={onClickOk}
-                          paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
+            <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
+                              onClickOk={onClickOk}
+                              paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                          data={props.data} setSelCol={setSelCol}
                                                          selCol={selCol} setLogScale={setLogScale}
                                                          logScale={logScale}></BoxPlotParams>}/>

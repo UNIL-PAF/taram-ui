@@ -1,7 +1,6 @@
 import axios from 'axios';
 import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {fetchAnalysisByResultId} from "../analysis/BackendAnalysis";
 
 function getAllTemplates() {
     return axios.get(globalConfig.urlBackend + "template")
@@ -13,7 +12,7 @@ function deleteTemplateCall(templateId) {
 
 export const deleteTemplate = createAsyncThunk('templates/delete', async (templateId, thunkApi) => {
     try {
-        await deleteTemplateCall(templateId)
+        await deleteTemplateCall(templateId )
     } catch (err) {
         let error = err // cast the error for access
         if (!error.response) {

@@ -1,85 +1,78 @@
-import React, {useState} from "react";
-import {Button, Dropdown, Menu, Modal, Rate} from 'antd';
-import {useDispatch} from "react-redux";
-import {addAnalysisStep, deleteAnalysisStep} from "./BackendAnalysisSteps";
-import {PlusCircleOutlined, SettingOutlined, ZoomInOutlined, DeleteOutlined} from "@ant-design/icons";
-import { Popconfirm, message } from 'antd';
+import React from "react";
+import axios from "axios";
+import globalConfig from "../globalConfig";
+import {Menu, Popconfirm} from "antd";
+import {deleteAnalysis} from "../analysis/BackendAnalysis";
 
 export default function AnalysisMenu(props) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const handleOk = () => {
-        setIsModalVisible(false);
-        props.onClickOk()
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    const confirmDelete = (stepId) => {
-        deleteAnalysisStep(stepId)
-        message.success('Delete step.');
-    };
-
-    const dispatch = useDispatch();
-
-    const clickParams = function () {
-        setIsModalVisible(true);
+    const clickDuplicate = () => {
+        axios.post(globalConfig.urlBackend + "analysis/duplicate/" + props.data.id)
     }
 
-    const clickAddStep = function (stepId, type, resultId) {
-        const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
-        dispatch(addAnalysisStep(stepObj))
+    const clickCopy = () => {
+        axios.post(globalConfig.urlBackend + "analysis/copy/" + props.data.id)
     }
 
+    const downloadPdf = (analysisId) => {
+        fetch(globalConfig.urlBackend + 'analysis/pdf/' + analysisId)
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'analysis_' + analysisId + '.pdf';
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
+    }
 
-    const analysisMenuList = (
-        <Menu>
-            <Menu.Item onClick={() => clickAddStep(props.stepId, "quality-control", props.resultId)}
-                       key={'quality-control'}>
-                <span>Quality control</span>
-            </Menu.Item>
-            <Menu.Item onClick={() => clickAddStep(props.stepId, "boxplot", props.resultId)}
-                       key={'boxplot'}>
-                <span>Boxplot</span>
-            </Menu.Item>
-            <Menu.Item onClick={() => clickAddStep(props.stepId, "transformation", props.resultId)}
-                       key={'transformation'}>
-                <span>Transformation</span>
-            </Menu.Item>
-        </Menu>
-    )
+    const saveTemplate = (analysisId) => {
+        console.log("save template", analysisId)
+    }
 
-    const buttonsDisabled = props.status !== "done"
-
-    if(props.status === "error") console.log(props)
+    const loadTemplate = (templateId) => {
+        console.log("run template", templateId)
+    }
 
     return (
         <>
-            <span>{props.status}</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Rate count={1}/>
-            <Popconfirm
-                title="Are you sure to delete this step?"
-                onConfirm={() => confirmDelete(props.stepId)}
-                okText="Yes"
-                cancelText="Cancel"
-            >
-                <Button type={"text"} icon={<DeleteOutlined/>} disabled={buttonsDisabled}></Button>
-            </Popconfirm>
-
-            <Button type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled}></Button>
-            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
-                    onClick={() => clickParams()}></Button>
-            <Dropdown overlay={analysisMenuList} placement="bottomLeft"
-                      arrow disabled={buttonsDisabled}>
-                <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
-            </Dropdown>
-            <Modal title="Parameters" visible={isModalVisible} onOk={() => handleOk()} onCancel={() => handleCancel()} width={1000}
-            >
-                {props.paramComponent}
-            </Modal>
+            <Menu selectable={false}>
+                <Menu.Item onClick={() => downloadPdf(props.analysisId)}
+                           key={'pdf'}>
+                    <span>Download PDF</span>
+                </Menu.Item>
+                <Menu.Divider key={'divider-1'}></Menu.Divider>
+                <Menu.Item onClick={() => clickDuplicate()}
+                           key={'copy-current'}>
+                    <span>Create a copy of analysis</span>
+                </Menu.Item>
+                <Menu.Item onClick={() => clickCopy()}
+                           key={'start-new'}>
+                    <span>Start new a new analysis</span>
+                </Menu.Item>
+                <Menu.Divider key={'divider-2'}></Menu.Divider>
+                <Menu.Item onClick={() => loadTemplate(99)}
+                           key={'load-template'}>
+                    <span>Run analysis from template</span>
+                </Menu.Item>
+                <Menu.Item onClick={() => saveTemplate(props.analysisId)}
+                           key={'save-template'}>
+                    <span>Save analysis as template</span>
+                </Menu.Item>
+                <Menu.Divider key={'divider-3'}></Menu.Divider>
+                <Menu.Item key={'delete-analysis'} danger={true}>
+                    <Popconfirm
+                        title="Are you sure you want to delete this analysis?"
+                        onConfirm={() => deleteAnalysis(props.analysisId)}
+                        okText="Yes"
+                        cancelText="Cancel"
+                    >
+                        <span>Delete analysis</span>
+                    </Popconfirm>
+                </Menu.Item>
+            </Menu>
         </>
 
 

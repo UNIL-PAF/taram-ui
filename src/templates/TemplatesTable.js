@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Layout, message, Popconfirm, Space, Table, Input} from "antd";
+import {Button, Input, Layout, message, Popconfirm, Space, Table} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {deleteTemplate, updateTemplate} from "./BackendTemplates";
 import {useDispatch} from "react-redux";
@@ -22,7 +22,7 @@ export default function TemplatesTable(props) {
     }
 
     const saveEntry = () => {
-        if(editFieldValue && editField){
+        if (editFieldValue && editField) {
             dispatch(updateTemplate({id: editField.id, name: editField.field, value: editFieldValue}))
             setEditField(undefined)
             setEditFieldValue(undefined)
@@ -37,21 +37,19 @@ export default function TemplatesTable(props) {
 
     const renderEditField = (field) => {
         return (_, record) => {
-            {
-                if (editField && editField.field === field && record.id === editField.id) {
-                    return (
-                        <Space onKeyPress={(ev) => pressedKey(ev)} onBlur={() => saveEntry()}>
-                            <Input defaultValue={_} onChange={(e) => setEditFieldValue(e.target.value)}/>
-                        </Space>
-                    )
-                } else {
-                    return (
-                        <Space>
-                            {_}
-                        </Space>
-                    )
+            if (editField && editField.field === field && record.id === editField.id) {
+                return (
+                    <Space onKeyPress={(ev) => pressedKey(ev)} onBlur={() => saveEntry()}>
+                        <Input defaultValue={_} onChange={(e) => setEditFieldValue(e.target.value)}/>
+                    </Space>
+                )
+            } else {
+                return (
+                    <Space>
+                        {_}
+                    </Space>
+                )
 
-                }
             }
         }
     }

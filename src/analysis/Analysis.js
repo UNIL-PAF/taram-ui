@@ -31,7 +31,6 @@ export default function Analysis() {
                 showIcon
                 closable
             />}
-            <h1>Analysis</h1>
 
             {analysisData && <div className={"analysis-container"}>
                 {
