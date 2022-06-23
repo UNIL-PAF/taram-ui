@@ -5,6 +5,13 @@
     border-radius: 5px;
 }
 
+.analysis-menu-title {
+    color: grey;
+}
+
+.analysis-menu-close {
+    float: right;
+}
 
 .analysis-container {
     display: flex;

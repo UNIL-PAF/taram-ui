@@ -68,7 +68,7 @@ export default function AnalysisMenu(props) {
     }
 
     return (
-        <div align={"right"} className={"analysis-menu"}>
+        <div align={"center"} className={"analysis-menu"}>
             {templatesError && <Alert
                 message="Error"
                 description={templatesError}
@@ -76,7 +76,7 @@ export default function AnalysisMenu(props) {
                 showIcon
                 closable
             />}
-            <Button onClick={() => closeMenu()} type={"text"} icon={<CloseOutlined/>}></Button>
+            <div><span className={"analysis-menu-title"}>Analysis menu</span><Button className={"analysis-menu-close"} onClick={() => closeMenu()} type={"text"} icon={<CloseOutlined/>}></Button></div>
             <Menu selectable={false} onClick={() => closeMenu()}>
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}

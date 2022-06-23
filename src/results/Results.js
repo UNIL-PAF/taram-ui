@@ -20,7 +20,6 @@ export default function Results(props) {
     return (
         <Content>
             <Space direction="vertical">
-                <h1>Results</h1>
                 <BrowseResults refreshResults={refreshResults}/>
                 <ResultsTable results={results}/>
             </Space>
