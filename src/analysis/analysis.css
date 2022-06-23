@@ -1,3 +1,9 @@
+.analysis-menu {
+    background-color: white;
+    box-shadow: 2px 2px 5px 1px lightgrey;
+}
+
+
 .analysis-container {
     display: flex;
     overflow: scroll;

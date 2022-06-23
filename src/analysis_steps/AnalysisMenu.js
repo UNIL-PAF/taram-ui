@@ -4,6 +4,8 @@ import {Alert, Button, Menu, message, Modal, Popconfirm} from "antd";
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAllTemplates} from "../templates/BackendTemplates";
+import '../analysis/analysis.css'
+import {CloseOutlined} from "@ant-design/icons";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -64,7 +66,7 @@ export default function AnalysisMenu(props) {
     }
 
     return (
-        <div align={"right"}>
+        <div align={"right"} className={"analysis-menu"}>
             {templatesError && <Alert
                 message="Error"
                 description={templatesError}
@@ -72,7 +74,7 @@ export default function AnalysisMenu(props) {
                 showIcon
                 closable
             />}
-            <Button onClick={() => closeMenu()}>Close</Button>
+            <Button onClick={() => closeMenu()} type={"text"} icon={<CloseOutlined/>}></Button>
             <Menu selectable={false} onClick={() => closeMenu()} >
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}
