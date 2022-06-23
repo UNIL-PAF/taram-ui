@@ -56,3 +56,22 @@ export const updateTemplate = createAsyncThunk('templates/update', async (templa
     }
 })
 
+function addTemplateCall(templateObj) {
+    return axios.post(globalConfig.urlBackend + "template/from-analysis/" + templateObj.analysisId + "?name=" + encodeURIComponent(templateObj.name) + "&description=" + encodeURIComponent(templateObj.description))
+}
+
+export const addTemplate = createAsyncThunk('templates/add', async (templateObj, thunkApi) => {
+    try {
+        const response = await addTemplateCall(templateObj)
+        return response.data
+    } catch (err) {
+        let error = err // cast the error for access
+        if (!error.response) {
+            throw err
+        }
+        return thunkApi.rejectWithValue(error.response.data)
+    } finally {
+        thunkApi.dispatch(fetchAllTemplates())
+    }
+})
+

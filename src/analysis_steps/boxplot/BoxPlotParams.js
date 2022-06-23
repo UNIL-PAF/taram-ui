@@ -16,7 +16,6 @@ export default function BoxPlotParams(props) {
     }
 
     function checkboxChange(e){
-        console.log(`checked = ${e.target.checked}`);
         props.setLogScale(e.target.checked)
     }
 

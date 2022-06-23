@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from "react";
 import globalConfig from "../globalConfig";
-import {Alert, Button, Menu, message, Modal, Popconfirm, Tooltip} from "antd";
+import {Alert, Button, Col, Input, Menu, message, Modal, Popconfirm, Row, Tooltip} from "antd";
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchAllTemplates} from "../templates/BackendTemplates";
+import {addTemplate, fetchAllTemplates} from "../templates/BackendTemplates";
 import '../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [nameText, setNameText] = useState("");
+    const [descriptionText, setDescriptionText] = useState("");
     const dispatch = useDispatch();
 
     const templatesData = useSelector(state => state.templates.data)
@@ -23,6 +25,7 @@ export default function AnalysisMenu(props) {
     }, [templatesStatus, templatesData, dispatch])
 
     const handleModalOk = () => {
+        dispatch(addTemplate({analysisId: props.analysisId, name: nameText, description: descriptionText}))
         setIsModalVisible(false);
     };
 
@@ -95,8 +98,8 @@ export default function AnalysisMenu(props) {
                         <Menu.Item
                             key={t.id}
                             onClick={() => loadTemplate(t.id)}>
-                            <Tooltip title={t.name}>
-                                <span>{t.description}</span>
+                            <Tooltip title={t.description} placement={"right"}>
+                                <span>{t.name}</span>
                             </Tooltip>
                         </Menu.Item>)}
                 </Menu.SubMenu>
@@ -117,9 +120,15 @@ export default function AnalysisMenu(props) {
                 </Menu.Item>
             </Menu>
             <Modal title="Save analysis as template" visible={isModalVisible} onOk={() => handleModalOk()}
-                   onCancel={() => handleModalCancel()} width={1000}
+                   onCancel={() => handleModalCancel()}
             >
-                <span>Template name</span>
+                    <Row gutter={[16, 16]}>
+                        <Col span={8}><span>Name</span></Col>
+                        <Col span={16}><Input onChange={(e) => setNameText(e.target.value)}></Input></Col>
+
+                        <Col span={8}><span>Description</span></Col>
+                        <Col span={16}><Input onChange={(e) => setDescriptionText(e.target.value)}></Input></Col>
+                    </Row>
             </Modal>
         </div>
 
