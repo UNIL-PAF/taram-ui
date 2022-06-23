@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import globalConfig from "../globalConfig";
-import {Alert, Button, Menu, message, Modal, Popconfirm} from "antd";
+import {Alert, Button, Menu, message, Modal, Popconfirm, Tooltip} from "antd";
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAllTemplates} from "../templates/BackendTemplates";
@@ -61,7 +61,6 @@ export default function AnalysisMenu(props) {
     }
 
     const closeMenu = () => {
-        console.log("close menu")
         props.setMenuIsVisible(false)
     }
 
@@ -75,7 +74,7 @@ export default function AnalysisMenu(props) {
                 closable
             />}
             <Button onClick={() => closeMenu()} type={"text"} icon={<CloseOutlined/>}></Button>
-            <Menu selectable={false} onClick={() => closeMenu()} >
+            <Menu selectable={false} onClick={() => closeMenu()}>
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}
                 >
@@ -91,10 +90,16 @@ export default function AnalysisMenu(props) {
                     <span>Start new a new analysis</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-2'}></Menu.Divider>
-                <Menu.Item onClick={() => loadTemplate(99)}
-                           key={'load-template'}>
-                    <span>Run analysis from template {templatesData ? templatesData.length : 0}</span>
-                </Menu.Item>
+                <Menu.SubMenu key={"sub-1"} title={"Run analysis from template"}>
+                    {templatesData && templatesData.map(t =>
+                        <Menu.Item
+                            key={t.id}
+                            onClick={() => loadTemplate(t.id)}>
+                            <Tooltip title={t.name}>
+                                <span>{t.description}</span>
+                            </Tooltip>
+                        </Menu.Item>)}
+                </Menu.SubMenu>
                 <Menu.Item onClick={() => setIsModalVisible(true)}
                            key={'save-template'}>
                     <span>Save analysis as template</span>
@@ -119,5 +124,6 @@ export default function AnalysisMenu(props) {
         </div>
 
 
-    );
+    )
+        ;
 }
