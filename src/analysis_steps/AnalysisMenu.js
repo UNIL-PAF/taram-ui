@@ -105,7 +105,7 @@ export default function AnalysisMenu(props) {
                 </Menu.SubMenu>
                 <Menu.Item onClick={() => setIsModalVisible(true)}
                            key={'save-template'}>
-                    <span>Save analysis as template</span>
+                    <span>Save analysis as template...</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 <Menu.Item key={'delete-analysis'} danger={true}>
