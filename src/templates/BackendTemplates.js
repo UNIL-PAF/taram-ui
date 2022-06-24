@@ -1,6 +1,7 @@
 import axios from 'axios';
 import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import {fetchAnalysisByResultId} from "../analysis/BackendAnalysis";
 
 function getAllTemplates() {
     return axios.get(globalConfig.urlBackend + "template")
@@ -72,6 +73,25 @@ export const addTemplate = createAsyncThunk('templates/add', async (templateObj,
         return thunkApi.rejectWithValue(error.response.data)
     } finally {
         thunkApi.dispatch(fetchAllTemplates())
+    }
+})
+
+function runTemplateCall(templateObj) {
+    return axios.post(globalConfig.urlBackend + "template/run/" + templateObj.templateId + "/analysis/" + templateObj.analysisId)
+}
+
+export const runTemplate = createAsyncThunk('templates/run', async (templateObj, thunkApi) => {
+    try {
+        const response = await runTemplateCall(templateObj)
+        return response.data
+    } catch (err) {
+        let error = err // cast the error for access
+        if (!error.response) {
+            throw err
+        }
+        return thunkApi.rejectWithValue(error.response.data)
+    } finally {
+        thunkApi.dispatch(fetchAnalysisByResultId(templateObj.resultsId))
     }
 })
 
