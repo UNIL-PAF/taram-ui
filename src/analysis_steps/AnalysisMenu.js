@@ -86,14 +86,14 @@ export default function AnalysisMenu(props) {
                 <Menu.Divider key={'divider-1'}></Menu.Divider>
                 <Menu.Item onClick={() => clickDuplicate()}
                            key={'copy-current'}>
-                    <span>Create a copy of analysis</span>
+                    <span>Duplicate analysis</span>
                 </Menu.Item>
                 <Menu.Item onClick={() => clickCopy()}
                            key={'start-new'}>
-                    <span>Start new a new analysis</span>
+                    <span>Start a new analysis</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-2'}></Menu.Divider>
-                <Menu.SubMenu key={"sub-1"} title={"Run analysis from template"}>
+                <Menu.SubMenu key={"sub-1"} title={"Run template"}>
                     {templatesData && templatesData.map(t =>
                         <Menu.Item
                             key={t.id}
