@@ -20,13 +20,13 @@
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 8px;
+    padding-top: 10px;
     position: absolute;
     right: 0;
-    top: 80px;
+    top: 60px;
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
-
 }
 
 .analysis-col {
@@ -34,7 +34,7 @@
     box-sizing: border-box;
     display: inline-block;
     height: 100%;
-    margin: 0 15px;
+    margin: 0 10px 0 10px;
     vertical-align: top;
     white-space: nowrap;
     width: 500px;

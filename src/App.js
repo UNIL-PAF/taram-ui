@@ -7,7 +7,7 @@ import MyRoutes from "./navigation/MyRoutes";
 function App() {
     return (
         <div className="App">
-            <Layout className="layout">
+            <Layout>
                 <MyRoutes/>
             </Layout>
         </div>
