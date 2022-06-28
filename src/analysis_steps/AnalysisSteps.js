@@ -22,7 +22,7 @@ export default function AnalysisSteps(props) {
                 </Dropdown>
 
             </span></h3>
-            <div>
+            <div className={"analysis-col-content"}>
                 {props.data.analysisSteps && props.data.analysisSteps.map(step => {
                     switch (step.type) {
                         case 'initial-result':
