@@ -98,7 +98,6 @@ export default function BoxPlot(props) {
                                                          selCol={selCol} setLogScale={setLogScale}
                                                          logScale={logScale}></BoxPlotParams>}/>
         }>
-            <p>Boxplot</p>
             {selCol && <ReactECharts option={options}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
