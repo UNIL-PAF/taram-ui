@@ -24,7 +24,7 @@ export default function InitialResult(props) {
     }
 
     return (
-        <Card className={"analysis-step-card"} title={"Initial Result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
+        <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               onClickOk={onClickOk}
                               paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}

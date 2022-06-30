@@ -10,3 +10,8 @@
 .comment-button {
     color: rgba(0,0,0,0.4);;
 }
+
+.copy-difference {
+    color: #ff4d4f;
+    font-style: italic;
+}

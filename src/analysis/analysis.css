@@ -27,7 +27,11 @@
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Blue_sky_and_sea.jpg/2560px-Blue_sky_and_sea.jpg")
+    background-image: linear-gradient(to bottom, deepskyblue,lightblue,lightblue,linen, lightpink);
+    /*
+     background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Blue_sky_and_sea.jpg/2560px-Blue_sky_and_sea.jpg")
+     */
+
 }
 
 .analysis-col {

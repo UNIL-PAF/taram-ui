@@ -98,6 +98,7 @@ export default function BoxPlot(props) {
                                                          selCol={selCol} setLogScale={setLogScale}
                                                          logScale={logScale}></BoxPlotParams>}/>
         }>
+            {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {selCol && <ReactECharts option={options}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
