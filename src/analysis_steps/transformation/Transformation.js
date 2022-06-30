@@ -29,6 +29,7 @@ export default function Transformation(props) {
                                                                 localParams={localParams}
                                                                 setLocalParams={setLocalParams}></TransformationParams>}/>
         }>
+            {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {params &&
                 <div>
                     <p>Transformation: <strong>{params.transformationType}</strong></p>
