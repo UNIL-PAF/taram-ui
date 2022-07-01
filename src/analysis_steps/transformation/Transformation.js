@@ -23,7 +23,7 @@ export default function Transformation(props) {
         <Card className={'analysis-step-card'} title={"Transformation"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status} errorMsg={props.data.error}
-                              onClickOk={onClickOk}
+                              onClickOk={onClickOk} error={props.data.error}
                               paramComponent={<TransformationParams analysisIdx={props.analysisIdx}
                                                                 data={props.data}
                                                                 localParams={localParams}

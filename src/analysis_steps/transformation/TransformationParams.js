@@ -51,7 +51,8 @@ export default function TransformationParams(props) {
             <Select defaultValue={props.localParams.normalizationType} style={{width: 250}} onChange={normChange}>
                 <Option value={'none'}>None</Option>
                 <Option value={'median'}>Median</Option>
-                {/*<Option value={'mean'}>Mean</Option>*/}
+                <Option value={'mean'}>Mean</Option>
+                <Option value={'provoke-error'}>Provoke error</Option>
             </Select>
             <br></br>
             <br></br>

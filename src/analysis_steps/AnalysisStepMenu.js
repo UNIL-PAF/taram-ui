@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate} from 'antd';
+import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
 import {useDispatch} from "react-redux";
 import {addAnalysisStep, deleteAnalysisStep} from "./BackendAnalysisSteps";
-import {DeleteOutlined, PlusCircleOutlined, SettingOutlined, ZoomInOutlined} from "@ant-design/icons";
+import {DeleteOutlined, PlusCircleOutlined, SettingOutlined, ZoomInOutlined, ClockCircleOutlined, SyncOutlined} from "@ant-design/icons";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -49,12 +49,34 @@ export default function AnalysisStepMenu(props) {
         </Menu>
     )
 
-    const buttonsDisabled = props.status !== "done"
+    const buttonsDisabled = (props.status === "running" || props.status === "idle")
+
+    const statusTag = () => {
+        if(props.status === "idle"){
+            return  <Tag icon={<ClockCircleOutlined />} color="warning">
+                waiting
+            </Tag>
+        }else if(props.status === "error"){
+            return  <Tag onClick={error} color="error" style={{cursor: "pointer"}}>
+                Error
+            </Tag>
+        }else if (props.status === "running"){
+            return <Tag icon={<SyncOutlined spin />} color="processing">
+                Running
+            </Tag>
+        }else return null
+    }
+
+    const error = () => {
+        Modal.error({
+            title: 'Error message',
+            content: props.error,
+        });
+    };
 
     return (
         <>
-            <span>{props.status}</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Rate count={1}/>
             <Popconfirm
                 title="Are you sure to delete this step?"
