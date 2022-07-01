@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
 import {EllipsisOutlined} from "@ant-design/icons";
-import {Button, Dropdown} from "antd";
+import {Button, Dropdown, Badge} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
@@ -11,8 +11,18 @@ import AnalysisMenu from "./AnalysisMenu";
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
 
+    const badgeStatus = () => {
+        switch (props.data.status) {
+            case 'error': return 'error'
+            case 'running': return 'processing'
+            case 'idle': return 'warning'
+            case 'done': return 'success'
+            default: return 'default'
+        }
+    }
+
     return (<div className={"analysis-col"}>
-            <h3>Analysis #{props.data.idx + 1} <span style={{float: "right"}}>
+            <h3><span style={{float: "left", marginLeft: "10px"}}><Badge status={badgeStatus()} /></span>Analysis #{props.data.idx + 1} <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
                                                  resultsId={props.data.result.id}></AnalysisMenu>}

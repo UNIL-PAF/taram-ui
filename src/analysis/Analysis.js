@@ -16,6 +16,8 @@ export default function Analysis() {
     const analysisError = useSelector(state => state.analysis.error)
     const cols = useSelector(state => selectCols(state))
 
+    console.log(analysisStatus)
+
     useEffect(() => {
         let timeout
 
