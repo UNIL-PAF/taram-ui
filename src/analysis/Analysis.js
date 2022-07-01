@@ -10,17 +10,32 @@ import {selectCols} from "./analysisSlice";
 export default function Analysis() {
     const dispatch = useDispatch();
     const params = useParams();
-    const analysisStatus = useSelector(state => state.analysis.status)
+    const analysisFetchStatus = useSelector(state => state.analysis.status)
+    const analysisStatus = useSelector(state => state.analysis.globalStatus)
     const analysisData = useSelector(state => state.analysis.data)
     const analysisError = useSelector(state => state.analysis.error)
     const cols = useSelector(state => selectCols(state))
 
     useEffect(() => {
-        if (analysisStatus === 'idle') {
+        let timeout
+
+        if (analysisFetchStatus === 'idle') {
             dispatch(fetchAnalysisByResultId(params.resultId))
             message.config({top: 60})
+        }else{
+            if(analysisStatus === 'running' || analysisStatus === 'idle'){
+                timeout = setTimeout(() => {
+                    dispatch(fetchAnalysisByResultId(params.resultId))
+                }, 2000);
+            }
         }
-    }, [analysisStatus, params.resultId, analysisData, dispatch])
+
+        return () => {
+            // clears timeout before running the new effect
+            clearTimeout(timeout);
+        };
+
+    }, [analysisFetchStatus, params.resultId, analysisData, dispatch, analysisStatus])
 
     return (
         <div>

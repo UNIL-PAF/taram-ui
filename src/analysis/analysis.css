@@ -17,7 +17,7 @@
     bottom: 0;
     left: 0;
     margin-bottom: 8px;
-    overflow-x: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
     padding-bottom: 8px;
     padding-top: 10px;
@@ -27,28 +27,26 @@
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
-    background-image: linear-gradient(to bottom, darkblue, blue,darkblue,rebeccapurple, darkorange);
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(1,0,41,0),rgba(0,0,139,0.5),rebeccapurple, darkorange), url("https://cdn2.picryl.com/photo/2020/01/01/andromeda-galaxy-in-acadias-night-sky-5a2e3f-1024.jpg");
     /*
+    background-image: linear-gradient(to bottom, black, #010029,darkblue,rebeccapurple, darkorange);
      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Blue_sky_and_sea.jpg/2560px-Blue_sky_and_sea.jpg")
      */
 
 }
 
 .analysis-col {
-    float: left;
     border-radius: 10px;
     box-sizing: border-box;
     display: inline-block;
     height: 100%;
     margin: 0 10px 0 10px;
     vertical-align: top;
+    horiz-align: left;
     white-space: nowrap;
     width: 500px;
     background-color: rgb(244,240,236);
-    padding-top: 10px;
-    padding-bottom: 40px;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding: 10px 5px 40px;
 }
 
 .analysis-col-content {

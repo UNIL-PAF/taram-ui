@@ -8,6 +8,7 @@ export const analysisSlice = createSlice({
         data: null,
         status: 'idle',
         error: null,
+        globalStatus: null
     },
     extraReducers: (builder) => {
         builder
@@ -16,7 +17,8 @@ export const analysisSlice = createSlice({
             })
             .addCase(fetchAnalysisByResultId.fulfilled, (state, action) => {
                 state.status = 'succeeded'
-                state.data = action.payload
+                state.data = action.payload.first
+                state.globalStatus = action.payload.second
             })
             .addCase(fetchAnalysisByResultId.rejected, (state, action) => {
                 state.status = 'failed'
