@@ -54,7 +54,7 @@ export default function AnalysisStepMenu(props) {
     const statusTag = () => {
         if(props.status === "idle"){
             return  <Tag icon={<ClockCircleOutlined />} color="warning">
-                waiting
+                Waiting
             </Tag>
         }else if(props.status === "error"){
             return  <Tag onClick={error} color="error" style={{cursor: "pointer"}}>

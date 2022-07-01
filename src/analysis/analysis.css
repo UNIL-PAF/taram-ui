@@ -44,7 +44,8 @@
     vertical-align: top;
     horiz-align: left;
     white-space: nowrap;
-    width: 500px;
+    /* width: 500px; */
+    width: 45%;
     background-color: rgb(244,240,236);
     padding: 10px 5px 40px;
 }
