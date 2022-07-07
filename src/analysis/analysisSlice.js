@@ -31,13 +31,4 @@ export const analysisSlice = createSlice({
     },
 })
 
-export let selectCols = createSelector([state => state.analysis.data], (d) => {
-    if(d){
-        return d.map( i => i.idx)
-    }else{
-        return []
-    }
-
-})
-
 export default analysisSlice.reducer

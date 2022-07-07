@@ -5,7 +5,6 @@ import {Alert, message} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
 import AnalysisSteps from "../analysis_steps/AnalysisSteps";
-import {selectCols} from "./analysisSlice";
 
 export default function Analysis() {
     const dispatch = useDispatch();
@@ -14,9 +13,6 @@ export default function Analysis() {
     const analysisStatus = useSelector(state => state.analysis.globalStatus)
     const analysisData = useSelector(state => state.analysis.data)
     const analysisError = useSelector(state => state.analysis.error)
-    const cols = useSelector(state => selectCols(state))
-
-    console.log(analysisStatus)
 
     useEffect(() => {
         let timeout
@@ -51,8 +47,8 @@ export default function Analysis() {
 
             {analysisData && <div className={"analysis-container"}>
                 {
-                    cols.map(colId => {
-                        return <AnalysisSteps analysisIdx={colId} data={analysisData[colId]} key={colId}/>
+                    analysisData.map(a => {
+                        return <AnalysisSteps analysisIdx={a.idx} data={a} key={a.idx}/>
                     })
                 }
             </div>

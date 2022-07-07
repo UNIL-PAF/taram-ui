@@ -30,8 +30,8 @@ export default function InitialResult(props) {
                               paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}
                                                           data={props.data}></InitialResultParams>}/>
         }>
-            {results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}
-            <p>Protein groups: <strong>{results.nrProteinGroups}</strong></p>
+            {results && results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}
+            <p>Protein groups: <strong>{results && results.nrProteinGroups}</strong></p>
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
