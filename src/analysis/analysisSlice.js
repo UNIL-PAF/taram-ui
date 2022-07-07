@@ -1,4 +1,4 @@
-import {createSelector, createSlice} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 import {fetchAnalysisByResultId} from './BackendAnalysis'
 
 export const analysisSlice = createSlice({

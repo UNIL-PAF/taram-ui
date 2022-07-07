@@ -18,7 +18,7 @@ export default function AnalysisStepMenu(props) {
     };
 
     const confirmDelete = (stepId) => {
-        deleteAnalysisStep(stepId)
+        dispatch(deleteAnalysisStep({stepId: stepId, resultId: props.resultId}))
         message.success('Delete step.');
     };
 
