@@ -34,6 +34,9 @@ export default function AnalysisSteps(props) {
             </span></h3>
             <div className={"analysis-col-content"}>
                 {props.data.analysisSteps && props.data.analysisSteps.map(step => {
+                    console.log(step.type)
+                    console.log(step.results)
+
                     switch (step.type) {
                         case 'initial-result':
                             return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}

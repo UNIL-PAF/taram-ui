@@ -55,7 +55,7 @@ export default function StepComment(props) {
             }
             {isEditing &&
                 <div>
-                    <TextArea rows={3} style={{marginBottom: 8}}
+                    <TextArea rows={3} style={{marginBottom: 8, width: '80%'}}
                               onChange={(e) => setCommentText(e.target.value)}
                               defaultValue={commentText}
                     ></TextArea>
