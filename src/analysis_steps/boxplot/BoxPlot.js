@@ -106,7 +106,7 @@ export default function BoxPlot(props) {
                                                          logScale={logScale}></BoxPlotParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {options && <ReactECharts option={options}/>}
+            {options && options.series.length > 0 && <ReactECharts option={options}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
