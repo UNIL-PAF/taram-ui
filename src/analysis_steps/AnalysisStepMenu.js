@@ -35,7 +35,7 @@ export default function AnalysisStepMenu(props) {
     const analysisMenuList = (
         <Menu>
             <Menu.Item onClick={() => clickAddStep(props.stepId, "quality-control", props.resultId)}
-                       key={'quality-control'}>
+                       key={'quality-control'} disabled={true}>
                 <span>Quality control</span>
             </Menu.Item>
             <Menu.Item onClick={() => clickAddStep(props.stepId, "boxplot", props.resultId)}
@@ -45,6 +45,10 @@ export default function AnalysisStepMenu(props) {
             <Menu.Item onClick={() => clickAddStep(props.stepId, "transformation", props.resultId)}
                        key={'transformation'}>
                 <span>Transformation</span>
+            </Menu.Item>
+            <Menu.Item onClick={() => clickAddStep(props.stepId, "filter", props.resultId)}
+                       key={'filter'}>
+                <span>Filter</span>
             </Menu.Item>
         </Menu>
     )

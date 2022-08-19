@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
+import Filter from "./filter/Filter"
 import {EllipsisOutlined} from "@ant-design/icons";
 import {Button, Dropdown, Badge} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
@@ -34,9 +35,6 @@ export default function AnalysisSteps(props) {
             </span></h3>
             <div className={"analysis-col-content"}>
                 {props.data.analysisSteps && props.data.analysisSteps.map(step => {
-                    console.log(step.type)
-                    console.log(step.results)
-
                     switch (step.type) {
                         case 'initial-result':
                             return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
@@ -50,6 +48,10 @@ export default function AnalysisSteps(props) {
                         case 'transformation':
                             return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                    data={step} key={step.id}/>
+                        case 'filter':
+                            return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                   data={step} key={step.id}/>
+
                         default:
                             return null
                     }
