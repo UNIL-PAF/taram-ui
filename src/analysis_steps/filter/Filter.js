@@ -20,8 +20,6 @@ export default function Filter(props) {
         }))
     }
 
-    console.log(props)
-
     return (
         <Card className={'analysis-step-card'} title={"Filter"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
@@ -33,7 +31,7 @@ export default function Filter(props) {
                                                                 setLocalParams={setLocalParams}></FilterParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            { results && 
+            { results &&
                 <div>
                     <p>Protein groups: <strong>{results.nrRows}</strong></p>
                     <p>Removed: <strong>{results.nrRowsRemoved}</strong></p>
