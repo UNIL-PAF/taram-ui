@@ -8,6 +8,7 @@ import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
 import AnalysisMenu from "./AnalysisMenu";
+import GroupFilter from "./group_filter/GroupFilter";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -51,6 +52,9 @@ export default function AnalysisSteps(props) {
                         case 'filter':
                             return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                    data={step} key={step.id}/>
+                        case 'group-filter':
+                            return <GroupFilter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                           data={step} key={step.id}/>
 
                         default:
                             return null
