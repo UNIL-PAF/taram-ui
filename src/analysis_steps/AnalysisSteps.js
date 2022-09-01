@@ -9,6 +9,7 @@ import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
 import AnalysisMenu from "./AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
+import TTest from "./t_test/TTest";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -55,6 +56,9 @@ export default function AnalysisSteps(props) {
                         case 'group-filter':
                             return <GroupFilter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                            data={step} key={step.id}/>
+                        case 't-test':
+                            return <TTest analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                data={step} key={step.id}/>
 
                         default:
                             return null

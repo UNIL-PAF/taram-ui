@@ -54,6 +54,10 @@ export default function AnalysisStepMenu(props) {
                        key={'group-filter'}>
                 <span>Filter on valid</span>
             </Menu.Item>
+            <Menu.Item onClick={() => clickAddStep(props.stepId, "t-test", props.resultId)}
+                       key={'t-test'}>
+                <span>t-test</span>
+            </Menu.Item>
         </Menu>
     )
 
