@@ -27,7 +27,7 @@ export default function TTestParams(props) {
 
     return (<>
         <span>
-            <span style={{paddingRight: "10px"}}>Value to filter on</span>
+            <span style={{paddingRight: "10px"}}>Compute t-test based on </span>
             <Select
                 defaultValue={intCol} style={{width: 250}} onChange={handleChange}>
                 {numCols.map((n, i) => {
@@ -38,18 +38,18 @@ export default function TTestParams(props) {
         <br/>
         <br/>
         <span>
-            <span style={{paddingRight: "10px"}}>Min number of valid values</span>
+            <span style={{paddingRight: "10px"}}>Significance threshold</span>
             <InputNumber
-                defaultValue={0}
-                onChange={(val) => valueChange("minNrValid", val)}></InputNumber>
+                defaultValue={props.localParams.signThres}
+                onChange={(val) => valueChange("signThres", val)}></InputNumber>
         </span>
         <br/>
         <br/>
         <span>
-            <span style={{paddingRight: "10px"}}>Number of valid entries required in</span>
-            <Select defaultValue={'one_group'} style={{width: 250}} onChange={filterInGroupChange}>
-                <Option value={'one_group'}>One groups</Option>
-                <Option value={'all_groups'}>All groups</Option>
+            <span style={{paddingRight: "10px"}}>Multiple testing correction</span>
+            <Select defaultValue={props.localParams.multiTestCorr} style={{width: 250}} onChange={filterInGroupChange}>
+                <Option value={'BH'}>Benjamini & Hochberg (FDR)</Option>
+                <Option value={'bonferroni'}>Bonferroni</Option>
             </Select>
         </span>
     </>);

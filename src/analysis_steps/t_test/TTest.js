@@ -20,8 +20,6 @@ export default function TTest(props) {
         }))
     }
 
-    console.log(results)
-
     return (
         <Card className={'analysis-step-card'} title={"t-test"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
