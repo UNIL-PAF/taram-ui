@@ -43,6 +43,10 @@ export default function AnalysisStepMenu(props) {
                            key={'boxplot'}>
                     <span>Boxplot</span>
                 </Menu.Item>
+                <Menu.Item onClick={() => clickAddStep(props.stepId, "volcano-plot", props.resultId)}
+                           key={'volcano-plot'}>
+                    <span>Volcano plot</span>
+                </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
                 <Menu.Item onClick={() => clickAddStep(props.stepId, "transformation", props.resultId)}

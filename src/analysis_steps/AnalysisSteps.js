@@ -10,6 +10,7 @@ import Transformation from "./transformation/Transformation";
 import AnalysisMenu from "./AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
+import VolcanoPlot from "./volcano_plot/VolcanoPlot";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -59,6 +60,9 @@ export default function AnalysisSteps(props) {
                         case 't-test':
                             return <TTest analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                 data={step} key={step.id}/>
+                        case 'volcano-plot':
+                            return <VolcanoPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                          data={step} key={step.id}/>
 
                         default:
                             return null
