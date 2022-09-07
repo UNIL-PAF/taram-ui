@@ -29,12 +29,53 @@ export default function VolcanoPlot(props) {
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
-        console.log(results)
-        return null
+        const dataWithLabel = results.data.map(d => { return { ...d, showLab: false } })
+
+        return {
+            xAxis: {},
+            yAxis: {},
+            label: {
+                show: true,
+                formatter: function (params) {
+                    return (params.data.showLab) ? params.data.gene : ""
+                },
+                position: 'right',
+                minMargin: 2
+            },
+            tooltip: {
+                showDelay: 0,
+                formatter: function(params) {
+                    return "Gene: <strong>" + params.data.gene + "</strong><br>" +
+                        "Protein group: <strong>" + params.data.prot + "</strong><br>" +
+                        "p-value: <strong>" + params.data.pVal + "</strong><br>" +
+                        "fold change: <strong>" + params.data.fc + "</strong>"
+                },
+            },
+            dataset: [{
+                dimensions: ["fc", "pVal"],
+                source: dataWithLabel,
+            }],
+            series: [
+                {
+                    symbolSize: 5,
+                    datasetIndex: 0,
+                    type: 'scatter'
+                }
+            ]
+        }
     }
 
-    console.log(options)
-    console.log(JSON.parse(props.data.results))
+    const onEvents = {
+        'click': showToolTipOnClick,
+    }
+
+    function showToolTipOnClick(e) {
+        const dataset = [{...options.dataset[0], source: options.dataset[0].source.map( a => {
+                return (a.prot === e.data.prot) ? {...a, showLab: !a.showLab} : a
+            })
+        }]
+        setOptions({...options, dataset: dataset})
+    }
 
     const onClickOk = () => {
         dispatch(setStepParameters({
@@ -55,7 +96,7 @@ export default function VolcanoPlot(props) {
                                                          logScale={logScale}></VolcanoPlotParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {options && options.series.length > 0 && <ReactECharts option={options}/>}
+            {options && options.series.length > 0 && <ReactECharts option={options} onEvents= {onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
