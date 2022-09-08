@@ -9,23 +9,18 @@ import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
 
 export default function BoxPlot(props) {
-
     const [selCol, setSelCol] = useState()
-    const [logScale, setLogScale] = useState(false)
+    const [boxplotParams, setBoxplotParams] = useState()
     const [options, setOptions] = useState()
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (props.data.parameters) {
+        if (props.data) {
             const params = JSON.parse(props.data.parameters)
             setSelCol(params.column)
-            setLogScale(params.logScale)
-        } else {
-            setSelCol(props.data.commonResult.intCol)
         }
-
-        if(props.data.results) setOptions(getOptions())
-    }, [props])
+        if (props.data.results) setOptions(getOptions())
+    }, [props, selCol])
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
@@ -87,26 +82,22 @@ export default function BoxPlot(props) {
         return options
     }
 
-    console.log(options)
-    console.log(JSON.parse(props.data.results))
 
-    const onClickOk = () => {
-        dispatch(setStepParameters({
-            resultId: props.resultId,
-            stepId: props.data.id,
-            params: {column: selCol, logScale: logScale}
-        }))
-    }
+    /*
+    paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
+                                                         data={props.data} setSelCol={setSelCol}
+                                                         selCol={selCol} setLogScale={setLogScale}
+                                                         logScale={logScale}></BoxPlotParams>}/>
+     */
 
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                              onClickOk={onClickOk} error={props.data.error}
-                              paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
-                                                         data={props.data} setSelCol={setSelCol}
-                                                         selCol={selCol} setLogScale={setLogScale}
-                                                         logScale={logScale}></BoxPlotParams>}/>
+                              error={props.data.error} paramType={"boxplot"}
+                              commonResult={props.data.commonResult} params={props.data.parameters}
+                              setParams={setBoxplotParams}/>
+
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.series.length > 0 && <ReactECharts option={options}/>}

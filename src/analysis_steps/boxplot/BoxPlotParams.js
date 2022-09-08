@@ -1,22 +1,41 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Checkbox, Select} from 'antd';
 
 const {Option} = Select;
 
 export default function BoxPlotParams(props) {
+    const [selCol, setSelCol] = useState()
+    const [logScale, setLogScale] = useState(false)
 
-    const numCols = props.data.commonResult.numericalColumns
-    const intCol = numCols.findIndex(c => {
-         const selCol = props.selCol ? props.selCol : props.data.commonResult.intCol
-        return  selCol === c
+    useEffect(() => {
+        if(! selCol){
+            if (props.params) {
+                const params = JSON.parse(props.params)
+                setSelCol(params.column)
+                setLogScale(params.logScale)
+            } else {
+                setSelCol(props.commonResult.intCol)
+            }
+        }
+        setBoxplotParams()
+    }, [props, selCol, logScale])
+
+    const numCols = props.commonResult.numericalColumns
+    const intCol = () => numCols.findIndex(c => {
+         const mySelCol = selCol ? selCol : props.commonResult.intCol
+        return  mySelCol === c
     })
 
     function handleChange(value) {
-        props.setSelCol(numCols[value])
+        setSelCol(numCols[value])
     }
 
     function checkboxChange(e){
-        props.setLogScale(e.target.checked)
+        setLogScale(e.target.checked)
+    }
+
+    function setBoxplotParams(){
+        props.setParams({column: selCol, logScale: logScale})
     }
 
     return (
@@ -29,7 +48,7 @@ export default function BoxPlotParams(props) {
             </Select>
             <br></br>
             <Checkbox
-                onChange={checkboxChange} defaultChecked={props.logScale}>Use logarithmic scale (log2)
+                onChange={checkboxChange} defaultChecked={logScale}>Use logarithmic scale (log2)
             </Checkbox>
 
         </>

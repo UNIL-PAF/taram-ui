@@ -1,16 +1,41 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
 import {useDispatch} from "react-redux";
-import {addAnalysisStep, deleteAnalysisStep} from "./BackendAnalysisSteps";
-import {DeleteOutlined, PlusCircleOutlined, SettingOutlined, ZoomInOutlined, ClockCircleOutlined, SyncOutlined} from "@ant-design/icons";
+import {deleteAnalysisStep, setStepParameters, addAnalysisStep} from "./BackendAnalysisSteps";
+import {
+    ClockCircleOutlined,
+    DeleteOutlined,
+    PlusCircleOutlined,
+    SettingOutlined,
+    SyncOutlined,
+    ZoomInOutlined
+} from "@ant-design/icons";
+import BoxPlotParams from "./boxplot/BoxPlotParams";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [showStepParams, setShowStepParams] = useState(undefined)
+    const [newStepParams, setNewStepParams] = useState(null)
     const dispatch = useDispatch();
 
     const handleOk = () => {
         setIsModalVisible(false);
-        props.onClickOk()
+        if (!showStepParams) {
+            dispatch(setStepParameters({
+                resultId: props.resultId,
+                stepId: props.stepId,
+                params: {newStepParams}
+            }))
+        } else {
+            const stepObj = {
+                stepId: props.stepId,
+                resultId: props.resultId,
+                newStep: {type: showStepParams.type, params: JSON.stringify(newStepParams)}
+            }
+            console.log(stepObj)
+            dispatch(addAnalysisStep(stepObj))
+        }
+
     };
 
     const handleCancel = () => {
@@ -28,9 +53,10 @@ export default function AnalysisStepMenu(props) {
 
     const clickAddStep = function (stepId, type, resultId) {
         const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
-        dispatch(addAnalysisStep(stepObj))
+        console.log(type)
+        setShowStepParams(analysisParamList(type))
+        setIsModalVisible(true)
     }
-
 
     const analysisMenuList = (
         <Menu>
@@ -74,19 +100,19 @@ export default function AnalysisStepMenu(props) {
     const buttonsDisabled = (props.status === "running" || props.status === "idle")
 
     const statusTag = () => {
-        if(props.status === "idle"){
-            return  <Tag icon={<ClockCircleOutlined />} color="warning">
+        if (props.status === "idle") {
+            return <Tag icon={<ClockCircleOutlined/>} color="warning">
                 Waiting
             </Tag>
-        }else if(props.status === "error"){
-            return  <Tag onClick={error} color="error" style={{cursor: "pointer"}}>
+        } else if (props.status === "error") {
+            return <Tag onClick={error} color="error" style={{cursor: "pointer"}}>
                 Error
             </Tag>
-        }else if (props.status === "running"){
-            return <Tag icon={<SyncOutlined spin />} color="processing">
+        } else if (props.status === "running") {
+            return <Tag icon={<SyncOutlined spin/>} color="processing">
                 Running
             </Tag>
-        }else return null
+        } else return null
     }
 
     const error = () => {
@@ -95,6 +121,19 @@ export default function AnalysisStepMenu(props) {
             content: props.error,
         });
     };
+
+    const analysisParamList = (type) => {
+        return {
+            type: type, render: <BoxPlotParams analysisIdx={props.analysisIdx}
+                                               params={props.params} commonResult={props.commonResult}
+                                               setParams={setNewStepParams}
+            ></BoxPlotParams>
+        }
+    }
+
+    const showModal = () => {
+        return showStepParams ? showStepParams.render : props.paramComponent
+    }
 
     return (
         <>
@@ -116,9 +155,10 @@ export default function AnalysisStepMenu(props) {
                       arrow disabled={buttonsDisabled}>
                 <Button type={"text"} icon={<PlusCircleOutlined/>}></Button>
             </Dropdown>
-            <Modal title="Parameters" visible={isModalVisible} onOk={() => handleOk()} onCancel={() => handleCancel()} width={1000}
+            <Modal title="Parameters" visible={isModalVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
+                   width={1000}
             >
-                {props.paramComponent}
+                {showModal()}
             </Modal>
         </>
 

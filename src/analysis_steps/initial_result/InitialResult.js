@@ -23,10 +23,11 @@ export default function InitialResult(props) {
         dispatch(setStepParameters({resultId: props.resultId, stepId: props.data.id, params: formattedParams}))
     }
 
+
     return (
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                              onClickOk={onClickOk}
+                              onClickOk={onClickOk} commonResult={props.data.commonResult}
                               paramComponent={<InitialResultParams analysisIdx={props.analysisIdx}
                                                           data={props.data}></InitialResultParams>}/>
         }>
