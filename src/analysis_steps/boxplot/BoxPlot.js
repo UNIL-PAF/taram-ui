@@ -9,7 +9,7 @@ import StepComment from "../StepComment";
 
 export default function BoxPlot(props) {
     const [selCol, setSelCol] = useState()
-    const [boxplotParams, setBoxplotParams] = useState()
+    const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
     const dispatch = useDispatch();
 
@@ -90,11 +90,11 @@ export default function BoxPlot(props) {
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               error={props.data.error} paramType={"boxplot"}
-                              commonResult={props.data.commonResult} params={props.data.parameters}
-                              stepParams={boxplotParams}
+                              commonResult={props.data.commonResult}
+                              stepParams={localParams}
                               paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                              params={props.data.parameters} commonResult={props.data.commonResult}
-                                                             setParams={setBoxplotParams}
+                                                             setParams={setLocalParams}
                               ></BoxPlotParams>}/>
 
         }>

@@ -1,12 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Checkbox} from 'antd';
 
 export default function FilterParams(props) {
 
+    useEffect(() => {
+        if(! props.params){
+            props.setParams({
+                removeOnlyIdentifiedBySite: true,
+                removeReverse: true,
+                removePotentialContaminant: true
+            })
+        }
+    }, [props])
+
+
     function handleChange(field, checked) {
-        let newParams = {...props.localParams}
+        let newParams = {...props.params}
         newParams[field] = checked
-        props.setLocalParams(newParams)
+        props.setParams(newParams)
     }
 
     return (<>

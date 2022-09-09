@@ -11,6 +11,7 @@ import {
     ZoomInOutlined
 } from "@ant-design/icons";
 import BoxPlotParams from "./boxplot/BoxPlotParams";
+import FilterParams from "./filter/FilterParams";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,14 +28,13 @@ export default function AnalysisStepMenu(props) {
                 stepId: props.stepId,
                 params: props.stepParams
             }))
-        // parameters for new step
+            // parameters for new step
         } else {
             const stepObj = {
                 stepId: props.stepId,
                 resultId: props.resultId,
                 newStep: {type: showStepParams.type, params: JSON.stringify(newStepParams)}
             }
-            console.log(stepObj)
             dispatch(addAnalysisStep(stepObj))
             setShowStepParams(undefined)
         }
@@ -124,12 +124,23 @@ export default function AnalysisStepMenu(props) {
     };
 
     const analysisParamList = (type) => {
-        return {
-            type: type, render: <BoxPlotParams analysisIdx={props.analysisIdx}
-                                               params={props.params} commonResult={props.commonResult}
-                                               setParams={setNewStepParams}
-            ></BoxPlotParams>
+        let renderObj = null
+        // eslint-disable-next-line
+        switch (type) {
+            case 'boxplot':
+                renderObj = <BoxPlotParams analysisIdx={props.analysisIdx}
+                                           commonResult={props.commonResult}
+                                           setParams={setNewStepParams}
+                ></BoxPlotParams>
+                break
+            case 'filter':
+                renderObj = <FilterParams analysisIdx={props.analysisIdx}
+                                           commonResult={props.commonResult}
+                                           setParams={setNewStepParams}
+                ></FilterParams>
+                break
         }
+        return { type: type, render: renderObj }
     }
 
     const showModal = () => {

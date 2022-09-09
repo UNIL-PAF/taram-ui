@@ -23,7 +23,7 @@ export default function BoxPlotParams(props) {
     useEffect(() => {
         const selColIdx = getSelColIdx(selCol)
         setIntCol(selColIdx)
-        setBoxplotParams()
+        props.setParams({column: selCol, logScale: logScale})
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selCol, logScale])
 
@@ -43,10 +43,6 @@ export default function BoxPlotParams(props) {
 
     function checkboxChange(e){
         setLogScale(e.target.checked)
-    }
-
-    function setBoxplotParams(){
-        props.setParams({column: selCol, logScale: logScale})
     }
 
     return (
