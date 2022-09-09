@@ -20,12 +20,14 @@ export default function AnalysisStepMenu(props) {
 
     const handleOk = () => {
         setIsModalVisible(false);
+        // parameters for existing step
         if (!showStepParams) {
             dispatch(setStepParameters({
                 resultId: props.resultId,
                 stepId: props.stepId,
-                params: {newStepParams}
+                params: props.stepParams
             }))
+        // parameters for new step
         } else {
             const stepObj = {
                 stepId: props.stepId,
@@ -34,6 +36,7 @@ export default function AnalysisStepMenu(props) {
             }
             console.log(stepObj)
             dispatch(addAnalysisStep(stepObj))
+            setShowStepParams(undefined)
         }
 
     };
@@ -51,45 +54,43 @@ export default function AnalysisStepMenu(props) {
         setIsModalVisible(true);
     }
 
-    const clickAddStep = function (stepId, type, resultId) {
-        const stepObj = {stepId: stepId, resultId: resultId, newStep: {type: type}}
-        console.log(type)
+    const clickAddStep = function (type) {
         setShowStepParams(analysisParamList(type))
         setIsModalVisible(true)
     }
 
     const analysisMenuList = (
         <Menu>
-            <Menu.Item onClick={() => clickAddStep(props.stepId, "quality-control", props.resultId)}
+            <Menu.Item onClick={() => clickAddStep("quality-control")}
                        key={'quality-control'} disabled={true}>
                 <span>Quality control</span>
             </Menu.Item>
             <Menu.SubMenu key={"sub-1"} title={"Plots"}>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "boxplot", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("boxplot")}
                            key={'boxplot'}>
                     <span>Boxplot</span>
                 </Menu.Item>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "volcano-plot", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("volcano-plot")}
                            key={'volcano-plot'}>
                     <span>Volcano plot</span>
                 </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "transformation", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("transformation")}
                            key={'transformation'}>
                     <span>Transformation</span>
                 </Menu.Item>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "filter", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("filter")}
                            key={'filter'}>
                     <span>Filter</span>
                 </Menu.Item>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "group-filter", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("group-filter")}
                            key={'group-filter'}>
                     <span>Filter on valid</span>
                 </Menu.Item>
             </Menu.SubMenu>
             <Menu.SubMenu key={"sub-3"} title={"Statistical tests"}>
-                <Menu.Item onClick={() => clickAddStep(props.stepId, "t-test", props.resultId)}
+                <Menu.Item onClick={() => clickAddStep("t-test")}
                            key={'t-test'}>
                     <span>t-test</span>
                 </Menu.Item>

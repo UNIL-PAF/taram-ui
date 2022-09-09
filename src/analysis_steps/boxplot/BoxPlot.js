@@ -3,7 +3,6 @@ import {Card} from "antd";
 import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import BoxPlotParams from "./BoxPlotParams";
-import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
@@ -20,6 +19,7 @@ export default function BoxPlot(props) {
             setSelCol(params.column)
         }
         if (props.data.results) setOptions(getOptions())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selCol])
 
     const getOptions = () => {
@@ -67,11 +67,14 @@ export default function BoxPlot(props) {
                     scale: true,
                     axisLabel: {interval: 0, rotate: 50},
                     show: (i === 0 ? true : false),
-                    data: boxplotData.experimentNames
+                    data: boxplotData.experimentNames,
+                    // axisLine: { onZero: false },
                 }
             }),
             yAxis: {
-                name: selCol
+                name: selCol,
+                nameTextStyle: {align: 'left'},
+                nameGap: 20
             }
         };
 
@@ -82,21 +85,17 @@ export default function BoxPlot(props) {
         return options
     }
 
-
-    /*
-    paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
-                                                         data={props.data} setSelCol={setSelCol}
-                                                         selCol={selCol} setLogScale={setLogScale}
-                                                         logScale={logScale}></BoxPlotParams>}/>
-     */
-
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               error={props.data.error} paramType={"boxplot"}
                               commonResult={props.data.commonResult} params={props.data.parameters}
-                              setParams={setBoxplotParams}/>
+                              stepParams={boxplotParams}
+                              paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
+                                                             params={props.data.parameters} commonResult={props.data.commonResult}
+                                                             setParams={setBoxplotParams}
+                              ></BoxPlotParams>}/>
 
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

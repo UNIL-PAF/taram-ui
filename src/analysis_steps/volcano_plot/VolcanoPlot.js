@@ -25,6 +25,7 @@ export default function VolcanoPlot(props) {
         }
 
         if(props.data.results) setOptions(getOptions())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
 
     const getOptions = () => {
