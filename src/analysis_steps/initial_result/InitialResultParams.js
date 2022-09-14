@@ -6,7 +6,6 @@ import ExperimentsSelection from "./ExperimentsSelection";
 export default function InitialResultParams(props) {
 
     const onExpSelection = (selRowKeys) => {
-        console.log("onExpSelection", selRowKeys)
         const newExpData = props.params.expData.map((exp) => {
             return {...exp, isSelected: selRowKeys.includes(exp.key)}
         })

@@ -21,14 +21,15 @@ export default function GroupFilter(props) {
     }
 
     return (
-        <Card className={'analysis-step-card'} title={"GroupFilter"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={"Filter on valid"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status} errorMsg={props.data.error}
-                              onClickOk={onClickOk} error={props.data.error}
+            <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status} error={props.data.error}
+                              paramType={"group-filter"} commonResult={props.data.commonResult}
+                              stepParams={localParams}
                               paramComponent={<GroupFilterParams analysisIdx={props.analysisIdx}
-                                                                 data={props.data}
-                                                                 localParams={localParams}
-                                                                 setLocalParams={setLocalParams}></GroupFilterParams>}/>
+                                                                 params={props.data.parameters}
+                                                                 commonResult={props.data.commonResult}
+                                                                 setParams={setLocalParams}></GroupFilterParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             { results &&

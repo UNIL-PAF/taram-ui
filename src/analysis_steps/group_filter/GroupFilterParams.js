@@ -5,24 +5,27 @@ const {Option} = Select;
 
 export default function GroupFilterParams(props) {
 
-    const numCols = props.data.commonResult.numericalColumns
+
+
+    const numCols = props.commonResult.numericalColumns
     const intCol = numCols.findIndex(c => {
-        const selCol = props.selCol ? props.selCol : props.data.commonResult.intCol
+        const selCol = props.selCol ? props.selCol : props.commonResult.intCol
         return selCol === c
     })
 
     function handleChange(value) {
-        props.setLocalParams({...props.localParams, field: numCols[value]})
+        console.log({...props.params, field: numCols[value]})
+        props.setParams({...props.params, field: numCols[value]})
     }
 
     function valueChange(field, value) {
-        let newParams = {...props.localParams}
+        let newParams = {...props.params}
         newParams[[field]] = value
-        props.setLocalParams(newParams)
+        props.setParams(newParams)
     }
 
     function filterInGroupChange(value) {
-        props.setLocalParams({...props.localParams, filterInGroup: value})
+        props.setParams({...props.params, filterInGroup: value})
     }
 
     return (<>

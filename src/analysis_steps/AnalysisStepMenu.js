@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
 import {useDispatch} from "react-redux";
 import {deleteAnalysisStep, setStepParameters, addAnalysisStep} from "./BackendAnalysisSteps";
@@ -12,12 +12,23 @@ import {
 } from "@ant-design/icons";
 import BoxPlotParams from "./boxplot/BoxPlotParams";
 import FilterParams from "./filter/FilterParams";
+import GroupFilterParams from "./group_filter/GroupFilterParams";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showStepParams, setShowStepParams] = useState(undefined)
-    const [newStepParams, setNewStepParams] = useState(null)
+    const [newStepParams, XsetNewStepParams] = useState(null)
     const dispatch = useDispatch();
+
+    const setNewStepParams = (params) => {
+        console.log(params)
+        XsetNewStepParams(params)
+    }
+
+
+    useEffect(() => {
+        console.log(newStepParams)
+    }, [newStepParams])
 
     const handleOk = () => {
 
@@ -37,7 +48,7 @@ export default function AnalysisStepMenu(props) {
             const stepObj = {
                 stepId: props.stepId,
                 resultId: props.resultId,
-                newStep: {type: showStepParams.type, params: JSON.stringify(newStepParams)}
+                newStep: {type: showStepParams, params: JSON.stringify(newStepParams)}
             }
             dispatch(addAnalysisStep(stepObj))
             setShowStepParams(undefined)
@@ -59,7 +70,7 @@ export default function AnalysisStepMenu(props) {
     }
 
     const clickAddStep = function (type) {
-        setShowStepParams(analysisParamList(type))
+        setShowStepParams(type)
         setIsModalVisible(true)
     }
 
@@ -128,27 +139,32 @@ export default function AnalysisStepMenu(props) {
     };
 
     const analysisParamList = (type) => {
-        let renderObj = null
         // eslint-disable-next-line
         switch (type) {
             case 'boxplot':
-                renderObj = <BoxPlotParams analysisIdx={props.analysisIdx}
+                return <BoxPlotParams analysisIdx={props.analysisIdx}
                                            commonResult={props.commonResult}
+                                           params={newStepParams}
                                            setParams={setNewStepParams}
                 ></BoxPlotParams>
                 break
             case 'filter':
-                renderObj = <FilterParams analysisIdx={props.analysisIdx}
+                return <FilterParams analysisIdx={props.analysisIdx}
                                            commonResult={props.commonResult}
                                            setParams={setNewStepParams}
                 ></FilterParams>
                 break
+            case 'group-filter':
+                return <GroupFilterParams analysisIdx={props.analysisIdx}
+                                          commonResult={props.commonResult}
+                                          setParams={setNewStepParams}
+                ></GroupFilterParams>
+                break
         }
-        return { type: type, render: renderObj }
     }
 
     const showModal = () => {
-        return showStepParams ? showStepParams.render : props.paramComponent
+        return showStepParams ? analysisParamList(showStepParams) : props.paramComponent
     }
 
     return (
