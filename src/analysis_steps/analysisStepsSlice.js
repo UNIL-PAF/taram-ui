@@ -23,6 +23,4 @@ export const analysisStepsSlice = createSlice({
     },
 })
 
-export const { addCol } = analysisStepsSlice.actions
-
 export default analysisStepsSlice.reducer
