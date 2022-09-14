@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
 import {useDispatch} from "react-redux";
-import {deleteAnalysisStep, setStepParameters, addAnalysisStep} from "./BackendAnalysisSteps";
+import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
 import {
     ClockCircleOutlined,
     DeleteOutlined,
@@ -17,18 +17,8 @@ import GroupFilterParams from "./group_filter/GroupFilterParams";
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showStepParams, setShowStepParams] = useState(undefined)
-    const [newStepParams, XsetNewStepParams] = useState(null)
+    const [newStepParams, setNewStepParams] = useState(null)
     const dispatch = useDispatch();
-
-    const setNewStepParams = (params) => {
-        console.log(params)
-        XsetNewStepParams(params)
-    }
-
-
-    useEffect(() => {
-        console.log(newStepParams)
-    }, [newStepParams])
 
     const handleOk = () => {
 
@@ -147,19 +137,16 @@ export default function AnalysisStepMenu(props) {
                                            params={newStepParams}
                                            setParams={setNewStepParams}
                 ></BoxPlotParams>
-                break
             case 'filter':
                 return <FilterParams analysisIdx={props.analysisIdx}
                                            commonResult={props.commonResult}
                                            setParams={setNewStepParams}
                 ></FilterParams>
-                break
             case 'group-filter':
                 return <GroupFilterParams analysisIdx={props.analysisIdx}
                                           commonResult={props.commonResult}
                                           setParams={setNewStepParams}
                 ></GroupFilterParams>
-                break
         }
     }
 

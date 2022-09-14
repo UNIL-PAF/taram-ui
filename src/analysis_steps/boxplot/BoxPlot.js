@@ -8,7 +8,6 @@ import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
 
 export default function BoxPlot(props) {
-    const [selCol, setSelCol] = useState()
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
     const dispatch = useDispatch();
@@ -16,14 +15,15 @@ export default function BoxPlot(props) {
     useEffect(() => {
         if (props.data) {
             const params = JSON.parse(props.data.parameters)
-            setSelCol(params.column)
+            setLocalParams(params)
         }
         if (props.data.results) setOptions(getOptions())
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, selCol])
+    }, [props])
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
+        const params = JSON.parse(props.data.parameters)
 
         const newData = results.data.map(d => {
             const dataWithName = d.data.map(box => {
@@ -72,13 +72,13 @@ export default function BoxPlot(props) {
                 }
             }),
             yAxis: {
-                name: selCol,
+                name: params.column,
                 nameTextStyle: {align: 'left'},
                 nameGap: 20
             }
         };
 
-        if (selCol) {
+        if (params.column) {
             replacePlotIfChanged(props.data.id, results, options, dispatch)
         }
 
@@ -93,7 +93,7 @@ export default function BoxPlot(props) {
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
-                                                             params={props.data.parameters} commonResult={props.data.commonResult}
+                                                             params={localParams} commonResult={props.data.commonResult}
                                                              setParams={setLocalParams}
                               ></BoxPlotParams>}/>
 

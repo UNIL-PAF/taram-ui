@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Checkbox, Select} from 'antd';
 
 const {Option} = Select;
@@ -7,15 +7,12 @@ export default function BoxPlotParams(props) {
 
     const numCols = props.commonResult.numericalColumns
 
-    console.log(props)
-
     useEffect(() => {
-        console.log(props.params)
         if(!props.params){
             props.setParams({column: getSelColIdx(props.commonResult.intCol), logScale: false})
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
-
 
     function getSelColIdx(selCol){
         if(!selCol) return undefined
