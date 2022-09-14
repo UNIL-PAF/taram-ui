@@ -53,9 +53,8 @@ export default function GroupSelection(props) {
     const renderTab = (tabObj, i) => {
         return (
             <TabPane
-                tab={<GroupNameInput onChange={onInputChange} alreadySet={tabObj.alreadySet} idx={i}/>}
+                tab={<GroupNameInput name={tabObj.name} onChange={onInputChange} alreadySet={tabObj.alreadySet} idx={i}/>}
                 key={i.toString()} closable={true}>
-                <span>{tabObj.name}</span>
                 {renderTransfer(tabObj)}
             </TabPane>
         )

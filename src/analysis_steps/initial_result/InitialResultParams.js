@@ -5,37 +5,6 @@ import ExperimentsSelection from "./ExperimentsSelection";
 
 export default function InitialResultParams(props) {
 
-    /*
-    useEffect(() => {
-        if(! data && props.data){
-            const colMapping = props.data.columnInfo.columnMapping
-
-            const expData = colMapping.experimentNames.map((e) => {
-                const exp = colMapping.experimentDetails[e]
-                return {
-                    name: exp.name,
-                    fileName: exp.fileName,
-                    originalName: exp.originalName,
-                    key: e,
-                    isSelected: exp.isSelected
-                }
-            })
-
-            const groupData = [{
-                name: "Condition",
-                alreadySet: false,
-                targetKeys: [],
-                dataSource: expData.map((exp) => {
-                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
-                })
-            }]
-
-            dispatch(setData({expData: expData, groupData: groupData}))
-        }
-    }, [props, data, dispatch])
-
-     */
-
     const onExpSelection = (selRowKeys) => {
         console.log("onExpSelection", selRowKeys)
         const newExpData = props.params.expData.map((exp) => {

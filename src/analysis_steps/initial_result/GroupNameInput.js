@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Input} from 'antd';
 
 
@@ -6,6 +6,10 @@ export default function GroupNameInput(props) {
     const placeholder = "Condition"
 
     const [inputVal, setInputVal] = useState();
+
+    useEffect(() => {
+        if(props.name) setInputVal(props.name)
+    }, [props])
 
     const onChange = (newInputVal) => {
         setInputVal(newInputVal)

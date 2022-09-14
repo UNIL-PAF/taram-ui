@@ -23,7 +23,7 @@ export default function InitialResult(props) {
                 }
             })
 
-            const groupData = [{
+            const newGroupData = [{
                 name: "Condition",
                 alreadySet: false,
                 targetKeys: [],
@@ -32,25 +32,38 @@ export default function InitialResult(props) {
                 })
             }]
 
+            const expList = Object.values(colMapping.experimentDetails)
+            const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
+
+            //const initialGroups = groups.map((e) => ({e : {name: e, "alreadySet": true, targetKeys: [], dataSource: []}}))
+            const initialGroups = groups.reduce((acc, cur) => ({ ...acc, [cur]: {name: cur, "alreadySet": true, targetKeys: [], dataSource: []}}), {})
+
+            const loadedGroupData = expList.reduce((acc, cur) => {
+                const cleaned = {key: cur.originalName, title: cur.name, disabled: true}
+                groups.forEach((g) => {
+                    const sameGroup = (g === cur.group)
+                    const dataSource = sameGroup ? {...cleaned, disabled: false} : cleaned
+                    acc[g].dataSource.push(dataSource)
+                    if(sameGroup) acc[g].targetKeys.push(cleaned.key)
+                })
+                return acc
+            }, initialGroups)
+
+            const groupData = (groups.length >= 1) ? Object.values(loadedGroupData) : newGroupData
             setLocalParams({expData: expData, groupData: groupData})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
 
-
-
+    // format the data for the backend
     const prepareParams = (params) => {
-        // format the data for the backend
-        const formattedParams = params.expData.reduce( (sum, d) => {
+        return params.expData.reduce( (sum, d) => {
             const group = params.groupData.find( (g) => {return g.targetKeys.includes(d.key)})
             sum[d.key] = { fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName }
             if(group) {sum[d.key].group = group.name}
             return sum
         }, {})
-
-        return formattedParams
     }
-
 
     return (
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
