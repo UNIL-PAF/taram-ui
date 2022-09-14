@@ -1,13 +1,16 @@
 import React, {useEffect, useState, useRef, useContext} from "react";
 import {Table, Input, Form} from 'antd';
-import {useSelector} from "react-redux";
 
 const EditableContext = React.createContext(null);
 
 export default function ExperimentsSelection(props) {
 
-    const data = useSelector((state) => state.analysisStepParams.data.expData)
-    const selKeys = useSelector((state) => state.analysisStepParams.data.expData.filter((exp) => exp.isSelected).map((exp) => exp.key))
+    const [selKeys, setSelKeys] = useState()
+
+    useEffect(() => {
+        setSelKeys(props.expData.filter((exp) => exp.isSelected).map((exp) => exp.key))
+    }, [props])
+
 
     const EditableCell = ({
                               title,
@@ -142,7 +145,7 @@ export default function ExperimentsSelection(props) {
                 }}
                 size={"small"}
                 columns={columns}
-                dataSource={data}
+                dataSource={props.expData}
                 pagination={false}
             />
         </>

@@ -1,17 +1,13 @@
-import React, {useEffect} from "react";
+import React from "react";
 import GroupSelection from "./GroupSelection";
 import {Divider} from "antd";
 import ExperimentsSelection from "./ExperimentsSelection";
-import {useDispatch, useSelector} from "react-redux";
-import {setData} from "../analysisStepParamsSlice";
 
 export default function InitialResultParams(props) {
 
-    const dispatch = useDispatch();
-    const data = useSelector((state) => state.analysisStepParams.data)
-
+    /*
     useEffect(() => {
-        if(! data){
+        if(! data && props.data){
             const colMapping = props.data.columnInfo.columnMapping
 
             const expData = colMapping.experimentNames.map((e) => {
@@ -38,22 +34,25 @@ export default function InitialResultParams(props) {
         }
     }, [props, data, dispatch])
 
+     */
+
     const onExpSelection = (selRowKeys) => {
-        const newExpData = data.expData.map((exp) => {
+        console.log("onExpSelection", selRowKeys)
+        const newExpData = props.params.expData.map((exp) => {
             return {...exp, isSelected: selRowKeys.includes(exp.key)}
         })
-        dispatch(setData({...data, expData: newExpData}))
+        props.setParams({...props.params, expData: newExpData})
     }
 
     const onChangeExpName = (row) => {
-        const newExpData = data.expData.map(exp => {
+        const newExpData = props.params.expData.map(exp => {
             if (exp.key === row.key) {
                 return {...exp, name: row.name}
             } else {
                 return exp
             }
         })
-        const newGroupData = data.groupData.map(tab => {
+        const newGroupData = props.params.groupData.map(tab => {
             return {
                 ...tab, dataSource: tab.dataSource.map(d => {
                     if (d.key === row.key) {
@@ -65,19 +64,27 @@ export default function InitialResultParams(props) {
             }
 
         })
-        dispatch(setData({groupData: newGroupData, expData: newExpData}))
+        props.setParams({groupData: newGroupData, expData: newExpData})
     }
 
     return (
         <>
             <h3>Experiments</h3>
-            {data &&
+            {props.params &&
                 <>
                     <ExperimentsSelection onChangeExpName={onChangeExpName}
-                                          onExpSelection={onExpSelection}></ExperimentsSelection>
+                                          onExpSelection={onExpSelection}
+                                          expData={props.params.expData}
+                    ></ExperimentsSelection>
                     <Divider/>
                     <h3>Group selection</h3>
-                    <GroupSelection></GroupSelection>
+                    <GroupSelection groupData={props.params.groupData}
+                                    expData={props.params.expData}
+                                    setGroupData={(gd) => props.setParams({
+                                        expData: props.params.expData,
+                                        groupData: gd
+                                    })}
+                    ></GroupSelection>
                 </>
             }
         </>

@@ -20,14 +20,18 @@ export default function AnalysisStepMenu(props) {
     const dispatch = useDispatch();
 
     const handleOk = () => {
+
         setIsModalVisible(false);
         // parameters for existing step
         if (!showStepParams) {
+            const params = props.prepareParams ? props.prepareParams(props.stepParams) : props.stepParams
+
             dispatch(setStepParameters({
                 resultId: props.resultId,
                 stepId: props.stepId,
-                params: props.stepParams
+                params: params
             }))
+
             // parameters for new step
         } else {
             const stepObj = {
