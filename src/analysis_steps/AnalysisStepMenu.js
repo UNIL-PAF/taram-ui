@@ -140,11 +140,13 @@ export default function AnalysisStepMenu(props) {
             case 'filter':
                 return <FilterParams analysisIdx={props.analysisIdx}
                                            commonResult={props.commonResult}
+                                           params={newStepParams}
                                            setParams={setNewStepParams}
                 ></FilterParams>
             case 'group-filter':
                 return <GroupFilterParams analysisIdx={props.analysisIdx}
                                           commonResult={props.commonResult}
+                                          params={newStepParams}
                                           setParams={setNewStepParams}
                 ></GroupFilterParams>
         }
