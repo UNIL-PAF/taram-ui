@@ -1,39 +1,51 @@
-import React from "react";
-import {InputNumber, Select} from 'antd';
+import React, {useEffect} from "react";
+import {Checkbox, InputNumber, Select} from 'antd';
 
 const {Option} = Select;
 
 export default function TransformationParams(props) {
 
-    const results = JSON.parse(props.data.results)
-    const numCols = (results && results.oldNumCols) ? results.oldNumCols : props.data.commonResult.numericalColumns
+    const numCols = props.commonResult.numericalColumns
+    const intColName = props.commonResult.intCol
+
+    useEffect(() => {
+        if(!props.params){
+            props.setParams({
+                intCol: intColName,
+                transformationType: 'log2',
+                normalizationType: 'median',
+                imputationType: 'normal',
+                imputationParams: {
+                    width: 0.3,
+                    downshift: 1.8,
+                    seed: 1
+                }
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props])
 
     function handleChange(value) {
-        props.setLocalParams({...props.localParams, intCol: numCols[value]})
+        props.setParams({...props.params, intCol: numCols[value]})
     }
 
     function transChange(value) {
-        props.setLocalParams({...props.localParams, transformationType: value})
+        props.setParams({...props.params, transformationType: value})
     }
 
     function normChange(value) {
-        props.setLocalParams({...props.localParams, normalizationType: value})
+        props.setParams({...props.params, normalizationType: value})
     }
 
     function impChange(value) {
-        props.setLocalParams({...props.localParams, imputationType: value})
+        props.setParams({...props.params, imputationType: value})
     }
 
     function valueChange(field, value) {
-        let newParams = {...props.localParams.imputationParams}
+        let newParams = {...props.params.imputationParams}
         newParams[[field]] = value
-        props.setLocalParams({...props.localParams, imputationParams: newParams})
+        props.setParams({...props.params, imputationParams: newParams})
     }
-
-    const intColName = (results && results.oldIntCol) ? results.oldIntCol : props.data.commonResult.intCol
-    const intCol = numCols.findIndex(c => {
-        return intColName === c
-    })
 
     function valueParams() {
         return <span style={{paddingLeft: "10px"}}>
@@ -44,21 +56,20 @@ export default function TransformationParams(props) {
     function normalParams() {
         return <span style={{paddingLeft: "10px"}}>
                 <span style={{paddingLeft: "10px"}}>Width <InputNumber
-                    defaultValue={0.3}
+                    value={props.params.imputationParams.width}
                     onChange={(val) => valueChange("width", val)}></InputNumber></span>
                 <span style={{paddingLeft: "10px"}}>Downshift <InputNumber
-                    defaultValue={1.8}
+                    value={props.params.imputationParams.downshift}
                     onChange={(val) => valueChange("downshift", val)}></InputNumber></span>
                 <span style={{paddingLeft: "10px"}}>Seed <InputNumber
-                    defaultValue={1}
+                    value={props.params.imputationParams.seed}
                     onChange={(val) => valueChange("seed", val)}></InputNumber></span>
             </span>
     }
 
-    return (
-        <>
-            <h3>Select value to transform</h3>
-            <Select defaultValue={intCol} style={{width: 250}} onChange={handleChange}>
+    function showOptions(){
+        return <>
+            <Select value={props.params.intCol} style={{width: 250}} onChange={handleChange}>
                 {numCols.map((n, i) => {
                     return <Option key={i} value={i}>{n}</Option>
                 })}
@@ -66,14 +77,14 @@ export default function TransformationParams(props) {
             <br></br>
             <br></br>
             <h3>Transformation</h3>
-            <Select defaultValue={props.localParams.transformationType} style={{width: 250}} onChange={transChange}>
+            <Select value={props.params.transformationType} style={{width: 250}} onChange={transChange}>
                 <Option value={'none'}>None</Option>
                 <Option value={'log2'}>Log2</Option>
             </Select>
             <br></br>
             <br></br>
             <h3>Normalization</h3>
-            <Select defaultValue={props.localParams.normalizationType} style={{width: 250}} onChange={normChange}>
+            <Select value={props.params.normalizationType} style={{width: 250}} onChange={normChange}>
                 <Option value={'none'}>None</Option>
                 <Option value={'median'}>Median</Option>
                 <Option value={'mean'}>Mean</Option>
@@ -81,15 +92,21 @@ export default function TransformationParams(props) {
             <br></br>
             <br></br>
             <h3>Imputation</h3>
-            <Select defaultValue={props.localParams.imputationType} style={{width: 250}} onChange={impChange}>
+            <Select value={props.params.imputationType} style={{width: 250}} onChange={impChange}>
                 <Option value={'none'}>None</Option>
                 <Option value={'normal'}>Normal distribution</Option>
                 <Option value={'nan'}>Replace by NaN</Option>
                 <Option value={'value'}>Fix value</Option>
             </Select>
-            {props.localParams.imputationType === "value" && valueParams()}
-            {props.localParams.imputationType === "normal" && normalParams()}
+            {props.params.imputationType === "value" && valueParams()}
+            {props.params.imputationType === "normal" && normalParams()}
+        </>
+    }
 
+    return (
+        <>
+            <h3>Select value to transform</h3>
+            {props.params && showOptions()}
         </>
     );
 }

@@ -13,6 +13,7 @@ import {
 import BoxPlotParams from "./boxplot/BoxPlotParams";
 import FilterParams from "./filter/FilterParams";
 import GroupFilterParams from "./group_filter/GroupFilterParams";
+import TransformationParams from "./transformation/TransformationParams";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -149,6 +150,12 @@ export default function AnalysisStepMenu(props) {
                                           params={newStepParams}
                                           setParams={setNewStepParams}
                 ></GroupFilterParams>
+            case 'transformation':
+                return <TransformationParams analysisIdx={props.analysisIdx}
+                                          commonResult={props.commonResult}
+                                          params={newStepParams}
+                                          setParams={setNewStepParams}
+                ></TransformationParams>
         }
     }
 
