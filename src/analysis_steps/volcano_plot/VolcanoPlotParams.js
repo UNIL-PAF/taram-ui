@@ -1,37 +1,50 @@
-import React from "react";
-import {Checkbox, Select} from 'antd';
-
-const {Option} = Select;
+import React, {useEffect} from "react";
+import {Checkbox, InputNumber} from 'antd';
 
 export default function BoxPlotParams(props) {
 
-    const numCols = props.data.commonResult.numericalColumns
-    const intCol = numCols.findIndex(c => {
-         const selCol = props.selCol ? props.selCol : props.data.commonResult.intCol
-        return  selCol === c
-    })
+    useEffect(() => {
+        if(!props.params){
+            props.setParams({
+                pValThresh: 0.05,
+                useAdjustedPVal: true,
+                log10PVal: true
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props])
 
-    function handleChange(value) {
-        props.setSelCol(numCols[value])
+    function checkboxChange(field, e){
+        let newParams = {...props.params}
+        newParams[[field]] = e.target.checked
+        props.setParams(newParams)
     }
 
-    function checkboxChange(e){
-        props.setLogScale(e.target.checked)
+    function valueChange(field, value) {
+        let newParams = {...props.params.imputationParams}
+        newParams[[field]] = value
+        props.setParams({...props.params, imputationParams: newParams})
+    }
+
+    function showOptions(){
+        return <>
+           <span style={{paddingLeft: "10px"}}>Significance threshold<InputNumber
+               value={props.params.pValThresh}
+               onChange={(val) => valueChange("pValThresh", val)}></InputNumber></span>
+            <br></br>
+            <Checkbox
+                onChange={(val) => checkboxChange("useAdjustedPVal", val)} checked={props.params.useAdjustedPVal}>Use adjusted p-value
+            </Checkbox>
+            <br></br>
+            <Checkbox
+                onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use log10(p-value)
+            </Checkbox>
+        </>
     }
 
     return (
         <>
-            <h3>Select data column for Boxplot</h3>
-            <Select defaultValue={intCol} style={{width: 250}} onChange={handleChange}>
-                {numCols.map((n, i) => {
-                    return <Option key={i} value={i}>{n}</Option>
-                })}
-            </Select>
-            <br></br>
-            <Checkbox
-                onChange={checkboxChange} defaultChecked={props.logScale}>Use logarithmic scale (log2)
-            </Checkbox>
-
+            {props.params && showOptions()}
         </>
     );
 }
