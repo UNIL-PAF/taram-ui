@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Checkbox, InputNumber, Select} from 'antd';
+import {InputNumber, Select} from 'antd';
 
 const {Option} = Select;
 

@@ -7,10 +7,6 @@ export default function GroupFilterParams(props) {
 
     const numCols = props.commonResult.numericalColumns
     const selCol = props.selCol ? props.selCol : props.commonResult.intCol
-    const intCol = numCols.findIndex(c => {
-        const selCol = props.selCol ? props.selCol : props.commonResult.intCol
-        return selCol === c
-    })
 
     useEffect(() => {
         if (!props.params) {

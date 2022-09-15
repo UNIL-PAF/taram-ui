@@ -14,6 +14,7 @@ import BoxPlotParams from "./boxplot/BoxPlotParams";
 import FilterParams from "./filter/FilterParams";
 import GroupFilterParams from "./group_filter/GroupFilterParams";
 import TransformationParams from "./transformation/TransformationParams";
+import TTestParams from "./t_test/TTestParams";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -156,6 +157,12 @@ export default function AnalysisStepMenu(props) {
                                           params={newStepParams}
                                           setParams={setNewStepParams}
                 ></TransformationParams>
+            case 't-test':
+                return <TTestParams analysisIdx={props.analysisIdx}
+                                             commonResult={props.commonResult}
+                                             params={newStepParams}
+                                             setParams={setNewStepParams}
+                ></TTestParams>
         }
     }
 
