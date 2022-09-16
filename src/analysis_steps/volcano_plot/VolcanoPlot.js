@@ -4,9 +4,12 @@ import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import VolcanoPlotParams from "./VolcanoPlotParams";
 import StepComment from "../StepComment";
+import {switchSelProt} from "../BackendAnalysisSteps";
+import {useDispatch} from "react-redux";
 
 export default function VolcanoPlot(props) {
 
+    const dispatch = useDispatch();
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
 
@@ -22,7 +25,10 @@ export default function VolcanoPlot(props) {
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
         const params = JSON.parse(props.data.parameters)
-        const dataWithLabel = results.data.map(d => { return { ...d, showLab: false } })
+        const dataWithLabel = results.data.map(d => {
+            const showLab = params.selProteins && params.selProteins.includes(d.prot)
+            return { ...d, showLab: showLab }
+        })
 
         return {
             xAxis: {
@@ -56,7 +62,7 @@ export default function VolcanoPlot(props) {
                     } else {
                         return "Gene: <strong>" + params.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + params.data.prot + "</strong><br>" +
-                            "p-value: <strong>" + params.data.pVal.toFixed(3) + "</strong><br>" +
+                            "p-value: <strong>" + params.data.pVal.toPrecision(3) + "</strong><br>" +
                             "fold change: <strong>" + params.data.fc.toFixed(2) + "</strong>"
                     }
                 },
@@ -132,11 +138,7 @@ export default function VolcanoPlot(props) {
     }
 
     function showToolTipOnClick(e) {
-        const dataset = [{...options.dataset[0], source: options.dataset[0].source.map( a => {
-                return (a.prot === e.data.prot) ? {...a, showLab: !a.showLab} : a
-            })
-        }]
-        setOptions({...options, dataset: dataset})
+        dispatch(switchSelProt({resultId: props.resultId, proteinAc: e.data.prot, stepId: props.data.id}))
     }
 
     return (
