@@ -21,11 +21,23 @@ export default function VolcanoPlot(props) {
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
+        const params = JSON.parse(props.data.parameters)
         const dataWithLabel = results.data.map(d => { return { ...d, showLab: false } })
 
         return {
-            xAxis: {},
-            yAxis: {},
+            xAxis: {
+                name: "Fold change",
+                nameLocation: "center",
+                nameTextStyle: { padding: [8, 4, 5, 6] },
+            },
+            yAxis: {
+                min: 1,
+                name: "-log10(p)",
+                position: "left",
+                nameRotate: 90,
+                nameLocation: "center",
+                nameTextStyle: { padding: [8, 4, 5, 6] },
+            },
             label: {
                 show: true,
                 formatter: function (params) {
@@ -37,21 +49,79 @@ export default function VolcanoPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function(params) {
-                    return "Gene: <strong>" + params.data.gene + "</strong><br>" +
-                        "Protein group: <strong>" + params.data.prot + "</strong><br>" +
-                        "p-value: <strong>" + params.data.pVal + "</strong><br>" +
-                        "fold change: <strong>" + params.data.fc + "</strong>"
+                    if (params.componentType === "markLine") {
+                        const text =
+                            params.data.name + " threshold: " + params.data.value;
+                        return text;
+                    } else {
+                        return "Gene: <strong>" + params.data.gene + "</strong><br>" +
+                            "Protein AC: <strong>" + params.data.prot + "</strong><br>" +
+                            "p-value: <strong>" + params.data.pVal.toFixed(3) + "</strong><br>" +
+                            "fold change: <strong>" + params.data.fc.toFixed(2) + "</strong>"
+                    }
                 },
             },
-            dataset: [{
-                dimensions: ["fc", "pVal"],
-                source: dataWithLabel,
-            }],
+            dataset: [
+                {
+                    dimensions: ["fc", "plotPVal", "isSign"],
+                    source: dataWithLabel,
+                },
+                {
+                    transform: {
+                        type: 'filter',
+                        config: { dimension: 'isSign', value: true }
+                    }
+                },
+                {
+                    transform: {
+                        type: 'filter',
+                        config: { dimension: 'isSign', value: false }
+                    }
+                }
+            ],
             series: [
                 {
                     symbolSize: 5,
-                    datasetIndex: 0,
-                    type: 'scatter'
+                    datasetIndex: 1,
+                    type: 'scatter',
+                    encode: {
+                        x: 'fc',
+                        y: 'plotPVal'
+                    },
+                    itemStyle: {
+                        color: "red"
+                    },
+                    markLine: {
+                        lineStyle: {
+                            type: "dashed",
+                            color: "#3ba272",
+                        },
+                        label: { show: false },
+                        symbol: ["none", "none"],
+                        data: [
+                            {
+                                xAxis: -1 * params.fcThresh,
+                                name: "Fold change",
+                            },
+                            {
+                                xAxis: params.fcThresh,
+                                name: "Fold change",
+                            },
+                            {
+                                yAxis: -1 * Math.log10(params.pValThresh),
+                                name: "p-Value",
+                            },
+                        ],
+                    },
+                },
+                {
+                    symbolSize: 5,
+                    datasetIndex: 2,
+                    type: 'scatter',
+                    encode: {
+                        x: 'fc',
+                        y: 'plotPVal'
+                    }
                 }
             ]
         }

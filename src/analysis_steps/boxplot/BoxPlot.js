@@ -68,7 +68,7 @@ export default function BoxPlot(props) {
                     axisLabel: {interval: 0, rotate: 50},
                     show: (i === 0 ? true : false),
                     data: boxplotData.experimentNames,
-                    // axisLine: { onZero: false },
+                    axisLine: { onZero: false }
                 }
             }),
             yAxis: {

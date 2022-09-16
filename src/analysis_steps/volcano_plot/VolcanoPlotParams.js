@@ -7,7 +7,8 @@ export default function BoxPlotParams(props) {
         if(!props.params){
             props.setParams({
                 pValThresh: 0.05,
-                useAdjustedPVal: true,
+                fcThresh: 2.0,
+                useAdjustedPVal: false,
                 log10PVal: true
             })
         }
@@ -31,6 +32,10 @@ export default function BoxPlotParams(props) {
            <span style={{paddingLeft: "10px"}}>Significance threshold<InputNumber
                value={props.params.pValThresh}
                onChange={(val) => valueChange("pValThresh", val)}></InputNumber></span>
+            <br></br>
+            <span style={{paddingLeft: "10px"}}>Fold change threshold<InputNumber
+                value={props.params.fcThresh}
+                onChange={(val) => valueChange("fcThresh", val)}></InputNumber></span>
             <br></br>
             <Checkbox
                 onChange={(val) => checkboxChange("useAdjustedPVal", val)} checked={props.params.useAdjustedPVal}>Use adjusted p-value
