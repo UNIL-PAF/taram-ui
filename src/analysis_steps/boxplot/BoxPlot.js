@@ -72,7 +72,7 @@ export default function BoxPlot(props) {
                 }
             }),
             yAxis: {
-                name: params.column,
+                name: params.column || props.data.columnInfo.columnMapping.intCol,
                 nameTextStyle: {align: 'left'},
                 nameGap: 20
             }
@@ -91,6 +91,7 @@ export default function BoxPlot(props) {
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               error={props.data.error} paramType={"boxplot"}
                               commonResult={props.data.commonResult}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
                               paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                              params={localParams} commonResult={props.data.commonResult}

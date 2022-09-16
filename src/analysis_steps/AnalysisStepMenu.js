@@ -139,6 +139,7 @@ export default function AnalysisStepMenu(props) {
                                            commonResult={props.commonResult}
                                            params={newStepParams}
                                            setParams={setNewStepParams}
+                                           intCol={props.intCol}
                 ></BoxPlotParams>
             case 'filter':
                 return <FilterParams analysisIdx={props.analysisIdx}

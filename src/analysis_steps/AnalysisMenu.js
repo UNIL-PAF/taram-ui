@@ -73,7 +73,7 @@ export default function AnalysisMenu(props) {
             }, initialGroups)
 
             const groupData = (groups.length >= 1) ? Object.values(loadedGroupData) : newGroupData
-            setLocalParams({expData: expData, groupData: groupData, column: props.initialStep.commonResult.intCol})
+            setLocalParams({expData: expData, groupData: groupData, column: colMapping.intCol})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])

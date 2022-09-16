@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import QualityControl from "./quality_control/QualityControl";
 import Filter from "./filter/Filter"
-import {EllipsisOutlined, SettingOutlined} from "@ant-design/icons";
-import {Button, Dropdown, Badge, Alert} from "antd";
+import {EllipsisOutlined} from "@ant-design/icons";
+import {Button, Dropdown, Badge} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
@@ -32,7 +32,7 @@ export default function AnalysisSteps(props) {
 
     return (
         <>
-            <div className={"analysis-col"}>
+            {props.data && props.data.analysisSteps && <div className={"analysis-col"}>
                 <h3>
                 <span style={{float: "left", marginLeft: "10px"}}>
                     <Badge status={badgeStatus()}/>
@@ -82,7 +82,7 @@ export default function AnalysisSteps(props) {
                         }
                     })}
                 </div>
-            </div>
+            </div>}
         </>
     );
 }

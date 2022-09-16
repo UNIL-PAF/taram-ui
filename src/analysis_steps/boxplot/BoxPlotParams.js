@@ -9,18 +9,12 @@ export default function BoxPlotParams(props) {
 
     useEffect(() => {
         if(!props.params){
-            props.setParams({column: getSelColIdx(props.commonResult.intCol), logScale: false})
+            //props.setParams({column: getSelColIdx(props.intCol), logScale: false})
+            //props.setParams({column: props.intCol, logScale: false})
+            props.setParams({logScale: false})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
-
-    function getSelColIdx(selCol){
-        if(!selCol) return undefined
-        return numCols.findIndex(c => {
-            const mySelCol = selCol ? selCol : props.commonResult.intCol
-            return  mySelCol === c
-        })
-    }
 
     function handleChange(value) {
         props.setParams({...props.params, column: numCols[value]})
@@ -32,7 +26,7 @@ export default function BoxPlotParams(props) {
 
     function showOptions(){
         return <>
-            <Select value={props.params.column} style={{width: 250}} onChange={handleChange}>
+            <Select value={props.params.column || props.intCol} style={{width: 250}} onChange={handleChange}>
                 {numCols.map((n, i) => {
                     return <Option key={i} value={i}>{n}</Option>
                 })}</Select>
