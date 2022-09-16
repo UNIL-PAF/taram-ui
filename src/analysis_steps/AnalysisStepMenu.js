@@ -187,11 +187,11 @@ export default function AnalysisStepMenu(props) {
                 okText="Yes"
                 cancelText="Cancel"
             >
-                <Button type={"text"} icon={<DeleteOutlined/>} disabled={buttonsDisabled}></Button>
+                <Button type={"text"} icon={<DeleteOutlined/>} style={{visibility: `${props.hideDeleteButton != undefined ? 'hidden' : 'visible'}`}}/>
             </Popconfirm>
 
-            <Button type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled}></Button>
-            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
+            <Button type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideZoomButton != undefined ? 'hidden' : 'visible'}`}}></Button>
+            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideSettingButton != undefined ? 'hidden' : 'visible'}`}}
                     onClick={() => clickParams()}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
                       arrow disabled={buttonsDisabled}>

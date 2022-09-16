@@ -4,11 +4,15 @@ import {Alert, Button, Col, Input, Menu, message, Modal, Popconfirm, Row, Toolti
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
 import {addTemplate, fetchAllTemplates, runTemplate} from "../templates/BackendTemplates";
+import DefineGroupsParams from "./initial_result/DefineGroupsParams";
 import '../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
+import {setStepParameters} from "./BackendAnalysisSteps";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [localParams, setLocalParams] = useState()
+    const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
     const [nameText, setNameText] = useState("");
     const [descriptionText, setDescriptionText] = useState("");
     const dispatch = useDispatch();
@@ -24,13 +28,92 @@ export default function AnalysisMenu(props) {
         }
     }, [templatesStatus, templatesData, dispatch])
 
+    useEffect(() => {
+        if (props.initialStep) {
+            const colMapping = props.initialStep.columnInfo.columnMapping
+
+            const expData = colMapping.experimentNames.map((e) => {
+                const exp = colMapping.experimentDetails[e]
+                return {
+                    name: exp.name,
+                    fileName: exp.fileName,
+                    originalName: exp.originalName,
+                    key: e,
+                    isSelected: exp.isSelected
+                }
+            })
+
+            const newGroupData = [{
+                name: "Condition",
+                alreadySet: false,
+                targetKeys: [],
+                dataSource: expData.map((exp) => {
+                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
+                })
+            }]
+
+            const expList = Object.values(colMapping.experimentDetails)
+            const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
+
+            //const initialGroups = groups.map((e) => ({e : {name: e, "alreadySet": true, targetKeys: [], dataSource: []}}))
+            const initialGroups = groups.reduce((acc, cur) => ({
+                ...acc,
+                [cur]: {name: cur, "alreadySet": true, targetKeys: [], dataSource: []}
+            }), {})
+
+            const loadedGroupData = expList.reduce((acc, cur) => {
+                const cleaned = {key: cur.originalName, title: cur.name, disabled: true}
+                groups.forEach((g) => {
+                    const sameGroup = (g === cur.group)
+                    const dataSource = sameGroup ? {...cleaned, disabled: false} : cleaned
+                    acc[g].dataSource.push(dataSource)
+                    if (sameGroup) acc[g].targetKeys.push(cleaned.key)
+                })
+                return acc
+            }, initialGroups)
+
+            const groupData = (groups.length >= 1) ? Object.values(loadedGroupData) : newGroupData
+            setLocalParams({expData: expData, groupData: groupData, column: props.initialStep.commonResult.intCol})
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props])
+
+
+    // format the data for the backend
+    const prepareParams = (params) => {
+        const experimentDetails =  params.expData.reduce((sum, d) => {
+            const group = params.groupData.find((g) => {
+                return g.targetKeys.includes(d.key)
+            })
+            sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
+            if (group) {
+                sum[d.key].group = group.name
+            }
+            return sum
+        }, {})
+        return {experimentDetails: experimentDetails, intCol: params.column}
+    }
+
     const handleModalOk = () => {
         dispatch(addTemplate({analysisId: props.analysisId, name: nameText, description: descriptionText}))
         setIsModalVisible(false);
     };
 
+    const handleGroupModalOk = () => {
+        dispatch(setStepParameters({
+            resultId: props.resultId,
+            stepId: props.initialStep.id,
+            params: prepareParams(localParams)
+        }))
+        setIsGroupModalVisible(false);
+    };
+
     const handleModalCancel = () => {
         setIsModalVisible(false);
+    };
+
+    const handleGroupModalCancel = () => {
+        setIsGroupModalVisible(false);
     };
 
     const clickDelete = () => {
@@ -43,6 +126,10 @@ export default function AnalysisMenu(props) {
 
     const clickCopy = () => {
         dispatch(copyAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
+    }
+
+    const setGroups = () => {
+        setIsGroupModalVisible(true);
     }
 
     const downloadPdf = () => {
@@ -76,8 +163,17 @@ export default function AnalysisMenu(props) {
                 showIcon
                 closable
             />}
-            <div><span className={"analysis-menu-title"}>Analysis menu</span><Button className={"analysis-menu-close"} onClick={() => closeMenu()} type={"text"} icon={<CloseOutlined/>}></Button></div>
+            <div><span className={"analysis-menu-title"}>Analysis menu</span><Button className={"analysis-menu-close"}
+                                                                                     onClick={() => closeMenu()}
+                                                                                     type={"text"}
+                                                                                     icon={<CloseOutlined/>}></Button>
+            </div>
             <Menu selectable={false} onClick={() => closeMenu()}>
+                <Menu.Item onClick={() => setGroups()}
+                           key={'groups'}
+                >
+                    <span>Define groups...</span>
+                </Menu.Item>
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}
                 >
@@ -120,15 +216,22 @@ export default function AnalysisMenu(props) {
                 </Menu.Item>
             </Menu>
             <Modal title="Save analysis as template" visible={isModalVisible} onOk={() => handleModalOk()}
-                   onCancel={() => handleModalCancel()}
-            >
-                    <Row gutter={[16, 16]}>
-                        <Col span={8}><span>Name</span></Col>
-                        <Col span={16}><Input onChange={(e) => setNameText(e.target.value)}></Input></Col>
+                   onCancel={() => handleModalCancel()}>
+                <Row gutter={[16, 16]}>
+                    <Col span={8}><span>Name</span></Col>
+                    <Col span={16}><Input onChange={(e) => setNameText(e.target.value)}></Input></Col>
 
-                        <Col span={8}><span>Description</span></Col>
-                        <Col span={16}><Input onChange={(e) => setDescriptionText(e.target.value)}></Input></Col>
-                    </Row>
+                    <Col span={8}><span>Description</span></Col>
+                    <Col span={16}><Input onChange={(e) => setDescriptionText(e.target.value)}></Input></Col>
+                </Row>
+            </Modal>
+            <Modal title={"Define groups"} visible={isGroupModalVisible} onOk={() => handleGroupModalOk()}
+                   onCancel={() => handleGroupModalCancel()} width={1000}>
+                <DefineGroupsParams analysisIdx={props.analysisIdx}
+                                    params={localParams} commonResult={props.initialStep.commonResult}
+                                    prepareParams={prepareParams}
+                                    setParams={setLocalParams}>
+                </DefineGroupsParams>
             </Modal>
         </div>
 

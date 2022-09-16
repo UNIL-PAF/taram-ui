@@ -41,7 +41,7 @@ export default function AnalysisSteps(props) {
                     <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
-                                                 resultsId={props.data.result.id}></AnalysisMenu>}
+                                                 resultId={props.data.result.id} initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
                     <Button type={"text"} icon={<EllipsisOutlined style={{fontSize: '24px'}}/>}></Button>
