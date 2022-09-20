@@ -172,7 +172,7 @@ export default function AnalysisMenu(props) {
                 <Menu.Item onClick={() => setGroups()}
                            key={'groups'}
                 >
-                    <span>Define groups...</span>
+                    <span>Groups and intensity...</span>
                 </Menu.Item>
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}
@@ -225,7 +225,7 @@ export default function AnalysisMenu(props) {
                     <Col span={16}><Input onChange={(e) => setDescriptionText(e.target.value)}></Input></Col>
                 </Row>
             </Modal>
-            <Modal title={"Define groups"} visible={isGroupModalVisible} onOk={() => handleGroupModalOk()}
+            <Modal visible={isGroupModalVisible} onOk={() => handleGroupModalOk()}
                    onCancel={() => handleGroupModalCancel()} width={1000}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}
                                     params={localParams} commonResult={props.initialStep.commonResult}
