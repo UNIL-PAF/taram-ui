@@ -1,13 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Card} from 'antd';
 import AnalysisStepMenu from "../AnalysisStepMenu"
-import DefineGroupsParams from "./DefineGroupsParams";
 import StepComment from "../StepComment";
 
 export default function InitialResult(props) {
     const results = JSON.parse(props.data.results)
-    //const [localParams, setLocalParams] = useState()
-
 
     return (
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
