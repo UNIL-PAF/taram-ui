@@ -6,11 +6,10 @@ const {Option} = Select;
 export default function GroupFilterParams(props) {
 
     const numCols = props.commonResult.numericalColumns
-    const selCol = props.selCol ? props.selCol : props.commonResult.intCol
 
     useEffect(() => {
         if (!props.params) {
-            props.setParams({field: selCol, filterInGroup: 'one_group', minNrValid: 0})
+            props.setParams({filterInGroup: 'one_group', minNrValid: 0})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
@@ -35,7 +34,7 @@ export default function GroupFilterParams(props) {
     <span>
             <span style={{paddingRight: "10px"}}>Value to filter on</span>
             <Select
-                value={props.params.field} style={{width: 250}} onChange={handleChange}>
+                value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
                 {numCols.map((n, i) => {
                     return <Option key={i} value={i}>{n}</Option>
                 })}

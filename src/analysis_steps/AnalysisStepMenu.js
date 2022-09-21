@@ -152,6 +152,7 @@ export default function AnalysisStepMenu(props) {
                                           commonResult={props.commonResult}
                                           params={newStepParams}
                                           setParams={setNewStepParams}
+                                          intCol={props.intCol}
                 ></GroupFilterParams>
             case 'transformation':
                 return <TransformationParams analysisIdx={props.analysisIdx}
@@ -164,6 +165,7 @@ export default function AnalysisStepMenu(props) {
                                              commonResult={props.commonResult}
                                              params={newStepParams}
                                              setParams={setNewStepParams}
+                                             intCol={props.intCol}
                 ></TTestParams>
             case 'volcano-plot':
                 return <VolcanoPlotParams analysisIdx={props.analysisIdx}
