@@ -20,7 +20,6 @@ export default function FilterParams(props) {
         }
     }, [props])
 
-
     function handleChange(field, checked) {
         let newParams = {...props.params}
         newParams[field] = checked
@@ -31,10 +30,10 @@ export default function FilterParams(props) {
         const emptyFilter = {
             colName: '',
             comparator: 'gt',
-            removeSelected: true,
+            removeSelected: false,
             compareToValue: ''
         }
-        setRemove([...remove, "remove"])
+        setRemove([...remove, "keep"])
         props.setParams({...props.params, colFilters: [...props.params.colFilters, emptyFilter]})
     }
 
@@ -69,6 +68,12 @@ export default function FilterParams(props) {
 
         return <Row gutter={3} key={'filter-'+idx}>
             <Col>
+                <Select onChange={(v) => changeRemove(idx, v)} value={remove[idx]} size={"small"} style={{width: 90}}>
+                    <Option key={"remove"} value={"remove"}>{"remove"}</Option>
+                    <Option key={"keep"} value={"keep"}>{"keep"}</Option>
+                </Select>
+            </Col>
+            <Col>
                 <Select value={filter.colName} onChange={(v) => multiSelect(idx,"colName", v)} size={"small"} style={{width: 250}}>
                     {props.commonResult.headers.map((n, i) => {
                         return <Option key={i} value={n.name}>{n.name}</Option>
@@ -87,12 +92,6 @@ export default function FilterParams(props) {
             </Col>
             <Col>
                 <Input onChange={(e) => changeCompareVal(idx, e)} value={filter.compareToValue} size={"small"} style={{width: 90}}/>
-            </Col>
-            <Col>
-                <Select onChange={(v) => changeRemove(idx, v)} value={remove[idx]} size={"small"} style={{width: 90}}>
-                    <Option key={"remove"} value={"remove"}>{"remove"}</Option>
-                    <Option key={"keep"} value={"keep"}>{"keep"}</Option>
-                </Select>
             </Col>
             <Col>
                 <Button onClick={(ex) => removeFilter(idx)} type={"text"} size={"small"} icon={<CloseCircleOutlined/>} />
