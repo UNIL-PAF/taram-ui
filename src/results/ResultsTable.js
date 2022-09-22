@@ -44,7 +44,6 @@ class ResultsTable extends React.Component {
         }
     ]
 
-
     render() {
         return (
             <>

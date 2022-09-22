@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Select, Space} from 'antd';
+import {useDispatch, useSelector} from "react-redux";
+import {getProteinTable} from "../../protein_table/BackendProteinTable";
+import ProteinTable from "../../protein_table/ProteinTable";
 
 const {Option} = Select;
 
@@ -7,6 +10,16 @@ export default function BoxPlotParams(props) {
 
     const [useDefaultCol, setUseDefaultCol] = useState()
     const numCols = props.commonResult.numericalColumns
+    const proteinTable = useSelector(state => state.proteinTable.data)
+    const proteinTableError = useSelector(state => state.proteinTable.error)
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(!proteinTable && !proteinTableError){
+            dispatch(getProteinTable({stepId: props.stepId}))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [proteinTable, proteinTableError])
 
     useEffect(() => {
         if (!props.params) {
@@ -46,7 +59,14 @@ export default function BoxPlotParams(props) {
                 <Checkbox
                     onChange={checkboxChange} checked={props.params.logScale}>Use logarithmic scale (log2)
                 </Checkbox>
+                {proteinTable && showProteinTable()}
             </Space>
+        </>
+    }
+
+    function showProteinTable(){
+        return <>
+            <ProteinTable tableData={proteinTable}></ProteinTable>
         </>
     }
 

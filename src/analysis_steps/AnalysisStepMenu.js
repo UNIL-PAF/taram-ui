@@ -140,6 +140,7 @@ export default function AnalysisStepMenu(props) {
                                            params={newStepParams}
                                            setParams={setNewStepParams}
                                            intCol={props.intCol}
+                                           stepId={props.stepId}
                 ></BoxPlotParams>
             case 'filter':
                 return <FilterParams analysisIdx={props.analysisIdx}
