@@ -1,23 +1,105 @@
-import React, {useEffect, useState} from "react";
-import {Table} from "antd";
+import React, {useEffect, useState, useRef} from "react";
+import {Table, Spin, Input, Space, Button} from "antd";
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 
 export default function ProteinTable(props) {
+
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+            >
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{
+                        marginBottom: 8,
+                        display: 'block',
+                    }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters, confirm, dataIndex)}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? '#1890ff' : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{
+                        backgroundColor: '#ffc069',
+                        padding: 0,
+                    }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
 
     const columns = [
         {
             title: 'Protein group',
             dataIndex: 'prot',
-            key: 'prot'
+            key: 'prot',
+            ellipsis: true,
+            ...getColumnSearchProps('prot'),
         },
         {
             title: 'Gene',
             dataIndex: 'gene',
             key: 'gene',
+            ...getColumnSearchProps('gene'),
         },
         {
             title: 'Description',
             dataIndex: 'desc',
             key: 'desc',
+            ellipsis: true
         },
         {
             title: 'Intensity',
@@ -25,6 +107,7 @@ export default function ProteinTable(props) {
             key: 'int',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.int - b.int,
+            render: (text) => text ? text.toExponential(2) : 0,
         },
         {
             title: 'IBAQ',
@@ -32,21 +115,35 @@ export default function ProteinTable(props) {
             key: 'ibaq',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.ibaq - b.ibaq,
+            render: (text) => text ? text.toExponential(2) : 0,
         }
     ];
+
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters, confirm, dataIndex) => {
+        setSearchText('');
+        setSearchedColumn(dataIndex);
+        clearFilters();
+        confirm();
+    };
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
         onChange: (a , b) => {
-            console.log(`selectedRowKeys: ${a}`, 'selectedRows: ', b);
+            const selProts = b.map((r) => r.prot)
+            props.setParams({...props.params, selProts: selProts})
         }
     };
 
-    console.log(props.tableData)
-
     return (
         <>
-            <h3>Protein table</h3>
+            { !props.tableData && <Spin tip="Loading..."></Spin>}
             { props.tableData && <Table
                 rowSelection={{
                     type: 'checkbox',

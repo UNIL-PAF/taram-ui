@@ -30,6 +30,8 @@ export default function AnalysisStepMenu(props) {
         if (!showStepParams) {
             const params = props.prepareParams ? props.prepareParams(props.stepParams) : props.stepParams
 
+            console.log(params)
+
             dispatch(setStepParameters({
                 resultId: props.resultId,
                 stepId: props.stepId,

@@ -25,8 +25,8 @@ export default function BoxPlot(props) {
         const results = JSON.parse(props.data.results)
         const params = JSON.parse(props.data.parameters)
 
-        const newData = results.data.map(d => {
-            const dataWithName = d.data.map(box => {
+        const newData = results.boxPlotData.map(d => {
+            const dataWithName = d.groupData.map(box => {
                 return [box.name].concat(box.data)
             })
             return {
@@ -35,39 +35,51 @@ export default function BoxPlot(props) {
             }
         })
 
-        results.data = newData
+        results.boxPlotData = newData
 
-        const myDimensions = ['name', 'min', 'Q1', 'median', 'Q3', 'max']
+        const boxplotDimensions = ['name', 'min', 'Q1', 'median', 'Q3', 'max']
 
-        const boxplotData = results
+        const parsedRes = results
+
+        const boxplotDatasets = parsedRes.boxPlotData.map(d => {
+            return {
+                dimensions: boxplotDimensions,
+                source: d.data
+            }
+        })
+
+        const selProtSeries = parsedRes.selProtData ? parsedRes.selProtData.map(d => {
+            return {
+                name: d.prot,
+                type: 'line',
+                data: d.ints
+            }
+        }) : null
+
+        const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
+            return {
+                name: d.group,
+                type: 'boxplot',
+                datasetIndex: i,
+                encode: {
+                    y: boxplotDimensions.slice(1),
+                    x: 'name',
+                },
+                xAxisIndex: i
+            }
+        })
 
         const options = {
-            dataset: boxplotData.data.map(d => {
-                return {
-                    dimensions: myDimensions,
-                    source: d.data
-                }
-            }),
-            series: boxplotData.data.map((d, i) => {
-                return {
-                    name: d.group,
-                    type: 'boxplot',
-                    datasetIndex: i,
-                    encode: {
-                        y: myDimensions.slice(1),
-                        x: 'name',
-                    },
-                    xAxisIndex: i
-                }
-            }),
+            dataset: boxplotDatasets,
+            series: boxplotSeries.concat(selProtSeries),
             legend: {},
-            xAxis: boxplotData.data.map((d, i) => {
+            xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
                     type: 'category',
                     scale: true,
                     axisLabel: {interval: 0, rotate: 50},
                     show: (i === 0 ? true : false),
-                    data: boxplotData.experimentNames,
+                    data: parsedRes.experimentNames,
                     axisLine: { onZero: false }
                 }
             }),

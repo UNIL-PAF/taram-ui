@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space} from 'antd';
+import {Checkbox, Select, Space, Divider} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
@@ -59,14 +59,10 @@ export default function BoxPlotParams(props) {
                 <Checkbox
                     onChange={checkboxChange} checked={props.params.logScale}>Use logarithmic scale (log2)
                 </Checkbox>
-                {proteinTable && showProteinTable()}
+                <Divider />
+                <h3>Protein table</h3>
+                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable}></ProteinTable>
             </Space>
-        </>
-    }
-
-    function showProteinTable(){
-        return <>
-            <ProteinTable tableData={proteinTable}></ProteinTable>
         </>
     }
 
