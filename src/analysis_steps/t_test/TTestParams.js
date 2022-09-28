@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import {InputNumber, Select} from 'antd';
+import React, {useEffect, useState} from "react";
+import {Checkbox, InputNumber, Select, Space} from 'antd';
 
 const {Option} = Select;
 
@@ -7,6 +7,7 @@ export default function TTestParams(props) {
 
     const numCols = props.commonResult.numericalColumns
     const intCol = props.commonResult.intCol
+    const [useDefaultCol, setUseDefaultCol] = useState()
 
     useEffect(() => {
         if(!props.params){
@@ -15,9 +16,19 @@ export default function TTestParams(props) {
                 multiTestCorr: 'BH',
                 signThres: 0.05
             })
+            setUseDefaultCol(true)
+        }else{
+        if(useDefaultCol === undefined){
+            setUseDefaultCol(props.params.field ? false: true)
         }
+    }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props, useDefaultCol])
+
+    function changeUseDefaultCol(e){
+        setUseDefaultCol(e.target.checked)
+        if(e.target.checked) props.setParams({...props.params, field: null})
+    }
 
     function handleChange(value) {
         props.setParams({...props.params, field: numCols[value]})
@@ -35,25 +46,23 @@ export default function TTestParams(props) {
 
     function showOptions(){
         return <>
-            <span>
-            <span style={{paddingRight: "10px"}}>Compute t-test based on </span>
+            <Space direction="vertical" size="middle">
+            <Checkbox
+                    onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
+            </Checkbox>
             <Select
-                value={props.params.field} style={{width: 250}} onChange={handleChange}>
+                disabled={useDefaultCol}
+                value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
                 {numCols.map((n, i) => {
                     return <Option key={i} value={i}>{n}</Option>
                 })}
             </Select>
-        </span>
-            <br/>
-            <br/>
             <span>
             <span style={{paddingRight: "10px"}}>Significance threshold</span>
             <InputNumber
                 value={props.params.signThres}
                 onChange={(val) => valueChange("signThres", val)}></InputNumber>
         </span>
-            <br/>
-            <br/>
             <span>
             <span style={{paddingRight: "10px"}}>Multiple testing correction</span>
             <Select value={props.params.multiTestCorr} style={{width: 250}} onChange={filterInGroupChange}>
@@ -61,6 +70,7 @@ export default function TTestParams(props) {
                 <Option value={'bonferroni'}>Bonferroni</Option>
             </Select>
         </span>
+            </Space>
         </>
     }
 

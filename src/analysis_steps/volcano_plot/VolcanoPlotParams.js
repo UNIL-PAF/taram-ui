@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Checkbox, InputNumber} from 'antd';
+import {Checkbox, InputNumber, Space} from 'antd';
 
 export default function BoxPlotParams(props) {
 
@@ -29,6 +29,7 @@ export default function BoxPlotParams(props) {
 
     function showOptions(){
         return <>
+            <Space direction="vertical" size="middle">
            <span style={{paddingLeft: "10px"}}>Significance threshold<InputNumber
                value={props.params.pValThresh}
                onChange={(val) => valueChange("pValThresh", val)}></InputNumber></span>
@@ -44,6 +45,7 @@ export default function BoxPlotParams(props) {
             <Checkbox
                 onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use log10(p-value)
             </Checkbox>
+            </Space>
         </>
     }
 

@@ -37,7 +37,7 @@ export default function VolcanoPlot(props) {
                 nameTextStyle: { padding: [8, 4, 5, 6] },
             },
             yAxis: {
-                min: 1,
+                min: 0,
                 name: "-log10(p)",
                 position: "left",
                 nameRotate: 90,
