@@ -74,7 +74,16 @@ export default function FilterParams(props) {
                 </Select>
             </Col>
             <Col>
-                <Select value={filter.colName} onChange={(v) => multiSelect(idx,"colName", v)} size={"small"} style={{width: 250}}>
+                <Select
+                    value={filter.colName}
+                    onChange={(v) => multiSelect(idx,"colName", v)}
+                    size={"small"}
+                    style={{width: 250}}
+                    showSearch={true}
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
                     {props.commonResult.headers.map((n, i) => {
                         return <Option key={i} value={n.name}>{n.name}</Option>
                     })}
