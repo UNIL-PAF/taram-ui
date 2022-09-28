@@ -50,7 +50,7 @@ export default function BoxPlot(props) {
 
         const selProtSeries = parsedRes.selProtData ? parsedRes.selProtData.map(d => {
             return {
-                name: d.prot,
+                name: d.gene ? d.gene : d.prot,
                 type: 'line',
                 data: d.ints
             }
