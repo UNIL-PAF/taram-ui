@@ -16,11 +16,14 @@ import GroupFilterParams from "./group_filter/GroupFilterParams";
 import TransformationParams from "./transformation/TransformationParams";
 import TTestParams from "./t_test/TTestParams";
 import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
+import ReactECharts from "echarts-for-react";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
+    const [showZoom, setShowZoom] = useState(null)
+
     const dispatch = useDispatch();
 
     const handleOk = () => {
@@ -185,6 +188,29 @@ export default function AnalysisStepMenu(props) {
         return showStepParams ? analysisParamList(showStepParams) : props.paramComponent
     }
 
+    const showZoomModal = () => {
+        return <>
+            {props.echartOptions &&
+            <div>
+                <ReactECharts
+                option={{...props.echartOptions, toolbox: {
+                        feature: {
+                            dataZoom: {
+                            },
+                            saveAsImage: {
+                                name: props.paramType + "_" + props.stepId
+                            }
+                        }
+                    }}}
+                style={{
+                    height: '500px',
+                    width: '100%',
+                }}
+            />
+            </div>}
+        </>
+    }
+
     return (
         <>
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
@@ -198,7 +224,7 @@ export default function AnalysisStepMenu(props) {
                 <Button type={"text"} icon={<DeleteOutlined/>} style={{visibility: `${props.hideDeleteButton !== undefined ? 'hidden' : 'visible'}`}}/>
             </Popconfirm>
 
-            <Button type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
+            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
             <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideSettingButton !== undefined ? 'hidden' : 'visible'}`}}
                     onClick={() => clickParams()}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
@@ -209,6 +235,11 @@ export default function AnalysisStepMenu(props) {
                    width={1000}
             >
                 {showModal()}
+            </Modal>
+            <Modal title="Plot" visible={showZoom} onOk={() => setShowZoom(false)} onCancel={() => setShowZoom(false)}
+                   width={"95%"} height={"95%"}
+            >
+                {showZoomModal()}
             </Modal>
         </>
 

@@ -105,6 +105,7 @@ export default function BoxPlot(props) {
                               commonResult={props.data.commonResult}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
+                              echartOptions={options}
                               paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
                                                              intCol={props.data.columnInfo.columnMapping.intCol}
                                                              params={localParams} commonResult={props.data.commonResult}
