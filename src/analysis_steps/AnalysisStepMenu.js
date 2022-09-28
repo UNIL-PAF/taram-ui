@@ -51,6 +51,8 @@ export default function AnalysisStepMenu(props) {
 
     const handleCancel = () => {
         setIsModalVisible(false);
+        setShowStepParams(undefined)
+        setNewStepParams(null)
     };
 
     const confirmDelete = (stepId) => {
