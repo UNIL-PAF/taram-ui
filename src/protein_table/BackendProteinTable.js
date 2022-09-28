@@ -1,7 +1,6 @@
 import axios from 'axios';
 import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {fetchAnalysisByResultId} from "../analysis/BackendAnalysis";
 
 function getProteinTableCall(stepId) {
     return axios.get(globalConfig.urlBackend + "analysis-step/protein-table/" + stepId)
