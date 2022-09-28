@@ -17,6 +17,7 @@ export default function TTest(props) {
                               paramType={"t-test"}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<TTestParams analysisIdx={props.analysisIdx}
                                                            params={localParams} commonResult={props.data.commonResult}
                                                            setParams={setLocalParams}

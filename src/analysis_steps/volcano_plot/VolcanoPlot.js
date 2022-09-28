@@ -148,6 +148,7 @@ export default function VolcanoPlot(props) {
                               error={props.data.error} paramType={"volcano-plot"}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<VolcanoPlotParams analysisIdx={props.analysisIdx}
                                                                  params={localParams} commonResult={props.data.commonResult}
                                                                  setParams={setLocalParams}

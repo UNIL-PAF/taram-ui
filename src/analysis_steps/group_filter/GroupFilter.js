@@ -15,6 +15,7 @@ export default function GroupFilter(props) {
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status} error={props.data.error}
                               paramType={"group-filter"} commonResult={props.data.commonResult}
                               stepParams={localParams}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<GroupFilterParams analysisIdx={props.analysisIdx}
                                                                  params={localParams}
                                                                  commonResult={props.data.commonResult}

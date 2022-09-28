@@ -16,6 +16,7 @@ export default function Filter(props) {
                               error={props.data.error} paramType={"filter"}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<FilterParams analysisIdx={props.analysisIdx}
                                                              params={localParams} commonResult={props.data.commonResult}
                                                              setParams={setLocalParams}

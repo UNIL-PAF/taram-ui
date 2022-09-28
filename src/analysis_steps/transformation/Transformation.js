@@ -15,6 +15,7 @@ export default function Transformation(props) {
                               error={props.data.error} paramType={"transformation"}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
+                              intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<TransformationParams analysisIdx={props.analysisIdx}
                                                                     params={localParams} commonResult={props.data.commonResult}
                                                                     setParams={setLocalParams}></TransformationParams>}/>

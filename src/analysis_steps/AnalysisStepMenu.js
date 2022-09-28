@@ -149,6 +149,7 @@ export default function AnalysisStepMenu(props) {
                                            commonResult={props.commonResult}
                                            params={newStepParams}
                                            setParams={setNewStepParams}
+                                           intCol={props.intCol}
                 ></FilterParams>
             case 'group-filter':
                 return <GroupFilterParams analysisIdx={props.analysisIdx}
@@ -162,6 +163,7 @@ export default function AnalysisStepMenu(props) {
                                           commonResult={props.commonResult}
                                           params={newStepParams}
                                           setParams={setNewStepParams}
+                                          intCol={props.intCol}
                 ></TransformationParams>
             case 't-test':
                 return <TTestParams analysisIdx={props.analysisIdx}

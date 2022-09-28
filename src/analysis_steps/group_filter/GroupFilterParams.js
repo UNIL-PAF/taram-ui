@@ -22,7 +22,7 @@ export default function GroupFilterParams(props) {
 
     function changeUseDefaultCol(e) {
         setUseDefaultCol(e.target.checked)
-        if (e.target.checked) props.setParams({...props.params, column: null})
+        if (e.target.checked) props.setParams({...props.params, field: null})
     }
 
     function handleChange(value) {
