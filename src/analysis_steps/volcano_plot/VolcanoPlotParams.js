@@ -22,9 +22,9 @@ export default function BoxPlotParams(props) {
     }
 
     function valueChange(field, value) {
-        let newParams = {...props.params.imputationParams}
+        let newParams = {...props.params}
         newParams[[field]] = value
-        props.setParams({...props.params, imputationParams: newParams})
+        props.setParams(newParams)
     }
 
     function showOptions(){
