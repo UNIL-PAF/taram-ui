@@ -47,7 +47,8 @@ export default function VolcanoPlot(props) {
             label: {
                 show: true,
                 formatter: function (params) {
-                    return (params.data.showLab) ? params.data.gene : ""
+                    const d = params.data
+                    return (d.showLab) ? (d.gene ? d.gene : d.prot) : ""
                 },
                 position: 'right',
                 minMargin: 2
