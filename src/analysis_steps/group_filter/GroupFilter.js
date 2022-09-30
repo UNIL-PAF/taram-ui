@@ -19,6 +19,7 @@ export default function GroupFilter(props) {
                               paramComponent={<GroupFilterParams analysisIdx={props.analysisIdx}
                                                                  params={localParams}
                                                                  commonResult={props.data.commonResult}
+                                                                 intCol={props.data.columnInfo.columnMapping.intCol}
                                                                  setParams={setLocalParams}></GroupFilterParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
