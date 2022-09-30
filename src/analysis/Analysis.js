@@ -37,14 +37,6 @@ export default function Analysis() {
 
     return (
         <div>
-            {analysisError && <Alert
-                message="Error"
-                description={analysisError}
-                type="error"
-                showIcon
-                closable
-            />}
-
             {analysisData && <div className={"analysis-container"}>
                 {
                     analysisData.map(a => {
@@ -53,7 +45,13 @@ export default function Analysis() {
                 }
             </div>
             }
-
+            {analysisError && <Alert
+                message="Error"
+                description={analysisError}
+                type="error"
+                showIcon
+                closable
+            />}
         </div>
     );
 }

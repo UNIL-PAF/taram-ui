@@ -25,6 +25,7 @@ export default function VolcanoPlot(props) {
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
         const params = JSON.parse(props.data.parameters)
+
         const dataWithLabel = results.data.map(d => {
             const showLab = params.selProteins && params.selProteins.includes(d.prot)
             return { ...d, showLab: showLab }

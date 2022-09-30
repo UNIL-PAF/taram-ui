@@ -19,7 +19,9 @@ export const deleteAnalysis = createAsyncThunk(
             }
             return thunkApi.rejectWithValue(error.response.data)
         }finally {
-            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            setTimeout(() => {
+                thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            }, 2000);
         }
     }
 )
@@ -62,7 +64,9 @@ export const duplicateAnalysis = createAsyncThunk(
             }
             return thunkApi.rejectWithValue(error.response.data)
         }finally {
-            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            setTimeout(() => {
+                thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            }, 2000);
         }
     }
 )
@@ -84,7 +88,9 @@ export const copyAnalysis = createAsyncThunk(
             }
             return thunkApi.rejectWithValue(error.response.data)
         }finally {
-            thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            setTimeout(() => {
+                thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultsId))
+            }, 2000);
         }
     }
 )

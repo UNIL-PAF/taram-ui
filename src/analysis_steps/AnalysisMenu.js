@@ -117,15 +117,15 @@ export default function AnalysisMenu(props) {
     };
 
     const clickDelete = () => {
-        dispatch(deleteAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
+        dispatch(deleteAnalysis({analysisId: props.analysisId, resultsId: props.resultId}))
     }
 
     const clickDuplicate = () => {
-        dispatch(duplicateAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
+        dispatch(duplicateAnalysis({analysisId: props.analysisId, resultsId: props.resultId}))
     }
 
     const clickCopy = () => {
-        dispatch(copyAnalysis({analysisId: props.analysisId, resultsId: props.resultsId}))
+        dispatch(copyAnalysis({analysisId: props.analysisId, resultsId: props.resultId}))
     }
 
     const setGroups = () => {
@@ -147,7 +147,7 @@ export default function AnalysisMenu(props) {
     }
 
     const loadTemplate = (templateId) => {
-        dispatch(runTemplate({analysisId: props.analysisId, templateId: templateId, resultsId: props.resultsId}))
+        dispatch(runTemplate({analysisId: props.analysisId, templateId: templateId, resultsId: props.resultId}))
     }
 
     const closeMenu = () => {
