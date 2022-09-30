@@ -21,6 +21,7 @@ export default function TTest(props) {
                               paramComponent={<TTestParams analysisIdx={props.analysisIdx}
                                                            params={localParams} commonResult={props.data.commonResult}
                                                            setParams={setLocalParams}
+                                                           intCol={props.data.columnInfo.columnMapping.intCol}
                                             ></TTestParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
