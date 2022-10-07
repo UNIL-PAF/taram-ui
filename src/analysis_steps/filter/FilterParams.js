@@ -140,7 +140,7 @@ export default function FilterParams(props) {
                         <Button type="primary" icon={<PlusCircleOutlined/>} size={"small"} onClick={() => clickAddFilter()}>Add new
                             filter</Button>
                     </Col></Row>
-                    {props.params && props.params.colFilters.map( (f, i) => renderOneFilter(i))}
+                    {props.params && props.params.colFilters && props.params.colFilters.map( (f, i) => renderOneFilter(i))}
                 </Space>
             </Col>
         </Row>
