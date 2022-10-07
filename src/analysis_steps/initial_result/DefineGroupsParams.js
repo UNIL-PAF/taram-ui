@@ -62,8 +62,7 @@ export default function DefineGroupsParams(props) {
                     <h3>Group selection</h3>
                     <GroupSelection groupData={props.params.groupData}
                                     expData={props.params.expData}
-                                    setGroupData={(gd) => props.setParams({
-                                        expData: props.params.expData,
+                                    setGroupData={(gd) => props.setParams({...props.params,
                                         groupData: gd
                                     })}
                     ></GroupSelection>
