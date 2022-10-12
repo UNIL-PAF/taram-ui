@@ -18,12 +18,12 @@ export default function FilterParams(props) {
                 colFilters: []
             })
         }else{
-            if(props.params.colFilters && props.params.colFilters.length > 0 && remove.length == 0){
+            if(props.params.colFilters && props.params.colFilters.length > 0 && remove.length === 0){
                 const parsedRemoves = props.params.colFilters.map( c => {return c.removeSelected ? "remove" : "keep"})
                 setRemove(parsedRemoves)
             }
         }
-    }, [props])
+    }, [props, remove.length])
 
     function handleChange(field, checked) {
         let newParams = {...props.params}

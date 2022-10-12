@@ -1,16 +1,24 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {Table, Spin, Input, Space, Button} from "antd";
-import { SearchOutlined } from '@ant-design/icons';
+import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
 export default function ProteinTable(props) {
 
     const [searchText, setSearchText] = useState('');
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
 
+    useEffect(() => {
+        if (props.tableData && props.params && props.params.selProts && props.params.selProts.length > 0 && selectedRowKeys.length === 0) {
+            const selRows = props.tableData.table.filter((r) => {return r.sel}).map((r) => {return r.key})
+            setSelectedRowKeys(selRows)
+        }
+    }, [props, selectedRowKeys.length])
+
     const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
             <div
                 style={{
                     padding: 8,
@@ -31,7 +39,7 @@ export default function ProteinTable(props) {
                     <Button
                         type="primary"
                         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
+                        icon={<SearchOutlined/>}
                         size="small"
                         style={{
                             width: 90,
@@ -105,7 +113,7 @@ export default function ProteinTable(props) {
             title: 'Intensity',
             dataIndex: 'int',
             key: 'int',
-            defaultSortOrder: 'descend',
+            //defaultSortOrder: 'descend',
             sorter: (a, b) => a.int - b.int,
             render: (text) => text ? text.toExponential(2) : 0,
         },
@@ -113,10 +121,10 @@ export default function ProteinTable(props) {
             title: 'IBAQ',
             dataIndex: 'ibaq',
             key: 'ibaq',
-            defaultSortOrder: 'descend',
+            //defaultSortOrder: 'descend',
             sorter: (a, b) => a.ibaq - b.ibaq,
             render: (text) => text ? text.toExponential(2) : 0,
-        }
+        },
     ];
 
 
@@ -135,23 +143,25 @@ export default function ProteinTable(props) {
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
-        onChange: (a , b) => {
+        selectedRowKeys,
+        onChange: (a, b) => {
             const selProts = b.map((r) => r.prot)
+            setSelectedRowKeys(a)
             props.setParams({...props.params, selProts: selProts})
         }
     };
 
     return (
         <>
-            { !props.tableData && <Spin tip="Loading..."></Spin>}
-            { props.tableData && <Table
+            {!props.tableData && <Spin tip="Loading..."></Spin>}
+            {props.tableData && <Table
                 rowSelection={{
                     type: 'checkbox',
                     ...rowSelection,
                 }}
                 dataSource={props.tableData.table}
                 columns={columns}
-                size={"small"}/> }
+                size={"small"}/>}
         </>
     );
 }
