@@ -117,7 +117,7 @@ export default function FilterParams(props) {
         <Row>
             <Col span={8}>
                 <span>
-                    <Checkbox defaultChecked={true}
+                    <Checkbox checked={props.params.removeOnlyIdentifiedBySite}
                               onChange={(e) => handleChange("removeOnlyIdentifiedBySite", e.target.checked)}>
                     </Checkbox>
                     <span style={{paddingLeft: "20px"}}>Remove only-identified-by-site</span>
@@ -125,7 +125,7 @@ export default function FilterParams(props) {
                 <br/>
                 <br/>
                 <span>
-                    <Checkbox defaultChecked={true}
+                    <Checkbox checked={props.params.removeReverse}
                               onChange={(e) => handleChange("removeReverse", e.target.checked)}>
                     </Checkbox>
                     <span style={{paddingLeft: "20px"}}>Remove reverse</span>
@@ -133,7 +133,7 @@ export default function FilterParams(props) {
                 <br/>
                 <br/>
                 <span>
-                    <Checkbox defaultChecked={true}
+                    <Checkbox checked={props.params.removePotentialContaminant}
                               onChange={(e) => handleChange("removePotentialContaminant", e.target.checked)}>
                     </Checkbox>
                     <span style={{paddingLeft: "20px"}}>Remove potential contaminants</span>

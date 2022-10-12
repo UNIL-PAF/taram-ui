@@ -14,4 +14,5 @@
 .copy-difference {
     color: #ff4d4f;
     font-style: italic;
+    white-space: pre-line;
 }
