@@ -17,8 +17,11 @@ export default function Transformation(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               paramComponent={<TransformationParams analysisIdx={props.analysisIdx}
-                                                                    params={localParams} commonResult={props.data.commonResult}
-                                                                    setParams={setLocalParams}></TransformationParams>}/>
+                                                                    params={localParams}
+                                                                    commonResult={props.data.commonResult}
+                                                                    setParams={setLocalParams}
+                                                                    intCol={props.data.columnInfo.columnMapping.intCol}
+                                            ></TransformationParams>}/>
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {params &&
