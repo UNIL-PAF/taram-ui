@@ -60,7 +60,7 @@ export default function StepComment(props) {
                               defaultValue={commentText}
                     ></TextArea>
                     <Space>
-                        <Button onClick={() => save()} size={"small"}>Save</Button>
+                        <Button onClick={() => save()} size={"small"} style={{marginLeft: '10px'}}>Save</Button>
                         <Button onClick={() => cancel()} size={"small"} danger>Cancel</Button>
                     </Space>
                 </div>

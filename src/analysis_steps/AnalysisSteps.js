@@ -11,6 +11,7 @@ import AnalysisMenu from "./AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
 import VolcanoPlot from "./volcano_plot/VolcanoPlot";
+import AnalysisTitle from "../analysis/AnalysisTitle";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -36,8 +37,9 @@ export default function AnalysisSteps(props) {
                 <h3>
                 <span style={{float: "left", marginLeft: "10px"}}>
                     <Badge status={badgeStatus()}/>
+                    <span>{props.data.idx + 1}</span>
                 </span>
-                    Analysis #{props.data.idx + 1}
+                    <AnalysisTitle id={props.data.id} name={props.data.name} idx={props.data.idx} resultId={props.data.result.id}></AnalysisTitle>
                     <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}

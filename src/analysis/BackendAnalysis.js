@@ -71,6 +71,33 @@ export const duplicateAnalysis = createAsyncThunk(
     }
 )
 
+function callSetAnalysisName(analysisId, analysisName){
+    axios.post(globalConfig.urlBackend + "analysis/set-name/" + analysisId, analysisName,
+        {headers:{
+            'Content-Type': 'application/json'
+        }})
+}
+
+export const setAnalysisName = createAsyncThunk(
+    'analysis/set-name',
+    async (analysisObj, thunkApi) => {
+        try {
+            const response = await callSetAnalysisName(analysisObj.analysisId, analysisObj.analysisName)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        }finally {
+            setTimeout(() => {
+                thunkApi.dispatch(fetchAnalysisByResultId(analysisObj.resultId))
+            }, 2000);
+        }
+    }
+)
+
 function callCopyAnalysis(analysisId){
     axios.post(globalConfig.urlBackend + "analysis/copy/" + analysisId)
 }
