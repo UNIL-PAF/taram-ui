@@ -17,7 +17,6 @@ export default function AnalysisTitle(props) {
 
     const save = () => {
         const analysisObj = {analysisId: props.id, analysisName: name, resultId: props.resultId}
-        console.log(analysisObj)
         setIsEditing(!isEditing)
         dispatch(setAnalysisName(analysisObj))
     }

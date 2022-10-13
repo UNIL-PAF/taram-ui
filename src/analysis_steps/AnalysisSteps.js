@@ -37,9 +37,10 @@ export default function AnalysisSteps(props) {
                 <h3>
                 <span style={{float: "left", marginLeft: "10px"}}>
                     <Badge status={badgeStatus()}/>
-                    <span>{props.data.idx + 1}</span>
+                    <span style={{fontSize: "large"}}>{props.data.idx + 1}</span>
                 </span>
                     <AnalysisTitle id={props.data.id} name={props.data.name} idx={props.data.idx} resultId={props.data.result.id}></AnalysisTitle>
+                    {props.data.copyFromIdx != null && <span className={"copy-from-title"}>{"Copy from #" + (props.data.copyFromIdx+1)}</span>}
                     <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}

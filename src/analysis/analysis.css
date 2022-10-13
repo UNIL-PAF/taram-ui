@@ -35,6 +35,14 @@
 
 }
 
+.copy-from-title {
+    color: #ff4d4f;
+    font-style: italic;
+    font-size: small;
+    margin-left: 20px;
+
+}
+
 .analysis-col {
     border-radius: 10px;
     box-sizing: border-box;
