@@ -6,6 +6,8 @@ import {setAnalysisName} from "./BackendAnalysis";
 
 export default function AnalysisTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
+    // we add this tempName, to show new name before data from backend is loaded
+    const [tempName, setTempName] = useState(undefined)
     const [name, setName] = useState(null)
     const dispatch = useDispatch();
 
@@ -19,6 +21,7 @@ export default function AnalysisTitle(props) {
         const analysisObj = {analysisId: props.id, analysisName: name, resultId: props.resultId}
         setIsEditing(!isEditing)
         dispatch(setAnalysisName(analysisObj))
+        setTempName(name)
     }
 
     const cancel = () => {
@@ -28,7 +31,7 @@ export default function AnalysisTitle(props) {
     return (
         <>
             {!isEditing &&
-                <span onClick={() => setIsEditing(true)}>{props.name || "Analysis #" + (props.idx + 1)}</span>
+                <span onClick={() => setIsEditing(true)}>{tempName || props.name || "Analysis #" + (props.idx + 1)}</span>
             }
             { isEditing &&
                 <div>
