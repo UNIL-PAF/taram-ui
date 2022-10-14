@@ -14,6 +14,11 @@ export const proteinTableSlice = createSlice({
     initialState: {
         error: null,
     },
+    reducers: {
+        clearTable(state){
+            state.data = undefined
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getProteinTable.pending, (state, action) => {
@@ -29,5 +34,7 @@ export const proteinTableSlice = createSlice({
             })
     },
 })
+
+export const {clearTable} = proteinTableSlice.actions
 
 export default proteinTableSlice.reducer

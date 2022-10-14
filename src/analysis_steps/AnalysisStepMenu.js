@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
 import {useDispatch} from "react-redux";
 import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
+import {clearTable} from "../protein_table/proteinTableSlice"
 import {
     ClockCircleOutlined,
     DeleteOutlined,
@@ -27,7 +28,7 @@ export default function AnalysisStepMenu(props) {
     const dispatch = useDispatch();
 
     const handleOk = () => {
-
+        dispatch(clearTable())
         setIsModalVisible(false);
         // parameters for existing step
         if (!showStepParams) {
@@ -56,6 +57,7 @@ export default function AnalysisStepMenu(props) {
         setIsModalVisible(false);
         setShowStepParams(undefined)
         setNewStepParams(null)
+        dispatch(clearTable())
     };
 
     const confirmDelete = (stepId) => {
@@ -136,78 +138,73 @@ export default function AnalysisStepMenu(props) {
         });
     };
 
-    const analysisParamList = (type) => {
+    const analysisParamList = (type, isNew) => {
         // eslint-disable-next-line
         switch (type) {
             case 'boxplot':
-                return <BoxPlotParams analysisIdx={props.analysisIdx}
-                                           commonResult={props.commonResult}
-                                           params={newStepParams}
-                                           setParams={setNewStepParams}
-                                           intCol={props.intCol}
-                                           stepId={props.stepId}
+                return <BoxPlotParams commonResult={props.commonResult}
+                                      params={isNew ? newStepParams : props.stepParams}
+                                      setParams={isNew ? setNewStepParams : props.setStepParams}
+                                      intCol={props.intCol}
+                                      stepId={props.stepId}
                 ></BoxPlotParams>
             case 'filter':
-                return <FilterParams analysisIdx={props.analysisIdx}
-                                           commonResult={props.commonResult}
-                                           params={newStepParams}
-                                           setParams={setNewStepParams}
-                                           intCol={props.intCol}
+                return <FilterParams commonResult={props.commonResult}
+                                     params={isNew ? newStepParams : props.stepParams}
+                                     setParams={isNew ? setNewStepParams : props.setStepParams}
+                                     intCol={props.intCol}
                 ></FilterParams>
             case 'group-filter':
-                return <GroupFilterParams analysisIdx={props.analysisIdx}
-                                          commonResult={props.commonResult}
-                                          params={newStepParams}
-                                          setParams={setNewStepParams}
+                return <GroupFilterParams commonResult={props.commonResult}
+                                          params={isNew ? newStepParams: props.stepParams}
+                                          setParams={isNew ? setNewStepParams: props.setStepParams}
                                           intCol={props.intCol}
                 ></GroupFilterParams>
             case 'transformation':
-                return <TransformationParams analysisIdx={props.analysisIdx}
-                                          commonResult={props.commonResult}
-                                          params={newStepParams}
-                                          setParams={setNewStepParams}
-                                          intCol={props.intCol}
+                return <TransformationParams commonResult={props.commonResult}
+                                             params={isNew ? newStepParams: props.stepParams}
+                                             setParams={isNew ? setNewStepParams: props.setStepParams}
+                                             intCol={props.intCol}
                 ></TransformationParams>
             case 't-test':
-                return <TTestParams analysisIdx={props.analysisIdx}
-                                             commonResult={props.commonResult}
-                                             params={newStepParams}
-                                             setParams={setNewStepParams}
-                                             intCol={props.intCol}
+                return <TTestParams commonResult={props.commonResult}
+                                    params={isNew ? newStepParams: props.stepParams}
+                                    setParams={isNew ? setNewStepParams: props.setStepParams}
+                                    intCol={props.intCol}
                 ></TTestParams>
             case 'volcano-plot':
-                return <VolcanoPlotParams analysisIdx={props.analysisIdx}
-                                    commonResult={props.commonResult}
-                                    params={newStepParams}
-                                    setParams={setNewStepParams}
+                return <VolcanoPlotParams commonResult={props.commonResult}
+                                          params={isNew ? newStepParams: props.stepParams}
+                                          setParams={isNew ? setNewStepParams: props.setStepParams}
                 ></VolcanoPlotParams>
         }
     }
 
     const showModal = () => {
-        return showStepParams ? analysisParamList(showStepParams) : props.paramComponent
+        return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
     }
 
     const showZoomModal = () => {
         return <>
             {props.echartOptions &&
-            <div>
-                <ReactECharts
-                option={{...props.echartOptions, toolbox: {
-                        feature: {
-                            dataZoom: {
-                            },
-                            saveAsImage: {
-                                name: props.paramType + "_" + props.stepId
+                <div>
+                    <ReactECharts
+                        option={{
+                            ...props.echartOptions, toolbox: {
+                                feature: {
+                                    dataZoom: {},
+                                    saveAsImage: {
+                                        name: props.paramType + "_" + props.stepId
+                                    }
+                                }
                             }
-                        }
-                    }}}
-                style={{
-                    height: '500px',
-                    width: '100%',
-                }}
-            />
-            </div>}
+                        }}
+                        style={{
+                            height: '500px',
+                            width: '100%',
+                        }}
+                    />
+                </div>}
         </>
     }
 
@@ -221,11 +218,14 @@ export default function AnalysisStepMenu(props) {
                 okText="Yes"
                 cancelText="Cancel"
             >
-                <Button type={"text"} icon={<DeleteOutlined/>} style={{visibility: `${props.hideDeleteButton !== undefined ? 'hidden' : 'visible'}`}}/>
+                <Button type={"text"} icon={<DeleteOutlined/>}
+                        style={{visibility: `${props.hideDeleteButton !== undefined ? 'hidden' : 'visible'}`}}/>
             </Popconfirm>
 
-            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
-            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled} style={{visibility: `${props.hideSettingButton !== undefined ? 'hidden' : 'visible'}`}}
+            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled}
+                    style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
+            <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
+                    style={{visibility: `${props.hideSettingButton !== undefined ? 'hidden' : 'visible'}`}}
                     onClick={() => clickParams()}></Button>
             <Dropdown overlay={analysisMenuList} placement="bottomLeft"
                       arrow disabled={buttonsDisabled}>

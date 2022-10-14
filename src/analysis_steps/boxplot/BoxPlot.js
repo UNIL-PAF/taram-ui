@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Card} from "antd";
 import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
-import BoxPlotParams from "./BoxPlotParams";
 import {useDispatch} from "react-redux";
 import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
@@ -10,14 +9,29 @@ import StepComment from "../StepComment";
 export default function BoxPlot(props) {
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
+    const [isWaiting, setIsWaiting] = useState(true)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        console.log(options)
+    },[options])
 
     useEffect(() => {
         if (props.data) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
+
+            if (isWaiting && props.data.status === 'done'){
+                setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
+                setIsWaiting(false)
+            }
+
+            if(! isWaiting && props.data.status !== 'done'){
+                setIsWaiting(true)
+                const greyOpt = {...options.data, color:  Array(30).fill('lightgrey')}
+                setOptions({count: options ? options.count + 1 : 0, data: greyOpt} )
+            }
         }
-        if (props.data.results) setOptions(getOptions())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
 
@@ -100,22 +114,21 @@ export default function BoxPlot(props) {
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu key={props.data.id} stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                              error={props.data.error} paramType={"boxplot"}
+            <AnalysisStepMenu key={props.data.id}
+                              stepId={props.data.id}
+                              resultId={props.resultId}
+                              status={props.data.status}
+                              error={props.data.error}
+                              paramType={"boxplot"}
                               commonResult={props.data.commonResult}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
+                              setStepParams={setLocalParams}
                               echartOptions={options}
-                              paramComponent={<BoxPlotParams analysisIdx={props.analysisIdx}
-                                                             intCol={props.data.columnInfo.columnMapping.intCol}
-                                                             params={localParams} commonResult={props.data.commonResult}
-                                                             setParams={setLocalParams}
-                                                             stepId={props.data.id}
-                              ></BoxPlotParams>}/>
-
+            />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {options && options.series.length > 0 && <ReactECharts option={options}/>}
+            {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );

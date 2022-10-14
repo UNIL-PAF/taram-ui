@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Card} from "antd";
 import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
-import VolcanoPlotParams from "./VolcanoPlotParams";
 import StepComment from "../StepComment";
 import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
@@ -11,6 +10,7 @@ export default function VolcanoPlot(props) {
 
     const dispatch = useDispatch();
     const [localParams, setLocalParams] = useState()
+    const [optionsCount, setOptionsCount] = useState(0)
     const [options, setOptions] = useState()
 
     useEffect(() => {
@@ -18,7 +18,10 @@ export default function VolcanoPlot(props) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
         }
-        if(props.data.results) setOptions(getOptions())
+        if (props.data.results && props.data.status === 'done'){
+            setOptionsCount(optionsCount + 1)
+            setOptions(getOptions())
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
 
@@ -28,14 +31,14 @@ export default function VolcanoPlot(props) {
 
         const dataWithLabel = results.data.map(d => {
             const showLab = params.selProteins && params.selProteins.includes(d.prot)
-            return { ...d, showLab: showLab }
+            return {...d, showLab: showLab}
         })
 
         return {
             xAxis: {
                 name: "Fold change",
                 nameLocation: "center",
-                nameTextStyle: { padding: [8, 4, 5, 6] },
+                nameTextStyle: {padding: [8, 4, 5, 6]},
             },
             yAxis: {
                 min: 0,
@@ -43,7 +46,7 @@ export default function VolcanoPlot(props) {
                 position: "left",
                 nameRotate: 90,
                 nameLocation: "center",
-                nameTextStyle: { padding: [8, 4, 5, 6] },
+                nameTextStyle: {padding: [8, 4, 5, 6]},
             },
             label: {
                 show: true,
@@ -56,7 +59,7 @@ export default function VolcanoPlot(props) {
             },
             tooltip: {
                 showDelay: 0,
-                formatter: function(params) {
+                formatter: function (params) {
                     if (params.componentType === "markLine") {
                         const text =
                             params.data.name + " threshold: " + params.data.value;
@@ -77,13 +80,13 @@ export default function VolcanoPlot(props) {
                 {
                     transform: {
                         type: 'filter',
-                        config: { dimension: 'isSign', value: true }
+                        config: {dimension: 'isSign', value: true}
                     }
                 },
                 {
                     transform: {
                         type: 'filter',
-                        config: { dimension: 'isSign', value: false }
+                        config: {dimension: 'isSign', value: false}
                     }
                 }
             ],
@@ -104,7 +107,7 @@ export default function VolcanoPlot(props) {
                             type: "dashed",
                             color: "#3ba272",
                         },
-                        label: { show: false },
+                        label: {show: false},
                         symbol: ["none", "none"],
                         data: [
                             {
@@ -146,19 +149,20 @@ export default function VolcanoPlot(props) {
     return (
         <Card className={'analysis-step-card'} title={"Volcano plot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                              error={props.data.error} paramType={"volcano-plot"}
+            <AnalysisStepMenu stepId={props.data.id}
+                              resultId={props.resultId}
+                              status={props.data.status}
+                              error={props.data.error}
+                              paramType={"volcano-plot"}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               echartOptions={options}
-                              paramComponent={<VolcanoPlotParams analysisIdx={props.analysisIdx}
-                                                                 params={localParams} commonResult={props.data.commonResult}
-                                                                 setParams={setLocalParams}
-                                                         ></VolcanoPlotParams>}/>
+                              setStepParams={setLocalParams}
+            />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {options && options.series.length > 0 && <ReactECharts option={options} onEvents= {onEvents}/>}
+            {options && options.series.length > 0 && <ReactECharts key={optionsCount} option={options} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
