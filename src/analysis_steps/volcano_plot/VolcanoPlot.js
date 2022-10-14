@@ -169,7 +169,8 @@ export default function VolcanoPlot(props) {
     return (
         <Card className={'analysis-step-card'} title={"Volcano plot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu stepId={props.data.id}
+            <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
+                              stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
@@ -177,7 +178,7 @@ export default function VolcanoPlot(props) {
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
-                              echartOptions={options}
+                              echartOptions={options ? options.data : null}
                               setStepParams={setLocalParams}
             />
         }>

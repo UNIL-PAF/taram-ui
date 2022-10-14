@@ -110,7 +110,7 @@ export default function BoxPlot(props) {
     return (
         <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu key={props.data.id}
+            <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
                               stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
@@ -120,7 +120,7 @@ export default function BoxPlot(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
                               setStepParams={setLocalParams}
-                              echartOptions={options}
+                              echartOptions={options ? options.data : null}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
