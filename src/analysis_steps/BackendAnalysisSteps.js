@@ -139,7 +139,7 @@ export const switchSelProt = createAsyncThunk(
             }
             return thunkApi.rejectWithValue(error.response.data)
         } finally {
-            thunkApi.dispatch(fetchAnalysisByResultId(stepObj.resultId))
+           // thunkApi.dispatch(fetchAnalysisByResultId(stepObj.resultId))
         }
     }
 )

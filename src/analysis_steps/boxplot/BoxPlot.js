@@ -13,10 +13,6 @@ export default function BoxPlot(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(options)
-    },[options])
-
-    useEffect(() => {
         if (props.data) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
