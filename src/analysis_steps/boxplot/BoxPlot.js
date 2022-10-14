@@ -33,7 +33,7 @@ export default function BoxPlot(props) {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props, isWaiting])
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)

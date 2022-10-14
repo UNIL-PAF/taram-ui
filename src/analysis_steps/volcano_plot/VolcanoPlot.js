@@ -10,20 +10,36 @@ export default function VolcanoPlot(props) {
 
     const dispatch = useDispatch();
     const [localParams, setLocalParams] = useState()
-    const [optionsCount, setOptionsCount] = useState(0)
+    const [isWaiting, setIsWaiting] = useState(true)
     const [options, setOptions] = useState()
+    const [onEvents, setOnEvents] = useState({'click': showToolTipOnClick})
 
     useEffect(() => {
         if (props.data.parameters) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
         }
-        if (props.data.results && props.data.status === 'done'){
-            setOptionsCount(optionsCount + 1)
-            setOptions(getOptions())
+        if (isWaiting && props.data.status === 'done'){
+            console.log("done")
+            setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
+            setIsWaiting(false)
+        }
+        if(! isWaiting && props.data.status !== 'done'){
+            console.log("greying out")
+            setIsWaiting(true)
+            const greyOpt = greyOptions(options.data)
+            setOptions({count: options ? options.count + 1 : 0, data: greyOpt} )
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
+
+    const greyOptions = (options) => {
+        const greyCol = 'lightgrey'
+        let newOpts = {...options, color:  Array(30).fill(greyCol)}
+        newOpts.series[0].itemStyle = {color: greyCol}
+        newOpts.series[0].markLine.lineStyle.color = greyCol
+        return newOpts
+    }
 
     const getOptions = () => {
         const results = JSON.parse(props.data.results)
@@ -138,10 +154,6 @@ export default function VolcanoPlot(props) {
         }
     }
 
-    const onEvents = {
-        'click': showToolTipOnClick,
-    }
-
     function showToolTipOnClick(e) {
         dispatch(switchSelProt({resultId: props.resultId, proteinAc: e.data.prot, stepId: props.data.id}))
     }
@@ -162,7 +174,7 @@ export default function VolcanoPlot(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {options && options.series.length > 0 && <ReactECharts key={optionsCount} option={options} onEvents={onEvents}/>}
+            {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
