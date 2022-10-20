@@ -14,23 +14,28 @@ export default function VolcanoPlot(props) {
     const [options, setOptions] = useState()
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
+    const [onEvents, setOnEvents] = useState()
 
     useEffect(() => {
         if (props.data.parameters) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
         }
-        if (isWaiting && props.data.status === 'done') {
-            setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
-            setIsWaiting(false)
-        }
-        if (!isWaiting && props.data.status !== 'done') {
-            setIsWaiting(true)
-            const greyOpt = greyOptions(options.data)
-            setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
+        if(props.data.status === 'done'){
+            if (isWaiting) {
+                setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
+                setIsWaiting(false)
+            }
+            setOnEvents({'click': showToolTipOnClick})
+        }else{
+            if(!isWaiting){
+                setIsWaiting(true)
+                const greyOpt = greyOptions(options.data)
+                setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props, selProts])
 
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
@@ -184,7 +189,7 @@ export default function VolcanoPlot(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data} onEvents={{'click': showToolTipOnClick}}/>}
+                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
