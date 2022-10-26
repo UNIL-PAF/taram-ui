@@ -20,6 +20,7 @@ export default function GroupFilter(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
+                              tableNr={props.data.tableNr}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

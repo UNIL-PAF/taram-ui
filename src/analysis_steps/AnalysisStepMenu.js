@@ -210,6 +210,7 @@ export default function AnalysisStepMenu(props) {
 
     return (
         <>
+            {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px", fontWeight: "bold"}}>{'M'+props.tableNr}</span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Rate count={1}/>
             <Popconfirm

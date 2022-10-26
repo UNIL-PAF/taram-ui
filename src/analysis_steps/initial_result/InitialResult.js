@@ -13,7 +13,7 @@ export default function InitialResult(props) {
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               commonResult={props.data.commonResult} hideDeleteButton={true} hideSettingButton={true} hideZoomButton={true}
-                              intCol={intCol}/>
+                              intCol={intCol} tableNr={props.data.tableNr}/>
         }>
             <p>Default intensity column: <strong>{intCol}</strong></p>
             {results && results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}
