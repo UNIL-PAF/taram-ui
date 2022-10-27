@@ -156,26 +156,26 @@ export default function AnalysisStepMenu(props) {
                 ></FilterParams>
             case 'group-filter':
                 return <GroupFilterParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams: props.stepParams}
-                                          setParams={isNew ? setNewStepParams: props.setStepParams}
+                                          params={isNew ? newStepParams : props.stepParams}
+                                          setParams={isNew ? setNewStepParams : props.setStepParams}
                                           intCol={props.intCol}
                 ></GroupFilterParams>
             case 'transformation':
                 return <TransformationParams commonResult={props.commonResult}
-                                             params={isNew ? newStepParams: props.stepParams}
-                                             setParams={isNew ? setNewStepParams: props.setStepParams}
+                                             params={isNew ? newStepParams : props.stepParams}
+                                             setParams={isNew ? setNewStepParams : props.setStepParams}
                                              intCol={props.intCol}
                 ></TransformationParams>
             case 't-test':
                 return <TTestParams commonResult={props.commonResult}
-                                    params={isNew ? newStepParams: props.stepParams}
-                                    setParams={isNew ? setNewStepParams: props.setStepParams}
+                                    params={isNew ? newStepParams : props.stepParams}
+                                    setParams={isNew ? setNewStepParams : props.setStepParams}
                                     intCol={props.intCol}
                 ></TTestParams>
             case 'volcano-plot':
                 return <VolcanoPlotParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams: props.stepParams}
-                                          setParams={isNew ? setNewStepParams: props.setStepParams}
+                                          params={isNew ? newStepParams : props.stepParams}
+                                          setParams={isNew ? setNewStepParams : props.setStepParams}
                 ></VolcanoPlotParams>
         }
     }
@@ -210,7 +210,8 @@ export default function AnalysisStepMenu(props) {
 
     return (
         <>
-            {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px", fontWeight: "bold"}}>{'M'+props.tableNr}</span>}
+            {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px"}}><Button
+                type="dashed" size="small">{'M' + props.tableNr}</Button></span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Rate count={1}/>
             <Popconfirm
