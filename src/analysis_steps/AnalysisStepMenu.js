@@ -18,6 +18,7 @@ import TransformationParams from "./transformation/TransformationParams";
 import TTestParams from "./t_test/TTestParams";
 import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
 import ReactECharts from "echarts-for-react";
+import globalConfig from "../globalConfig";
 
 export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -184,6 +185,20 @@ export default function AnalysisStepMenu(props) {
         return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
     }
 
+    const downloadTable = () => {
+        fetch(globalConfig.urlBackend + 'analysis-step/table/' + props.stepId)
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'M' + props.tableNr + '.txt';
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
+    }
+
     const showZoomModal = () => {
         return <>
             {props.echartOptions &&
@@ -211,7 +226,7 @@ export default function AnalysisStepMenu(props) {
     return (
         <>
             {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px"}}><Button
-                type="dashed" size="small">{'M' + props.tableNr}</Button></span>}
+                type="dashed" size="small" onClick={downloadTable}>{'M' + props.tableNr}</Button></span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Rate count={1}/>
             <Popconfirm
