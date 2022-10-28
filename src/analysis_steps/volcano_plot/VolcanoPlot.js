@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Card} from "antd";
+import {Button, Card} from "antd";
 import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
 import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
+import EchartsZoom from "../EchartsZoom";
+import {FullscreenOutlined} from "@ant-design/icons";
 
 export default function VolcanoPlot(props) {
+    const type = 'volcano-plot'
 
     const dispatch = useDispatch();
     const [localParams, setLocalParams] = useState()
@@ -15,6 +18,7 @@ export default function VolcanoPlot(props) {
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
     const [onEvents, setOnEvents] = useState()
+    const [showZoom, setShowZoom] = useState(null)
 
     useEffect(() => {
         if (props.data.parameters) {
@@ -179,7 +183,7 @@ export default function VolcanoPlot(props) {
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"volcano-plot"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
@@ -187,10 +191,14 @@ export default function VolcanoPlot(props) {
                               setStepParams={setLocalParams}
             />
         }>
+            {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
+                <Button size={'small'} type='default' onClick={() => setShowZoom(true)} icon={<FullscreenOutlined />}>Expand</Button>
+            </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id}></EchartsZoom>}
         </Card>
     );
 }

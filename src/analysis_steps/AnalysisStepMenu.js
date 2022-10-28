@@ -6,7 +6,6 @@ import {clearTable} from "../protein_table/proteinTableSlice"
 import {
     ClockCircleOutlined,
     EllipsisOutlined,
-    FullscreenOutlined,
     PlusCircleOutlined,
     SettingOutlined,
     SyncOutlined
@@ -17,7 +16,6 @@ import GroupFilterParams from "./group_filter/GroupFilterParams";
 import TransformationParams from "./transformation/TransformationParams";
 import TTestParams from "./t_test/TTestParams";
 import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
-import ReactECharts from "echarts-for-react";
 import globalConfig from "../globalConfig";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
@@ -26,7 +24,6 @@ export default function AnalysisStepMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
-    const [showZoom, setShowZoom] = useState(null)
 
     const dispatch = useDispatch();
 
@@ -74,10 +71,9 @@ export default function AnalysisStepMenu(props) {
 
     const analysisMenuList = (
         <Menu>
-            <Menu.Item onClick={() => clickAddStep("quality-control")}
-                       key={'quality-control'} disabled={true}>
-                <span>Quality control</span>
-            </Menu.Item>
+            <div style={{paddingLeft: '10px'}}>
+                <span className={"analysis-menu-title"}>Add a following step</span>
+            </div>
             <Menu.SubMenu key={"sub-1"} title={"Plots"}>
                 <Menu.Item onClick={() => clickAddStep("boxplot")}
                            key={'boxplot'}>
@@ -196,30 +192,6 @@ export default function AnalysisStepMenu(props) {
             });
     }
 
-    const showZoomModal = () => {
-        return <>
-            {props.echartOptions &&
-                <div>
-                    <ReactECharts
-                        option={{
-                            ...props.echartOptions, toolbox: {
-                                feature: {
-                                    dataZoom: {},
-                                    saveAsImage: {
-                                        name: props.paramType + "_" + props.stepId
-                                    }
-                                }
-                            }
-                        }}
-                        style={{
-                            height: '500px',
-                            width: '100%',
-                        }}
-                    />
-                </div>}
-        </>
-    }
-
     return (
         <>
             {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px"}}><Button
@@ -232,8 +204,6 @@ export default function AnalysisStepMenu(props) {
                       arrow>
                 <Button type={"text"} icon={<EllipsisOutlined/>}></Button>
             </Dropdown>
-            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<FullscreenOutlined />} disabled={buttonsDisabled}
-                    style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
             <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
                     style={{visibility: `${props.hideSettingButton !== undefined ? 'hidden' : 'visible'}`}}
                     onClick={() => clickParams()}></Button>
@@ -245,11 +215,6 @@ export default function AnalysisStepMenu(props) {
                    width={1000}
             >
                 {showModal()}
-            </Modal>
-            <Modal title="Plot" visible={showZoom} onOk={() => setShowZoom(false)} onCancel={() => setShowZoom(false)}
-                   width={"95%"} height={"95%"}
-            >
-                {showZoomModal()}
             </Modal>
         </>
 

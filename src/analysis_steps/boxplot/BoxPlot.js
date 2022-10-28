@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Card} from "antd";
+import {Button, Card} from "antd";
 import AnalysisStepMenu from "../AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
 import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
+import {FullscreenOutlined} from "@ant-design/icons";
+import EchartsZoom from "../EchartsZoom";
 
 export default function BoxPlot(props) {
+    const type = 'boxplot'
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
+    const [showZoom, setShowZoom] = useState(null)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -69,7 +73,7 @@ export default function BoxPlot(props) {
         const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
             return {
                 name: d.group,
-                type: 'boxplot',
+                type: type,
                 datasetIndex: i,
                 encode: {
                     y: boxplotDimensions.slice(1),
@@ -115,7 +119,7 @@ export default function BoxPlot(props) {
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"boxplot"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
@@ -123,9 +127,13 @@ export default function BoxPlot(props) {
                               echartOptions={options ? options.data : null}
             />
         }>
+            {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
+                <Button size={'small'} type='default' onClick={() => setShowZoom(true)} icon={<FullscreenOutlined />}>Expand</Button>
+            </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id}></EchartsZoom>}
         </Card>
     );
 }
