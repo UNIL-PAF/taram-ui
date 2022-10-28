@@ -1,15 +1,15 @@
 import React, {useState} from "react";
-import {Button, Dropdown, Menu, message, Modal, Popconfirm, Rate, Tag} from 'antd';
+import {Button, Dropdown, Menu, Modal, Tag} from 'antd';
 import {useDispatch} from "react-redux";
-import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
+import {addAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
 import {clearTable} from "../protein_table/proteinTableSlice"
 import {
     ClockCircleOutlined,
-    DeleteOutlined,
+    EllipsisOutlined,
+    FullscreenOutlined,
     PlusCircleOutlined,
     SettingOutlined,
-    SyncOutlined,
-    ZoomInOutlined
+    SyncOutlined
 } from "@ant-design/icons";
 import BoxPlotParams from "./boxplot/BoxPlotParams";
 import FilterParams from "./filter/FilterParams";
@@ -19,8 +19,10 @@ import TTestParams from "./t_test/TTestParams";
 import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
 import ReactECharts from "echarts-for-react";
 import globalConfig from "../globalConfig";
+import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
 export default function AnalysisStepMenu(props) {
+    const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
@@ -59,11 +61,6 @@ export default function AnalysisStepMenu(props) {
         setShowStepParams(undefined)
         setNewStepParams(null)
         dispatch(clearTable())
-    };
-
-    const confirmDelete = (stepId) => {
-        dispatch(deleteAnalysisStep({stepId: stepId, resultId: props.resultId}))
-        message.success('Delete step.');
     };
 
     const clickParams = function () {
@@ -228,18 +225,14 @@ export default function AnalysisStepMenu(props) {
             {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px"}}><Button
                 type="dashed" size="small" onClick={downloadTable}>{'M' + props.tableNr}</Button></span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
-            <Rate count={1}/>
-            <Popconfirm
-                title="Are you sure to delete this step?"
-                onConfirm={() => confirmDelete(props.stepId)}
-                okText="Yes"
-                cancelText="Cancel"
-            >
-                <Button type={"text"} icon={<DeleteOutlined/>}
-                        style={{visibility: `${props.hideDeleteButton !== undefined ? 'hidden' : 'visible'}`}}/>
-            </Popconfirm>
-
-            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<ZoomInOutlined/>} disabled={buttonsDisabled}
+            <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
+                      overlay={<AnalysisStepMenuItems type={props.paramType} stepId={props.stepId} setMenuIsVisible={setMenuIsVisible}
+                                             resultId={props.resultId}></AnalysisStepMenuItems>}
+                      placement="bottomLeft"
+                      arrow>
+                <Button type={"text"} icon={<EllipsisOutlined/>}></Button>
+            </Dropdown>
+            <Button onClick={() => setShowZoom(true)} type={"text"} icon={<FullscreenOutlined />} disabled={buttonsDisabled}
                     style={{visibility: `${props.hideZoomButton !== undefined ? 'hidden' : 'visible'}`}}></Button>
             <Button type={"text"} icon={<SettingOutlined/>} disabled={buttonsDisabled}
                     style={{visibility: `${props.hideSettingButton !== undefined ? 'hidden' : 'visible'}`}}
