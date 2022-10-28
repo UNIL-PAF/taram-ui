@@ -12,7 +12,7 @@ export default function InitialResult(props) {
     return (
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
-                              commonResult={props.data.commonResult} hideDeleteButton={true} hideSettingButton={true} hideZoomButton={true}
+                              commonResult={props.data.commonResult}
                               intCol={intCol} tableNr={props.data.tableNr}/>
         }>
             <p>Default intensity column: <strong>{intCol}</strong></p>

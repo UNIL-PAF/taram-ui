@@ -81,7 +81,7 @@ export default function AnalysisMenu(props) {
 
     // format the data for the backend
     const prepareParams = (params) => {
-        const experimentDetails =  params.expData.reduce((sum, d) => {
+        const experimentDetails = params.expData.reduce((sum, d) => {
             const group = params.groupData.find((g) => {
                 return g.targetKeys.includes(d.key)
             })
@@ -163,10 +163,11 @@ export default function AnalysisMenu(props) {
                 showIcon
                 closable
             />}
-            <div><span className={"analysis-menu-title"}>Analysis menu</span><Button className={"analysis-menu-close"}
-                                                                                     onClick={() => closeMenu()}
-                                                                                     type={"text"}
-                                                                                     icon={<CloseOutlined/>}></Button>
+            <div><span className={"analysis-menu-title"}>Analysis menu</span>
+                <Button className={"analysis-menu-close"}
+                        onClick={() => closeMenu()}
+                        type={"text"}
+                        icon={<CloseOutlined/>}></Button>
             </div>
             <Menu selectable={false} onClick={() => closeMenu()}>
                 <Menu.Item onClick={() => setGroups()}
