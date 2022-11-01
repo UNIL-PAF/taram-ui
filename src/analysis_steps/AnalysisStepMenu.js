@@ -1,23 +1,11 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {useDispatch} from "react-redux";
-import {addAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
-import {clearTable} from "../protein_table/proteinTableSlice"
 import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined} from "@ant-design/icons";
-import BoxPlotParams from "./boxplot/BoxPlotParams";
-import FilterParams from "./filter/FilterParams";
-import GroupFilterParams from "./group_filter/GroupFilterParams";
-import TransformationParams from "./transformation/TransformationParams";
-import TTestParams from "./t_test/TTestParams";
-import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
 import globalConfig from "../globalConfig";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
 export default function AnalysisStepMenu(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
-    const [isModalVisible, setIsModalVisible] = useState(false);
-//    const [showStepParams, setShowStepParams] = useState(undefined)
-//    const [newStepParams, setNewStepParams] = useState(null)
 
     const statusTag = () => {
         if (props.status === "idle") {
@@ -58,13 +46,12 @@ export default function AnalysisStepMenu(props) {
 
     return (
         <>
-            {props.status === 'done' && props.tableNr && <span style={{marginRight: "70px"}}><Button
-                type="dashed" size="small" onClick={downloadTable}>{'M' + props.tableNr}</Button></span>}
+            {props.status === 'done' && props.tableNr &&
+                <span style={{marginRight: "160px"}}><Tag onClick={downloadTable}>{'Table: M' + props.tableNr}</Tag></span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems type={props.paramType} stepId={props.stepId}
                                                       setMenuIsVisible={setMenuIsVisible}
-                                                      setIsModalVisible={setIsModalVisible}
                                                       commonResult={props.commonResult}
                                                       params={props.stepParams}
                                                       setParams={props.setStepParams}

@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import globalConfig from "../globalConfig";
 import {Button, Menu, message, Modal, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
-import {addTemplate} from "../templates/BackendTemplates";
 import '../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
@@ -16,18 +15,9 @@ import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [nameText, setNameText] = useState("");
-    const [descriptionText, setDescriptionText] = useState("");
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
     const dispatch = useDispatch();
-
-    /*
-    useEffect(() => {
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
-     */
 
     const handleOk = () => {
         dispatch(clearTable())
@@ -60,15 +50,6 @@ export default function AnalysisStepMenuItems(props) {
         setShowStepParams(undefined)
         setNewStepParams(null)
         dispatch(clearTable())
-    };
-
-    const handleModalOk = () => {
-        dispatch(addTemplate({analysisId: props.analysisId, name: nameText, description: descriptionText}))
-        setIsModalVisible(false);
-    };
-
-    const handleModalCancel = () => {
-        setIsModalVisible(false);
     };
 
     const confirmDelete = () => {
