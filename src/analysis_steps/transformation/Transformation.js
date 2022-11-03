@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Card} from "antd";
-import AnalysisStepMenu from "../AnalysisStepMenu";
+import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 
 export default function Transformation(props) {
@@ -20,6 +20,7 @@ export default function Transformation(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
+                              hasImputed={props.data.imputationTablePath != null}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

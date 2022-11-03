@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card} from "antd";
-import AnalysisStepMenu from "../AnalysisStepMenu";
+import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
 import {replacePlotIfChanged} from "../CommonStep";
@@ -125,6 +125,7 @@ export default function BoxPlot(props) {
                               stepParams={localParams}
                               setStepParams={setLocalParams}
                               echartOptions={options ? options.data : null}
+                              hasImputed={props.data.imputationTablePath != null}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
 import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined} from "@ant-design/icons";
-import globalConfig from "../globalConfig";
+import globalConfig from "../../globalConfig";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
 export default function AnalysisStepMenu(props) {
@@ -51,6 +51,7 @@ export default function AnalysisStepMenu(props) {
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems type={props.paramType} stepId={props.stepId}
+                                                      tableNr={props.tableNr}
                                                       setMenuIsVisible={setMenuIsVisible}
                                                       commonResult={props.commonResult}
                                                       params={props.stepParams}
@@ -60,6 +61,7 @@ export default function AnalysisStepMenu(props) {
                                                       prepareParams={props.prepareParams}
                                                       stepParams={props.stepParams}
                                                       setStepParams={props.setStepParams}
+                                                      hasImputed={props.hasImputed}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>

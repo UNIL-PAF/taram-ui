@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import globalConfig from "../globalConfig";
+import globalConfig from "../../globalConfig";
 import {Alert, Button, Col, Input, Menu, message, Modal, Popconfirm, Row, Tooltip} from "antd";
-import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../analysis/BackendAnalysis";
+import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../../analysis/BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
-import {addTemplate, fetchAllTemplates, runTemplate} from "../templates/BackendTemplates";
-import DefineGroupsParams from "./initial_result/DefineGroupsParams";
-import '../analysis/analysis.css'
+import {addTemplate, fetchAllTemplates, runTemplate} from "../../templates/BackendTemplates";
+import DefineGroupsParams from "../initial_result/DefineGroupsParams";
+import '../../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
-import {setStepParameters} from "./BackendAnalysisSteps";
+import {setStepParameters} from "../BackendAnalysisSteps";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);

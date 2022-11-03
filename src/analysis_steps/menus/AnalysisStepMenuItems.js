@@ -1,27 +1,29 @@
 import React, {useState} from "react";
-import globalConfig from "../globalConfig";
+import globalConfig from "../../globalConfig";
 import {Button, Menu, message, Modal, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
-import '../analysis/analysis.css'
+import '../../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
-import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "./BackendAnalysisSteps";
-import {clearTable} from "../protein_table/proteinTableSlice";
-import BoxPlotParams from "./boxplot/BoxPlotParams";
-import FilterParams from "./filter/FilterParams";
-import GroupFilterParams from "./group_filter/GroupFilterParams";
-import TransformationParams from "./transformation/TransformationParams";
-import TTestParams from "./t_test/TTestParams";
-import VolcanoPlotParams from "./volcano_plot/VolcanoPlotParams";
+import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "../BackendAnalysisSteps";
+import {clearTable} from "../../protein_table/proteinTableSlice";
+import BoxPlotParams from "../boxplot/BoxPlotParams";
+import FilterParams from "../filter/FilterParams";
+import GroupFilterParams from "../group_filter/GroupFilterParams";
+import TransformationParams from "../transformation/TransformationParams";
+import TTestParams from "../t_test/TTestParams";
+import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
+import DownloadTableModal from "./DownloadTableModal"
+import DownloadZipModal from "./DownloadZipModal"
 
 export default function AnalysisStepMenuItems(props) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [showModalName, setShowModalName] = useState()
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
     const dispatch = useDispatch();
 
     const handleOk = () => {
         dispatch(clearTable())
-        setIsModalVisible(false);
+        setShowModalName(undefined)
         // parameters for existing step
         if (!showStepParams) {
             const params = props.prepareParams ? props.prepareParams(props.stepParams) : props.stepParams
@@ -46,7 +48,7 @@ export default function AnalysisStepMenuItems(props) {
     };
 
     const handleCancel = () => {
-        setIsModalVisible(false);
+        setShowModalName(undefined)
         setShowStepParams(undefined)
         setNewStepParams(null)
         dispatch(clearTable())
@@ -57,27 +59,16 @@ export default function AnalysisStepMenuItems(props) {
         message.success('Delete ' + getType() + '.');
     };
 
-    const clickParams = function () {
-        setIsModalVisible(true);
-    }
-
-    const downloadPdf = () => {
-        fetch(globalConfig.urlBackend + 'analysis/pdf/' + props.analysisId)
-            .then(response => {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'analysis_' + props.analysisId + '.pdf';
-                    a.click();
-                });
-                //window.location.href = response.url;
-            });
-    }
-
-
-    const showModal = () => {
-        return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
+    const showModal = (name) => {
+        switch (name) {
+            case 'parameters':
+                return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
+            case 'download-table':
+                return <DownloadTableModal tableNr={props.tableNr} hasImputed={props.hasImputed}></DownloadTableModal>
+            case 'download-zip':
+                return <DownloadZipModal></DownloadZipModal>
+            default: return null
+        }
     }
 
     const closeMenu = () => {
@@ -136,7 +127,29 @@ export default function AnalysisStepMenuItems(props) {
 
     const clickAddStep = function (type) {
         setShowStepParams(type)
-        setIsModalVisible(true)
+        setShowModalName('parameters')
+    }
+
+    const getModalTitle = function (name) {
+        switch (name) {
+            case 'parameters':
+                return 'Parameters'
+            case 'download-table':
+                return 'Download table'
+            case 'download-zip':
+                return 'Download ZIP'
+            default:
+                return ''
+        }
+    }
+
+    const getModalWidth = function(name){
+        switch (name) {
+            case 'download-table':
+                return 300;
+            default:
+                return 1000;
+        }
     }
 
     return (
@@ -148,8 +161,8 @@ export default function AnalysisStepMenuItems(props) {
                 icon={<CloseOutlined/>}></Button>
             </div>
             <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}}>
-                {props.type &&<Menu.Item onClick={() => clickParams()}
-                           key={'params'}
+                {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
+                                          key={'params'}
                 >
                     <span>Change parameters..</span>
                 </Menu.Item>}
@@ -186,16 +199,16 @@ export default function AnalysisStepMenuItems(props) {
                     </Menu.SubMenu>
                 </Menu.SubMenu>
                 <Menu.Divider key={'divider-2'}></Menu.Divider>
-                <Menu.Item onClick={() => downloadPdf()}
+                <Menu.Item onClick={() => setShowModalName('download-zip')}
                            key={'zip'}
                 >
                     <span>Download ZIP..</span>
                 </Menu.Item>
-                <Menu.Item onClick={() => downloadPdf()}
+                {props.tableNr && <Menu.Item onClick={() => setShowModalName('download-table')}
                            key={'table'}
                 >
                     <span>Download table..</span>
-                </Menu.Item>
+                </Menu.Item>}
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 {props.type && <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
@@ -208,10 +221,11 @@ export default function AnalysisStepMenuItems(props) {
                     </Popconfirm>
                 </Menu.Item>}
             </Menu>
-            <Modal title="Parameters" visible={isModalVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
-                   width={1000}
+            <Modal title={getModalTitle(showModalName)} visible={showModalName} onOk={() => handleOk()}
+                   onCancel={() => handleCancel()}
+                   width={getModalWidth(showModalName)}
             >
-                {showModal()}
+                {showModal(showModalName)}
             </Modal>
         </div>
 

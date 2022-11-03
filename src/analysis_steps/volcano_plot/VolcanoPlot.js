@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card} from "antd";
-import AnalysisStepMenu from "../AnalysisStepMenu";
+import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
 import {switchSelProt} from "../BackendAnalysisSteps";
@@ -189,6 +189,7 @@ export default function VolcanoPlot(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               echartOptions={options ? options.data : null}
                               setStepParams={setLocalParams}
+                              hasImputed={props.data.imputationTablePath != null}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>

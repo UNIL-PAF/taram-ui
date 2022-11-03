@@ -7,7 +7,7 @@ import {Button, Dropdown, Badge} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
-import AnalysisMenu from "./AnalysisMenu";
+import AnalysisMenu from "./menus/AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
 import VolcanoPlot from "./volcano_plot/VolcanoPlot";

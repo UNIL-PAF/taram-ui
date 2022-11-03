@@ -1,6 +1,6 @@
 import React from "react";
 import {Card} from 'antd';
-import AnalysisStepMenu from "../AnalysisStepMenu"
+import AnalysisStepMenu from "../menus/AnalysisStepMenu"
 import StepComment from "../StepComment";
 
 export default function InitialResult(props) {
@@ -13,7 +13,7 @@ export default function InitialResult(props) {
         <Card className={"analysis-step-card"} title={"Initial result"} headStyle={{textAlign: 'left'}} bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id} resultId={props.resultId} status={props.data.status}
                               commonResult={props.data.commonResult}
-                              intCol={intCol} tableNr={props.data.tableNr}/>
+                              intCol={intCol} tableNr={props.data.tableNr} hasImputed={false}/>
         }>
             <p>Default intensity column: <strong>{intCol}</strong></p>
             {results && results.maxQuantParameters && <p>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong></p>}
