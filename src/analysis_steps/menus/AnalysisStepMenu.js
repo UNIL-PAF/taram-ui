@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
 import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined} from "@ant-design/icons";
-import globalConfig from "../../globalConfig";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
 export default function AnalysisStepMenu(props) {
@@ -30,24 +29,10 @@ export default function AnalysisStepMenu(props) {
         });
     };
 
-    const downloadTable = () => {
-        fetch(globalConfig.urlBackend + 'analysis-step/table/' + props.stepId)
-            .then(response => {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'M' + props.tableNr + '.txt';
-                    a.click();
-                });
-                //window.location.href = response.url;
-            });
-    }
-
     return (
         <>
             {props.status === 'done' && props.tableNr &&
-                <span style={{marginRight: "160px"}}><Tag onClick={downloadTable}>{'Table: M' + props.tableNr}</Tag></span>}
+                <span style={{marginRight: "160px"}}><Tag>{'Table: M' + props.tableNr}</Tag></span>}
             <span style={{marginRight: "35px"}}>{statusTag()}</span>
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems type={props.paramType} stepId={props.stepId}

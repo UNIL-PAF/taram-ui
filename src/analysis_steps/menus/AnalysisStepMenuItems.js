@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import globalConfig from "../../globalConfig";
+import React, {useEffect, useState} from "react";
 import {Button, Menu, message, Modal, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
 import '../../analysis/analysis.css'
@@ -19,9 +18,28 @@ export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
+    const [startDownload, setStartDownload] = useState(undefined)
     const dispatch = useDispatch();
 
-    const handleOk = () => {
+    useEffect(() => {
+        if(startDownload === false){
+            setStartDownload(undefined)
+            setShowModalName(undefined)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startDownload])
+
+
+    const handleOk = (name) => {
+        switch (name) {
+            case 'parameters':
+                handleParamsOk()
+                break;
+            default: setStartDownload(true)
+        }
+    }
+
+    const handleParamsOk = () => {
         dispatch(clearTable())
         setShowModalName(undefined)
         // parameters for existing step
@@ -64,7 +82,13 @@ export default function AnalysisStepMenuItems(props) {
             case 'parameters':
                 return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
             case 'download-table':
-                return <DownloadTableModal tableNr={props.tableNr} hasImputed={props.hasImputed}></DownloadTableModal>
+                return <DownloadTableModal
+                    stepId={props.stepId}
+                    setStartDownload={setStartDownload}
+                    startDownload={startDownload}
+                    tableNr={props.tableNr}
+                    hasImputed={props.hasImputed}>
+                </DownloadTableModal>
             case 'download-zip':
                 return <DownloadZipModal></DownloadZipModal>
             default: return null
@@ -221,7 +245,7 @@ export default function AnalysisStepMenuItems(props) {
                     </Popconfirm>
                 </Menu.Item>}
             </Menu>
-            <Modal title={getModalTitle(showModalName)} visible={showModalName} onOk={() => handleOk()}
+            <Modal title={getModalTitle(showModalName)} visible={showModalName} onOk={() => handleOk(showModalName)}
                    onCancel={() => handleCancel()}
                    width={getModalWidth(showModalName)}
             >
