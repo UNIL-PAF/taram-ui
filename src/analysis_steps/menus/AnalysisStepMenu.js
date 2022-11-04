@@ -47,6 +47,7 @@ export default function AnalysisStepMenu(props) {
                                                       stepParams={props.stepParams}
                                                       setStepParams={props.setStepParams}
                                                       hasImputed={props.hasImputed}
+                                                      hasPlot={props.hasPlot}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>

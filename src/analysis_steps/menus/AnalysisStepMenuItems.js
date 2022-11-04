@@ -90,7 +90,14 @@ export default function AnalysisStepMenuItems(props) {
                     hasImputed={props.hasImputed}>
                 </DownloadTableModal>
             case 'download-zip':
-                return <DownloadZipModal></DownloadZipModal>
+                return <DownloadZipModal
+                    stepId={props.stepId}
+                    setStartDownload={setStartDownload}
+                    startDownload={startDownload}
+                    tableNr={props.tableNr}
+                    hasPlot={props.hasPlot}
+                    hasImputed={props.hasImputed}>
+                ></DownloadZipModal>
             default: return null
         }
     }

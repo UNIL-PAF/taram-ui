@@ -124,6 +124,7 @@ export default function BoxPlot(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               stepParams={localParams}
                               setStepParams={setLocalParams}
+                              hasPlot={true}
                               echartOptions={options ? options.data : null}
                               hasImputed={props.data.imputationTablePath != null}
             />
