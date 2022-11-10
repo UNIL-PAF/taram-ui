@@ -22,7 +22,11 @@ export default function BoxPlot(props) {
             setLocalParams(params)
 
             if (isWaiting && props.data.status === 'done'){
-                setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
+                const results = JSON.parse(props.data.results)
+                const echartOptions = getOptions(results)
+                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
             }
 
@@ -35,8 +39,7 @@ export default function BoxPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting])
 
-    const getOptions = () => {
-        const results = JSON.parse(props.data.results)
+    const getOptions = (results) => {
         const params = JSON.parse(props.data.parameters)
 
         const newData = results.boxPlotData.map(d => {
@@ -103,10 +106,6 @@ export default function BoxPlot(props) {
                 nameGap: 20
             }
         };
-
-        if (params.column) {
-            replacePlotIfChanged(props.data.id, results, options, dispatch)
-        }
 
         return options
     }

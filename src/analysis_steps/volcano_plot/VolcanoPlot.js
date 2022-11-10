@@ -7,6 +7,7 @@ import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
+import {replacePlotIfChanged} from "../CommonStep";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -27,7 +28,10 @@ export default function VolcanoPlot(props) {
         }
         if(props.data.status === 'done'){
             if (isWaiting) {
-                setOptions({count: options ? options.count + 1 : 0, data: getOptions()})
+                const results = JSON.parse(props.data.results)
+                const echartOptions = getOptions(results)
+                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setIsWaiting(false)
             }
             setOnEvents({'click': showToolTipOnClick})
@@ -49,8 +53,7 @@ export default function VolcanoPlot(props) {
         return newOpts
     }
 
-    const getOptions = (mySelProts) => {
-        const results = JSON.parse(props.data.results)
+    const getOptions = (results, mySelProts) => {
         const params = JSON.parse(props.data.parameters)
 
         // we set the default selProts
@@ -172,7 +175,10 @@ export default function VolcanoPlot(props) {
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
         dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id}))
-        setOptions({count: options ? options.count + 1 : 0, data: getOptions(newSelProts)})
+        const results = JSON.parse(props.data.results)
+        const echartOptions = getOptions(results, newSelProts)
+        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+        replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
     }
 
     return (

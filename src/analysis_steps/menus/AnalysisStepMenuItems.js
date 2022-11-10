@@ -92,6 +92,7 @@ export default function AnalysisStepMenuItems(props) {
             case 'download-zip':
                 return <DownloadZipModal
                     stepId={props.stepId}
+                    type={props.type}
                     setStartDownload={setStartDownload}
                     startDownload={startDownload}
                     tableNr={props.tableNr}

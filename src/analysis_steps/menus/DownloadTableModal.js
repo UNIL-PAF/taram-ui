@@ -4,25 +4,23 @@ import globalConfig from "../../globalConfig";
 
 export default function DownloadTableModal(props) {
 
-    const [imputed, setImputed] = useState()
+    const [noImputed, setNoImputed] = useState(false)
 
     useEffect(() => {
         if(props.startDownload){
             downloadTable()
             props.setStartDownload(false)
         }
-        if(props && typeof(imputed) == "undefined"){
-            setImputed(props.hasImputed)
-        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, imputed])
+    }, [props])
 
     const onChange = (checked) => {
-        setImputed(checked)
+        setNoImputed(checked)
     }
 
     const downloadTable = () => {
-        fetch(globalConfig.urlBackend + 'analysis-step/table/' + props.stepId + '?imputed=' + imputed)
+        const noImputedStr = noImputed ? '?noImputed=' + noImputed : ''
+        fetch(globalConfig.urlBackend + 'analysis-step/table/' + props.stepId + noImputedStr)
             .then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
@@ -41,10 +39,10 @@ export default function DownloadTableModal(props) {
             { props.tableNr &&
                 <span>
                     <Switch
-                        checkedChildren="Imputed"
+                        checkedChildren="No Imputed"
                         unCheckedChildren="Original"
                         onChange={onChange}
-                        defaultChecked={props.hasImputed}
+                        defaultChecked={false}
                         disabled={!props.hasImputed}/> values
                 </span>
             }
