@@ -10,6 +10,11 @@ export const analysisSlice = createSlice({
         error: null,
         globalStatus: null
     },
+    reducers: {
+        setError(state, action) {
+            state.error = action.payload
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAnalysisByResultId.pending, (state, action) => {
@@ -30,5 +35,5 @@ export const analysisSlice = createSlice({
             })
     },
 })
-
+export const { setError } = analysisSlice.actions
 export default analysisSlice.reducer
