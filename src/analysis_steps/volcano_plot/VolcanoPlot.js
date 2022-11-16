@@ -26,18 +26,17 @@ export default function VolcanoPlot(props) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
         }
-        if(props.data.status === 'done'){
+        if (props.data.status === 'done') {
             if (isWaiting) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
-                console.log(echartOptions)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setIsWaiting(false)
             }
             setOnEvents({'click': showToolTipOnClick})
-        }else{
-            if(!isWaiting){
+        } else {
+            if (!isWaiting) {
                 setIsWaiting(true)
                 const greyOpt = greyOptions(options.data)
                 setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
@@ -58,8 +57,10 @@ export default function VolcanoPlot(props) {
         const params = JSON.parse(props.data.parameters)
 
         // we set the default selProts
+        console.log(mySelProts, params.selProteins)
+
         const defSelProts = (mySelProts ? mySelProts : params.selProteins)
-        if(! mySelProts) setSelProts(params.selProteins)
+        if (defSelProts) setSelProts(params.selProteins)
 
         const dataWithLabel = results.data.map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
@@ -80,15 +81,6 @@ export default function VolcanoPlot(props) {
                 nameLocation: "center",
                 nameTextStyle: {padding: [8, 4, 5, 6]},
             },
-            label: {
-                show: true,
-                formatter: function (params) {
-                    const d = params.data
-                    return (d.showLab) ? (d.gene ? d.gene : d.prot) : ""
-                },
-                position: 'right',
-                minMargin: 2
-            },
             tooltip: {
                 showDelay: 0,
                 formatter: function (params) {
@@ -106,7 +98,7 @@ export default function VolcanoPlot(props) {
             },
             dataset: [
                 {
-                    dimensions: ["fc", "plotPVal", "isSign"],
+                    dimensions: ["fc", "plotPVal", "isSign", "showLab"],
                     source: dataWithLabel,
                 },
                 {
@@ -120,11 +112,20 @@ export default function VolcanoPlot(props) {
                         type: 'filter',
                         config: {dimension: 'isSign', value: false}
                     }
+                },
+                {
+                    transform: {
+                        type: 'filter',
+                        config: {dimension: 'showLab', value: true}
+                    }
                 }
+
             ],
             series: [
                 {
-                    label: {show: false},
+                    label: {
+                        show: false,
+                    },
                     symbolSize: 5,
                     datasetIndex: 1,
                     large: true,
@@ -171,7 +172,21 @@ export default function VolcanoPlot(props) {
                         x: 'fc',
                         y: 'plotPVal'
                     }
-                }
+                },
+                {
+                    label: {
+                        show: true,
+                        formatter: function (v) {return v.data.gene ? v.data.gene : v.data.prot},
+                        position: 'right',
+                        minMargin: 2
+                    },
+                    symbolSize: 8,
+                    itemStyle: {
+                        color: "rgba(255, 255, 255, 0)",
+                    },
+                    datasetIndex: 3,
+                    type: 'scatter'
+                },
             ]
         }
     }
@@ -207,13 +222,15 @@ export default function VolcanoPlot(props) {
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
-                <Button size={'small'} type='default' onClick={() => setShowZoom(true)} icon={<FullscreenOutlined />}>Expand</Button>
+                <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                        icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id}></EchartsZoom>}
+            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
+                                     paramType={type} stepId={props.data.id}></EchartsZoom>}
         </Card>
     );
 }
