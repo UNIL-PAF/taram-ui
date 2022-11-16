@@ -30,6 +30,7 @@ export default function VolcanoPlot(props) {
             if (isWaiting) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
+                console.log(echartOptions)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setIsWaiting(false)
@@ -123,8 +124,11 @@ export default function VolcanoPlot(props) {
             ],
             series: [
                 {
+                    label: {show: false},
                     symbolSize: 5,
                     datasetIndex: 1,
+                    large: true,
+                    largeThreshold: 1,
                     type: 'scatter',
                     encode: {
                         x: 'fc',
@@ -157,8 +161,11 @@ export default function VolcanoPlot(props) {
                     },
                 },
                 {
+                    label: {show: false},
                     symbolSize: 5,
                     datasetIndex: 2,
+                    large: true,
+                    largeThreshold: 1,
                     type: 'scatter',
                     encode: {
                         x: 'fc',
