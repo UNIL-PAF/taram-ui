@@ -180,11 +180,11 @@ export default function VolcanoPlot(props) {
                         fontWeight: 'bold',
                         fontSize: 14
                     },
-                    symbolSize: 5,
+                    symbolSize: 8,
                     itemStyle: {
                         color: "rgba(0, 128, 0, 0)",
-                        /*borderWidth: 1,
-                        borderColor: 'green'*/
+                        borderWidth: 1,
+                        borderColor: 'green'
                     },
                     datasetIndex: 3,
                     type: 'scatter',
