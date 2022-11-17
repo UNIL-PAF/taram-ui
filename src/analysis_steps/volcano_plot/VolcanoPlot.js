@@ -30,9 +30,10 @@ export default function VolcanoPlot(props) {
             if (isWaiting) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
+                setSelProts(JSON.parse(props.data.parameters).selProteins)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setIsWaiting(false)
+                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
             }
             setOnEvents({'click': showToolTipOnClick})
         } else {
@@ -57,17 +58,14 @@ export default function VolcanoPlot(props) {
         const params = JSON.parse(props.data.parameters)
 
         // we set the default selProts
-        console.log(mySelProts, params.selProteins)
-
         const defSelProts = (mySelProts ? mySelProts : params.selProteins)
-        if (defSelProts) setSelProts(params.selProteins)
 
         const dataWithLabel = results.data.map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
             return {...d, showLab: showLab}
         })
 
-        return {
+        const opts =  {
             xAxis: {
                 name: "Fold change",
                 nameLocation: "center",
@@ -178,17 +176,22 @@ export default function VolcanoPlot(props) {
                         show: true,
                         formatter: function (v) {return v.data.gene ? v.data.gene : v.data.prot},
                         position: 'right',
-                        minMargin: 2
+                        minMargin: 2,
+                        fontWeight: 'bold',
+                        fontSize: 14
                     },
-                    symbolSize: 8,
+                    symbolSize: 5,
                     itemStyle: {
-                        color: "rgba(255, 255, 255, 0)",
+                        color: "rgba(0, 128, 0, 0)",
+                        /*borderWidth: 1,
+                        borderColor: 'green'*/
                     },
                     datasetIndex: 3,
-                    type: 'scatter'
+                    type: 'scatter',
                 },
             ]
         }
+        return opts
     }
 
     function showToolTipOnClick(e) {
@@ -196,11 +199,11 @@ export default function VolcanoPlot(props) {
         const protIndex = selProts.indexOf(prot)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
-        dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id}))
         const results = JSON.parse(props.data.results)
         const echartOptions = getOptions(results, newSelProts)
+        const callback = () => {replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)}
+        dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-        replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
     }
 
     return (

@@ -16,8 +16,6 @@ export function computeCrC32(str) {
 export function replacePlotIfChanged(stepId, results, options, dispatch){
     const echartsHash = computeCrC32(JSON.stringify(options))
 
-    console.log(options)
-
     if(!results.plot || results.plot.echartsHash !== echartsHash){
         const plotParams = {echartsOptions: JSON.stringify(options, function(key, value) {
                 if (typeof value === "function") {
