@@ -8,7 +8,7 @@ export default function Transformation(props) {
     const [localParams, setLocalParams] = useState(params)
 
     return (
-        <Card className={'analysis-step-card'} title={"Transformation"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={props.data.nr + " - Transformation"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}

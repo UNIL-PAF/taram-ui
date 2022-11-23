@@ -111,7 +111,7 @@ export default function BoxPlot(props) {
     }
 
     return (
-        <Card className={'analysis-step-card'} title={"Boxplot"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={props.data.nr + " - Boxplot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
                               stepId={props.data.id}

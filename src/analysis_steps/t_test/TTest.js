@@ -9,7 +9,7 @@ export default function TTest(props) {
     const [localParams, setLocalParams] = useState(params)
 
     return (
-        <Card className={'analysis-step-card'} title={"t-test"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={props.data.nr + " - t-test"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}

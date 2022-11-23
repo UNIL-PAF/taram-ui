@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
-import QualityControl from "./quality_control/QualityControl";
 import Filter from "./filter/Filter"
 import {EllipsisOutlined} from "@ant-design/icons";
-import {Button, Dropdown, Badge} from "antd";
+import {Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import Transformation from "./transformation/Transformation";
@@ -53,32 +52,30 @@ export default function AnalysisSteps(props) {
             </span>
                 </h3>
                 <div className={"analysis-col-content"}>
-                    {props.data.analysisSteps && props.data.analysisSteps.map(step => {
+                    {props.data.analysisSteps && props.data.analysisSteps.map( (step, i) => {
+                        const stepWithNr = {...step, nr: i+1}
                         switch (step.type) {
                             case 'initial-result':
                                 return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={step} key={step.id}/>
-                            case 'quality-control':
-                                return <QualityControl analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={step} key={step.id}/>
+                                                      data={stepWithNr} key={step.id}/>
                             case 'boxplot':
                                 return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={step} key={step.id}/>
+                                                data={stepWithNr} key={step.id}/>
                             case 'transformation':
                                 return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={step} key={step.id}/>
+                                                       data={stepWithNr} key={step.id}/>
                             case 'filter':
                                 return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                               data={step} key={step.id}/>
+                                               data={stepWithNr} key={step.id}/>
                             case 'group-filter':
                                 return <GroupFilter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={step} key={step.id}/>
+                                                    data={stepWithNr} key={step.id}/>
                             case 't-test':
                                 return <TTest analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                              data={step} key={step.id}/>
+                                              data={stepWithNr} key={step.id}/>
                             case 'volcano-plot':
                                 return <VolcanoPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={step} key={step.id}/>
+                                                    data={stepWithNr} key={step.id}/>
 
                             default:
                                 return null
