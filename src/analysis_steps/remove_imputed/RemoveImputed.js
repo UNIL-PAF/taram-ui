@@ -6,6 +6,9 @@ import StepComment from "../StepComment";
 export default function RemoveImputed(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
+    const results = JSON.parse(props.data.results)
+
+    if(props && props.data) console.log(props.data)
 
     return (
         <Card className={'analysis-step-card'} title={props.data.nr + " - Remove imputed"} headStyle={{textAlign: 'left'}}
@@ -26,8 +29,8 @@ export default function RemoveImputed(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {props && props.data &&
                 <div>
-                    <p>Nr of replacements: <strong>{props.data.nrValuesReplaced}</strong></p>
-                    <p>Nr protein groups with replacements: <strong>{props.data.nrProteinGroupsReplaced}</strong></p>
+                    <p>Nr of replacements: <strong>{results.nrValuesReplaced}</strong></p>
+                    <p>Nr protein groups with replacements: <strong>{results.nrProteinGroupsReplaced}</strong></p>
                 </div>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
