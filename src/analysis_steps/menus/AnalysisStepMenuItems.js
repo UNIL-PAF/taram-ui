@@ -13,6 +13,7 @@ import TTestParams from "../t_test/TTestParams";
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadTableModal from "./DownloadTableModal"
 import DownloadZipModal from "./DownloadZipModal"
+import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -110,6 +111,13 @@ export default function AnalysisStepMenuItems(props) {
     const analysisParamList = (type, isNew) => {
         // eslint-disable-next-line
         switch (type) {
+            case 'remove-imputed':
+                return <RemoveImputedParams commonResult={props.commonResult}
+                                      params={isNew ? newStepParams : props.stepParams}
+                                      setParams={isNew ? setNewStepParams : props.setStepParams}
+                                      intCol={props.intCol}
+                                      stepId={props.stepId}
+                ></RemoveImputedParams>
             case 'boxplot':
                 return <BoxPlotParams commonResult={props.commonResult}
                                       params={isNew ? newStepParams : props.stepParams}
@@ -221,6 +229,10 @@ export default function AnalysisStepMenuItems(props) {
                         <Menu.Item onClick={() => clickAddStep("group-filter")}
                                    key={'group-filter'}>
                             <span>Filter on valid</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("remove-imputed")}
+                                   key={'remove-imputed'}>
+                            <span>Remove imputed values</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-3"} title={"Statistical tests"}>

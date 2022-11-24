@@ -11,6 +11,7 @@ import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
 import VolcanoPlot from "./volcano_plot/VolcanoPlot";
 import AnalysisTitle from "../analysis/AnalysisTitle";
+import RemoveImputed from "./remove_imputed/RemoveImputed";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -76,7 +77,9 @@ export default function AnalysisSteps(props) {
                             case 'volcano-plot':
                                 return <VolcanoPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                     data={stepWithNr} key={step.id}/>
-
+                            case 'remove-imputed':
+                                return <RemoveImputed analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                      data={stepWithNr} key={step.id}/>
                             default:
                                 return null
                         }
