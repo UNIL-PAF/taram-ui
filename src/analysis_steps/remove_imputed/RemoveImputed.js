@@ -27,7 +27,7 @@ export default function RemoveImputed(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {props && props.data &&
+            {results &&
                 <div>
                     <p>Nr of replacements: <strong>{results.nrValuesReplaced}</strong></p>
                     <p>Nr protein groups with replacements: <strong>{results.nrProteinGroupsReplaced}</strong></p>
