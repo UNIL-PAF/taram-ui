@@ -11,7 +11,6 @@ import GroupFilterParams from "../group_filter/GroupFilterParams";
 import TransformationParams from "../transformation/TransformationParams";
 import TTestParams from "../t_test/TTestParams";
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
-import DownloadTableModal from "./DownloadTableModal"
 import DownloadZipModal from "./DownloadZipModal"
 import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
 
@@ -23,7 +22,7 @@ export default function AnalysisStepMenuItems(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(startDownload === false){
+        if (startDownload === false) {
             setStartDownload(undefined)
             setShowModalName(undefined)
         }
@@ -36,7 +35,8 @@ export default function AnalysisStepMenuItems(props) {
             case 'parameters':
                 handleParamsOk()
                 break;
-            default: setStartDownload(true)
+            default:
+                setStartDownload(true)
         }
     }
 
@@ -82,14 +82,6 @@ export default function AnalysisStepMenuItems(props) {
         switch (name) {
             case 'parameters':
                 return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
-            case 'download-table':
-                return <DownloadTableModal
-                    stepId={props.stepId}
-                    setStartDownload={setStartDownload}
-                    startDownload={startDownload}
-                    tableNr={props.tableNr}
-                    hasImputed={props.hasImputed}>
-                </DownloadTableModal>
             case 'download-zip':
                 return <DownloadZipModal
                     stepId={props.stepId}
@@ -99,8 +91,9 @@ export default function AnalysisStepMenuItems(props) {
                     tableNr={props.tableNr}
                     hasPlot={props.hasPlot}
                     hasImputed={props.hasImputed}>
-                ></DownloadZipModal>
-            default: return null
+                    ></DownloadZipModal>
+            default:
+                return null
         }
     }
 
@@ -113,10 +106,10 @@ export default function AnalysisStepMenuItems(props) {
         switch (type) {
             case 'remove-imputed':
                 return <RemoveImputedParams commonResult={props.commonResult}
-                                      params={isNew ? newStepParams : props.stepParams}
-                                      setParams={isNew ? setNewStepParams : props.setStepParams}
-                                      intCol={props.intCol}
-                                      stepId={props.stepId}
+                                            params={isNew ? newStepParams : props.stepParams}
+                                            setParams={isNew ? setNewStepParams : props.setStepParams}
+                                            intCol={props.intCol}
+                                            stepId={props.stepId}
                 ></RemoveImputedParams>
             case 'boxplot':
                 return <BoxPlotParams commonResult={props.commonResult}
@@ -183,7 +176,7 @@ export default function AnalysisStepMenuItems(props) {
         }
     }
 
-    const getModalWidth = function(name){
+    const getModalWidth = function (name) {
         switch (name) {
             case 'download-table':
                 return 300;
@@ -242,17 +235,13 @@ export default function AnalysisStepMenuItems(props) {
                         </Menu.Item>
                     </Menu.SubMenu>
                 </Menu.SubMenu>
-                <Menu.Divider key={'divider-2'}></Menu.Divider>
-                <Menu.Item onClick={() => setShowModalName('download-zip')}
-                           key={'zip'}
-                >
-                    <span>Download ZIP..</span>
-                </Menu.Item>
-                {props.tableNr && <Menu.Item onClick={() => setShowModalName('download-table')}
-                           key={'table'}
-                >
-                    <span>Download table..</span>
-                </Menu.Item>}
+                {(props.type === 'boxplot' || props.type === 'volcano-plot') &&
+                    <div><Menu.Divider key={'divider-2'}></Menu.Divider>
+                        <Menu.Item onClick={() => setShowModalName('download-zip')}
+                                   key={'zip'}
+                        >
+                            <span>Download ZIP..</span>
+                        </Menu.Item></div>}
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 {props.type && <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm

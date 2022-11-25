@@ -7,8 +7,6 @@ import {setError} from "../../analysis/analysisSlice";
 export default function DownloadZipModal(props) {
     const [svg, setSvg] = useState(undefined)
     const [png, setPng] = useState(undefined)
-    const [table, setTable] = useState(undefined)
-    const [notImputed, setNotImputed] = useState(false)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,7 +19,6 @@ export default function DownloadZipModal(props) {
                 setSvg(true)
                 setPng(true)
             }
-            setTable(props.tableNr ? true : false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, svg])
@@ -30,8 +27,6 @@ export default function DownloadZipModal(props) {
         fetch(globalConfig.urlBackend + 'analysis-step/zip/' + props.stepId
             + '?svg=' + svg
             + '&png=' + png
-            + '&table=' + table
-            + '&notImputed=' + notImputed
         )
             .then(response => {
                 response.blob().then(blob => {
@@ -63,15 +58,6 @@ export default function DownloadZipModal(props) {
                     defaultChecked={props.hasPlot}
                     onChange={(val) => setPng(val.target.checked)}>PNG plot
                 </Checkbox>
-                <Checkbox
-                    disabled={typeof props.tableNr === "undefined"}
-                    defaultChecked={props.tableNr ? true : false}
-                    onChange={(val) => setTable(val.target.checked)}>Table {props.tableNr &&<em>M{props.tableNr}</em>}
-                </Checkbox>
-                {props.tableNr && props.hasImputed && <Checkbox
-                    defaultChecked={false}
-                    onChange={(val) => setNotImputed(val.target.checked)}>Table <em>M{props.tableNr}</em> without imputed values
-                </Checkbox>}
             </Space>
         </>
     );
