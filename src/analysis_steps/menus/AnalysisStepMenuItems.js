@@ -13,6 +13,7 @@ import TTestParams from "../t_test/TTestParams";
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
 import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
+import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -104,6 +105,13 @@ export default function AnalysisStepMenuItems(props) {
     const analysisParamList = (type, isNew) => {
         // eslint-disable-next-line
         switch (type) {
+            case 'remove-columns':
+                return <RemoveColumnsParams commonResult={props.commonResult}
+                                            params={isNew ? newStepParams : props.stepParams}
+                                            setParams={isNew ? setNewStepParams : props.setStepParams}
+                                            intCol={props.intCol}
+                                            stepId={props.stepId}
+                ></RemoveColumnsParams>
             case 'remove-imputed':
                 return <RemoveImputedParams commonResult={props.commonResult}
                                             params={isNew ? newStepParams : props.stepParams}
@@ -211,6 +219,10 @@ export default function AnalysisStepMenuItems(props) {
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
+                        <Menu.Item onClick={() => clickAddStep("remove-columns")}
+                                   key={'remove-columns'}>
+                            <span>Remove columns</span>
+                        </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("transformation")}
                                    key={'transformation'}>
                             <span>Transformation</span>

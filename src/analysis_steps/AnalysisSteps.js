@@ -12,6 +12,7 @@ import TTest from "./t_test/TTest";
 import VolcanoPlot from "./volcano_plot/VolcanoPlot";
 import AnalysisTitle from "../analysis/AnalysisTitle";
 import RemoveImputed from "./remove_imputed/RemoveImputed";
+import RemoveColumns from "./remove_columns/RemoveColumns";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -79,6 +80,9 @@ export default function AnalysisSteps(props) {
                                                     data={stepWithNr} key={step.id}/>
                             case 'remove-imputed':
                                 return <RemoveImputed analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                      data={stepWithNr} key={step.id}/>
+                            case 'remove-columns':
+                                return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={step.id}/>
                             default:
                                 return null

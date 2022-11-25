@@ -22,8 +22,7 @@ export default function RemoveImputedParams(props) {
 
     return (
         <>
-            <h3>Select value to transform</h3>
-            <h3>Transformation</h3>
+            <h3>Replace imputed values by</h3>
             <Select value={replaceBy} style={{width: 150}} onChange={handleChange}>
                 <Option value={'nan'}>NA</Option>
                 <Option value={'zero'}>0</Option>
