@@ -30,7 +30,8 @@ export default function VolcanoPlot(props) {
             if (isWaiting) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
-                setSelProts(JSON.parse(props.data.parameters).selProteins)
+                const backendSelProts = JSON.parse(props.data.parameters).selProteins
+                if(backendSelProts) setSelProts(backendSelProts)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
@@ -196,7 +197,7 @@ export default function VolcanoPlot(props) {
 
     function showToolTipOnClick(e) {
         const prot = e.data.prot
-        const protIndex = selProts.indexOf(prot)
+        const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
         const results = JSON.parse(props.data.results)
