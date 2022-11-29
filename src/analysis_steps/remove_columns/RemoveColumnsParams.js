@@ -16,8 +16,6 @@ export default function RemoveColumnsParams(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, checkedKeys])
 
-    console.log(props.commonResult)
-
     const treeData = props.commonResult.headers.reduce((acc, val) => {
         const newVal =   {
             title: val.name,
