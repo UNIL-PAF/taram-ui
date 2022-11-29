@@ -16,3 +16,8 @@
     font-style: italic;
     white-space: pre-line;
 }
+
+.narrow-menu {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}

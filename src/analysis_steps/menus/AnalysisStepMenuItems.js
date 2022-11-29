@@ -208,40 +208,48 @@ export default function AnalysisStepMenuItems(props) {
                     <span>Change parameters..</span>
                 </Menu.Item>}
                 <Menu.SubMenu key={"sub-0"} title={"Add a following step"}>
-                    <Menu.SubMenu key={"sub-1"} title={"Plots"}>
+                    <Menu.SubMenu key={"sub-1"} title={"Plots"} >
                         <Menu.Item onClick={() => clickAddStep("boxplot")}
+                                   className="narrow-menu"
                                    key={'boxplot'}>
                             <span>Boxplot</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("volcano-plot")}
+                                   className="narrow-menu"
                                    key={'volcano-plot'}>
                             <span>Volcano plot</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
+                                   className="narrow-menu"
                                    key={'remove-columns'}>
                             <span>Remove columns</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("transformation")}
+                                   className="narrow-menu"
                                    key={'transformation'}>
                             <span>Transformation</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("filter")}
+                                   className="narrow-menu"
                                    key={'filter'}>
                             <span>Filter</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("group-filter")}
+                                   className="narrow-menu"
                                    key={'group-filter'}>
                             <span>Filter on valid</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("remove-imputed")}
+                                   className="narrow-menu"
                                    key={'remove-imputed'}>
                             <span>Remove imputed values</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-3"} title={"Statistical tests"}>
                         <Menu.Item onClick={() => clickAddStep("t-test")}
+                                   className="narrow-menu"
                                    key={'t-test'}>
                             <span>t-test</span>
                         </Menu.Item>

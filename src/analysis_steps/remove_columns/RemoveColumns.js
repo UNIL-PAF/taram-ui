@@ -8,8 +8,6 @@ export default function RemoveColumns(props) {
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
 
-    if(props && props.data) console.log(props.data)
-
     return (
         <Card className={'analysis-step-card'} title={props.data.nr + " - Remove columns"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
