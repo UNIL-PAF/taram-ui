@@ -15,6 +15,9 @@ const reorder = (list, startIndex, endIndex) => {
 const withNewTaskIds = (column, taskIds) => ({
     id: column.id,
     name: column.name,
+    title: column.title,
+    keepEntries: column.keepEntries,
+    idx: column.idx,
     taskIds
 });
 
@@ -54,13 +57,18 @@ const reorderSingleDrag = ({
     // the id of the task to be moved
     const taskId = home.taskIds[source.index];
 
+    const newTaskId = Number(foreign.idx) + Number(taskId)
+
+    const movingTask = entities.tasks.find( t => t.id === taskId)
+    const newTask = {...movingTask, id: newTaskId}
+
     // remove from home column
     const newHomeTaskIds = [...home.taskIds];
-    newHomeTaskIds.splice(source.index, 1);
+    if(!home.keepEntries) newHomeTaskIds.splice(source.index, 1);
 
     // add to foreign column
     const newForeignTaskIds = [...foreign.taskIds];
-    newForeignTaskIds.splice(destination.index, 0, taskId);
+    if(!foreign.keepEntries) newForeignTaskIds.splice(destination.index, 0, newTaskId);
 
     const updated = {
         ...entities,
@@ -68,7 +76,8 @@ const reorderSingleDrag = ({
             ...entities.columns,
             [home.id]: withNewTaskIds(home, newHomeTaskIds),
             [foreign.id]: withNewTaskIds(foreign, newForeignTaskIds)
-        }
+        },
+        tasks: entities.tasks.concat(newTask)
     };
 
     return {

@@ -6,6 +6,7 @@
     width: 900px;
     min-height: 200px;
 }
+
 .c-multi-drag-table .ant-col:first-child:after {
     display: block;
     content: "";

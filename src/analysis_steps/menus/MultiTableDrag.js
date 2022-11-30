@@ -16,7 +16,9 @@ const entitiesMock = {
     columns: {
         groups: {
             id: "groups",
+            idx: 0,
             title: "Groups",
+            keepEntries: true,
             taskIds: [
                 "0",
                 "1",
@@ -26,11 +28,13 @@ const entitiesMock = {
         },
         first: {
             id: "first",
+            idx: 100,
             title: "First group (right)",
             taskIds: []
         },
         second: {
             id: "second",
+            idx: 1000,
             title: "Second group (left)",
             taskIds: []
         }
@@ -46,7 +50,7 @@ export const MultiTableDrag = () => {
     const [entities, setEntities] = useState(entitiesMock);
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
     const [draggingTaskId, setDraggingTaskId] = useState(null);
-    const [pageSize, setPageSize] = useState(10);
+   // const [pageSize, setPageSize] = useState(10);
 
     const tableColumns = [
         {
@@ -362,10 +366,11 @@ export const MultiTableDrag = () => {
     /**
      * Handle table change
      */
-    const handleTableChange = (pagination, filters, sorter) => {
+   /* const handleTableChange = (pagination, filters, sorter) => {
         const { pageSize } = pagination;
         setPageSize(pageSize);
     };
+    */
 
     return (
         <>
@@ -416,7 +421,7 @@ export const MultiTableDrag = () => {
                                             onClick: (e) => onClickRow(e, record),
                                             onTouchEnd: (e) => onTouchEndRow(e, record)
                                         })}
-                                        onChange={handleTableChange}
+                                        /*onChange={handleTableChange}*/
                                     />
                                 </div>
                             </Col>)}
