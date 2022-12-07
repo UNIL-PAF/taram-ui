@@ -16,7 +16,6 @@ const entitiesMock = {
     columns: {
         groups: {
             id: "groups",
-            idx: 0,
             title: "Groups",
             keepEntries: true,
             taskIds: [
@@ -28,13 +27,11 @@ const entitiesMock = {
         },
         first: {
             id: "first",
-            idx: 100,
             title: "First group (right)",
             taskIds: []
         },
         second: {
             id: "second",
-            idx: 1000,
             title: "Second group (left)",
             taskIds: []
         }
@@ -375,7 +372,6 @@ export const MultiTableDrag = () => {
                 >
                     <Row gutter={40}>
                         {entities.columnIds.map((id) => {
-                            console.log(entities, id)
                             return (
                             <Col key={id} xs={8}>
                                 <div className="inner-col">
@@ -401,7 +397,6 @@ export const MultiTableDrag = () => {
                                                     }),
                                                 // Custom td
                                                 row: (val) => {
-                                                    console.log(entities, id)
                                                     return DraggableTableRow({
                                                         tasks: getTasks(entities, id),
                                                         ...val

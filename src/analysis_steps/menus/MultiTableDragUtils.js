@@ -17,7 +17,6 @@ const withNewTaskIds = (column, taskIds) => ({
     name: column.name,
     title: column.title,
     keepEntries: column.keepEntries,
-    idx: column.idx,
     taskIds
 });
 
@@ -57,7 +56,7 @@ const reorderSingleDrag = ({
     // the id of the task to be moved
     const taskId = home.taskIds[source.index];
 
-    const newTaskId = Number(foreign.idx) + Number(taskId)
+    const newTaskId = entities.tasks.length
 
     const movingTask = entities.tasks.find( t => t.id === taskId)
     const newTask = {...movingTask, id: newTaskId}
@@ -185,9 +184,12 @@ const reorderMultiDrag = ({
     const final = withRemovedTasks[destination.droppableId];
 
     const oldTasks = entities.tasks.filter(t => orderedSelectedTaskIds.includes(t.id))
-    const newTasks = oldTasks.concat(oldTasks.map(t => ({...t, id: Number(t.id) + Number(final.idx)})))
+    const taskLen = entities.tasks.length
+    const newTasks = entities.tasks.concat(oldTasks.map((t, i) => ({...t, id: String(taskLen + i)})))
+    const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( (t, i) => String(taskLen + i))
 
-    const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( t => Number(t) + Number(final.idx))
+    console.log(newTasks)
+    console.log(newOrderedSelectedTaskIds)
 
     const withInserted = (() => {
         const base = [...final.taskIds];
