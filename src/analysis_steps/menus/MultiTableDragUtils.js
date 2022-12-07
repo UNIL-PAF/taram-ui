@@ -178,15 +178,20 @@ const reorderMultiDrag = ({
             id => !selectedTaskIds.includes(id)
         );
 
-        previous[column.id] = withNewTaskIds(column, remainingTaskIds);
+        previous[column.id] = withNewTaskIds(column, column.keepEntries ? column.taskIds : remainingTaskIds);
         return previous;
     }, entities.columns);
 
     const final = withRemovedTasks[destination.droppableId];
 
+    const oldTasks = entities.tasks.filter(t => orderedSelectedTaskIds.includes(t.id))
+    const newTasks = oldTasks.concat(oldTasks.map(t => ({...t, id: Number(t.id) + Number(final.idx)})))
+
+    const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( t => Number(t) + Number(final.idx))
+
     const withInserted = (() => {
         const base = [...final.taskIds];
-        base.splice(insertAtIndex, 0, ...orderedSelectedTaskIds);
+        base.splice(insertAtIndex, 0, ...newOrderedSelectedTaskIds);
         return base;
     })();
 
@@ -198,12 +203,13 @@ const reorderMultiDrag = ({
 
     const updated = {
         ...entities,
-        columns: withAddedTasks
+        columns: withAddedTasks,
+        tasks: newTasks
     };
 
     return {
         entities: updated,
-        selectedTaskIds: orderedSelectedTaskIds
+        selectedTaskIds: newOrderedSelectedTaskIds
     };
 };
 

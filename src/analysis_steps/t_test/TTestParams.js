@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
 import {MultiTableDrag} from "../menus/MultiTableDrag";
+import {MultiTableDrag2} from "../menus/MultiTableDrag2";
 
 const {Option} = Select;
 

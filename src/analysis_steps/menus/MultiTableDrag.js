@@ -50,7 +50,6 @@ export const MultiTableDrag = () => {
     const [entities, setEntities] = useState(entitiesMock);
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
     const [draggingTaskId, setDraggingTaskId] = useState(null);
-   // const [pageSize, setPageSize] = useState(10);
 
     const tableColumns = [
         {
@@ -153,6 +152,8 @@ export const MultiTableDrag = () => {
                 </tr>
             );
         }
+
+        if(!record) return null
 
         const isSelected = selectedTaskIds.some(
             (selectedTaskId) => selectedTaskId === record.id
@@ -363,15 +364,6 @@ export const MultiTableDrag = () => {
         toggleSelection(record.id);
     };
 
-    /**
-     * Handle table change
-     */
-   /* const handleTableChange = (pagination, filters, sorter) => {
-        const { pageSize } = pagination;
-        setPageSize(pageSize);
-    };
-    */
-
     return (
         <>
             <Card
@@ -383,6 +375,7 @@ export const MultiTableDrag = () => {
                 >
                     <Row gutter={40}>
                         {entities.columnIds.map((id) => {
+                            console.log(entities, id)
                             return (
                             <Col key={id} xs={8}>
                                 <div className="inner-col">
@@ -407,11 +400,13 @@ export const MultiTableDrag = () => {
                                                         ...val
                                                     }),
                                                 // Custom td
-                                                row: (val) =>
-                                                    DraggableTableRow({
+                                                row: (val) => {
+                                                    console.log(entities, id)
+                                                    return DraggableTableRow({
                                                         tasks: getTasks(entities, id),
                                                         ...val
                                                     })
+                                            }
                                             }
                                         }}
                                         // Set props on per row (td)
@@ -421,7 +416,6 @@ export const MultiTableDrag = () => {
                                             onClick: (e) => onClickRow(e, record),
                                             onTouchEnd: (e) => onTouchEndRow(e, record)
                                         })}
-                                        /*onChange={handleTableChange}*/
                                     />
                                 </div>
                             </Col>)}
