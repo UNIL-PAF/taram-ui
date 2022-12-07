@@ -18,7 +18,7 @@ const entitiesMock = {
     columns: {
         groups: {
             id: "groups",
-            title: "Groups",
+            title: "Available groups",
             keepEntries: true,
             taskIds: [
                 "0",
@@ -51,10 +51,6 @@ export const GroupTableDrag = () => {
     const [draggingTaskId, setDraggingTaskId] = useState(null);
 
     const baseTableColumns = [
-        {
-            title: "ID",
-            dataIndex: "id"
-        },
         {
             title: "Title",
             dataIndex: "title"
