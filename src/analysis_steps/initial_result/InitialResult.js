@@ -17,6 +17,7 @@ export default function InitialResult(props) {
                               status={props.data.status}
                               commonResult={props.data.commonResult}
                               intCol={intCol} tableNr={props.data.tableNr}
+                              experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={false}/>
         }>
             <p>Default intensity column: <strong>{intCol}</strong></p>

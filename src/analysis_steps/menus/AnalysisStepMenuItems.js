@@ -148,6 +148,7 @@ export default function AnalysisStepMenuItems(props) {
                 return <TTestParams commonResult={props.commonResult}
                                     params={isNew ? newStepParams : props.stepParams}
                                     setParams={isNew ? setNewStepParams : props.setStepParams}
+                                    experimentDetails={props.experimentDetails}
                                     intCol={props.intCol}
                 ></TTestParams>
             case 'volcano-plot':

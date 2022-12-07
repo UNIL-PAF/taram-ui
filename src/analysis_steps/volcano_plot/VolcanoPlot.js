@@ -222,6 +222,7 @@ export default function VolcanoPlot(props) {
                               echartOptions={options ? options.data : null}
                               setStepParams={setLocalParams}
                               hasPlot={true}
+                              experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>

@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {Table, Row, Col, Card, Empty, Space, Popconfirm, Button, message} from "antd";
+import {Table, Row, Col, Card, Empty, Space, Button} from "antd";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./GroupTableDragUtils";
 import "./multi_table_drag.css";
 import {DeleteOutlined} from "@ant-design/icons";
-import {deleteTemplate} from "../../templates/BackendTemplates";
 
 const entitiesMock = {
     tasks: [

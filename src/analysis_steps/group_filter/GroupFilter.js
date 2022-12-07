@@ -22,6 +22,7 @@ export default function GroupFilter(props) {
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
                               hasImputed={props.data.imputationTablePath != null}
+                              experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

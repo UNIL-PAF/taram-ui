@@ -6,6 +6,8 @@ const {Option} = Select;
 
 export default function TTestParams(props) {
 
+    console.log(props.experimentDetails)
+
     const numCols = props.commonResult.numericalColumns
     const intCol = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()

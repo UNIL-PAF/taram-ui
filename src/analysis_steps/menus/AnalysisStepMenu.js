@@ -50,7 +50,8 @@ export default function AnalysisStepMenu(props) {
                 <span style={{marginRight: "180px"}}><Button onClick={() => downloadTable()} size={'small'}>{'Table-' + props.tableNr}</Button></span>}
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
-                      overlay={<AnalysisStepMenuItems type={props.paramType} stepId={props.stepId}
+                      overlay={<AnalysisStepMenuItems type={props.paramType}
+                                                      stepId={props.stepId}
                                                       tableNr={props.tableNr}
                                                       setMenuIsVisible={setMenuIsVisible}
                                                       commonResult={props.commonResult}
@@ -63,6 +64,7 @@ export default function AnalysisStepMenu(props) {
                                                       setStepParams={props.setStepParams}
                                                       hasImputed={props.hasImputed}
                                                       hasPlot={props.hasPlot}
+                                                      experimentDetails={props.experimentDetails}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>

@@ -21,6 +21,7 @@ export default function RemoveColumns(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
+                              experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>
