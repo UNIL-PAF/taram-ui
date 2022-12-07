@@ -293,6 +293,7 @@ export const MultiTableDrag = () => {
         }
 
         setSelectedTaskIds(updated);
+        document.getSelection().removeAllRanges();
     };
 
     /**

@@ -188,9 +188,6 @@ const reorderMultiDrag = ({
     const newTasks = entities.tasks.concat(oldTasks.map((t, i) => ({...t, id: String(taskLen + i)})))
     const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( (t, i) => String(taskLen + i))
 
-    console.log(newTasks)
-    console.log(newOrderedSelectedTaskIds)
-
     const withInserted = (() => {
         const base = [...final.taskIds];
         base.splice(insertAtIndex, 0, ...newOrderedSelectedTaskIds);
