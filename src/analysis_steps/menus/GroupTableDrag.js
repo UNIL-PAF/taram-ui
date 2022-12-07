@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {Table, Row, Col, Card, Empty, Space, Popconfirm, Button, message} from "antd";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./MultiTableDragUtils";
+import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./GroupTableDragUtils";
 import "./multi_table_drag.css";
 import {DeleteOutlined} from "@ant-design/icons";
 import {deleteTemplate} from "../../templates/BackendTemplates";
@@ -45,7 +45,7 @@ const COLUMN_ID_DONE = "done";
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const PRIMARY_BUTTON_NUMBER = 0;
 
-export const MultiTableDrag = () => {
+export const GroupTableDrag = () => {
     const [entities, setEntities] = useState(entitiesMock);
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
     const [draggingTaskId, setDraggingTaskId] = useState(null);

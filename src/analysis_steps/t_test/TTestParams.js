@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
-import {MultiTableDrag} from "../menus/MultiTableDrag";
-import {MultiTableDrag2} from "../menus/MultiTableDrag2";
+import {GroupTableDrag} from "../menus/GroupTableDrag";
 
 const {Option} = Select;
 
@@ -72,7 +71,7 @@ export default function TTestParams(props) {
                 <Option value={'bonferroni'}>Bonferroni</Option>
             </Select>
         </span>
-                <MultiTableDrag/>
+                <GroupTableDrag/>
             </Space>
         </>
     }
