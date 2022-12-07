@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Table, Row, Col, Card, Empty } from "antd";
+import {Table, Row, Col, Card, Empty, Space, Popconfirm, Button, message} from "antd";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./MultiTableDragUtils";
 import "./multi_table_drag.css";
+import {DeleteOutlined} from "@ant-design/icons";
+import {deleteTemplate} from "../../templates/BackendTemplates";
 
 const entitiesMock = {
     tasks: [
@@ -48,7 +50,7 @@ export const MultiTableDrag = () => {
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
     const [draggingTaskId, setDraggingTaskId] = useState(null);
 
-    const tableColumns = [
+    const baseTableColumns = [
         {
             title: "ID",
             dataIndex: "id"
@@ -56,8 +58,31 @@ export const MultiTableDrag = () => {
         {
             title: "Title",
             dataIndex: "title"
-        }
+        },
     ];
+
+    const deleteTableColumns = baseTableColumns.concat({
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+                <Button type={"text"} icon={<DeleteOutlined/>} onClick={() => confirmDelete(record.id)}></Button>
+            </Space>
+        ),
+    },)
+
+    const confirmDelete = (id) => {
+        const newTasks = entities.tasks.filter( t => t.id !== id)
+
+        const newColumns = Object.keys(entities.columns).reduce(function(result, key) {
+            const col = entities.columns[key]
+            const newTaskIds = col.taskIds.filter( t => t !== id)
+            result[key] = {...col, taskIds: newTaskIds}
+            return result
+        }, {})
+
+        setEntities({...entities, tasks: newTasks, columns: newColumns})
+    };
 
     /**
      * On window click
@@ -138,6 +163,8 @@ export const MultiTableDrag = () => {
      * Draggable table row
      */
     const DraggableTableRow = ({ index, record, columnId, tasks, ...props }) => {
+        const tableColumns = baseTableColumns
+
         if (!tasks.length) {
             return (
                 <tr className="ant-table-placeholder row-item" {...props}>
@@ -227,8 +254,6 @@ export const MultiTableDrag = () => {
             source,
             destination
         });
-
-        console.log("onDragEnd", processed);
 
         setEntities(processed.entities);
         setDraggingTaskId(null);
@@ -373,6 +398,8 @@ export const MultiTableDrag = () => {
                 >
                     <Row gutter={40}>
                         {entities.columnIds.map((id) => {
+                            const tableColumns = (entities.columns[id].keepEntries) ? baseTableColumns : deleteTableColumns
+
                             return (
                             <Col key={id} xs={8}>
                                 <div className="inner-col">

@@ -56,10 +56,9 @@ const reorderSingleDrag = ({
     // the id of the task to be moved
     const taskId = home.taskIds[source.index];
 
-    const newTaskId = entities.tasks.length
-
+    const nextTaskId =Math.max(...entities.tasks.map( t => Number(t.id))) + Number(1)
     const movingTask = entities.tasks.find( t => t.id === taskId)
-    const newTask = {...movingTask, id: newTaskId}
+    const newTask = {...movingTask, id: nextTaskId}
 
     // remove from home column
     const newHomeTaskIds = [...home.taskIds];
@@ -67,7 +66,7 @@ const reorderSingleDrag = ({
 
     // add to foreign column
     const newForeignTaskIds = [...foreign.taskIds];
-    if(!foreign.keepEntries) newForeignTaskIds.splice(destination.index, 0, newTaskId);
+    if(!foreign.keepEntries) newForeignTaskIds.splice(destination.index, 0, nextTaskId);
 
     const updated = {
         ...entities,
@@ -182,11 +181,11 @@ const reorderMultiDrag = ({
     }, entities.columns);
 
     const final = withRemovedTasks[destination.droppableId];
-
     const oldTasks = entities.tasks.filter(t => orderedSelectedTaskIds.includes(t.id))
-    const taskLen = entities.tasks.length
-    const newTasks = entities.tasks.concat(oldTasks.map((t, i) => ({...t, id: String(taskLen + i)})))
-    const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( (t, i) => String(taskLen + i))
+
+    const nextTaskId =Math.max(...entities.tasks.map( t => Number(t.id))) + Number(1)
+    const newTasks = entities.tasks.concat(oldTasks.map((t, i) => ({...t, id: String(nextTaskId + i)})))
+    const newOrderedSelectedTaskIds = orderedSelectedTaskIds.map( (t, i) => String(nextTaskId + i))
 
     const withInserted = (() => {
         const base = [...final.taskIds];
