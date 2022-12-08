@@ -6,46 +6,12 @@ import { mutliDragAwareReorder, multiSelectTo as multiSelect } from "./GroupTabl
 import "./multi_table_drag.css";
 import {DeleteOutlined} from "@ant-design/icons";
 
-const entitiesMock = {
-    tasks: [
-        { id: "0", title: "Group 0" },
-        { id: "1", title: "Group 1" },
-        { id: "2", title: "Group 2" },
-        { id: "3", title: "Group 3" },
-    ],
-    columnIds: ["groups", "first", "second"],
-    columns: {
-        groups: {
-            id: "groups",
-            title: "Available groups",
-            keepEntries: true,
-            taskIds: [
-                "0",
-                "1",
-                "2",
-                "3",
-            ]
-        },
-        first: {
-            id: "first",
-            title: "First group (right)",
-            taskIds: []
-        },
-        second: {
-            id: "second",
-            title: "Second group (left)",
-            taskIds: []
-        }
-    }
-};
-
 const COLUMN_ID_DONE = "done";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const PRIMARY_BUTTON_NUMBER = 0;
 
-export const GroupTableDrag = () => {
-    const [entities, setEntities] = useState(entitiesMock);
+export const GroupTableDrag = (props) => {
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
     const [draggingTaskId, setDraggingTaskId] = useState(null);
 
@@ -67,16 +33,16 @@ export const GroupTableDrag = () => {
     },)
 
     const confirmDelete = (id) => {
-        const newTasks = entities.tasks.filter( t => t.id !== id)
+        const newTasks = props.entities.tasks.filter( t => t.id !== id)
 
-        const newColumns = Object.keys(entities.columns).reduce(function(result, key) {
-            const col = entities.columns[key]
+        const newColumns = Object.keys(props.entities.columns).reduce(function(result, key) {
+            const col = props.entities.columns[key]
             const newTaskIds = col.taskIds.filter( t => t !== id)
             result[key] = {...col, taskIds: newTaskIds}
             return result
         }, {})
 
-        setEntities({...entities, tasks: newTasks, columns: newColumns})
+        props.setEntities({...props.entities, tasks: newTasks, columns: newColumns})
     };
 
     /**
@@ -243,6 +209,8 @@ export const GroupTableDrag = () => {
             return;
         }
 
+        const entities = props.entities
+
         const processed = mutliDragAwareReorder({
             entities,
             selectedTaskIds,
@@ -250,7 +218,7 @@ export const GroupTableDrag = () => {
             destination
         });
 
-        setEntities(processed.entities);
+        props.setEntities(processed.entities);
         setDraggingTaskId(null);
     };
 
@@ -306,7 +274,7 @@ export const GroupTableDrag = () => {
      * This behaviour matches the MacOSX finder selection
      */
     const multiSelectTo = (newTaskId) => {
-        const updated = multiSelect(entities, selectedTaskIds, newTaskId);
+        const updated = multiSelect(props.entities, selectedTaskIds, newTaskId);
 
         if (updated == null) {
             return;
@@ -384,7 +352,7 @@ export const GroupTableDrag = () => {
 
     return (
         <>
-            <Card
+            {props.entities && <Card
                 className={`c-multi-drag-table ${draggingTaskId ? "is-dragging" : ""}`}
             >
                 <DragDropContext
@@ -392,19 +360,19 @@ export const GroupTableDrag = () => {
                     onDragEnd={onDragEnd}
                 >
                     <Row gutter={40}>
-                        {entities.columnIds.map((id) => {
-                            const tableColumns = (entities.columns[id].keepEntries) ? baseTableColumns : deleteTableColumns
+                        {props.entities.columnIds.map((id) => {
+                            const tableColumns = (props.entities.columns[id].keepEntries) ? baseTableColumns : deleteTableColumns
 
                             return (
                             <Col key={id} xs={8}>
                                 <div className="inner-col">
                                     <Row justify="space-between" align="middle">
-                                        <h4>{entities.columns[id].title}</h4>
+                                        <h4>{props.entities.columns[id].title}</h4>
                                     </Row>
                                     <span>{}</span>
 
                                     <Table
-                                        dataSource={getTasks(entities, id)}
+                                        dataSource={getTasks(props.entities, id)}
                                         columns={tableColumns}
                                         rowKey="id"
                                         pagination={false}
@@ -414,14 +382,14 @@ export const GroupTableDrag = () => {
                                                 // Custom tbody
                                                 wrapper: (val) =>
                                                     DroppableTableBody({
-                                                        columnId: entities.columns[id].id,
-                                                        tasks: getTasks(entities, id),
+                                                        columnId: props.entities.columns[id].id,
+                                                        tasks: getTasks(props.entities, id),
                                                         ...val
                                                     }),
                                                 // Custom td
                                                 row: (val) => {
                                                     return DraggableTableRow({
-                                                        tasks: getTasks(entities, id),
+                                                        tasks: getTasks(props.entities, id),
                                                         ...val
                                                     })
                                             }
@@ -440,7 +408,7 @@ export const GroupTableDrag = () => {
                         )}
                     </Row>
                 </DragDropContext>
-            </Card>
+            </Card>}
         </>
     );
 };

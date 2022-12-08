@@ -4,13 +4,60 @@ import {GroupTableDrag} from "../menus/GroupTableDrag";
 
 const {Option} = Select;
 
-export default function TTestParams(props) {
+const getEntitiesMock = (experimentDetails) => {
+    const availableGroups = Object.keys(experimentDetails).reduce(function(result, key) {
+        const newGroup = experimentDetails[key].group
+        if(! result.includes(newGroup)) return result.concat(newGroup)
+        return result
+    }, [])
 
-    console.log(props.experimentDetails)
+    const initTasks = availableGroups.map( (group, i) => { return {id: String(i), title: group} })
+
+    return {
+        tasks: initTasks,
+        columnIds: ["groups", "first", "second"],
+        columns: {
+            groups: {
+                id: "groups",
+                title: "Available groups",
+                keepEntries: true,
+                taskIds: initTasks.map(t => t.id)
+            },
+            first: {
+                id: "first",
+                title: "First group (right)",
+                taskIds: []
+            },
+            second: {
+                id: "second",
+                title: "Second group (left)",
+                taskIds: []
+            }
+        }
+    }
+};
+
+export default function TTestParams(props) {
 
     const numCols = props.commonResult.numericalColumns
     const intCol = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()
+    const [entities, setEntities] = useState();
+
+    useEffect(() => {
+        if(entities){
+            const firstGroup = parseGroups("first")
+            const secondGroup = parseGroups("second")
+            props.setParams({...props.params, firstGroup: firstGroup, secondGroup: secondGroup })
+        }
+    }, [entities])
+
+    useEffect(() => {
+        if(!entities && props.experimentDetails){
+            setEntities(getEntitiesMock(props.experimentDetails))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props, entities])
 
     useEffect(() => {
         if(!props.params){
@@ -27,6 +74,10 @@ export default function TTestParams(props) {
     }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
+
+    function parseGroups(field){
+        return entities.columns[field].taskIds.map(id => entities.tasks[id].title)
+    }
 
     function changeUseDefaultCol(e){
         setUseDefaultCol(e.target.checked)
@@ -73,7 +124,8 @@ export default function TTestParams(props) {
                 <Option value={'bonferroni'}>Bonferroni</Option>
             </Select>
         </span>
-                <GroupTableDrag/>
+                {entities && <GroupTableDrag entities={entities}
+                                setEntities={setEntities}/>}
             </Space>
         </>
     }
