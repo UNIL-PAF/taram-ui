@@ -50,6 +50,7 @@ export default function TTestParams(props) {
             const secondGroup = parseGroups("second")
             props.setParams({...props.params, firstGroup: firstGroup, secondGroup: secondGroup })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entities])
 
     useEffect(() => {
