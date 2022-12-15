@@ -28,7 +28,10 @@ export default function TTest(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <div>
-                    <p>Nr of significant results: <strong>{results.numberOfSignificant}</strong></p>
+                    <h3>Nr of significant results:</h3>
+                    {results.comparisions.map( (comp, i) => {
+                            return <p key={i}>{comp.firstGroup} - {comp.secondGroup} : <strong>{comp.numberOfSignificant}</strong></p>
+                    })}
                 </div>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
