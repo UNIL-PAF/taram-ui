@@ -107,7 +107,8 @@ export default function ProteinTable(props) {
             title: 'Description',
             dataIndex: 'desc',
             key: 'desc',
-            ellipsis: true
+            ellipsis: true,
+            ...getColumnSearchProps('desc'),
         },
         {
             title: 'Intensity',
