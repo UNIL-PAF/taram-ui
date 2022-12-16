@@ -8,14 +8,20 @@ export default function ProteinTable(props) {
     const [searchText, setSearchText] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [columns, setColumns] = useState();
     const searchInput = useRef(null);
 
     useEffect(() => {
+        if(props.tableData && !columns){
+            setColumns(getColumns())
+        }
+
         if (props.tableData && props.params && props.params.selProts && props.params.selProts.length > 0 && selectedRowKeys.length === 0) {
             const selRows = props.tableData.table.filter((r) => {return r.sel}).map((r) => {return r.key})
             setSelectedRowKeys(selRows)
         }
-    }, [props, selectedRowKeys.length])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props, selectedRowKeys.length, columns])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -89,7 +95,18 @@ export default function ProteinTable(props) {
             ),
     });
 
-    const columns = [
+    const getColumns = () => {
+        return defaultColumns.concat( {
+            title: props.tableData.intField,
+            dataIndex: 'int',
+            key: 'int',
+            //defaultSortOrder: 'descend',
+            sorter: (a, b) => a.int - b.int,
+            render: (text) => text ? text.toExponential(2) : 0,
+        })
+    }
+
+    const defaultColumns = [
         {
             title: 'Protein group',
             dataIndex: 'prot',
@@ -109,26 +126,9 @@ export default function ProteinTable(props) {
             key: 'desc',
             ellipsis: true,
             ...getColumnSearchProps('desc'),
-        },
-        {
-            title: 'Intensity',
-            dataIndex: 'int',
-            key: 'int',
-            //defaultSortOrder: 'descend',
-            sorter: (a, b) => a.int - b.int,
-            render: (text) => text ? text.toExponential(2) : 0,
-        },
-        {
-            title: 'IBAQ',
-            dataIndex: 'ibaq',
-            key: 'ibaq',
-            //defaultSortOrder: 'descend',
-            sorter: (a, b) => a.ibaq - b.ibaq,
-            render: (text) => text ? text.toExponential(2) : 0,
-        },
+        }
     ];
-
-
+    
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
