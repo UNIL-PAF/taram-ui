@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card} from "antd";
+import {Button, Card, Row, Col} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
@@ -67,6 +67,7 @@ export default function VolcanoPlot(props) {
         })
 
         const opts =  {
+            title: {text: params.comparison.group1 + " - " + params.comparison.group2, left: "center"},
             xAxis: {
                 name: "Fold change",
                 nameLocation: "center",
@@ -226,11 +227,17 @@ export default function VolcanoPlot(props) {
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>
-            {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
+            {props.data.status === 'done' && <Row>
+                <Col span={12}></Col>
+                <Col span={12}>
+                <div style={{textAlign: 'right'}}>
                 <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
                         icon={<FullscreenOutlined/>}>Expand</Button>
-            </div>}
+                </div>
+                </Col>
+                </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
