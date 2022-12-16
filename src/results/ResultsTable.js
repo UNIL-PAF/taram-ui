@@ -1,14 +1,21 @@
 import React from "react";
-import {Table} from 'antd';
+import {Button, message, Popconfirm, Space, Table} from 'antd';
+import {DeleteOutlined} from "@ant-design/icons";
+import {deleteResult} from "./BackendResults";
 
-class ResultsTable extends React.Component {
+export default function ResultsTable(props) {
 
-    columns = [
+    const confirmDelete = (resultId) => {
+        deleteResult(resultId, props.refreshResults)
+        message.success('Delete result [' + resultId + '].');
+    };
+
+    const columns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text, record) => <a href={'/analysis/'+ record.id}>{text}</a>,
+            render: (text, record) => <a href={'/analysis/' + record.id}>{text}</a>,
         },
         {
             title: 'Type',
@@ -31,26 +38,38 @@ class ResultsTable extends React.Component {
             key: 'path',
         },
         {
-            title: 'File creation date',
-            dataIndex: 'fileCreationDate',
-            key: 'fileCreationDate',
+            title: 'Creation date',
+            dataIndex: 'lastModifDate',
+            key: 'lastModifDate',
             sorter: (a, b) =>
-                a.fileCreationDate &&
-                a.fileCreationDate > b.fileCreationDate &&
-                b.fileCreationDate
+                a.lastModifDate &&
+                a.lastModifDate > b.lastModifDate &&
+                b.lastModifDate
                     ? 1
                     : -1,
             defaultSortOrder: "ascend"
-        }
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Popconfirm
+                        title="Are you sure to delete this result?"
+                        onConfirm={() => confirmDelete(record.id)}
+                        okText="Yes"
+                        cancelText="Cancel"
+                    >
+                        <Button type={"text"} icon={<DeleteOutlined/>}></Button>
+                    </Popconfirm>
+                </Space>
+            ),
+        },
     ]
 
-    render() {
-        return (
-            <>
-                <Table dataSource={this.props.results} columns={this.columns}/>
-            </>
-        );
-    }
+    return (
+        <>
+            <Table dataSource={props.results} columns={columns}/>
+        </>
+    );
 }
-
-export default ResultsTable

@@ -22,6 +22,22 @@ function getAvailableDirs(setVisible, setAvailableDirs){
         });
 }
 
+function deleteResult(resultId, refreshResults){
+    axios.delete(globalConfig.urlBackend + 'result/' + resultId)
+        .then((response) => {
+            // handle success
+            console.log("ok");
+        })
+        .catch(function (error) {
+            // handle error
+            console.log("error")
+            console.log(error);
+        })
+        .then(function () {
+            refreshResults()
+        });
+}
+
 function getResults(setState) {
     axios.get(globalConfig.urlBackend + 'result/list')
         .then((response) => {
@@ -61,4 +77,4 @@ function addResult(result, refreshResults){
 
 
 
-export {getAvailableDirs, getResults, addResult}
+export {getAvailableDirs, getResults, addResult, deleteResult}

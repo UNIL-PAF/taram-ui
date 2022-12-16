@@ -21,7 +21,7 @@ export default function Results(props) {
         <Content>
             <Space direction="vertical">
                 <BrowseResults refreshResults={refreshResults}/>
-                <ResultsTable results={results}/>
+                <ResultsTable results={results} refreshResults={refreshResults}/>
             </Space>
         </Content>
     );
