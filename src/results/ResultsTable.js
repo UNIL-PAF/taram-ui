@@ -23,11 +23,6 @@ export default function ResultsTable(props) {
             key: 'type',
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-        },
-        {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
