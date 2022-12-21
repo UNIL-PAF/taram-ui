@@ -15,8 +15,7 @@ export default function RemoveColumnsParams(props) {
 
     const getDefaultCheckedKeys = () => {
         return props.commonResult.headers.map( (a, i) => {
-
-            const hasWildcard = removeWildcard.reduce((acc, val) => {return acc || a.name.includes(val)}, false)
+            const hasWildcard = removeWildcard.find( v => a.name.includes(v))
             if(hasWildcard) return undefined
 
             if(a.type === "EXPERIMENT"){
