@@ -16,7 +16,7 @@ export default function RemoveColumns(props) {
                               status={props.data.status}
                               error={props.data.error}
                               paramType={"remove-columns"}
-                              commonResult={props.data.commonResult}
+                              commonResult={props.commonResBefore}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}

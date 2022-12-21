@@ -82,8 +82,10 @@ export default function AnalysisSteps(props) {
                                 return <RemoveImputed analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={step.id}/>
                             case 'remove-columns':
+                                // since we need all headers if changing parameters, we have to get from the step before
+                                const commonResBefore = props.data.analysisSteps[i-1].commonResult
                                 return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={step.id}/>
+                                                      data={stepWithNr} key={step.id} commonResBefore={commonResBefore}/>
                             default:
                                 return null
                         }
