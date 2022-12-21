@@ -33,7 +33,9 @@ export default function RemoveColumnsParams(props) {
             if (props.params) {
                 setCheckedKeys(props.params.keepIdxs)
             } else {
-                setCheckedKeys(getDefaultCheckedKeys())
+                const defSel = getDefaultCheckedKeys()
+                setCheckedKeys(defSel)
+                props.setParams({keepIdxs: checkedToParams(defSel)})
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +86,6 @@ export default function RemoveColumnsParams(props) {
 
     const onCheck = (checkedKeysValue) => {
         setCheckedKeys(checkedKeysValue);
-        console.log(checkedKeysValue)
         props.setParams({keepIdxs: checkedToParams(checkedKeysValue)})
     };
 
