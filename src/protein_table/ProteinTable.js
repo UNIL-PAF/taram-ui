@@ -128,7 +128,7 @@ export default function ProteinTable(props) {
             ...getColumnSearchProps('desc'),
         }
     ];
-    
+
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);

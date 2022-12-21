@@ -5,12 +5,35 @@ export default function RemoveColumnsParams(props) {
 
     const [checkedKeys, setCheckedKeys] = useState();
 
+    const removeSingle = ["Protein.IDs", "Peptide.counts.all", "Razor.unique.peptides", "Peptide.counts.unique",
+        "Number.of.proteins" , "Unique.peptides", "Sequence.coverage", "Unique.razor.sequence.coverage",
+        "Unique.sequence.coverage", "Sequence.length", "Sequence.lengths", "Q.value", "id","Peptide.IDs","Peptide.is.razor",
+        "Mod..peptide.IDs", "Evidence.IDs", "MS.MS.IDs", "Best.MS.MS", "Oxidation.M.site.IDs", "Oxidation.M.site.positions",
+        "Taxonomy.IDs", "Mod.peptide.IDs"];
+    const removeSamples = ["Razor.unique.peptides", "Unique.peptides", "Sequence.coverage"];
+    const removeWildcard = ["Fraction", "Mutated", "Mutation"]
+
+    const getDefaultCheckedKeys = () => {
+        return props.commonResult.headers.map( (a, i) => {
+
+            const hasWildcard = removeWildcard.reduce((acc, val) => {return acc || a.name.includes(val)}, false)
+            if(hasWildcard) return undefined
+
+            if(a.type === "EXPERIMENT"){
+                return (removeSamples.includes(a.name)) ? undefined : i
+            }else{
+                return (removeSingle.includes(a.name)) ? undefined : i
+            }
+        }).filter(a => typeof a !== "undefined")
+    }
+
+
     useEffect(() => {
         if(!checkedKeys) {
             if (props.params) {
                 setCheckedKeys(props.params.keepIdxs)
             } else {
-                setCheckedKeys([])
+                setCheckedKeys(getDefaultCheckedKeys())
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,11 +62,11 @@ export default function RemoveColumnsParams(props) {
 
     const getTag = (type) => {
         if(type === "NUMBER"){
-            return <Tag color={"cyan"}>Numerical</Tag>
+            return <Tag color={"green"}>Numerical</Tag>
         }else if(type === "CHARACTER"){
             return <Tag color={"gold"}>Character</Tag>
         }else if(type === "EXPERIMENT"){
-            return <Tag color={"green"}>Samples</Tag>
+            return null
         }else{
             return null
         }
@@ -61,6 +84,7 @@ export default function RemoveColumnsParams(props) {
 
     const onCheck = (checkedKeysValue) => {
         setCheckedKeys(checkedKeysValue);
+        console.log(checkedKeysValue)
         props.setParams({keepIdxs: checkedToParams(checkedKeysValue)})
     };
 
