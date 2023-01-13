@@ -14,6 +14,7 @@ import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
 import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
 import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
+import PcaPlotParams from "../pca/PcaPlotParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -126,6 +127,13 @@ export default function AnalysisStepMenuItems(props) {
                                       intCol={props.intCol}
                                       stepId={props.stepId}
                 ></BoxPlotParams>
+            case 'pca':
+                return <PcaPlotParams commonResult={props.commonResult}
+                                      params={isNew ? newStepParams : props.stepParams}
+                                      setParams={isNew ? setNewStepParams : props.setStepParams}
+                                      intCol={props.intCol}
+                                      stepId={props.stepId}
+                ></PcaPlotParams>
             case 'filter':
                 return <FilterParams commonResult={props.commonResult}
                                      params={isNew ? newStepParams : props.stepParams}
@@ -214,6 +222,11 @@ export default function AnalysisStepMenuItems(props) {
                                    className="narrow-menu"
                                    key={'boxplot'}>
                             <span>Boxplot</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("pca")}
+                                   className="narrow-menu"
+                                   key={'pca'}>
+                            <span>PCA</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("volcano-plot")}
                                    className="narrow-menu"

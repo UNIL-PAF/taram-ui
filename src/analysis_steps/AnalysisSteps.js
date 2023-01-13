@@ -13,6 +13,7 @@ import VolcanoPlot from "./volcano_plot/VolcanoPlot";
 import AnalysisTitle from "../analysis/AnalysisTitle";
 import RemoveImputed from "./remove_imputed/RemoveImputed";
 import RemoveColumns from "./remove_columns/RemoveColumns";
+import PcaPlot from "./pca/PcaPlot";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -62,6 +63,9 @@ export default function AnalysisSteps(props) {
                                                       data={stepWithNr} key={step.id}/>
                             case 'boxplot':
                                 return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                data={stepWithNr} key={step.id}/>
+                            case 'pca':
+                                return <PcaPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                 data={stepWithNr} key={step.id}/>
                             case 'transformation':
                                 return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
