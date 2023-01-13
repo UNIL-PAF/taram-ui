@@ -28,7 +28,6 @@ export default function PcaPlot(props) {
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
-                console.log(results)
             }
 
             if (!isWaiting && props.data.status !== 'done') {
@@ -41,45 +40,34 @@ export default function PcaPlot(props) {
     }, [props, isWaiting])
 
     const getOptions = (results) => {
-        const params = JSON.parse(props.data.parameters)
         const xAxisPc = 0
         const yAxisPc = 1
 
-        console.log(results)
-        /*
-        const series = results.groups.map(g => {
-            console.log(g)
-            console.log(g.pcList[xAxisPc].pcVals)
-            return {
-                data: g.pcList[xAxisPc].pcVals.map((l, i) => { return [l, g.pcList[yAxisPc].pcVals[i]]}),
-                type: 'scatter'
+        const transforms = results.groups.map((g) => {
+            return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
+        })
+
+        const series = results.groups.map((g, i) => {
+            return  {
+                name: g,
+                datasetIndex: (i + 1),
+                type: 'scatter',
+                encode: {
+                    x: 'x',
+                    y: 'y'
+                }
             }
         })
-        console.log(series)
-
-         */
-        const mySource = results.pcList.map(p => {return [p.expName, p.groupName, p.pcVals[xAxisPc], p.pcVals[yAxisPc]]})
-        console.log(mySource)
 
         const options = {
             dataset: [
                 {
                     dimensions: ["expName", "group", "x", "y"],
-                    source: results.pcList.map(p => {return [p.expName, p.groupName, p.pcVals[xAxisPc], p.pcVals[yAxisPc]]}),
-                },
-                {
-                    transform: {
-                        type: 'filter',
-                        config: {dimension: 'group', value: "KO"}
-                    }
-                },
-                {
-                    transform: {
-                        type: 'filter',
-                        config: {dimension: 'group', value: "WT"}
-                    }
-                },
-            ],
+                    source: results.pcList.map(p => {
+                        return [p.expName, p.groupName, p.pcVals[xAxisPc], p.pcVals[yAxisPc]]
+                    }),
+                }
+            ].concat(transforms),
             xAxis: {
                 name: "PC" + (xAxisPc + 1) + " (" + results.explVars[xAxisPc].toFixed(1) + "%)",
                 nameLocation: "center",
@@ -90,24 +78,21 @@ export default function PcaPlot(props) {
                 nameLocation: "center",
                 nameTextStyle: {padding: [8, 4, 15, 6]},
             },
-            series: [
-                {
-                    datasetIndex: 1,
-                    type: 'scatter',
-                    encode: {
-                        x: 'x',
-                        y: 'y'
-                    }
-                },
-                {
-                    datasetIndex: 2,
-                    type: 'scatter',
-                    encode: {
-                        x: 'x',
-                        y: 'y'
-                    }
-                },
-            ]
+            tooltip: {
+                position: 'top',
+                formatter: function (params) {
+                    return params.data[0]
+                }
+            },
+            legend: {},
+            series: series.length ? series : [{
+                datasetIndex: 0,
+                type: 'scatter',
+                encode: {
+                    x: 'x',
+                    y: 'y'
+                }
+            }]
         };
 
         return options
