@@ -42,7 +42,7 @@ export default function ResultsTable(props) {
                 b.lastModifDate
                     ? 1
                     : -1,
-            defaultSortOrder: "ascend"
+            defaultSortOrder: "descend"
         },
         {
             title: 'Action',
