@@ -217,23 +217,6 @@ export default function AnalysisStepMenuItems(props) {
                     <span>Change parameters..</span>
                 </Menu.Item>}
                 <Menu.SubMenu key={"sub-0"} title={"Add a following step"}>
-                    <Menu.SubMenu key={"sub-1"} title={"Plots"} >
-                        <Menu.Item onClick={() => clickAddStep("boxplot")}
-                                   className="narrow-menu"
-                                   key={'boxplot'}>
-                            <span>Boxplot</span>
-                        </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("pca")}
-                                   className="narrow-menu"
-                                   key={'pca'}>
-                            <span>PCA</span>
-                        </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("volcano-plot")}
-                                   className="narrow-menu"
-                                   key={'volcano-plot'}>
-                            <span>Volcano plot</span>
-                        </Menu.Item>
-                    </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
@@ -259,6 +242,23 @@ export default function AnalysisStepMenuItems(props) {
                                    className="narrow-menu"
                                    key={'remove-imputed'}>
                             <span>Remove imputed values</span>
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu key={"sub-1"} title={"Plots"} >
+                        <Menu.Item onClick={() => clickAddStep("boxplot")}
+                                   className="narrow-menu"
+                                   key={'boxplot'}>
+                            <span>Boxplot</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("pca")}
+                                   className="narrow-menu"
+                                   key={'pca'}>
+                            <span>PCA</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("volcano-plot")}
+                                   className="narrow-menu"
+                                   key={'volcano-plot'}>
+                            <span>Volcano plot</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-3"} title={"Statistical tests"}>
