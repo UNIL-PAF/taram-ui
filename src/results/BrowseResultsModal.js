@@ -50,21 +50,6 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                 }}
             >
                 <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please specify a name for the analysis.',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item name="description" label="Description">
-                    <Input type="textarea" />
-                </Form.Item>
-                <Form.Item
                     name="resDir"
                     label="Result directory"
                     rules={[
@@ -84,7 +69,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                         {
                             _.map(fltDirs, (dir, i) => {
                                 return <Option key={i} value={i}>{dir.path}</Option>
-                        })
+                            })
                         }
                     </Select>
                 </Form.Item>
@@ -93,6 +78,21 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                         <Radio value="MaxQuant">MaxQuant</Radio>
                         <Radio disabled={true} value="Spectronaut">Spectronaut</Radio>
                     </Radio.Group>
+                </Form.Item>
+                <Form.Item
+                    name="name"
+                    label="Name"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please specify a name for the analysis.',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                    <Input type="textarea" />
                 </Form.Item>
             </Form>
         </Modal>
