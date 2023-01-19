@@ -7,7 +7,7 @@ export default function BrowseResults({refreshResults}) {
     return (
         <Row justify="left">
             <Col>
-                <BrowseResultsModal buttonText={'Add new result'} refreshResults={refreshResults}/>
+                <BrowseResultsModal buttonText={'Add new analysis'} refreshResults={refreshResults}/>
             </Col>
         </Row>
     );

@@ -34,16 +34,16 @@ class Navbar extends React.Component {
                 <span style={{color: 'white'}}>{this.selectedTab}</span>
                 <Col span={12} style={{display: 'flex', justifyContent: 'center'}}>
                     <Menu theme="dark" mode="horizontal" selectedKeys={this.state.selectedTab} disabledOverflow={true}>
-                        <Menu.Item key={"results"} onClick={(payload) => this.clickMainMenu(payload)}>
-                            <Link to=
-                                      {"/results"}>
-                                Results
-                            </Link>
-                        </Menu.Item>
                         <Menu.Item key={"analysis"} onClick={(payload) => this.clickMainMenu(payload)}>
                             <Link to=
                                       {"/analysis"}>
                                 Analysis
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key={"viewer"} onClick={(payload) => this.clickMainMenu(payload)}>
+                            <Link to=
+                                      {"/viewer"}>
+                                Viewer
                             </Link>
                         </Menu.Item>
                         <Menu.Item key={"templates"} onClick={(payload) => this.clickMainMenu(payload)}>

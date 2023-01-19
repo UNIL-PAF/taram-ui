@@ -24,7 +24,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
     return (
         <Modal
             visible={visible}
-            title="Add a new result"
+            title="Add a new analysis"
             okText="Add"
             cancelText="Cancel"
             width={1000}
@@ -55,7 +55,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                     rules={[
                         {
                             required: true,
-                            message: 'Please specify a name for the result.',
+                            message: 'Please specify a name for the analysis.',
                         },
                     ]}
                 >

@@ -2,7 +2,6 @@ import {Layout} from "antd";
 import {Route, Routes} from "react-router-dom";
 import Results from "../results/Results";
 import Navbar from "./Navbar";
-import Home from "../home/Home";
 import Analysis from "../analysis/Analysis";
 import React from "react";
 import Templates from "../templates/Templates";
@@ -17,9 +16,9 @@ class MyRoutes extends React.Component {
                     <Navbar/>
                 </Header>
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="results" element={<Results/>}/>
-                    <Route path="analysis" element={<Analysis/>}>
+                    <Route path="/" element={<Results/>}/>
+                    <Route path="analysis" element={<Results/>}/>
+                    <Route path="viewer" element={<Analysis/>}>
                         <Route path=":resultId" element={<Analysis />} />
                     </Route>
                     <Route path="templates" element={<Templates/>}>

@@ -15,7 +15,7 @@ export default function ResultsTable(props) {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text, record) => <a href={'/analysis/' + record.id}>{text}</a>,
+            render: (text, record) => <a href={'/viewer/' + record.id}>{text}</a>,
         },
         {
             title: 'Type',
