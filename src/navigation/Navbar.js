@@ -26,7 +26,7 @@ class Navbar extends React.Component {
                         <Menu.Item key={"home"} onClick={() => this.clickHome()}>
                             <Link to=
                                       {"/"}>
-                                PAF analysis
+                                Taram
                             </Link>
                         </Menu.Item>
                     </Menu>
