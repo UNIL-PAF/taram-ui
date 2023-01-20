@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card} from "antd";
+import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
@@ -7,6 +7,7 @@ import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
+import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps"
 
 export default function BoxPlot(props) {
     const type = 'boxplot'
@@ -15,6 +16,12 @@ export default function BoxPlot(props) {
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const echartOptions = getOptions(JSON.parse(props.data.results))
+        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [localParams])
 
     useEffect(() => {
         if (props.data) {
@@ -40,7 +47,7 @@ export default function BoxPlot(props) {
     }, [props, isWaiting])
 
     const getOptions = (results) => {
-        const params = JSON.parse(props.data.parameters)
+        const params = localParams || JSON.parse(props.data.parameters)
 
         const newData = results.boxPlotData.map(d => {
             const dataWithName = d.groupData.map(box => {
@@ -86,6 +93,15 @@ export default function BoxPlot(props) {
             }
         })
 
+        const groupByCondition = () => {
+            return parsedRes.boxPlotData.reduce(
+                (acc, curr) => acc.concat(curr.data.map(d => d[0])),
+                []
+            );
+        }
+
+        const experimentNames = params.groupByCondition ? groupByCondition() : parsedRes.experimentNames
+
         const options = {
             dataset: boxplotDatasets,
             series: boxplotSeries.concat(selProtSeries),
@@ -96,7 +112,7 @@ export default function BoxPlot(props) {
                     scale: true,
                     axisLabel: {interval: 0, rotate: 50},
                     show: (i === 0 ? true : false),
-                    data: parsedRes.experimentNames,
+                    data: experimentNames,
                     axisLine: { onZero: false }
                 }
             }),
@@ -108,6 +124,12 @@ export default function BoxPlot(props) {
         };
 
         return options
+    }
+
+    const checkboxChange = (e) => {
+        const newLocalParams = {...localParams, groupByCondition: e.target.checked}
+        setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
+        setLocalParams(newLocalParams)
     }
 
     return (
@@ -133,6 +155,9 @@ export default function BoxPlot(props) {
                 <Button size={'small'} type='default' onClick={() => setShowZoom(true)} icon={<FullscreenOutlined />}>Expand</Button>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+            <Checkbox
+                onChange={checkboxChange} checked={localParams && localParams.groupByCondition}>Group by condition
+            </Checkbox>
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id}></EchartsZoom>}

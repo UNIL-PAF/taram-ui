@@ -68,6 +68,10 @@ export const addAnalysisStep = createAsyncThunk(
     }
 )
 
+export function setStepParametersWithoutRunning(paramsObj){
+    return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId + "?doNotRun=true", paramsObj.params)
+}
+
 function setStepParametersCall(paramsObj) {
     return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, paramsObj.params)
 }
