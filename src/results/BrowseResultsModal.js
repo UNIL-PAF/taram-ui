@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, Modal, Radio, Select} from 'antd';
 import {addResult, getAvailableDirs} from "./BackendResults"
 import _ from "lodash"
+import {useDispatch} from "react-redux";
 
 const { Option } = Select;
 
@@ -102,6 +103,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
 export function BrowseResultsModal({buttonText, refreshResults}){
     const [visible, setVisible] = useState(false);
     const [availableDirs, setAvailableDirs] = useState();
+    const dispatch = useDispatch();
 
     const onCreate = (values) => {
         const selDir = availableDirs.filter((a) => a.type === values.type)[values.resDir]
@@ -109,7 +111,7 @@ export function BrowseResultsModal({buttonText, refreshResults}){
         localVals.path = selDir.path
         localVals.resFile = selDir.resFile
         localVals.fileCreationDate = selDir.fileCreationDate
-        addResult(localVals, refreshResults)
+        dispatch(addResult(localVals))
         setVisible(false);
     };
 

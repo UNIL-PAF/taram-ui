@@ -5,6 +5,7 @@ import {Alert, message} from 'antd';
 import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
 import AnalysisSteps from "../analysis_steps/AnalysisSteps";
+import {resetResults} from "../results/ResultsSlice"
 
 export default function Analysis() {
     const dispatch = useDispatch();
@@ -13,6 +14,14 @@ export default function Analysis() {
     const analysisStatus = useSelector(state => state.analysis.globalStatus)
     const analysisData = useSelector(state => state.analysis.data)
     const analysisError = useSelector(state => state.analysis.error)
+    const resultsId = useSelector(state => state.results.resultId)
+
+    useEffect(() => {
+        if(resultsId != null){
+            dispatch(resetResults())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resultsId])
 
     useEffect(() => {
         let timeout

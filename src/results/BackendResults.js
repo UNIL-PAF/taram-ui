@@ -1,5 +1,6 @@
 import axios from 'axios';
 import globalConfig from "../globalConfig";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 function getAvailableDirs(setVisible, setAvailableDirs){
     axios.get(globalConfig.urlBackend + "result/available-dirs")
@@ -58,23 +59,25 @@ function getResults(setState) {
         });
 }
 
-function addResult(result, refreshResults){
-    axios.post(globalConfig.urlBackend + 'result/add', result)
-        .then((response) => {
-            // handle success
-            console.log("ok");
-        })
-        .catch(function (error) {
-            // handle error
-            console.log("error")
-            console.log(error);
-        })
-        .then(function () {
-            refreshResults()
-        });
+function callAddResult(result){
+    return axios.post(globalConfig.urlBackend + 'result/add', result)
 }
 
+export const addResult = createAsyncThunk(
+    'result/add',
+    async (result, thunkApi) => {
+        try {
+            const response = await callAddResult(result)
+            return response.data
+        }catch(err){
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        }
+    }
+)
 
 
-
-export {getAvailableDirs, getResults, addResult, deleteResult}
+export {getAvailableDirs, getResults, deleteResult}
