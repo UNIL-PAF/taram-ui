@@ -14,6 +14,7 @@ import AnalysisTitle from "../analysis/AnalysisTitle";
 import RemoveImputed from "./remove_imputed/RemoveImputed";
 import RemoveColumns from "./remove_columns/RemoveColumns";
 import PcaPlot from "./pca/PcaPlot";
+import ScatterPlot from "./scatter_plot/ScatterPlot";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -90,6 +91,9 @@ export default function AnalysisSteps(props) {
                                 const commonResBefore = props.data.analysisSteps[i-1].commonResult
                                 return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={step.id} commonResBefore={commonResBefore}/>
+                            case 'scatter-plot':
+                                return <ScatterPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                    data={stepWithNr} key={step.id}/>
                             default:
                                 return null
                         }

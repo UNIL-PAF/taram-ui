@@ -15,6 +15,7 @@ import DownloadZipModal from "./DownloadZipModal"
 import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
 import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
 import PcaPlotParams from "../pca/PcaPlotParams";
+import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -164,6 +165,11 @@ export default function AnalysisStepMenuItems(props) {
                                           params={isNew ? newStepParams : props.stepParams}
                                           setParams={isNew ? setNewStepParams : props.setStepParams}
                 ></VolcanoPlotParams>
+            case 'scatter-plot':
+                return <ScatterPlotParams commonResult={props.commonResult}
+                                          params={isNew ? newStepParams : props.stepParams}
+                                          setParams={isNew ? setNewStepParams : props.setStepParams}
+                ></ScatterPlotParams>
         }
     }
 
@@ -245,6 +251,11 @@ export default function AnalysisStepMenuItems(props) {
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-1"} title={"Plots"} >
+                        <Menu.Item onClick={() => clickAddStep("scatter-plot")}
+                                   className="narrow-menu"
+                                   key={'scatter-plot'}>
+                            <span>Scatter plot</span>
+                        </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("boxplot")}
                                    className="narrow-menu"
                                    key={'boxplot'}>

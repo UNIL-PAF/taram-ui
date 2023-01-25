@@ -8,8 +8,8 @@ import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
 
-export default function PcaPlot(props) {
-    const type = 'pca'
+export default function ScatterPlot(props) {
+    const type = 'scatter-plot'
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
@@ -23,6 +23,7 @@ export default function PcaPlot(props) {
 
             if (isWaiting && props.data.status === 'done') {
                 const results = JSON.parse(props.data.results)
+                console.log(results)
                 const echartOptions = getOptions(results)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
@@ -39,43 +40,34 @@ export default function PcaPlot(props) {
     }, [props, isWaiting])
 
     const getOptions = (results) => {
-        const xAxisPc = 0
-        const yAxisPc = 1
-
-        const transforms = results.groups.map((g) => {
-            return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
-        })
-
-        const series = results.groups.map((g, i) => {
-            return  {
-                name: g,
-                datasetIndex: (i + 1),
-                type: 'scatter',
-                encode: {
-                    x: 'x',
-                    y: 'y'
-                }
-            }
-        })
-
         const options = {
             dataset: [
                 {
-                    dimensions: ["expName", "group", "x", "y"],
-                    source: results.pcList.map(p => {
-                        return [p.expName, p.groupName, p.pcVals[xAxisPc], p.pcVals[yAxisPc]]
+                    dimensions: ["x", "y"],
+                    source: results.data.map(p => {
+                        return [p.x, p.y]
                     }),
                 }
-            ].concat(transforms),
+            ],
             xAxis: {
-                name: "PC" + (xAxisPc + 1) + " (" + results.explVars[xAxisPc].toFixed(1) + "%)",
+                name: "x",
                 nameLocation: "center",
-                nameTextStyle: {padding: [10, 4, 5, 6]},
+                nameTextStyle: {padding: [8, 4, 5, 6]},
+                axisLabel: {
+                    formatter: function (value) {
+                        return String(value).length > 5 ? value.toExponential(1) : value
+                    }
+                }
             },
             yAxis: {
-                name: "PC" + (yAxisPc + 1) + " (" + results.explVars[yAxisPc].toFixed(1) + "%)",
+                name: "y",
                 nameLocation: "center",
-                nameTextStyle: {padding: [8, 4, 15, 6]},
+                nameTextStyle: {padding: [8, 4, 45, 6]},
+                axisLabel: {
+                    formatter: function (value) {
+                        return String(value).length > 5 ? value.toExponential(1) : value
+                    }
+                }
             },
             tooltip: {
                 position: 'top',
@@ -84,21 +76,24 @@ export default function PcaPlot(props) {
                 }
             },
             legend: {},
-            series: series.length ? series : [{
+            series: [{
                 datasetIndex: 0,
                 type: 'scatter',
                 encode: {
                     x: 'x',
                     y: 'y'
                 }
-            }]
+            }],
+            grid: {
+                left: 70
+            }
         };
 
         return options
     }
 
     return (
-        <Card className={'analysis-step-card'} title={props.data.nr + " - PCA"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={props.data.nr + " - Scatter plot"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
                               stepId={props.data.id}
