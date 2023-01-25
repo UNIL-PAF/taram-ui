@@ -39,6 +39,10 @@ export default function ScatterPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting])
 
+    const nrForm = (nr) => {
+        return String(nr).length > 5 ? nr.toExponential(1) : nr
+    }
+
     const getOptions = (results) => {
         const options = {
             dataset: [
@@ -55,7 +59,7 @@ export default function ScatterPlot(props) {
                 nameTextStyle: {padding: [8, 4, 5, 6]},
                 axisLabel: {
                     formatter: function (value) {
-                        return String(value).length > 5 ? value.toExponential(1) : value
+                        return nrForm(value)
                     }
                 }
             },
@@ -65,15 +69,15 @@ export default function ScatterPlot(props) {
                 nameTextStyle: {padding: [8, 4, 45, 6]},
                 axisLabel: {
                     formatter: function (value) {
-                        return String(value).length > 5 ? value.toExponential(1) : value
+                        return nrForm(value)
                     }
                 }
             },
             tooltip: {
-                position: 'top',
+                showDelay: 0,
                 formatter: function (params) {
-                    return params.data[0]
-                }
+                    return "x: " + nrForm(params.data[0]) + "<br>y: " + nrForm(params.data[1])
+                },
             },
             legend: {},
             series: [{
@@ -82,7 +86,10 @@ export default function ScatterPlot(props) {
                 encode: {
                     x: 'x',
                     y: 'y'
-                }
+                },
+                large: true,
+                largeThreshold: 500,
+                symbolSize: 5,
             }],
             grid: {
                 left: 70
