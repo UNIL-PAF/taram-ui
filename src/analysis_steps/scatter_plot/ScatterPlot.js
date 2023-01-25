@@ -23,8 +23,7 @@ export default function ScatterPlot(props) {
 
             if (isWaiting && props.data.status === 'done') {
                 const results = JSON.parse(props.data.results)
-                console.log(results)
-                const echartOptions = getOptions(results)
+                const echartOptions = getOptions(results, params)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
@@ -43,7 +42,7 @@ export default function ScatterPlot(props) {
         return String(nr).length > 5 ? nr.toExponential(1) : nr
     }
 
-    const getOptions = (results) => {
+    const getOptions = (results, params) => {
         const options = {
             dataset: [
                 {
@@ -54,9 +53,12 @@ export default function ScatterPlot(props) {
                 }
             ],
             xAxis: {
-                name: "x",
+                name: params.xAxis,
                 nameLocation: "center",
-                nameTextStyle: {padding: [8, 4, 5, 6]},
+                nameTextStyle: {
+                    padding: [8, 4, 5, 6],
+                    fontWeight: 'bold'
+                },
                 axisLabel: {
                     formatter: function (value) {
                         return nrForm(value)
@@ -64,9 +66,12 @@ export default function ScatterPlot(props) {
                 }
             },
             yAxis: {
-                name: "y",
+                name: params.yAxis,
                 nameLocation: "center",
-                nameTextStyle: {padding: [8, 4, 45, 6]},
+                nameTextStyle: {
+                    padding: [8, 4, 45, 6],
+                    fontWeight: 'bold'
+                },
                 axisLabel: {
                     formatter: function (value) {
                         return nrForm(value)
@@ -75,8 +80,9 @@ export default function ScatterPlot(props) {
             },
             tooltip: {
                 showDelay: 0,
-                formatter: function (params) {
-                    return "x: " + nrForm(params.data[0]) + "<br>y: " + nrForm(params.data[1])
+                formatter: function (p) {
+                    return params.xAxis + ": <strong>" + nrForm(p.data[0]) +
+                        "</strong><br>" + params.yAxis + ": <strong>" + nrForm(p.data[1]) + "</strong>"
                 },
             },
             legend: {},
@@ -92,7 +98,7 @@ export default function ScatterPlot(props) {
                 symbolSize: 5,
             }],
             grid: {
-                left: 70
+                left: 75
             }
         };
 

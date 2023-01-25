@@ -169,6 +169,7 @@ export default function AnalysisStepMenuItems(props) {
                 return <ScatterPlotParams commonResult={props.commonResult}
                                           params={isNew ? newStepParams : props.stepParams}
                                           setParams={isNew ? setNewStepParams : props.setStepParams}
+                                          intCol={props.intCol}
                 ></ScatterPlotParams>
         }
     }
