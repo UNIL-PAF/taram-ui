@@ -43,12 +43,14 @@ export default function ScatterPlot(props) {
     }
 
     const getOptions = (results, params) => {
+        console.log(results)
+
         const options = {
             dataset: [
                 {
-                    dimensions: ["x", "y"],
+                    dimensions: ["x", "y", "name", "col"],
                     source: results.data.map(p => {
-                        return [p.x, p.y]
+                        return [p.x, p.y, p.n, p.d]
                     }),
                 }
             ],
@@ -81,8 +83,9 @@ export default function ScatterPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function (p) {
-                    return params.xAxis + ": <strong>" + nrForm(p.data[0]) +
+                    const text =  "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + nrForm(p.data[0]) +
                         "</strong><br>" + params.yAxis + ": <strong>" + nrForm(p.data[1]) + "</strong>"
+                    return (params.colorBy) ? (text + "<br>" + params.colorBy + "<strong>" + p.data[3].toFixed(1) + "</strong>" ): text
                 },
             },
             legend: {},
@@ -91,9 +94,8 @@ export default function ScatterPlot(props) {
                 type: 'scatter',
                 encode: {
                     x: 'x',
-                    y: 'y'
+                    y: 'y',
                 },
-                large: true,
                 largeThreshold: 500,
                 symbolSize: 5,
             }],
@@ -102,7 +104,16 @@ export default function ScatterPlot(props) {
             }
         };
 
-        return options
+        return (params.colorBy) ? {...options, visualMap: {
+            dimension: 3,
+            orient: 'vertical',
+            right: 10,
+            top: 'center',
+            calculable: true,
+            inRange: {
+                color: ['#f2c31a', '#24b7f2']
+            }
+        }} : options
     }
 
     return (

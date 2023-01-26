@@ -8,6 +8,7 @@ export default function ScatterPlotParams(props) {
     console.log(props.commonResult)
 
     const [useDefaultCol, setUseDefaultCol] = useState()
+    const [useColorBy, setUseColorBy] = useState()
     const numCols = props.commonResult.numericalColumns
 
     const expNames = props.commonResult.headers.reduce((acc, h) => {
@@ -21,6 +22,17 @@ export default function ScatterPlotParams(props) {
         }
         return acc
     }, {field: undefined, res: []}).res
+
+    const dataCols = props.commonResult.headers.reduce((acc, h) => {
+        if (h.type === "NUMBER"){
+            if(h.experiment){
+                if(!acc.includes(h.experiment.field)) acc.push(h.experiment.field)
+            }else{
+                acc.push(h.name)
+            }
+        }
+        return acc
+    }, [])
 
     useEffect(() => {
         if (props.params) {
@@ -36,6 +48,10 @@ export default function ScatterPlotParams(props) {
 
     function handleColChange(value) {
         props.setParams({...props.params, column: numCols[value]})
+    }
+
+    function handleColorColChange(value) {
+        props.setParams({...props.params, colorBy: dataCols[value]})
     }
 
     function handleAxisChange(target) {
@@ -82,6 +98,14 @@ export default function ScatterPlotParams(props) {
                             })}</Select></Col>
                     </Space>
                 </Row>
+                <Checkbox
+                    onChange={(e) => setUseColorBy(e.target.checked)} checked={useColorBy}>Color data points by
+                </Checkbox>
+                <Select disabled={!useColorBy} value={props.params.colorBy} style={{width: 250}}
+                        onChange={handleColorColChange}>
+                    {dataCols.map((n, i) => {
+                        return <Option key={i} value={i}>{n}</Option>
+                    })}</Select>
             </Space>
         </>
     }
