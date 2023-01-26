@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card} from "antd";
+import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
@@ -7,6 +7,7 @@ import {replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
+import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps";
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -15,6 +16,14 @@ export default function ScatterPlot(props) {
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(localParams){
+            const echartOptions = getOptions(JSON.parse(props.data.results), localParams)
+            setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [localParams])
 
     useEffect(() => {
         if (props.data) {
@@ -38,18 +47,37 @@ export default function ScatterPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting])
 
+    const checkboxChange = (e) => {
+        const newLocalParams = {...localParams, logTrans: e.target.checked}
+        setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
+        setLocalParams(newLocalParams)
+    }
+
     const nrForm = (nr) => {
         return String(nr).length > 5 ? nr.toExponential(1) : nr
     }
 
+    const computeLogData = (d) => {
+        const myD = d.filter(d => d.x != 0 && d.y != 0).map(a => {
+            return {...a, x: Math.log10(a.x), y: Math.log10(a.y)}
+        })
+
+        const xMin = Math.min(...myD.map(a => a.x))
+        const xMax = Math.max(...myD.map(a => a.x))
+        const yMin = Math.min(...myD.map(a => a.y))
+        const yMax = Math.max(...myD.map(a => a.y))
+
+        return {lims: [[xMin, xMax], [yMin, yMax]], d: myD}
+    }
+
     const getOptions = (results, params) => {
-        console.log(results)
+        const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
 
         const options = {
             dataset: [
                 {
                     dimensions: ["x", "y", "name", "col"],
-                    source: results.data.map(p => {
+                    source: myData.d.map(p => {
                         return [p.x, p.y, p.n, p.d]
                     }),
                 }
@@ -61,11 +89,14 @@ export default function ScatterPlot(props) {
                     padding: [8, 4, 5, 6],
                     fontWeight: 'bold'
                 },
+                type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
                         return nrForm(value)
                     }
-                }
+                },
+                min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
+                max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
             },
             yAxis: {
                 name: params.yAxis,
@@ -74,18 +105,21 @@ export default function ScatterPlot(props) {
                     padding: [8, 4, 45, 6],
                     fontWeight: 'bold'
                 },
+                type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
                         return nrForm(value)
                     }
-                }
+                },
+                min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
+                max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
             },
             tooltip: {
                 showDelay: 0,
                 formatter: function (p) {
-                    const text =  "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + nrForm(p.data[0]) +
+                    const text = "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + nrForm(p.data[0]) +
                         "</strong><br>" + params.yAxis + ": <strong>" + nrForm(p.data[1]) + "</strong>"
-                    return (params.colorBy) ? (text + "<br>" + params.colorBy + "<strong>" + p.data[3].toFixed(1) + "</strong>" ): text
+                    return (params.colorBy) ? (text + "<br>" + params.colorBy + "<strong>" + p.data[3].toFixed(1) + "</strong>") : text
                 },
             },
             legend: {},
@@ -104,16 +138,18 @@ export default function ScatterPlot(props) {
             }
         };
 
-        return (params.colorBy) ? {...options, visualMap: {
-            dimension: 3,
-            orient: 'vertical',
-            right: 10,
-            top: 'center',
-            calculable: true,
-            inRange: {
-                color: ['#f2c31a', '#24b7f2']
+        return (params.colorBy) ? {
+            ...options, visualMap: {
+                dimension: 3,
+                orient: 'vertical',
+                right: 10,
+                top: 'center',
+                calculable: true,
+                inRange: {
+                    color: ['#f2c31a', '#24b7f2']
+                }
             }
-        }} : options
+        } : options
     }
 
     return (
@@ -140,6 +176,9 @@ export default function ScatterPlot(props) {
                         icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+            <Checkbox
+                onChange={checkboxChange} checked={localParams && localParams.logTrans}>Log transform [log10]
+            </Checkbox>
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>

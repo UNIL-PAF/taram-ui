@@ -4,9 +4,6 @@ import {Checkbox, Select, Space, Row, Col} from 'antd';
 const {Option} = Select;
 
 export default function ScatterPlotParams(props) {
-
-    console.log(props.commonResult)
-
     const [useDefaultCol, setUseDefaultCol] = useState()
     const [useColorBy, setUseColorBy] = useState()
     const numCols = props.commonResult.numericalColumns
@@ -24,10 +21,10 @@ export default function ScatterPlotParams(props) {
     }, {field: undefined, res: []}).res
 
     const dataCols = props.commonResult.headers.reduce((acc, h) => {
-        if (h.type === "NUMBER"){
-            if(h.experiment){
-                if(!acc.includes(h.experiment.field)) acc.push(h.experiment.field)
-            }else{
+        if (h.type === "NUMBER") {
+            if (h.experiment) {
+                if (!acc.includes(h.experiment.field)) acc.push(h.experiment.field)
+            } else {
                 acc.push(h.name)
             }
         }
@@ -36,9 +33,8 @@ export default function ScatterPlotParams(props) {
 
     useEffect(() => {
         if (props.params) {
-            if (useDefaultCol === undefined) {
-                setUseDefaultCol(props.params.column ? false : true)
-            }
+            if (useDefaultCol === undefined) setUseDefaultCol(props.params.column ? false : true)
+            if (useColorBy === undefined) setUseColorBy(props.params.colorBy ? true : false)
         } else {
             props.setParams({xAxis: expNames[0], yAxis: expNames[1], column: props.intCol})
             setUseDefaultCol(true)
@@ -73,11 +69,17 @@ export default function ScatterPlotParams(props) {
                 <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
                 </Checkbox>
-                <Select disabled={useDefaultCol} value={props.params.column} style={{width: 250}}
-                        onChange={handleColChange}>
-                    {numCols.map((n, i) => {
-                        return <Option key={i} value={i}>{n}</Option>
-                    })}</Select>
+                <Row>
+                    <Space direction={"horizontal"}>
+                        <Col>
+                            <Select disabled={useDefaultCol} value={props.params.column} style={{width: 250}}
+                                    onChange={handleColChange}>
+                                {numCols.map((n, i) => {
+                                    return <Option key={i} value={i}>{n}</Option>
+                                })}</Select>
+                        </Col>
+                    </Space>
+                </Row>
                 <Row>
                     <Space direction={"horizontal"}>
                         <Col><span><strong>X axis</strong></span></Col>
