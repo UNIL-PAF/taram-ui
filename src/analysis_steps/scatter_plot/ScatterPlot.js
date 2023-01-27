@@ -19,7 +19,8 @@ export default function ScatterPlot(props) {
 
     useEffect(() => {
         if(localParams && props.data && props.data.status === 'done'){
-            const echartOptions = getOptions(JSON.parse(props.data.results), localParams)
+            const intCol = localParams.column || props.data.columnInfo.columnMapping.intCol
+            const echartOptions = getOptions(JSON.parse(props.data.results), localParams, intCol)
             setOptions({...options, data: echartOptions})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +33,8 @@ export default function ScatterPlot(props) {
 
             if (isWaiting && props.data.status === 'done') {
                 const results = JSON.parse(props.data.results)
-                const echartOptions = getOptions(results, params)
+                const intCol = params.column || props.data.columnInfo.columnMapping.intCol
+                const echartOptions = getOptions(results, params, intCol)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
@@ -78,11 +80,12 @@ export default function ScatterPlot(props) {
         }, [undefined, undefined])
     }
 
-    const getOptions = (results, params) => {
+    const getOptions = (results, params, intCol) => {
         const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
 
         const options = {
+            title: {text: params.xAxis + " - " + params.yAxis, left: "center"},
             dataset: [
                 {
                     dimensions: ["x", "y", "name", "col"],
@@ -92,7 +95,7 @@ export default function ScatterPlot(props) {
                 }
             ],
             xAxis: {
-                name: params.xAxis,
+                name: intCol + " " + params.xAxis,
                 nameLocation: "center",
                 nameTextStyle: {
                     padding: [8, 4, 5, 6],
@@ -108,7 +111,7 @@ export default function ScatterPlot(props) {
                 max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
             },
             yAxis: {
-                name: params.yAxis,
+                name: intCol + " " + params.yAxis,
                 nameLocation: "center",
                 nameTextStyle: {
                     padding: [8, 4, 45, 6],
@@ -158,7 +161,8 @@ export default function ScatterPlot(props) {
                 calculable: true,
                 inRange: {
                     color: ['#f2c31a', '#24b7f2']
-                }
+                },
+                text: [params.colorBy, ''],
             }
         } : options
     }
