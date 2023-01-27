@@ -33,9 +33,10 @@ export default function ScatterPlotParams(props) {
 
     useEffect(() => {
         if (props.params) {
-            console.log(props.params)
             if (useDefaultCol === undefined) setUseDefaultCol(props.params.column ? false : true)
             if (useColorBy === undefined) setUseColorBy(props.params.colorBy ? true : false)
+            // we have to reset Log transform to undefined
+            if(props.params.logTrans) props.setParams({...props.params, logTrans: undefined})
         } else {
             props.setParams({xAxis: expNames[0], yAxis: expNames[1]})
             setUseDefaultCol(true)
