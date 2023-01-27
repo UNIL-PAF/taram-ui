@@ -70,8 +70,17 @@ export default function ScatterPlot(props) {
         return {lims: [[xMin, xMax], [yMin, yMax]], d: myD}
     }
 
+    const computeColLimits = (d) => {
+        return d.reduce((acc, v) => {
+            acc[0] = (!acc[0] || v.d < acc[0]) ? v.d : acc[0]
+            acc[1] = (!acc[1] || v.d > acc[1]) ? v.d : acc[1]
+            return acc
+        }, [undefined, undefined])
+    }
+
     const getOptions = (results, params) => {
         const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
+        const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
 
         const options = {
             dataset: [
@@ -140,6 +149,8 @@ export default function ScatterPlot(props) {
 
         return (params.colorBy) ? {
             ...options, visualMap: {
+                min: colLimits[0],
+                max: colLimits[1],
                 dimension: 3,
                 orient: 'vertical',
                 right: 10,
