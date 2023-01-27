@@ -19,7 +19,7 @@ export default function BoxPlot(props) {
 
     useEffect(() => {
         const echartOptions = getOptions(JSON.parse(props.data.results))
-        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+        setOptions({...options, data: echartOptions})
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localParams])
 

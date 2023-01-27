@@ -19,9 +19,8 @@ export default function ScatterPlot(props) {
 
     useEffect(() => {
         if(localParams){
-            console.log(localParams)
             const echartOptions = getOptions(JSON.parse(props.data.results), localParams)
-            setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+            setOptions({...options, data: echartOptions})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localParams])
@@ -59,7 +58,7 @@ export default function ScatterPlot(props) {
     }
 
     const computeLogData = (d) => {
-        const myD = d.filter(d => d.x != 0 && d.y != 0).map(a => {
+        const myD = d.filter(d => d.x !== 0 && d.y !== 0).map(a => {
             return {...a, x: Math.log10(a.x), y: Math.log10(a.y)}
         })
 
