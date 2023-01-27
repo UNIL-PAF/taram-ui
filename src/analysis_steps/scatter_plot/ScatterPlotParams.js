@@ -50,12 +50,12 @@ export default function ScatterPlotParams(props) {
         props.setParams({...props.params, colorBy: dataCols[value]})
     }
 
-    function handleAxisChange(target) {
-        return function (value) {
-            const myParams = props.params
-            myParams[target] = expNames[value]
-            props.setParams(myParams)
-        }
+    function handleAxisChangeX(value){
+        props.setParams({...props.params, xAxis: expNames[value]})
+    }
+
+    function handleAxisChangeY(value){
+        props.setParams({...props.params, yAxis: expNames[value]})
     }
 
     function changeUseDefaultCol(e) {
@@ -84,7 +84,7 @@ export default function ScatterPlotParams(props) {
                     <Space direction={"horizontal"}>
                         <Col><span><strong>X axis</strong></span></Col>
                         <Col><Select value={props.params.xAxis} style={{width: 250}}
-                                     onChange={handleAxisChange("xAxis")}>
+                                     onChange={handleAxisChangeX}>
                             {expNames.map((n, i) => {
                                 return <Option key={i} value={i}>{n}</Option>
                             })}</Select></Col>
@@ -94,7 +94,7 @@ export default function ScatterPlotParams(props) {
                     <Space direction={"horizontal"}>
                         <Col><span><strong>X axis</strong></span></Col>
                         <Col><Select value={props.params.yAxis} style={{width: 250}}
-                                     onChange={handleAxisChange("yAxis")}>
+                                     onChange={handleAxisChangeY}>
                             {expNames.map((n, i) => {
                                 return <Option key={i} value={i}>{n}</Option>
                             })}</Select></Col>

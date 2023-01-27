@@ -32,7 +32,6 @@ export default function AnalysisStepMenuItems(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDownload])
 
-
     const handleOk = (name) => {
         switch (name) {
             case 'parameters':
