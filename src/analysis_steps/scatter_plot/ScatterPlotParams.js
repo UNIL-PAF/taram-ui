@@ -33,10 +33,11 @@ export default function ScatterPlotParams(props) {
 
     useEffect(() => {
         if (props.params) {
+            console.log(props.params)
             if (useDefaultCol === undefined) setUseDefaultCol(props.params.column ? false : true)
             if (useColorBy === undefined) setUseColorBy(props.params.colorBy ? true : false)
         } else {
-            props.setParams({xAxis: expNames[0], yAxis: expNames[1], column: props.intCol})
+            props.setParams({xAxis: expNames[0], yAxis: expNames[1]})
             setUseDefaultCol(true)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,6 +62,15 @@ export default function ScatterPlotParams(props) {
     function changeUseDefaultCol(e) {
         setUseDefaultCol(e.target.checked)
         if (e.target.checked) props.setParams({...props.params, column: props.intCol})
+    }
+
+    function handleCheckColorBy(e){
+        setUseColorBy(e.target.checked)
+        if(!e.target.checked){
+            let myParams = props.params
+            delete myParams.colorBy
+            props.setParams(myParams)
+        }
     }
 
     function showOptions() {
@@ -101,7 +111,7 @@ export default function ScatterPlotParams(props) {
                     </Space>
                 </Row>
                 <Checkbox
-                    onChange={(e) => setUseColorBy(e.target.checked)} checked={useColorBy}>Color data points by
+                    onChange={handleCheckColorBy} checked={useColorBy}>Color data points by
                 </Checkbox>
                 <Select disabled={!useColorBy} value={props.params.colorBy} style={{width: 250}}
                         onChange={handleColorColChange}>
