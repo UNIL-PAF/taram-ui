@@ -18,7 +18,7 @@ export default function ScatterPlot(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(localParams){
+        if(localParams && props.data && props.data.status === 'done'){
             const echartOptions = getOptions(JSON.parse(props.data.results), localParams)
             setOptions({...options, data: echartOptions})
         }
