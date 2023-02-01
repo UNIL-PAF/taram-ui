@@ -25,7 +25,7 @@ export default function ScatterPlotParams(props) {
             if (h.experiment) {
                 if (!acc.includes(h.experiment.field)) acc.push(h.experiment.field)
             } else {
-                acc.push(h.name)
+                if (!acc.includes(h.name)) acc.push(h.name)
             }
         }
         return acc
