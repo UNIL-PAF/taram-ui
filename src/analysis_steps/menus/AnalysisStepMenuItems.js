@@ -279,14 +279,14 @@ export default function AnalysisStepMenuItems(props) {
                             <span>t-test</span>
                         </Menu.Item>
                     </Menu.SubMenu>
+                    <Menu.Divider key={'divider-2'}></Menu.Divider>
                 </Menu.SubMenu>
                 {(props.type === 'boxplot' || props.type === 'volcano-plot') &&
-                    <div><Menu.Divider key={'divider-2'}></Menu.Divider>
                         <Menu.Item onClick={() => setShowModalName('download-zip')}
                                    key={'zip'}
                         >
                             <span>Download ZIP..</span>
-                        </Menu.Item></div>}
+                        </Menu.Item>}
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 {props.type && <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
