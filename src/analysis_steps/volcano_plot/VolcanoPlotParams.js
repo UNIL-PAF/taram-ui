@@ -1,10 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
 
 const {Option} = Select;
 
 export default function BoxPlotParams(props) {
 
+    const [selComp, setSelComp] = useState(0)
     const comparison = props.commonResult.headers.filter( h => h.name.includes("p.value")).map( h => h.experiment.comp)
 
     useEffect(() => {
@@ -16,6 +17,13 @@ export default function BoxPlotParams(props) {
                 log10PVal: true,
                 comparison: comparison[0]
             })
+        }else if(props.params.comparison && selComp === 0){
+            const c = props.params.comparison
+            const compIdx = comparison.reduce((acc, v, i) => {
+                if(c.group1 === v.group1 && c.group2 === v.group2) return i
+                else return acc
+                    }, 0)
+            setSelComp(compIdx)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
@@ -35,15 +43,15 @@ export default function BoxPlotParams(props) {
     function handleChange(index) {
         let newParams = {...props.params, comparison: comparison[index]}
         props.setParams(newParams)
+        setSelComp(index)
     }
 
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
 
-                <span style={{paddingLeft: "10px"}}>Select comparision &nbsp;<Select value={props.params.column}
+                <span style={{paddingLeft: "10px"}}>Select comparision &nbsp;<Select value={selComp}
                                                                                      style={{width: 250}}
-                                                                                     defaultValue={0}
                                                                                      onChange={handleChange}>
                     {comparison.map((comp, i) => {
                         const name = comp.group1 + " - " + comp.group2
