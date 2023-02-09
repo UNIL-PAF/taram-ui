@@ -122,7 +122,7 @@ export default function TTestParams(props) {
             <span style={{paddingRight: "10px"}}>Multiple testing correction</span>
             <Select value={props.params.multiTestCorr} style={{width: 250}} onChange={multiTestCorrChange}>
                 <Option value={'BH'}>Benjamini & Hochberg (FDR)</Option>
-                <Option value={'bonferroni'}>Bonferroni</Option>
+                <Option value={'none'}>None</Option>
             </Select>
         </span>
                 {entities && <GroupTableDrag entities={entities}
