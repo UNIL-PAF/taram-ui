@@ -74,14 +74,6 @@ export default function BoxPlot(props) {
             }
         })
 
-        const selProtSeries = parsedRes.selProtData ? parsedRes.selProtData.map(d => {
-            return {
-                name: d.gene ? d.gene : d.prot,
-                type: 'line',
-                data: d.ints
-            }
-        }) : null
-
         const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
             return {
                 name: d.group,
@@ -95,18 +87,40 @@ export default function BoxPlot(props) {
             }
         })
 
-        const groupByCondition = () => {
-            return parsedRes.boxPlotData.reduce(
-                (acc, curr) => acc.concat(curr.data.map(d => d[0])),
-                []
-            );
+        const groupByCondition = parsedRes.boxPlotData.reduce(
+            (acc, curr) => acc.concat(curr.data.map(d => d[0])),
+            []
+        );
+
+        const sortByCondition = (groupByCondition) => {
+            const sortArr = parsedRes.experimentNames.map((n, i) => {
+                return groupByCondition.indexOf(n)
+            })
+
+            return parsedRes.selProtData.map(p => {
+                let newInts = sortArr.map(sortIdx => p.ints[sortIdx])
+                return {...p, ints: newInts}
+            })
         }
 
-        const experimentNames = params.groupByCondition ? groupByCondition() : parsedRes.experimentNames
+        const experimentNames = params.groupByCondition ? groupByCondition : parsedRes.experimentNames
+
+        const selProtSeries = (groupByCondition) => {
+            if (!parsedRes.selProtData) return null
+            const mySel = params.groupByCondition ? sortByCondition(groupByCondition) : parsedRes.selProtData
+
+            return mySel.map(d => {
+                return {
+                    name: d.gene ? d.gene : d.prot,
+                    type: 'line',
+                    data: d.ints
+                }
+            })
+        }
 
         const options = {
             dataset: boxplotDatasets,
-            series: boxplotSeries.concat(selProtSeries),
+            series: parsedRes.selProtData ? boxplotSeries.concat(selProtSeries(groupByCondition)) : boxplotSeries,
             legend: {},
             xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
