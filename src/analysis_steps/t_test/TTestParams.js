@@ -102,7 +102,7 @@ export default function TTestParams(props) {
     function showOptions(){
         return <>
             <Space direction="vertical" size="middle">
-            <Checkbox  
+            <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
             </Checkbox>
             <Select

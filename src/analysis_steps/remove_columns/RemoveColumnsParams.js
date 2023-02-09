@@ -5,7 +5,7 @@ export default function RemoveColumnsParams(props) {
 
     const [checkedKeys, setCheckedKeys] = useState();
 
-    const removeSingle = ["Protein.IDs", "Peptide.counts.all", "Razor.unique.peptides", "Peptide.counts.unique",
+    const removeSingle = ["Protein.IDs", "Peptide.counts.all", "Peptide.counts.razor.unique", "Peptide.counts.unique",
         "Number.of.proteins" , "Unique.peptides", "Sequence.coverage", "Unique.razor.sequence.coverage",
         "Unique.sequence.coverage", "Sequence.length", "Sequence.lengths", "Q.value", "id","Peptide.IDs","Peptide.is.razor",
         "Mod..peptide.IDs", "Evidence.IDs", "MS.MS.IDs", "Best.MS.MS", "Oxidation.M.site.IDs", "Oxidation.M.site.positions",
