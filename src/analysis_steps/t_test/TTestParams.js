@@ -102,7 +102,7 @@ export default function TTestParams(props) {
     function showOptions(){
         return <>
             <Space direction="vertical" size="middle">
-            <Checkbox
+            <Checkbox  
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
             </Checkbox>
             <Select
@@ -115,6 +115,7 @@ export default function TTestParams(props) {
             <span>
             <span style={{paddingRight: "10px"}}>Significance threshold</span>
             <InputNumber
+                min={0.000001} max={0.999}
                 value={props.params.signThres}
                 onChange={(val) => valueChange("signThres", val)}></InputNumber>
         </span>
