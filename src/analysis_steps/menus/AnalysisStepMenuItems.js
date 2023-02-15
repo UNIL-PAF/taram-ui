@@ -9,6 +9,7 @@ import BoxPlotParams from "../boxplot/BoxPlotParams";
 import FilterParams from "../filter/FilterParams";
 import GroupFilterParams from "../group_filter/GroupFilterParams";
 import LogTransformationParams from "../log_transformation/LogTransformationParams";
+import ImputationParams from "../imputation/ImputationParams";
 import TTestParams from "../t_test/TTestParams";
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
@@ -152,6 +153,12 @@ export default function AnalysisStepMenuItems(props) {
                                              setParams={isNew ? setNewStepParams : props.setStepParams}
                                              intCol={props.intCol}
                 ></LogTransformationParams>
+            case 'imputation':
+                return <ImputationParams commonResult={props.commonResult}
+                                                params={isNew ? newStepParams : props.stepParams}
+                                                setParams={isNew ? setNewStepParams : props.setStepParams}
+                                                intCol={props.intCol}
+                ></ImputationParams>
             case 't-test':
                 return <TTestParams commonResult={props.commonResult}
                                     params={isNew ? newStepParams : props.stepParams}

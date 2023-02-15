@@ -6,6 +6,7 @@ import {Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import LogTransformation from "./log_transformation/LogTransformation";
+import Imputation from "./imputation/Imputation";
 import AnalysisMenu from "./menus/AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
@@ -71,6 +72,9 @@ export default function AnalysisSteps(props) {
                             case 'log-transformation':
                                 return <LogTransformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                        data={stepWithNr} key={step.id}/>
+                            case 'imputation':
+                                return <Imputation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                          data={stepWithNr} key={step.id}/>
                             case 'filter':
                                 return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                data={stepWithNr} key={step.id}/>
