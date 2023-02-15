@@ -5,7 +5,7 @@ import {EllipsisOutlined} from "@ant-design/icons";
 import {Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
-import Transformation from "./transformation/Transformation";
+import LogTransformation from "./log_transformation/LogTransformation";
 import AnalysisMenu from "./menus/AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
@@ -68,8 +68,8 @@ export default function AnalysisSteps(props) {
                             case 'pca':
                                 return <PcaPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                 data={stepWithNr} key={step.id}/>
-                            case 'transformation':
-                                return <Transformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                            case 'log-transformation':
+                                return <LogTransformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                        data={stepWithNr} key={step.id}/>
                             case 'filter':
                                 return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}

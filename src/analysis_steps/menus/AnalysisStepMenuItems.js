@@ -8,7 +8,7 @@ import {clearTable} from "../../protein_table/proteinTableSlice";
 import BoxPlotParams from "../boxplot/BoxPlotParams";
 import FilterParams from "../filter/FilterParams";
 import GroupFilterParams from "../group_filter/GroupFilterParams";
-import TransformationParams from "../transformation/TransformationParams";
+import LogTransformationParams from "../log_transformation/LogTransformationParams";
 import TTestParams from "../t_test/TTestParams";
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
@@ -146,12 +146,12 @@ export default function AnalysisStepMenuItems(props) {
                                           setParams={isNew ? setNewStepParams : props.setStepParams}
                                           intCol={props.intCol}
                 ></GroupFilterParams>
-            case 'transformation':
-                return <TransformationParams commonResult={props.commonResult}
+            case 'log-transformation':
+                return <LogTransformationParams commonResult={props.commonResult}
                                              params={isNew ? newStepParams : props.stepParams}
                                              setParams={isNew ? setNewStepParams : props.setStepParams}
                                              intCol={props.intCol}
-                ></TransformationParams>
+                ></LogTransformationParams>
             case 't-test':
                 return <TTestParams commonResult={props.commonResult}
                                     params={isNew ? newStepParams : props.stepParams}
@@ -223,16 +223,11 @@ export default function AnalysisStepMenuItems(props) {
                     <span>Change parameters..</span>
                 </Menu.Item>}
                 <Menu.SubMenu key={"sub-0"} title={"Add a following step"}>
-                    <Menu.SubMenu key={"sub-2"} title={"Filter & transform"}>
+                    <Menu.SubMenu key={"sub-1"} title={"Filter"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
                                    key={'remove-columns'}>
                             <span>Remove columns</span>
-                        </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("transformation")}
-                                   className="narrow-menu"
-                                   key={'transformation'}>
-                            <span>Transformation</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("filter")}
                                    className="narrow-menu"
@@ -250,7 +245,24 @@ export default function AnalysisStepMenuItems(props) {
                             <span>Remove imputed values</span>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.SubMenu key={"sub-1"} title={"Plots"} >
+                    <Menu.SubMenu key={"sub-2"} title={"Transform"}>
+                        <Menu.Item onClick={() => clickAddStep("log-transformation")}
+                                   className="narrow-menu"
+                                   key={'log-transformation'}>
+                            <span>Log transformation</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("normalization")}
+                                   className="narrow-menu"
+                                   key={'normalization'}>
+                            <span>Normalization</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("imputation")}
+                                   className="narrow-menu"
+                                   key={'imputation'}>
+                            <span>Imputation</span>
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu key={"sub-3"} title={"Plots"} >
                         <Menu.Item onClick={() => clickAddStep("scatter-plot")}
                                    className="narrow-menu"
                                    key={'scatter-plot'}>
@@ -272,11 +284,11 @@ export default function AnalysisStepMenuItems(props) {
                             <span>Volcano plot</span>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.SubMenu key={"sub-3"} title={"Statistical tests"}>
+                    <Menu.SubMenu key={"sub-4"} title={"Statistical tests"}>
                         <Menu.Item onClick={() => clickAddStep("t-test")}
                                    className="narrow-menu"
                                    key={'t-test'}>
-                            <span>t-test</span>
+                            <span>t Test</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Divider key={'divider-2'}></Menu.Divider>
