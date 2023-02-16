@@ -16,6 +16,7 @@ import RemoveImputed from "./remove_imputed/RemoveImputed";
 import RemoveColumns from "./remove_columns/RemoveColumns";
 import PcaPlot from "./pca/PcaPlot";
 import ScatterPlot from "./scatter_plot/ScatterPlot";
+import Normalization from "./normalization/Normalization";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -72,6 +73,9 @@ export default function AnalysisSteps(props) {
                             case 'log-transformation':
                                 return <LogTransformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                        data={stepWithNr} key={step.id}/>
+                            case 'normalization':
+                                return <Normalization analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                          data={stepWithNr} key={step.id}/>
                             case 'imputation':
                                 return <Imputation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                           data={stepWithNr} key={step.id}/>

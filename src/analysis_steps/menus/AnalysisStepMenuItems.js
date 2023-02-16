@@ -17,6 +17,7 @@ import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
 import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
 import PcaPlotParams from "../pca/PcaPlotParams";
 import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
+import NormalizationParams from "../normalization/NormalizationParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -153,6 +154,12 @@ export default function AnalysisStepMenuItems(props) {
                                              setParams={isNew ? setNewStepParams : props.setStepParams}
                                              intCol={props.intCol}
                 ></LogTransformationParams>
+            case 'normalization':
+                return <NormalizationParams commonResult={props.commonResult}
+                                                params={isNew ? newStepParams : props.stepParams}
+                                                setParams={isNew ? setNewStepParams : props.setStepParams}
+                                                intCol={props.intCol}
+                ></NormalizationParams>
             case 'imputation':
                 return <ImputationParams commonResult={props.commonResult}
                                                 params={isNew ? newStepParams : props.stepParams}
