@@ -30,13 +30,14 @@ export default function Normalization(props) {
             {results &&
                 <Row>
                     <Col span={12}>
-                        <Row><span>Min: <strong>{formNum(results.min)}</strong></span></Row>
-                        <Row><span>Max: <strong>{formNum(results.max)}</strong></span></Row>
-                        <Row><span>Number of NaN: <strong>{results.nrNans}</strong></span></Row>
+                        <Row><span><strong>Min: </strong>{formNum(results.min)}</span></Row>
+                        <Row><span><strong>Max: </strong>{formNum(results.max)}</span></Row>
+                        <Row><span><strong>Number of NaN: </strong>{results.nrNans}</span></Row>
                     </Col>
                     <Col span={12}>
-                        <Row><span>Mean: <strong>{formNum(results.mean)}</strong></span></Row>
-                        <Row><span>Median: <strong>{formNum(results.median)}</strong></span></Row>
+                        <Row><span><strong>Mean: </strong>{formNum(results.mean)}</span></Row>
+                        <Row><span><strong>Median: </strong>{formNum(results.median)}</span></Row>
+                        <Row><span><strong>Sum: </strong>{formNum(results.sum)}</span></Row>
                     </Col>
                 </Row>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
