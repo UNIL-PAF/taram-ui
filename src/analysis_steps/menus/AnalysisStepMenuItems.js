@@ -18,6 +18,7 @@ import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
 import PcaPlotParams from "../pca/PcaPlotParams";
 import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
 import NormalizationParams from "../normalization/NormalizationParams";
+import SummaryStatParams from "../summary_stat/SummaryStatParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -160,6 +161,12 @@ export default function AnalysisStepMenuItems(props) {
                                                 setParams={isNew ? setNewStepParams : props.setStepParams}
                                                 intCol={props.intCol}
                 ></NormalizationParams>
+            case 'summary-stat':
+                return <SummaryStatParams commonResult={props.commonResult}
+                                            params={isNew ? newStepParams : props.stepParams}
+                                            setParams={isNew ? setNewStepParams : props.setStepParams}
+                                            intCol={props.intCol}
+                ></SummaryStatParams>
             case 'imputation':
                 return <ImputationParams commonResult={props.commonResult}
                                                 params={isNew ? newStepParams : props.stepParams}
@@ -303,6 +310,11 @@ export default function AnalysisStepMenuItems(props) {
                                    className="narrow-menu"
                                    key={'t-test'}>
                             <span>t Test</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("summary-stat")}
+                                   className="narrow-menu"
+                                   key={'summary-stat'}>
+                            <span>Summary</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Divider key={'divider-2'}></Menu.Divider>

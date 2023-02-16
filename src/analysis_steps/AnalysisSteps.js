@@ -17,6 +17,7 @@ import RemoveColumns from "./remove_columns/RemoveColumns";
 import PcaPlot from "./pca/PcaPlot";
 import ScatterPlot from "./scatter_plot/ScatterPlot";
 import Normalization from "./normalization/Normalization";
+import SummaryStat from "./summary_stat/SummaryStat";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -76,6 +77,9 @@ export default function AnalysisSteps(props) {
                             case 'normalization':
                                 return <Normalization analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                           data={stepWithNr} key={step.id}/>
+                            case 'summary-stat':
+                                return <SummaryStat analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                      data={stepWithNr} key={step.id}/>
                             case 'imputation':
                                 return <Imputation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                           data={stepWithNr} key={step.id}/>

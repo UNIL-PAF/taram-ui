@@ -1,7 +1,8 @@
 import React, {useState} from "react";
-import {Card} from "antd";
+import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {formNum} from "../../common/NumberFormatting";
 
 export default function LogTransformation(props) {
     const params = JSON.parse(props.data.parameters)
@@ -27,13 +28,17 @@ export default function LogTransformation(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <div>
-                    <p>Min: <strong>{results.min}</strong></p>
-                    <p>Max: <strong>{results.max}</strong></p>
-                    <p>Mean: <strong>{results.mean}</strong></p>
-                    <p>Median: <strong>{results.median}</strong></p>
-                    <p># NaN: <strong>{results.nrNans}</strong></p>
-                </div>
+                <Row>
+                    <Col span={12}>
+                        <Row><span>Min: <strong>{formNum(results.min)}</strong></span></Row>
+                        <Row><span>Max: <strong>{formNum(results.max)}</strong></span></Row>
+                        <Row><span>Number of NaN: <strong>{results.nrNans}</strong></span></Row>
+                    </Col>
+                    <Col span={12}>
+                        <Row><span>Mean: <strong>{formNum(results.mean)}</strong></span></Row>
+                        <Row><span>Median: <strong>{formNum(results.median)}</strong></span></Row>
+                    </Col>
+                </Row>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>

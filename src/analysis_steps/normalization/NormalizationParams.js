@@ -3,7 +3,7 @@ import {Checkbox, Select, Space} from 'antd';
 
 const {Option} = Select;
 
-export default function TransformationParams(props) {
+export default function NormalizationParams(props) {
 
     const numCols = props.commonResult.numericalColumns
     const intColName = props.commonResult.intCol

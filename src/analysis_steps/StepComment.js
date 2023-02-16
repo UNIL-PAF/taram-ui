@@ -40,6 +40,7 @@ export default function StepComment(props) {
                 <Row onMouseEnter={() => setMouseOver(true)}
                      onMouseLeave={() => setMouseOver(false)}
                      align="top"
+                     className={"comment-box"}
                 >
                     <Col span={21}>
                         {props.comment && <p style={{whiteSpace: 'pre-wrap'}} onClick={() => setIsEditing(true)}>{props.comment}</p>}

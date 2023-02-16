@@ -21,3 +21,11 @@
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
+
+.ant-card-body {
+    padding-top: 12px;
+}
+
+.comment-box {
+    padding-top: 12px;
+}
