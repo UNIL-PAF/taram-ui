@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card} from "antd";
+import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 
@@ -9,7 +9,8 @@ export default function GroupFilter(props) {
     const [localParams, setLocalParams] = useState(params)
 
     return (
-        <Card className={'analysis-step-card'} title={props.data.nr + " - Filter on valid"} headStyle={{textAlign: 'left'}}
+        <Card className={'analysis-step-card'} title={props.data.nr + " - Filter on valid"}
+              headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
@@ -28,8 +29,12 @@ export default function GroupFilter(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <div>
-                    <p>Protein groups: <strong>{results.nrRows}</strong></p>
-                    <p>Removed: <strong>{results.nrRowsRemoved}</strong></p>
+                    <Row>
+                        <Col><span><strong>Protein groups: </strong>{results.nrRows}</span></Col>
+                    </Row>
+                    <Row>
+                        <Col><span><strong>Removed: </strong>{results.nrRowsRemoved}</span></Col>
+                    </Row>
                 </div>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>

@@ -10,7 +10,7 @@ export default function GroupFilterParams(props) {
 
     useEffect(() => {
         if (!props.params) {
-            props.setParams({filterInGroup: 'one_group', minNrValid: 0})
+            props.setParams({filterInGroup: 'one_group', minNrValid: 1, zeroIsInvalid: true})
             setUseDefaultCol(true)
         } else {
             if (useDefaultCol === undefined) {
@@ -23,6 +23,10 @@ export default function GroupFilterParams(props) {
     function changeUseDefaultCol(e) {
         setUseDefaultCol(e.target.checked)
         if (e.target.checked) props.setParams({...props.params, field: null})
+    }
+
+    function changeZeroIsInvalid(e) {
+        props.setParams({...props.params, zeroIsInvalid: e.target.checked})
     }
 
     function handleChange(value) {
@@ -42,26 +46,34 @@ export default function GroupFilterParams(props) {
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
-         <Checkbox
-             onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
-         </Checkbox>
-        <Select disabled={useDefaultCol}
-                value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
-                {numCols.map((n, i) => {
-                    return <Option key={i} value={i}>{n}</Option>
-                })}
-        </Select>
-            <span>
+                <Checkbox
+                    onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
+                </Checkbox>
+                <Select disabled={useDefaultCol}
+                        value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
+                    {numCols.map((n, i) => {
+                        return <Option key={i} value={i}>{n}</Option>
+                    })}
+                </Select>
+                <span>
+            <span style={{paddingRight: "10px"}}>Consider zero as invalid</span>
+               <Checkbox
+                   onChange={changeZeroIsInvalid} checked={props.params.zeroIsInvalid}>
+                </Checkbox>
+            </span>
+                <span>
             <span style={{paddingRight: "10px"}}>Min number of valid values</span>
             <InputNumber
                 value={props.params.minNrValid}
+                min={0}
                 onChange={(val) => valueChange("minNrValid", val)}></InputNumber>
             </span>
-            <span>
-            <span style={{paddingRight: "10px"}}>Number of valid entries required in</span>
+                <span>
+            <span style={{paddingRight: "10px"}}>Required in</span>
             <Select value={props.params.filterInGroup} style={{width: 250}} onChange={filterInGroupChange}>
-                <Option value={'one_group'}>one group</Option>
-                <Option value={'all_groups'}>all groups</Option>
+                <Option value={'total'}>total</Option>
+                <Option value={'all_groups'}>each group</Option>
+                <Option value={'one_group'}>at least one group</Option>
             </Select>
         </span>
             </Space>
