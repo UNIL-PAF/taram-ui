@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import globalConfig from "../../globalConfig";
 import {Alert, Button, Col, Input, Menu, message, Modal, Popconfirm, Row, Tooltip} from "antd";
 import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../../analysis/BackendAnalysis";
@@ -12,10 +12,29 @@ export default function AnalysisMenu(props) {
     const [nameText, setNameText] = useState("");
     const [descriptionText, setDescriptionText] = useState("");
     const dispatch = useDispatch();
+    const menuRef = useRef(null);
 
     const templatesData = useSelector(state => state.templates.data)
     const templatesStatus = useSelector(state => state.templates.status)
     const templatesError = useSelector(state => state.templates.error)
+
+    useEffect(() => {
+        /**
+         * Alert if clicked on outside of element
+         */
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                props.setMenuIsVisible(false)
+            }
+        }
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [menuRef])
 
     useEffect(() => {
         if (templatesStatus === 'idle') {
@@ -68,7 +87,7 @@ export default function AnalysisMenu(props) {
     }
 
     return (
-        <div align={"center"} className={"analysis-menu"}>
+        <div ref={menuRef} align={"center"} className={"analysis-menu"}>
             {templatesError && <Alert
                 message="Error"
                 description={templatesError}
