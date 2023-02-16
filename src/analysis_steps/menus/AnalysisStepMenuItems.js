@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {Button, Menu, message, Modal, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
 import '../../analysis/analysis.css'
@@ -26,6 +26,25 @@ export default function AnalysisStepMenuItems(props) {
     const [newStepParams, setNewStepParams] = useState(null)
     const [startDownload, setStartDownload] = useState(undefined)
     const dispatch = useDispatch();
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        /**
+         * Alert if clicked on outside of element
+         */
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                props.setMenuIsVisible(false)
+            }
+        }
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [menuRef])
 
     useEffect(() => {
         if (startDownload === false) {
@@ -230,7 +249,7 @@ export default function AnalysisStepMenuItems(props) {
     }
 
     return (
-        <div align={"center"} className={"analysis-menu"} style={{minWidth: '200px'}}>
+        <div ref={menuRef} align={"center"} className={"analysis-menu"} style={{minWidth: '200px'}}>
             <div><span className={"analysis-menu-title"}>{getType()} menu</span><Button
                 className={"analysis-menu-close"}
                 onClick={() => closeMenu()}
