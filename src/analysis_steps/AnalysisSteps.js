@@ -37,6 +37,8 @@ export default function AnalysisSteps(props) {
         }
     }
 
+    const keyBase = (props.data.copyFromIdx ? props.data.copyFromIdx : "")
+
     return (
         <>
             {props.data && props.data.analysisSteps && <div className={"analysis-col"}>
@@ -45,6 +47,8 @@ export default function AnalysisSteps(props) {
                     <Badge status={badgeStatus()}/>
                     <span style={{fontSize: "large"}}>{props.data.idx + 1}</span>
                 </span>
+                    <span className={"results-name-title"}>{props.data.result.name}</span>
+                    <span style={{marginRight: "10px"}}>-</span>
                     <AnalysisTitle id={props.data.id} name={props.data.name} idx={props.data.idx} resultId={props.data.result.id}></AnalysisTitle>
                     {props.data.copyFromIdx != null && <span className={"copy-from-title"}>{"Copy from #" + (props.data.copyFromIdx+1)}</span>}
                     <span style={{float: "right", marginRight: "10px"}}>
@@ -61,51 +65,52 @@ export default function AnalysisSteps(props) {
                 <div className={"analysis-col-content"}>
                     {props.data.analysisSteps && props.data.analysisSteps.map( (step, i) => {
                         const stepWithNr = {...step, nr: i+1}
+                        const myKey = keyBase + "-" + step.id
                         switch (step.type) {
                             case 'initial-result':
                                 return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={step.id}/>
+                                                      data={stepWithNr} key={myKey}/>
                             case 'boxplot':
                                 return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={step.id}/>
+                                                data={stepWithNr} key={myKey}/>
                             case 'pca':
                                 return <PcaPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={step.id}/>
+                                                data={stepWithNr} key={myKey}/>
                             case 'log-transformation':
                                 return <LogTransformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={stepWithNr} key={step.id}/>
+                                                       data={stepWithNr} key={myKey}/>
                             case 'normalization':
                                 return <Normalization analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={step.id}/>
+                                                          data={stepWithNr} key={myKey}/>
                             case 'summary-stat':
                                 return <SummaryStat analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={step.id}/>
+                                                      data={stepWithNr} key={myKey}/>
                             case 'imputation':
                                 return <Imputation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={step.id}/>
+                                                          data={stepWithNr} key={myKey}/>
                             case 'filter':
                                 return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                               data={stepWithNr} key={step.id}/>
+                                               data={stepWithNr} key={myKey}/>
                             case 'group-filter':
                                 return <GroupFilter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={step.id}/>
+                                                    data={stepWithNr} key={myKey}/>
                             case 't-test':
                                 return <TTest analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                              data={stepWithNr} key={step.id}/>
+                                              data={stepWithNr} key={myKey}/>
                             case 'volcano-plot':
                                 return <VolcanoPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={step.id}/>
+                                                    data={stepWithNr} key={myKey}/>
                             case 'remove-imputed':
                                 return <RemoveImputed analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={step.id}/>
+                                                      data={stepWithNr} key={myKey}/>
                             case 'remove-columns':
                                 // since we need all headers if changing parameters, we have to get from the step before
                                 const commonResBefore = props.data.analysisSteps[i-1].commonResult
                                 return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={step.id} commonResBefore={commonResBefore}/>
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}/>
                             case 'scatter-plot':
                                 return <ScatterPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={step.id}/>
+                                                    data={stepWithNr} key={myKey}/>
                             default:
                                 return null
                         }
