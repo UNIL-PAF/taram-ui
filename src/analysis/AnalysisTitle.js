@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import '../analysis_steps/AnalysisStep.css'
 import {useDispatch} from "react-redux";
-import {Button, Input, Space} from "antd";
+import {Button, Input} from "antd";
 import {setAnalysisName} from "./BackendAnalysis";
+import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
 
 export default function AnalysisTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -34,18 +35,16 @@ export default function AnalysisTitle(props) {
                 <span onClick={() => setIsEditing(true)}>{tempName || props.name || "Analysis #" + (props.idx + 1)}</span>
             }
             { isEditing &&
-                <div>
-                    <Space>
-                        <Input
-                            style={{ width: 200 }}
-                            defaultValue={props.name}
-                            onPressEnter={save}
-                            onChange={(e) => setName(e.target.value)}
-                            onBlur={save}/>
-                        <Button onClick={() => save()} size={"small"}>Save</Button>
-                        <Button onClick={() => cancel()} size={"small"} danger>Cancel</Button>
-                    </Space>
-                </div>
+                <span>
+                            <Input
+                                style={{ width: 100 }}
+                                defaultValue={tempName || props.name || "Analysis #" + (props.idx + 1)}
+                                onPressEnter={save}
+                                onChange={(e) => setName(e.target.value)}
+                                onBlur={save}/>
+                                <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>} onClick={() => save()} size={"small"}></Button>
+                                <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>} onClick={() => cancel()} size={"small"} danger></Button>
+                </span>
             }
         </>
     );

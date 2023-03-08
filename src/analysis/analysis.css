@@ -34,8 +34,11 @@
     color: #ff4d4f;
     font-style: italic;
     font-size: small;
-    margin-left: 20px;
+    margin-left: 10px;
+}
 
+.results-name-title {
+    margin-right: 10px;
 }
 
 .analysis-col {
