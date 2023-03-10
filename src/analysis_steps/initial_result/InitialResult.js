@@ -119,6 +119,7 @@ export default function InitialResult(props) {
                               intCol={intCol}
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              resType={props.resType}
                               hasImputed={false}/>
         }>
             <Space direction={'vertical'}>

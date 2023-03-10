@@ -65,6 +65,7 @@ export default function AnalysisStepMenu(props) {
                                                       hasImputed={props.hasImputed}
                                                       hasPlot={props.hasPlot}
                                                       experimentDetails={props.experimentDetails}
+                                                      resType={props.resType}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>

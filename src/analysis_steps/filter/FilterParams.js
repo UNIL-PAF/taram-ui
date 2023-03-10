@@ -6,14 +6,13 @@ import {CloseCircleOutlined, PlusCircleOutlined} from "@ant-design/icons";
 const {Option} = Select;
 
 export default function FilterParams(props) {
-
     const [remove, setRemove] = useState([])
 
     useEffect(() => {
         if (!props.params) {
             props.setParams({
-                removeOnlyIdentifiedBySite: true,
-                removeReverse: true,
+                removeOnlyIdentifiedBySite: props.resType !== "Spectronaut",
+                removeReverse: props.resType !== "Spectronaut",
                 removePotentialContaminant: true,
                 colFilters: []
             })
@@ -119,6 +118,7 @@ export default function FilterParams(props) {
             <Col span={8}>
                 <span>
                     <Checkbox checked={props.params.removeOnlyIdentifiedBySite}
+                              disabled={props.resType === "Spectronaut"}
                               onChange={(e) => handleChange("removeOnlyIdentifiedBySite", e.target.checked)}>
                     </Checkbox>
                     <span style={{paddingLeft: "20px"}}>Remove only-identified-by-site</span>
@@ -127,6 +127,7 @@ export default function FilterParams(props) {
                 <br/>
                 <span>
                     <Checkbox checked={props.params.removeReverse}
+                              disabled={props.resType === "Spectronaut"}
                               onChange={(e) => handleChange("removeReverse", e.target.checked)}>
                     </Checkbox>
                     <span style={{paddingLeft: "20px"}}>Remove reverse</span>

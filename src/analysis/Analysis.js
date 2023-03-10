@@ -49,7 +49,7 @@ export default function Analysis() {
             {analysisData && <div className={"analysis-container"}>
                 {
                     analysisData.map(a => {
-                        return <AnalysisSteps analysisIdx={a.idx} data={a} key={a.idx}/>
+                        return <AnalysisSteps analysisIdx={a.idx} data={a} key={a.idx} resType={a.result.type}/>
                     })
                 }
             </div>

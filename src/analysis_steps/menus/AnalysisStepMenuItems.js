@@ -161,6 +161,7 @@ export default function AnalysisStepMenuItems(props) {
                                      params={isNew ? newStepParams : props.stepParams}
                                      setParams={isNew ? setNewStepParams : props.setStepParams}
                                      intCol={props.intCol}
+                                     resType={props.resType}
                 ></FilterParams>
             case 'group-filter':
                 return <GroupFilterParams commonResult={props.commonResult}

@@ -54,7 +54,8 @@ export default function AnalysisSteps(props) {
                     <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
-                                                 resultId={props.data.result.id} initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
+                                                 resultId={props.data.result.id}
+                                                 initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
                     <Button type={"text"} icon={<EllipsisOutlined style={{fontSize: '24px'}}/>}></Button>
@@ -69,7 +70,7 @@ export default function AnalysisSteps(props) {
                         switch (step.type) {
                             case 'initial-result':
                                 return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey}/>
+                                                      data={stepWithNr} key={myKey} resType={props.resType}/>
                             case 'boxplot':
                                 return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                 data={stepWithNr} key={myKey}/>
