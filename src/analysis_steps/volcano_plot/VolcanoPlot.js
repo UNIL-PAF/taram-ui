@@ -31,7 +31,7 @@ export default function VolcanoPlot(props) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
                 const backendSelProts = JSON.parse(props.data.parameters).selProteins
-                if(backendSelProts) setSelProts(backendSelProts)
+                if (backendSelProts) setSelProts(backendSelProts)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
@@ -50,7 +50,9 @@ export default function VolcanoPlot(props) {
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
         let newOpts = {...options, color: Array(30).fill(greyCol)}
-        newOpts.series[0].itemStyle = {color: greyCol}
+        newOpts.series.forEach((s, i) => {
+            if (s.itemStyle) newOpts.series[i].itemStyle = {color: greyCol}
+        })
         newOpts.series[0].markLine.lineStyle.color = greyCol
         return newOpts
     }
@@ -66,7 +68,11 @@ export default function VolcanoPlot(props) {
             return {...d, showLab: showLab}
         })
 
-        const opts =  {
+        const valueName = params.useAdjustedPVal ? "q-value" : "p-value"
+        const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
+
+
+        const opts = {
             title: {text: params.comparison.group1 + " - " + params.comparison.group2, left: "center"},
             xAxis: {
                 name: "Fold change",
@@ -75,7 +81,7 @@ export default function VolcanoPlot(props) {
             },
             yAxis: {
                 min: 0,
-                name: "-log10(p)",
+                name: xAxisName,
                 position: "left",
                 nameRotate: 90,
                 nameLocation: "center",
@@ -92,13 +98,14 @@ export default function VolcanoPlot(props) {
                         return "Gene: <strong>" + params.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + params.data.prot + "</strong><br>" +
                             "p-value: <strong>" + params.data.pVal.toPrecision(3) + "</strong><br>" +
+                            "q-value: <strong>" + params.data.qVal.toPrecision(3) + "</strong><br>" +
                             "fold change: <strong>" + params.data.fc.toFixed(2) + "</strong>"
                     }
                 },
             },
             dataset: [
                 {
-                    dimensions: ["fc", "plotPVal", "isSign", "showLab"],
+                    dimensions: ["fc", "plotVal", "isSign", "showLab", "qVal", "qIsSign"],
                     source: dataWithLabel,
                 },
                 {
@@ -118,11 +125,22 @@ export default function VolcanoPlot(props) {
                         type: 'filter',
                         config: {dimension: 'showLab', value: true}
                     }
-                }
+                },
+                {
+                    transform: {
+                        type: 'filter',
+                        config: {dimension: 'qIsSign', value: true}
+                    },
+                },
 
             ],
+            legend: {
+                top: "10%",
+                data: ["Sign"].concat(params.showQVal ? ["Sign q-val"] : [])
+            },
             series: [
                 {
+                    name: "Sign",
                     label: {
                         show: false,
                     },
@@ -136,7 +154,7 @@ export default function VolcanoPlot(props) {
                         y: 'plotPVal'
                     },
                     itemStyle: {
-                        color: "red"
+                        color: "#91cc75"
                     },
                     markLine: {
                         lineStyle: {
@@ -162,6 +180,9 @@ export default function VolcanoPlot(props) {
                     },
                 },
                 {
+                    itemStyle: {
+                        color: "#5470c6"
+                    },
                     label: {show: false},
                     symbolSize: 5,
                     datasetIndex: 2,
@@ -176,7 +197,9 @@ export default function VolcanoPlot(props) {
                 {
                     label: {
                         show: true,
-                        formatter: function (v) {return v.data.gene ? v.data.gene : v.data.prot},
+                        formatter: function (v) {
+                            return v.data.gene ? v.data.gene : v.data.prot
+                        },
                         position: 'right',
                         minMargin: 2,
                         fontWeight: 'bold',
@@ -193,7 +216,27 @@ export default function VolcanoPlot(props) {
                 },
             ]
         }
-        return opts
+
+        const qValSeries = {
+            name: "Sign q-val",
+            itemStyle: {
+                color: "#fac858"
+            },
+            label: {show: false},
+            symbolSize: 5,
+            datasetIndex: 4,
+            large: true,
+            largeThreshold: 1,
+            type: 'scatter',
+            encode: {
+                x: 'fc',
+                y: 'plotPVal'
+            }
+        }
+
+        const finalOpts = {...opts, series: (params.showQVal ? opts.series.concat(qValSeries) : opts.series)}
+
+        return finalOpts
     }
 
     function showToolTipOnClick(e) {
@@ -203,7 +246,9 @@ export default function VolcanoPlot(props) {
         setSelProts(newSelProts)
         const results = JSON.parse(props.data.results)
         const echartOptions = getOptions(results, newSelProts)
-        const callback = () => {replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)}
+        const callback = () => {
+            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+        }
         dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
     }
@@ -230,12 +275,12 @@ export default function VolcanoPlot(props) {
             {props.data.status === 'done' && <Row>
                 <Col span={12}></Col>
                 <Col span={12}>
-                <div style={{textAlign: 'right'}}>
-                <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
-                        icon={<FullscreenOutlined/>}>Expand</Button>
-                </div>
+                    <div style={{textAlign: 'right'}}>
+                        <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                                icon={<FullscreenOutlined/>}>Expand</Button>
+                    </div>
                 </Col>
-                </Row>}
+            </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
 
             {options && options.data && options.data.series.length > 0 &&

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, InputNumber, Select, Space} from 'antd';
+import {Checkbox, InputNumber, Select, Space, Switch} from 'antd';
 
 const {Option} = Select;
 
@@ -13,9 +13,10 @@ export default function BoxPlotParams(props) {
             props.setParams({
                 pValThresh: 0.05,
                 fcThresh: 2.0,
-                useAdjustedPVal: false,
+                useAdjustedPVal: true,
                 log10PVal: true,
-                comparison: comparison[0]
+                comparison: comparison[0],
+                showQVal: true
             })
         }else if(props.params.comparison && selComp === 0){
             const c = props.params.comparison
@@ -46,6 +47,11 @@ export default function BoxPlotParams(props) {
         setSelComp(index)
     }
 
+    function changeSwitch(val){
+        let newParams = {...props.params, useAdjustedPVal: val}
+        props.setParams(newParams)
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
@@ -60,19 +66,20 @@ export default function BoxPlotParams(props) {
                 <span style={{paddingLeft: "10px"}}>Significance threshold &nbsp;<InputNumber
                     value={props.params.pValThresh}
                     onChange={(val) => valueChange("pValThresh", val)}></InputNumber></span>
-                <br></br>
                 <span style={{paddingLeft: "10px"}}>Fold change threshold &nbsp;<InputNumber
                     value={props.params.fcThresh}
                     onChange={(val) => valueChange("fcThresh", val)}></InputNumber></span>
-                <br></br>
+                <span>Use &nbsp;
+                    <Switch onChange={(val) => changeSwitch(val)} checkedChildren="q-values" unCheckedChildren="p-values" checked={props.params.useAdjustedPVal} />
+                </span>
                 <Checkbox
-                    onChange={(val) => checkboxChange("useAdjustedPVal", val)} checked={props.params.useAdjustedPVal}>Use
-                    adjusted p-value
+                    disabled={props.params.useAdjustedPVal}
+                    onChange={(val) => checkboxChange("showQVal", val)} checked={props.params.showQVal}>
+                    Show significant q-values with different color.
                 </Checkbox>
-                <br></br>
                 <Checkbox
                     onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use
-                    log10(p-value)
+                    -log10 values
                 </Checkbox>
             </Space>
         </>
