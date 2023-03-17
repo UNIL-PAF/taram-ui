@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import Filter from "./filter/Filter"
-import {EllipsisOutlined} from "@ant-design/icons";
+import {BarsOutlined} from "@ant-design/icons";
 import {Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
@@ -58,7 +58,7 @@ export default function AnalysisSteps(props) {
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
-                    <Button type={"text"} icon={<EllipsisOutlined style={{fontSize: '24px'}}/>}></Button>
+                    <Button type={"text"} icon={<BarsOutlined style={{fontSize: '24px'}}/>}></Button>
                 </Dropdown>
 
             </span>
