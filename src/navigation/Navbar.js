@@ -56,9 +56,9 @@ export default function Navbar() {
                 </Menu>
             </Col>
             <Col span={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
+                {/*<Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
                     <Menu.Item key={"user"}>User</Menu.Item>
-                </Menu>
+                </Menu>*/}
             </Col>
         </Row>
     )
