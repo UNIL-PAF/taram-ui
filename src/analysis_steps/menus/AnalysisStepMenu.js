@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined, DownloadOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
 import FullProteinTable from "../../full_protein_table/FullProteinTable";
@@ -46,11 +46,16 @@ export default function AnalysisStepMenu(props) {
             });
     }
 
+    const getTitle = () => {
+        return <>
+            <span>Table-{props.tableNr} <Button onClick={() => downloadTable()} type={"primary"} style={{marginLeft: "10px"}} icon={<DownloadOutlined />}>Download table</Button></span>
+        </>
+    }
+
+
     return (
         <>
-            {props.status === 'done' && props.tableNr &&
-                <span style={{marginRight: "10px"}}><Button onClick={() => downloadTable()} size={'small'}>{'Table-' + props.tableNr}</Button></span>}
-            {props.status === 'done' && props.tableNr && <span style={{marginRight: "180px"}}><Button onClick={() => setShowTable(true)} size={'small'}>{'T' + props.tableNr}</Button></span>}
+            {props.status === 'done' && props.tableNr && <span style={{marginRight: "20px"}}><Button onClick={() => setShowTable(true)} size={'small'}>{'Table-' + props.tableNr}</Button></span>}
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}
 
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
@@ -75,10 +80,10 @@ export default function AnalysisStepMenu(props) {
                       arrow>
                 <Button type={"default"} size="small" icon={<EllipsisOutlined/>}></Button>
             </Dropdown>
-            {showTable && <Modal visible={true} title="Table" onCancel={() => setShowTable(false)}
+            {showTable && <Modal visible={true} title={getTitle()} onCancel={() => setShowTable(false)}
                    width={"95%"} height={"95%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
             >
-                <FullProteinTable stepId={props.stepId}></FullProteinTable>
+                <FullProteinTable stepId={props.stepId} tableNr={props.tableNr}></FullProteinTable>
             </Modal>}
         </>
 

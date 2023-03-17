@@ -10,7 +10,6 @@ import {formNum} from "../common/NumberFormatting";
 export default function FullProteinTable(props) {
 
     const [searchText, setSearchText] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const searchInput = useRef(null);
