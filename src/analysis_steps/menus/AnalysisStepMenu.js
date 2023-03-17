@@ -3,9 +3,11 @@ import {Button, Dropdown, Modal, Tag} from 'antd';
 import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
+import FullProteinTable from "../../full_protein_table/FullProteinTable";
 
 export default function AnalysisStepMenu(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
+    const [showTable, setShowTable] = useState(false)
 
     const statusTag = () => {
         if (props.status === "idle") {
@@ -47,8 +49,10 @@ export default function AnalysisStepMenu(props) {
     return (
         <>
             {props.status === 'done' && props.tableNr &&
-                <span style={{marginRight: "180px"}}><Button onClick={() => downloadTable()} size={'small'}>{'Table-' + props.tableNr}</Button></span>}
+                <span style={{marginRight: "10px"}}><Button onClick={() => downloadTable()} size={'small'}>{'Table-' + props.tableNr}</Button></span>}
+            {props.status === 'done' && props.tableNr && <span style={{marginRight: "180px"}}><Button onClick={() => setShowTable(true)} size={'small'}>{'T' + props.tableNr}</Button></span>}
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}
+
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems type={props.paramType}
                                                       stepId={props.stepId}
@@ -71,7 +75,11 @@ export default function AnalysisStepMenu(props) {
                       arrow>
                 <Button type={"default"} size="small" icon={<EllipsisOutlined/>}></Button>
             </Dropdown>
-
+            {showTable && <Modal visible={true} title="Table" onCancel={() => setShowTable(false)}
+                   width={"95%"} height={"95%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
+            >
+                <FullProteinTable stepId={props.stepId}></FullProteinTable>
+            </Modal>}
         </>
 
 
