@@ -26,7 +26,9 @@ export default function Analysis() {
     useEffect(() => {
         let timeout
 
-        if (analysisFetchStatus === 'idle') {
+        if(params.resultId && analysisData && analysisData.length && analysisData[0].result.id !== Number(params.resultId)){
+            dispatch(fetchAnalysisByResultId(params.resultId))
+        }else if (analysisFetchStatus === 'idle') {
             dispatch(fetchAnalysisByResultId(params.resultId))
             message.config({top: 60})
         }else{
@@ -41,8 +43,8 @@ export default function Analysis() {
             // clears timeout before running the new effect
             clearTimeout(timeout);
         };
-
-    }, [analysisFetchStatus, params.resultId, analysisData, dispatch, analysisStatus])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [analysisFetchStatus, params.resultId, analysisData, analysisStatus, resultsId])
 
     return (
         <div>
