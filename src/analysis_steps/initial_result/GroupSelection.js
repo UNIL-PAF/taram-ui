@@ -64,13 +64,14 @@ export default function GroupSelection(props) {
                     <DragDropContext
                         onDragEnd={(result) => onDragEnd(result, props.groupData, props.setGroupData)}
                     >
-                        {Object.entries(props.groupData).map(([columnId, column], index) => {
+                        {Object.entries(props.groupData).map(([columnId, column], i) => {
                             return (
                                 <div
                                     style={{
                                         display: "flex",
                                         flexDirection: "column",
-                                        alignItems: "top"
+                                        alignItems: "top",
+                                        borderRight: i === 0 ? "2px dashed lightgrey" : undefined
                                     }}
                                     key={columnId}
                                 >
@@ -135,7 +136,7 @@ export default function GroupSelection(props) {
                                         </Droppable>
                                     </div>
                                 </div>
-                            );
+                        );
                         })}
                     </DragDropContext>
                     <Button onClick={addGroup}>Add group</Button>
