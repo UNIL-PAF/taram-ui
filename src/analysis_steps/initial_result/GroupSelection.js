@@ -1,102 +1,146 @@
-import React, {useState} from "react";
-import {Transfer, Tabs} from 'antd';
-import GroupNameInput from "./GroupNameInput";
-
-const {TabPane} = Tabs;
+import React from "react";
+import GroupTitle from "./GroupTitle";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {Button} from "antd";
 
 export default function GroupSelection(props) {
-    const [selectedKeys, setSelectedKeys] = useState([])
 
-    const getRemainingDataSource = (targetKeys, selKeys) => {
-        return props.expData.map((exp) => {
-            return {key: exp.key, title: exp.name, disabled: (! targetKeys.includes(exp.key)) && selKeys.includes(exp.key)}
-        })
+    const addGroup = () => {
+        let newCols = {...props.groupData}
+        const nextIdx = Object.keys(props.groupData).length
+        newCols["group-" + nextIdx] = { name: "Group " + nextIdx, items: []}
+        props.setGroupData(newCols)
     }
 
-    const addTab = () => {
-        const newTabs = props.groupData.concat({
-            name: "Condition",
-            alreadySet: false,
-            targetKeys: [],
-            dataSource: getRemainingDataSource([], selectedKeys)
-        })
-        props.setGroupData(newTabs)
-    };
-
-    const removeTab = (tabKey) => {
-        const tabIdx = Number(tabKey)
-        const newTabs = props.groupData.filter((t, i) => {
-            return i !== tabIdx
-        })
-        props.setGroupData(newTabs)
+    const changeGroupName = (groupId, groupName) => {
+        const newCols = {...props.groupData}
+        newCols[groupId].name = groupName
+        props.setGroupData(newCols)
     }
 
-    const onEdit = (targetKey, action) => {
-        if (action === "add") {
-            addTab()
-        } else if (action === "remove") {
-            removeTab(targetKey)
+    const onDragEnd = (result, columns, setColumns) => {
+        if (!result.destination) return;
+        const { source, destination } = result;
+
+        if (source.droppableId !== destination.droppableId) {
+            const sourceColumn = columns[source.droppableId];
+            const destColumn = columns[destination.droppableId];
+            const sourceItems = [...sourceColumn.items];
+            const destItems = [...destColumn.items];
+            const [removed] = sourceItems.splice(source.index, 1);
+            destItems.splice(destination.index, 0, removed);
+            setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...sourceColumn,
+                    items: sourceItems
+                },
+                [destination.droppableId]: {
+                    ...destColumn,
+                    items: destItems
+                }
+            });
+        } else {
+            const column = columns[source.droppableId];
+            const copiedItems = [...column.items];
+            const [removed] = copiedItems.splice(source.index, 1);
+            copiedItems.splice(destination.index, 0, removed);
+            setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...column,
+                    items: copiedItems
+                }
+            });
         }
     };
 
-    const onInputChange = (newVal, idx) => {
-        let newTabs = props.groupData.map((t, i) => {
-            if (i === idx) {
-                return {...t, name: newVal, alreadySet: true}
-            } else {
-                return t
-            }
-        })
-        props.setGroupData(newTabs)
-    }
 
-    const renderTab = (tabObj, i) => {
         return (
-            <TabPane
-                tab={<GroupNameInput name={tabObj.name} onChange={onInputChange} alreadySet={tabObj.alreadySet} idx={i}/>}
-                key={i.toString()} closable={true}>
-                {renderTransfer(tabObj)}
-            </TabPane>
-        )
-    }
+            <div>
+                <div
+                    style={{ display: "flex", justifyContent: "left", height: "100%"}}
+                >
+                    <DragDropContext
+                        onDragEnd={(result) => onDragEnd(result, props.groupData, props.setGroupData)}
+                    >
+                        {Object.entries(props.groupData).map(([columnId, column], index) => {
+                            return (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "top"
+                                    }}
+                                    key={columnId}
+                                >
+                                    <GroupTitle id={columnId} name={column.name} changeGroupName={changeGroupName}></GroupTitle>
+                                    <div style={{ margin: 8 }}>
+                                        <Droppable droppableId={columnId} key={columnId}>
+                                            {(provided, snapshot) => {
+                                                return (
+                                                    <div
+                                                        {...provided.droppableProps}
+                                                        ref={provided.innerRef}
+                                                        style={{
+                                                            background: snapshot.isDraggingOver
+                                                                ? "lightblue"
+                                                                : "whitesmoke",
+                                                            padding: 4,
+                                                            width: 150,
+                                                            minHeight: 500
+                                                        }}
+                                                    >
+                                                        {column.items.map((item, index) => {
+                                                            return (
+                                                                <Draggable
+                                                                    key={item.id}
+                                                                    draggableId={item.id}
+                                                                    index={index}
+                                                                >
+                                                                    {(provided, snapshot) => {
+                                                                        return (
+                                                                            <div
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                                style={{
+                                                                                    userSelect: "none",
+                                                                                    paddingLeft: "5px",
+                                                                                    paddingTop: "5px",
+                                                                                    margin: "0 0 8px 0",
+                                                                                    minHeight: "30px",
+                                                                                    height: "30px",
+                                                                                    backgroundColor: snapshot.isDragging
+                                                                                        ? "#7d560a"
+                                                                                        : "#e19b12",
+                                                                                    color: "white",
+                                                                                    borderRadius: "5px",
+                                                                                    ...provided.draggableProps.style
+                                                                                }}
+                                                                            >
+                                                                                <span style={{
+                                                                                    color: "white",
+                                                                                }}>{item.name}</span>
+                                                                            </div>
+                                                                        );
+                                                                    }}
+                                                                </Draggable>
+                                                            );
+                                                        })}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                );
+                                            }}
+                                        </Droppable>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </DragDropContext>
+                    <Button onClick={addGroup}>Add group</Button>
+                </div>
+            </div>
+        );
 
-    const somethingIsTransfered = (nextTargetKeys, tabObj) => {
-        const selKeys = nextTargetKeys.concat(selectedKeys)
-        setSelectedKeys(selKeys)
-
-        let newTabs = props.groupData.map((t) => {
-            if (t.name === tabObj.name) {
-                return {...t, targetKeys: nextTargetKeys}
-            } else {
-                return {...t, dataSource: getRemainingDataSource(t.targetKeys, selKeys)}
-            }
-        })
-        props.setGroupData(newTabs)
-    }
-
-    const renderTransfer = (tabObj) => {
-        return <Transfer
-            dataSource={tabObj.dataSource}
-            titles={['', tabObj.name]}
-            render={item => item.title}
-            disabled={!tabObj.alreadySet}
-            targetKeys={tabObj.targetKeys}
-            listStyle={{width: 450}}
-            onChange={(nextnextTargetKeys) => somethingIsTransfered(nextnextTargetKeys, tabObj)}
-        >
-        </Transfer>
-    }
-
-    return (
-        <>
-            <Tabs
-                type="editable-card"
-                onEdit={onEdit}
-            >
-                {props.groupData && props.groupData.map((t, i) => {
-                    return renderTab(t, i)
-                })}
-            </Tabs>
-        </>
-    )
 }

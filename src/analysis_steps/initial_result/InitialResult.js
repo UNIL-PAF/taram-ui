@@ -37,36 +37,30 @@ export default function InitialResult(props) {
                 }
             })
 
-            const newGroupData = [{
-                name: "Condition",
-                alreadySet: false,
-                targetKeys: [],
-                dataSource: expData.map((exp) => {
-                    return {key: exp.key, title: exp.name, disabled: !exp.isSelected}
-                })
-            }]
-
             const expList = Object.values(colMapping.experimentDetails)
+
+            const newGroupData = {
+                experiments: {
+                    name: "Experiments",
+                    items: expList.filter( (d) => {return !d.group}).map( (d) => { return {id: d.name, name: d.name}})
+                }}
+
             const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
 
-            //const initialGroups = groups.map((e) => ({e : {name: e, "alreadySet": true, targetKeys: [], dataSource: []}}))
             const initialGroups = groups.reduce((acc, cur) => ({
                 ...acc,
-                [cur]: {name: cur, "alreadySet": true, targetKeys: [], dataSource: []}
+                [cur]: {name: cur, items: []}
             }), {})
 
             const loadedGroupData = expList.reduce((acc, cur) => {
-                const cleaned = {key: cur.originalName, title: cur.name, disabled: true}
+                const cleaned = {id: cur.name, name: cur.name}
                 groups.forEach((g) => {
-                    const sameGroup = (g === cur.group)
-                    const dataSource = sameGroup ? {...cleaned, disabled: false} : cleaned
-                    acc[g].dataSource.push(dataSource)
-                    if (sameGroup) acc[g].targetKeys.push(cleaned.key)
+                    if (g === cur.group) acc[g].items.push(cleaned)
                 })
                 return acc
             }, initialGroups)
 
-            const groupData = (groups.length >= 1) ? Object.values(loadedGroupData) : newGroupData
+            const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
             setLocalParams({expData: expData, groupData: groupData, column: colMapping.intCol})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,11 +70,11 @@ export default function InitialResult(props) {
     // format the data for the backend
     const prepareParams = (params) => {
         const experimentDetails = params.expData.reduce((sum, d) => {
-            const group = params.groupData.find((g) => {
-                return g.targetKeys.includes(d.key)
+            const group = Object.values(params.groupData).find((g) => {
+                return g.items.find((i) => {return i.id === d.key})
             })
             sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
-            if (group) {
+            if (group && group.name !== "Experiments") {
                 sum[d.key].group = group.name
             }
             return sum
