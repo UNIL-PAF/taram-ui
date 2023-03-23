@@ -139,7 +139,7 @@ export default function GroupSelection(props) {
                         );
                         })}
                     </DragDropContext>
-                    <Button onClick={addGroup}>Add group</Button>
+                    <Button style={{marginLeft: "8px"}} onClick={addGroup}>New group</Button>
                 </div>
             </div>
         );
