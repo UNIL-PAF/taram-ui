@@ -131,7 +131,7 @@ export default function ScatterPlot(props) {
                 formatter: function (p) {
                     const text = "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + nrForm(p.data[0]) +
                         "</strong><br>" + params.yAxis + ": <strong>" + nrForm(p.data[1]) + "</strong>"
-                    return (params.colorBy) ? (text + "<br>" + params.colorBy + "<strong>" + p.data[3].toFixed(1) + "</strong>") : text
+                    return (params.colorBy) ? (text + "<br>" + params.colorBy + ": <strong>" + p.data[3].toFixed(1) + "</strong>") : text
                 },
             },
             legend: {},
