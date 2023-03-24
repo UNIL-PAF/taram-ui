@@ -325,16 +325,16 @@ export default function AnalysisStepMenuItems(props) {
                             <span>Volcano plot</span>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.SubMenu key={"sub-4"} title={"Statistical tests"}>
-                        <Menu.Item onClick={() => clickAddStep("t-test")}
-                                   className="narrow-menu"
-                                   key={'t-test'}>
-                            <span>t Test</span>
-                        </Menu.Item>
+                    <Menu.SubMenu key={"sub-4"} title={"Statistics"}>
                         <Menu.Item onClick={() => clickAddStep("summary-stat")}
                                    className="narrow-menu"
                                    key={'summary-stat'}>
                             <span>Summary</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("t-test")}
+                                   className="narrow-menu"
+                                   key={'t-test'}>
+                            <span>t Test</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Divider key={'divider-2'}></Menu.Divider>
