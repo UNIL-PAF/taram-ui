@@ -20,8 +20,10 @@ export default function ScatterPlot(props) {
     useEffect(() => {
         if(localParams && props.data && props.data.status === 'done'){
             const intCol = localParams.column || props.data.columnInfo.columnMapping.intCol
-            const echartOptions = getOptions(JSON.parse(props.data.results), localParams, intCol)
+            const results = JSON.parse(props.data.results)
+            const echartOptions = getOptions(results, localParams, intCol)
             setOptions({...options, data: echartOptions})
+            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localParams])
@@ -53,10 +55,6 @@ export default function ScatterPlot(props) {
         const newLocalParams = {...localParams, logTrans: e.target.checked}
         setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
         setLocalParams(newLocalParams)
-    }
-
-    const nrForm = (nr) => {
-        return String(nr).length > 5 ? nr.toExponential(1) : nr
     }
 
     const computeLogData = (d) => {
@@ -104,7 +102,7 @@ export default function ScatterPlot(props) {
                 type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
-                        return nrForm(value)
+                        return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
                 min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
@@ -120,7 +118,7 @@ export default function ScatterPlot(props) {
                 type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
-                        return nrForm(value)
+                        return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
                 min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
@@ -129,8 +127,8 @@ export default function ScatterPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function (p) {
-                    const text = "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + nrForm(p.data[0]) +
-                        "</strong><br>" + params.yAxis + ": <strong>" + nrForm(p.data[1]) + "</strong>"
+                    const text = "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + String(p.data[0]).length > 5 ? p.data[0].toExponential(1) : p.data[0] +
+                        "</strong><br>" + params.yAxis + ": <strong>" + String(p.data[1]).length > 5 ? p.data[1].toExponential(1) : p.data[1] + "</strong>"
                     return (params.colorBy) ? (text + "<br>" + params.colorBy + ": <strong>" + p.data[3].toFixed(1) + "</strong>") : text
                 },
             },
