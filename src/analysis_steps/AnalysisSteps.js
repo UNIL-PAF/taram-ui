@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import Filter from "./filter/Filter"
 import {BarsOutlined} from "@ant-design/icons";
-import {Badge, Button, Dropdown} from "antd";
+import {Alert, Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import LogTransformation from "./log_transformation/LogTransformation";
@@ -21,6 +21,7 @@ import SummaryStat from "./summary_stat/SummaryStat";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
+    const [error, setError] = useState(undefined)
 
     const badgeStatus = () => {
         switch (props.data.status) {
@@ -54,6 +55,7 @@ export default function AnalysisSteps(props) {
                     <span style={{float: "right", marginRight: "10px"}}>
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
+                                                 setError={setError}
                                                  resultId={props.data.result.id}
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
@@ -63,6 +65,13 @@ export default function AnalysisSteps(props) {
 
             </span>
                 </h3>
+                {(error) && <Alert
+                    message="Error"
+                    description={error}
+                    type="error"
+                    showIcon
+                    closable
+                />}
                 <div className={"analysis-col-content"}>
                     {props.data.analysisSteps && props.data.analysisSteps.map( (step, i) => {
                         const stepWithNr = {...step, nr: i+1}

@@ -67,15 +67,22 @@ export default function AnalysisMenu(props) {
     const downloadPdf = () => {
         fetch(globalConfig.urlBackend + 'analysis/pdf/' + props.analysisId)
             .then(response => {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'analysis_' + props.analysisId + '.pdf';
-                    a.click();
-                });
-                //window.location.href = response.url;
-            });
+                if(response.ok){
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'analysis_' + props.analysisId + '.pdf';
+                        a.click();
+                    })
+                }else {
+                    response.text().then(text => {
+                        const err = JSON.parse(text).message
+                        console.error("PDF download error: " + err)
+                        props.setError(err)
+                    })
+                }
+            })
     }
 
     const loadTemplate = (templateId) => {
