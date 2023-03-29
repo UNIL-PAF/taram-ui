@@ -19,7 +19,7 @@ export default function InitialResult(props) {
     const colInfo = props.data.columnInfo
     const numCols = props.data.commonResult.numericalColumns
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
-    const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some( a => a.group)
+    const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some(a => a.group)
 
 
     useEffect(() => {
@@ -42,8 +42,13 @@ export default function InitialResult(props) {
             const newGroupData = {
                 experiments: {
                     name: "Experiments",
-                    items: expList.filter( (d) => {return !d.group}).map( (d) => { return {id: d.name, name: d.name}})
-                }}
+                    items: expList.filter((d) => {
+                        return !d.group
+                    }).map((d) => {
+                        return {id: d.name, name: d.name}
+                    })
+                }
+            }
 
             const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
 
@@ -71,7 +76,9 @@ export default function InitialResult(props) {
     const prepareParams = (params) => {
         const experimentDetails = params.expData.reduce((sum, d) => {
             const group = Object.values(params.groupData).find((g) => {
-                return g.items.find((i) => {return i.id === d.key})
+                return g.items.find((i) => {
+                    return i.id === d.key
+                })
             })
             sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
             if (group && group.name !== "Experiments") {
@@ -104,7 +111,8 @@ export default function InitialResult(props) {
     }
 
     return (
-        <Card className={"analysis-step-card"} title={props.data.nr + " - Initial result"} headStyle={{textAlign: 'left'}}
+        <Card className={"analysis-step-card"} title={props.data.nr + " - Initial result"}
+              headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
@@ -122,7 +130,7 @@ export default function InitialResult(props) {
                             danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
                             type={'primary'}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
                 </Row>
-            <Row>
+                <Row>
                 <span>Default intensity column: <strong>
                     <Select value={props.data.columnInfo.columnMapping.intCol}
                             style={{width: 250}}
@@ -131,16 +139,22 @@ export default function InitialResult(props) {
                             return <Option key={i} value={i}>{n}</Option>
                         })}</Select>
                 </strong></span>
-            </Row>
-            <Row>
-            {results && results.maxQuantParameters &&
-                <span>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong>
+                </Row>
+                <Row>
+                    {results && results.maxQuantParameters &&
+                        <span>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong>
                 </span>}
-            </Row>
-            <Row>
-            <span>Protein groups: <strong>{results && results.nrProteinGroups}</strong></span>
-            </Row>
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+                </Row>
+                <Row>
+                    <span>Protein groups: <strong>{results && results.nrProteinGroups}</strong></span>
+                </Row>
+                { results.fastaFiles &&
+                    <Row>
+                        <span>Fasta files: <strong>{results.fastaFiles.join(", ")}</strong></span>
+                    </Row>
+                }
+                <StepComment stepId={props.data.id} resultId={props.resultId}
+                             comment={props.data.comments}></StepComment>
             </Space>
             <Modal visible={showModal} onOk={() => handleGroupModalOk()}
                    onCancel={() => changGroups()} width={1000}>
