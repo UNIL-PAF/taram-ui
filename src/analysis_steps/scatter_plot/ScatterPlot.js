@@ -140,7 +140,6 @@ export default function ScatterPlot(props) {
                     x: 'x',
                     y: 'y',
                 },
-                largeThreshold: 500,
                 symbolSize: 5,
             }],
             grid: {
