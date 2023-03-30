@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Modal, Row, Select, Space} from 'antd';
+import {Button, Card, Modal, Row, Select, Space, Col} from 'antd';
 import AnalysisStepMenu from "../menus/AnalysisStepMenu"
 import StepComment from "../StepComment";
 import DefineGroupsParams from "./DefineGroupsParams";
@@ -150,7 +150,10 @@ export default function InitialResult(props) {
                 </Row>
                 { results.fastaFiles &&
                     <Row>
-                        <span>Fasta files: <strong>{results.fastaFiles.join(", ")}</strong></span>
+                        <Col>Fasta files:</Col>
+                        <Col>
+                            {results.fastaFiles.map(f => {return <Row key={f}>&nbsp;<strong>{f}</strong></Row>})}
+                        </Col>
                     </Row>
                 }
                 <StepComment stepId={props.data.id} resultId={props.resultId}
