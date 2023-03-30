@@ -134,7 +134,10 @@ export default function BoxPlot(props) {
             }),
             yAxis: {
                 name: params.column || props.data.columnInfo.columnMapping.intCol,
-                nameTextStyle: {align: 'left'},
+                nameTextStyle: {
+                    align: 'left',
+                    padding: [0, 0, 0, -50]
+                },
                 nameGap: 20
             }
         };
