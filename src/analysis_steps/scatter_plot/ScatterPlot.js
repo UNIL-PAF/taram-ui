@@ -127,8 +127,10 @@ export default function ScatterPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function (p) {
-                    const text = "<strong>" + p.data[2] + "</strong><br>" + params.xAxis + ": <strong>" + String(p.data[0]).length > 5 ? p.data[0].toExponential(1) : p.data[0] +
-                        "</strong><br>" + params.yAxis + ": <strong>" + String(p.data[1]).length > 5 ? p.data[1].toExponential(1) : p.data[1] + "</strong>"
+                    const text1 = "<strong>" + p.data[2] + "</strong><br>"
+                    const text2 = params.xAxis + ": <strong>" + String(p.data[0].length > 5 ? p.data[0].toExponential(1) : p.data[0].toFixed(1)) + "</strong><br>"
+                    const text3 = params.yAxis + ": <strong>" + String(p.data[1].length > 5 ? p.data[1].toExponential(1) : p.data[1].toFixed(1)) + "</strong>"
+                    const text = text1 + text2 + text3
                     return (params.colorBy) ? (text + "<br>" + params.colorBy + ": <strong>" + p.data[3].toFixed(1) + "</strong>") : text
                 },
             },
