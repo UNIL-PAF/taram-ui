@@ -63,14 +63,15 @@ export default function VolcanoPlot(props) {
         // we set the default selProts
         const defSelProts = (mySelProts ? mySelProts : params.selProteins)
 
-        const dataWithLabel = results.data.map(d => {
+        const dataWithLabel = results.data.filter(d => {
+            return params.useAdjustedPVal ? d.qVal : d.pVal
+        }).map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
             return {...d, showLab: showLab}
         })
 
         const valueName = params.useAdjustedPVal ? "q-value" : "p-value"
         const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
-
 
         const opts = {
             title: {text: params.comparison.group1 + " - " + params.comparison.group2, left: "center"},
@@ -89,17 +90,17 @@ export default function VolcanoPlot(props) {
             },
             tooltip: {
                 showDelay: 0,
-                formatter: function (params) {
-                    if (params.componentType === "markLine") {
+                formatter: function (myParams) {
+                    if (myParams.componentType === "markLine") {
                         const text =
-                            params.data.name + " threshold: " + params.data.value;
+                            myParams.data.name + " threshold: " + (myParams.data.name.includes("Fold") ? myParams.data.value : params.pValThresh);
                         return text;
                     } else {
-                        return "Gene: <strong>" + params.data.gene + "</strong><br>" +
-                            "Protein AC: <strong>" + params.data.prot + "</strong><br>" +
-                            "p-value: <strong>" + params.data.pVal.toPrecision(3) + "</strong><br>" +
-                            "q-value: <strong>" + params.data.qVal.toPrecision(3) + "</strong><br>" +
-                            "fold change: <strong>" + params.data.fc.toFixed(2) + "</strong>"
+                        return "Gene: <strong>" + myParams.data.gene + "</strong><br>" +
+                            "Protein AC: <strong>" + myParams.data.prot + "</strong><br>" +
+                            "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
+                            "q-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" +
+                            "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong>"
                     }
                 },
             },
@@ -111,13 +112,13 @@ export default function VolcanoPlot(props) {
                 {
                     transform: {
                         type: 'filter',
-                        config: {dimension: 'isSign', value: true}
+                        config: {dimension: params.useAdjustedPVal ? 'qIsSign' : 'isSign', value: true}
                     }
                 },
                 {
                     transform: {
                         type: 'filter',
-                        config: {dimension: 'isSign', value: false}
+                        config: {dimension: params.useAdjustedPVal ? 'qIsSign' : 'isSign', value: false}
                     }
                 },
                 {
@@ -136,11 +137,11 @@ export default function VolcanoPlot(props) {
             ],
             legend: {
                 top: "10%",
-                data: ["Sign"].concat(params.showQVal ? ["Sign q-val"] : [])
+                data: ["Sign" + (params.useAdjustedPVal ? " q-val" : "")].concat((!params.useAdjustedPVal && params.showQVal) ? ["Sign q-val"] : [])
             },
             series: [
                 {
-                    name: "Sign",
+                    name: "Sign" + (params.useAdjustedPVal ? " q-val" : ""),
                     label: {
                         show: false,
                     },
@@ -174,7 +175,7 @@ export default function VolcanoPlot(props) {
                             },
                             {
                                 yAxis: -1 * Math.log10(params.pValThresh),
-                                name: "p-Value",
+                                name: (params.useAdjustedPVal ? " q-Value" : "p-Value")
                             },
                         ],
                     },
@@ -234,7 +235,10 @@ export default function VolcanoPlot(props) {
             }
         }
 
-        const finalOpts = {...opts, series: (params.showQVal ? opts.series.concat(qValSeries) : opts.series)}
+        const finalOpts = {
+            ...opts,
+            series: ((!params.useAdjustedPVal && params.showQVal) ? opts.series.concat(qValSeries) : opts.series)
+        }
 
         return finalOpts
     }
