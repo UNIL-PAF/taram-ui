@@ -8,7 +8,7 @@ export default function EchartsZoom(props) {
     const showZoomModal = () => {
         return <>
             {props.echartsOptions &&
-                <div>
+                <div style={{height: '100%'}}>
                     <ReactECharts
                         option={{
                             ...props.echartsOptions, toolbox: {
@@ -21,7 +21,7 @@ export default function EchartsZoom(props) {
                             }
                         }}
                         style={{
-                            height: '500px',
+                            height: '100%',
                             width: '100%',
                         }}
                     />
@@ -31,7 +31,7 @@ export default function EchartsZoom(props) {
 
     return (
         <Modal visible={props.showZoom} title="Plot" onCancel={() => props.setShowZoom(false)}
-               width={"95%"} height={"95%"} footer={null}
+               width={"95%"} height={"100%"} footer={null}
         >
             {showZoomModal()}
         </Modal>
