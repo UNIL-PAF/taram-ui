@@ -5,8 +5,6 @@ import {Button} from "antd";
 
 export default function GroupSelection(props) {
 
-    console.log(props)
-
     const addGroup = () => {
         let newCols = {...props.groupData}
         const nextIdx = Object.keys(props.groupData).length
