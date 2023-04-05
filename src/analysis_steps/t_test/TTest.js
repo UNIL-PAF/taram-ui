@@ -8,6 +8,8 @@ export default function TTest(props) {
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
 
+    console.log("TTest", params)
+
     return (
         <Card className={'analysis-step-card'} title={props.data.nr + " - t-test"} headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={

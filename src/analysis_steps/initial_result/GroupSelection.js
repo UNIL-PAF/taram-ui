@@ -5,6 +5,8 @@ import {Button} from "antd";
 
 export default function GroupSelection(props) {
 
+    console.log(props)
+
     const addGroup = () => {
         let newCols = {...props.groupData}
         const nextIdx = Object.keys(props.groupData).length
@@ -41,7 +43,7 @@ export default function GroupSelection(props) {
                 }
             });
         } else {
-            const column = columns[source.droppableId];
+                const column = columns[source.droppableId];
             const copiedItems = [...column.items];
             const [removed] = copiedItems.splice(source.index, 1);
             copiedItems.splice(destination.index, 0, removed);
