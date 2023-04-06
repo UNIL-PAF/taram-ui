@@ -1,26 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {CloseOutlined} from '@ant-design/icons';
 import {Button} from 'antd';
 
 export default function TTestGroupSelection(props) {
-
-    const initCols = {
-        available: {
-            name: "Available groups",
-            id: 0,
-            items: [{id: "Group 1-0", name: "Group 1", column: 0, colIdx: 0}, {
-                id: "Group 2-0",
-                name: "Group 2",
-                column: 0,
-                colIdx: 1
-            }]
-        },
-        first: {name: "First group (right)", id: 1, items: [{id: "Group 1-1", name: "Group 1", column: 1, colIdx: 0}]},
-        second: {name: "Second group (left)", id: 2, items: [{id: "Group 2-2", name: "Group 2", column: 2, colIdx: 1}]}
-    }
-
-    const [columns, setColumns] = useState(initCols)
 
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
@@ -84,7 +67,7 @@ export default function TTestGroupSelection(props) {
             "#ea7ccc"
         ]
 
-        return colPal[item.colIdx % colPal.length]
+        return colPal[item.color % colPal.length]
     }
 
     const itemStyle = (item) => {
@@ -102,14 +85,14 @@ export default function TTestGroupSelection(props) {
     }
 
     const removeItem = (colId, itemId) => {
-        const column = Object.values(columns)[colId];
-        const columnKey = Object.keys(columns)[colId];
+        const column = Object.values(props.columns)[colId];
+        const columnKey = Object.keys(props.columns)[colId];
         let copiedItems = [...column.items];
         const itemIdx = copiedItems.findIndex((item) => item.id === itemId)
         copiedItems.splice(itemIdx, 1);
 
-        setColumns({
-            ...columns,
+        props.setColumns({
+            ...props.columns,
             [columnKey]: {
                 ...column,
                 items: copiedItems
@@ -123,9 +106,9 @@ export default function TTestGroupSelection(props) {
                 style={{display: "flex", justifyContent: "left", height: "100%"}}
             >
                 <DragDropContext
-                    onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+                    onDragEnd={(result) => onDragEnd(result, props.columns, props.setColumns)}
                 >
-                    {Object.entries(columns).map(([columnId, column], i) => {
+                    {Object.entries(props.columns).map(([columnId, column], i) => {
                         return (
                             <div
                                 style={{
@@ -136,7 +119,7 @@ export default function TTestGroupSelection(props) {
                                 }}
                                 key={columnId}
                             >
-                                <span>{column.name}</span>
+                                <span style={{paddingLeft: "18px"}}><strong>{column.name}</strong></span>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}
                                                isDropDisabled={columnId === "available"}>
@@ -151,7 +134,7 @@ export default function TTestGroupSelection(props) {
                                                             : "whitesmoke",
                                                         padding: 4,
                                                         width: 150,
-                                                        minHeight: 500
+                                                        minHeight: 400
                                                     }}
                                                 >
                                                     {column.items.map((item, index) => {
@@ -176,7 +159,7 @@ export default function TTestGroupSelection(props) {
                                                                                 }}>{item.name}
                                                                                 </span>
                                                                                 {columnId !== "available" && <Button
-                                                                                    onClick={()=>removeItem(column.id, item.id)}
+                                                                                    onClick={() => removeItem(column.id, item.id)}
                                                                                     style={{
                                                                                         float: "right",
                                                                                         marginRight: "4px",

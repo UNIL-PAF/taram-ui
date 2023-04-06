@@ -10,20 +10,49 @@ export default function TTestParams(props) {
     const intCol = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()
 
-    console.log(props)
+    const groups = props.commonResult.headers.reduce((acc, cur) => {
+        if(cur.experiment && cur.experiment.group && ! acc.includes(cur.experiment.group)){
+            return acc.concat(cur.experiment.group)
+        }else return acc
+    }, [])
+
+    const getGroupColor = (availableGroups, name) => {
+        return availableGroups.find(a => a.name === name).color
+    }
+
+    const availableGroups = groups.map( (g, i) => {return {name: g, id: g + "-0-" + i, color: i}})
+    const firstGroup =  (props.params && props.params.firstGroup) ?  props.params.firstGroup.map( (g, i) => {return {name: g, id: g + "-1-" + i, color: getGroupColor(availableGroups, g)}}) : []
+    const secondGroup =  (props.params && props.params.secondGroup) ?  props.params.secondGroup.map( (g, i) => {return {name: g, id: g + "-2-" + i, color: getGroupColor(availableGroups, g)}}) : []
+
+    const initCols = {
+        available: {
+            name: "Available groups",
+            id: 0,
+            items: availableGroups
+        },
+        first: {name: "First group (right)", id: 1, items: firstGroup},
+        second: {name: "Second group (left)", id: 2, items: secondGroup}
+    }
 
     useEffect(() => {
         if(!props.params){
             props.setParams({
                 field: intCol,
                 multiTestCorr: 'BH',
-                signThres: 0.05
+                signThres: 0.05,
+                columns: initCols
             })
             setUseDefaultCol(true)
         }else{
-        if(useDefaultCol === undefined){
-            setUseDefaultCol(props.params.field ? false: true)
-        }
+            if(!props.params.columns){
+                props.setParams({
+                   ...props.params,
+                  columns: initCols
+                })
+            }
+            if(useDefaultCol === undefined){
+                setUseDefaultCol(props.params.field ? false: true)
+            }
     }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
@@ -45,6 +74,10 @@ export default function TTestParams(props) {
 
     function multiTestCorrChange(value) {
         props.setParams({...props.params, multiTestCorr: value})
+    }
+
+    function setColumns(columns){
+        props.setParams({...props.params, columns: columns})
     }
 
     function showOptions(){
@@ -74,7 +107,8 @@ export default function TTestParams(props) {
                 <Option value={'none'}>None</Option>
             </Select>
         </span>
-                <TTestGroupSelection></TTestGroupSelection>
+                <h3>Define pairs</h3>
+                {props.params && props.params.columns && <TTestGroupSelection columns={props.params.columns} setColumns={setColumns}></TTestGroupSelection>}
             </Space>
         </>
     }

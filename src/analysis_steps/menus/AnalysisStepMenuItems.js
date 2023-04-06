@@ -11,6 +11,7 @@ import GroupFilterParams from "../group_filter/GroupFilterParams";
 import LogTransformationParams from "../log_transformation/LogTransformationParams";
 import ImputationParams from "../imputation/ImputationParams";
 import TTestParams from "../t_test/TTestParams";
+import {prepareTTestParams} from "../t_test/TTestPrepareParams"
 import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
 import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
@@ -25,6 +26,7 @@ export default function AnalysisStepMenuItems(props) {
     const [showStepParams, setShowStepParams] = useState(undefined)
     const [newStepParams, setNewStepParams] = useState(null)
     const [startDownload, setStartDownload] = useState(undefined)
+    const [prepareParams, setPrepareParams] = useState()
     const dispatch = useDispatch();
     const menuRef = useRef(null);
 
@@ -79,10 +81,12 @@ export default function AnalysisStepMenuItems(props) {
 
             // parameters for new step
         } else {
+            const params = prepareParams ? prepareParams(newStepParams) : newStepParams
+
             const stepObj = {
                 stepId: props.stepId,
                 resultId: props.resultId,
-                newStep: {type: showStepParams, params: JSON.stringify(newStepParams)}
+                newStep: {type: showStepParams, params: JSON.stringify(params)}
             }
             dispatch(addAnalysisStep(stepObj))
             setShowStepParams(undefined)
@@ -222,8 +226,15 @@ export default function AnalysisStepMenuItems(props) {
         }
     }
 
+    const getPrepareParamsFunction = (type) => {
+        if(type === "t-test"){
+            return () => (params) => prepareTTestParams(params)
+        }else return undefined
+    }
+
     const clickAddStep = function (type) {
         setShowStepParams(type)
+        setPrepareParams(getPrepareParamsFunction(type))
         setShowModalName('parameters')
     }
 

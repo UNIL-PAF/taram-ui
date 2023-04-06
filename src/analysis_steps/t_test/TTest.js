@@ -2,13 +2,12 @@ import React, {useState} from "react";
 import {Card} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {prepareTTestParams} from "./TTestPrepareParams"
 
 export default function TTest(props) {
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
-
-    console.log("TTest", params)
 
     return (
         <Card className={'analysis-step-card'} title={props.data.nr + " - t-test"} headStyle={{textAlign: 'left'}}
@@ -25,6 +24,7 @@ export default function TTest(props) {
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={props.data.imputationTablePath != null}
+                              prepareParams={prepareTTestParams}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
