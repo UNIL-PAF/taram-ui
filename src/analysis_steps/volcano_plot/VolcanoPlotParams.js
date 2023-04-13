@@ -23,8 +23,12 @@ export default function BoxPlotParams(props) {
             const compIdx = comparison.reduce((acc, v, i) => {
                 if(c.group1 === v.group1 && c.group2 === v.group2) return i
                 else return acc
-                    }, 0)
-            setSelComp(compIdx)
+                    }, undefined)
+
+            if(typeof(compIdx) === "undefined"){
+                props.setParams({...props.params, comparison: comparison[0]})
+                setSelComp(0)
+            }else setSelComp(compIdx)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
