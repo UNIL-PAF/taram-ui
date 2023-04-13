@@ -17,7 +17,8 @@ export default function TTestParams(props) {
     }, [])
 
     const getGroupColor = (availableGroups, name) => {
-        return availableGroups.find(a => a.name === name).color
+        const myGrp = availableGroups.find(a => a.name === name)
+        return myGrp ? myGrp.color : undefined
     }
 
     const availableGroups = groups.map( (g, i) => {return {name: g, id: g + "-0-" + i, color: i}})

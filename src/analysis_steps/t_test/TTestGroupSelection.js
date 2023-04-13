@@ -67,7 +67,11 @@ export default function TTestGroupSelection(props) {
             "#ea7ccc"
         ]
 
-        return colPal[item.color % colPal.length]
+        if(typeof(item.color) !== "undefined"){
+            return colPal[item.color % colPal.length]
+        }else{
+            return " #808080"
+        }
     }
 
     const itemStyle = (item) => {
