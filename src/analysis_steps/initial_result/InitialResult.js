@@ -23,7 +23,7 @@ export default function InitialResult(props) {
 
 
     useEffect(() => {
-        if (props.data) {
+        if (!localParams && props.data) {
             const colMapping = props.data.columnInfo.columnMapping
 
             const expData = colMapping.experimentNames.map((e) => {
@@ -67,7 +67,7 @@ export default function InitialResult(props) {
                     id: cur.name,
                     name: cur.name,
                     fileName: cur.fileName,
-                    originalFilename: cur.originalName
+                    originalName: cur.originalName
                 }
                 groups.forEach((g) => {
                     if (g === cur.group) acc[g].items.push(cleaned)
@@ -79,7 +79,7 @@ export default function InitialResult(props) {
             setLocalParams({expData: expData, groupData: groupData, column: colMapping.intCol})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props, localParams])
 
 
     // format the data for the backend
@@ -87,7 +87,7 @@ export default function InitialResult(props) {
         const experimentDetails = params.expData.reduce((sum, d) => {
             const group = Object.values(params.groupData).find((g) => {
                 return g.items.find((i) => {
-                    return i.id === d.key
+                    return i.originalName === d.originalName
                 })
             })
             sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
@@ -111,8 +111,16 @@ export default function InitialResult(props) {
         }))
     }
 
-    const changeExpName = () =>{
-        console.log("changeExpName", localParams, prepareParams(localParams))
+    const changeExpName = (expIdx, newName) =>{
+        const exps = prepareParams(localParams)
+        let newExpDetails = {...exps.experimentDetails}
+        newExpDetails[expIdx] = {...newExpDetails[expIdx], name: newName}
+        const newParams = {...exps, experimentDetails: newExpDetails}
+        dispatch(setStepParameters({
+            resultId: props.resultId,
+            stepId: props.data.id,
+            params: newParams
+        }))
     }
 
     const handleGroupModalOk = () => {

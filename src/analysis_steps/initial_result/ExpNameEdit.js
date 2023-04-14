@@ -9,7 +9,7 @@ export default function ExpNameEdit(props) {
 
     const save = () => {
         console.log("save", name)
-        props.changeExpName()
+        props.changeExpName(props.expIdx, name)
         props.cancel()
     }
 

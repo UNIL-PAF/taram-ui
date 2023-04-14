@@ -106,7 +106,7 @@ export default function GroupSelection(props) {
                                                             >
                                                                 {(provided, snapshot) => {
                                                                     const popoverContent = <div>
-                                                                        <span>Original name: <strong>{item.originalFilename}</strong></span>
+                                                                        <span>Original name: <strong>{item.originalName}</strong></span>
                                                                         <br/>
                                                                         {item.fileName &&
                                                                             <span>File name: <strong>{item.fileName}</strong></span>}
@@ -171,7 +171,7 @@ export default function GroupSelection(props) {
                                                                                     paddingTop: "1px"
                                                                                 }}/>}
                                                                                 size={"small"}/>
-                                                                            {showEdit && showEdit.col === i && showEdit.idx === index && <ExpNameEdit name={item.name} changeExpName={props.changeExpName} cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
+                                                                            {showEdit && showEdit.col === i && showEdit.idx === index && <ExpNameEdit name={item.name} expIdx={item.originalName} changeExpName={props.changeExpName} cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
                                                                         </div>
                                                                     );
                                                                 }}
