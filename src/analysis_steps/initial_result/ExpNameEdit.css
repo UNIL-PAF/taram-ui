@@ -1,0 +1,16 @@
+.exp-name-edit {
+    position: relative;
+    top: -40px;
+    background-color: white;
+    display:inline-flex;
+    white-space: nowrap;
+    width: 180px;
+    padding: 2px 2px 2px 2px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+
+.exp-name-button {
+    margin-left: 5px;
+    margin-top: 3px;
+}

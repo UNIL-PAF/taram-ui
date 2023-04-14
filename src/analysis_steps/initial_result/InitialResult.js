@@ -45,7 +45,12 @@ export default function InitialResult(props) {
                     items: expList.filter((d) => {
                         return !d.group
                     }).map((d) => {
-                        return {id: d.name, name: d.name}
+                        return {
+                            id: d.name,
+                            name: d.name,
+                            fileName: d.fileName,
+                            originalName: d.originalName
+                        }
                     })
                 }
             }
@@ -58,7 +63,12 @@ export default function InitialResult(props) {
             }), {})
 
             const loadedGroupData = expList.reduce((acc, cur) => {
-                const cleaned = {id: cur.name, name: cur.name}
+                const cleaned = {
+                    id: cur.name,
+                    name: cur.name,
+                    fileName: cur.fileName,
+                    originalFilename: cur.originalName
+                }
                 groups.forEach((g) => {
                     if (g === cur.group) acc[g].items.push(cleaned)
                 })
@@ -99,6 +109,10 @@ export default function InitialResult(props) {
             stepId: props.data.id,
             params: prepareParams({...localParams, column: numCols[value]})
         }))
+    }
+
+    const changeExpName = () =>{
+        console.log("changeExpName", localParams, prepareParams(localParams))
     }
 
     const handleGroupModalOk = () => {
@@ -165,7 +179,9 @@ export default function InitialResult(props) {
                                     params={localParams}
                                     commonResult={props.data.commonResult}
                                     prepareParams={prepareParams}
-                                    setParams={setLocalParams}>
+                                    setParams={setLocalParams}
+                                    changeExpName={changeExpName}
+                >
                 </DefineGroupsParams>
             </Modal>
         </Card>
