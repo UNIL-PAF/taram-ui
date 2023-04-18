@@ -30,6 +30,25 @@ export default function AnalysisStepMenuItems(props) {
     const dispatch = useDispatch();
     const menuRef = useRef(null);
 
+    // State for keeping track of whether key is pressed
+    const [keyPressed, setKeyPressed] = useState();
+
+    // If pressed key is our target key then set to true
+    function downHandler({key}) {
+        console.log(key)
+        setKeyPressed(key);
+    }
+
+    // Add event listeners
+    useEffect(() => {
+        window.addEventListener("keydown", downHandler);
+        // Remove event listeners on cleanup
+        return () => {
+            window.removeEventListener("keydown", downHandler);
+        };
+    }, []); // Empty array ensures that effect is only run on mount and unmount
+
+
     useEffect(() => {
         /**
          * Alert if clicked on outside of element
@@ -39,6 +58,7 @@ export default function AnalysisStepMenuItems(props) {
                 props.setMenuIsVisible(false)
             }
         }
+
         // Bind the event listener
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -175,27 +195,27 @@ export default function AnalysisStepMenuItems(props) {
                 ></GroupFilterParams>
             case 'log-transformation':
                 return <LogTransformationParams commonResult={props.commonResult}
-                                             params={isNew ? newStepParams : props.stepParams}
-                                             setParams={isNew ? setNewStepParams : props.setStepParams}
-                                             intCol={props.intCol}
+                                                params={isNew ? newStepParams : props.stepParams}
+                                                setParams={isNew ? setNewStepParams : props.setStepParams}
+                                                intCol={props.intCol}
                 ></LogTransformationParams>
             case 'normalization':
                 return <NormalizationParams commonResult={props.commonResult}
-                                                params={isNew ? newStepParams : props.stepParams}
-                                                setParams={isNew ? setNewStepParams : props.setStepParams}
-                                                intCol={props.intCol}
-                ></NormalizationParams>
-            case 'summary-stat':
-                return <SummaryStatParams commonResult={props.commonResult}
                                             params={isNew ? newStepParams : props.stepParams}
                                             setParams={isNew ? setNewStepParams : props.setStepParams}
                                             intCol={props.intCol}
+                ></NormalizationParams>
+            case 'summary-stat':
+                return <SummaryStatParams commonResult={props.commonResult}
+                                          params={isNew ? newStepParams : props.stepParams}
+                                          setParams={isNew ? setNewStepParams : props.setStepParams}
+                                          intCol={props.intCol}
                 ></SummaryStatParams>
             case 'imputation':
                 return <ImputationParams commonResult={props.commonResult}
-                                                params={isNew ? newStepParams : props.stepParams}
-                                                setParams={isNew ? setNewStepParams : props.setStepParams}
-                                                intCol={props.intCol}
+                                         params={isNew ? newStepParams : props.stepParams}
+                                         setParams={isNew ? setNewStepParams : props.setStepParams}
+                                         intCol={props.intCol}
                 ></ImputationParams>
             case 't-test':
                 return <TTestParams commonResult={props.commonResult}
@@ -227,9 +247,9 @@ export default function AnalysisStepMenuItems(props) {
     }
 
     const getPrepareParamsFunction = (type) => {
-        if(type === "t-test"){
+        if (type === "t-test") {
             return () => (params) => prepareTTestParams(params)
-        }else return undefined
+        } else return undefined
     }
 
     const clickAddStep = function (type) {
@@ -262,20 +282,21 @@ export default function AnalysisStepMenuItems(props) {
 
     return (
         <div ref={menuRef} align={"center"} className={"analysis-menu"} style={{minWidth: '200px'}}>
+            <span>{keyPressed}</span>
             <div><span className={"analysis-menu-title"}>{getType()} menu</span><Button
                 className={"analysis-menu-close"}
                 onClick={() => closeMenu()}
                 type={"text"}
                 icon={<CloseOutlined/>}></Button>
             </div>
-            <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}}>
+            <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}} openKeys={['sub-0', 'sub-1', 'filter']}>
                 {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
                                           key={'params'}
                 >
                     <span>Change parameters..</span>
                 </Menu.Item>}
                 <Menu.SubMenu key={"sub-0"} title={"Add a following step"}>
-                    <Menu.SubMenu key={"sub-1"} title={"Filter"}>
+                    <Menu.SubMenu key={"sub-1"} title={"Filter (f)"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
                                    key={'remove-columns'}>
@@ -314,7 +335,7 @@ export default function AnalysisStepMenuItems(props) {
                             <span>Imputation</span>
                         </Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.SubMenu key={"sub-3"} title={"Plots"} >
+                    <Menu.SubMenu key={"sub-3"} title={"Plots"}>
                         <Menu.Item onClick={() => clickAddStep("scatter-plot")}
                                    className="narrow-menu"
                                    key={'scatter-plot'}>
@@ -354,11 +375,11 @@ export default function AnalysisStepMenuItems(props) {
                         props.type === 'volcano-plot' ||
                         props.type === 'pca' ||
                         props.type === 'scatter-plot') &&
-                        <Menu.Item onClick={() => setShowModalName('download-zip')}
-                                   key={'zip'}
-                        >
-                            <span>Download ZIP..</span>
-                        </Menu.Item>}
+                    <Menu.Item onClick={() => setShowModalName('download-zip')}
+                               key={'zip'}
+                    >
+                        <span>Download ZIP..</span>
+                    </Menu.Item>}
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 {props.type && <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
