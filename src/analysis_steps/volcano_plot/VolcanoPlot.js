@@ -276,6 +276,7 @@ export default function VolcanoPlot(props) {
                               setStepParams={setLocalParams}
                               hasPlot={true}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>

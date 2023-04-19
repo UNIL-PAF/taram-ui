@@ -25,6 +25,7 @@ export default function SummaryStat(props) {
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>

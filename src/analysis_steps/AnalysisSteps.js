@@ -78,7 +78,6 @@ export default function AnalysisSteps(props) {
                         const stepWithNr = {...step, nr: i+1}
                         const myKey = keyBase + "-" + step.id
                         const onSelect = () => {
-                            console.log("select " + i)
                             setSelStep(i)
                         }
                         switch (step.type) {

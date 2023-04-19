@@ -27,26 +27,62 @@ export default function AnalysisStepMenuItems(props) {
     const [newStepParams, setNewStepParams] = useState(null)
     const [startDownload, setStartDownload] = useState(undefined)
     const [prepareParams, setPrepareParams] = useState()
+    const [openMenuKeys, setOpenMenuKeys] = useState()
     const dispatch = useDispatch();
     const menuRef = useRef(null);
 
-    // State for keeping track of whether key is pressed
-    const [keyPressed, setKeyPressed] = useState();
+    const findChildByName = (myRef, name) => {
+        const children = Object.values(myRef.children)
+        let selChild;
+        if(children.length >= 1){
+             children.forEach( c => {
+                 if(c.innerText && c.innerText.includes(name) && c.className.includes("ant-menu-submenu-title")){
+                     selChild = c;
+                 }else if(!selChild){
+                     selChild = findChildByName(c, name)
+                 }
+                 if(selChild) return
+            })
 
-    // If pressed key is our target key then set to true
-    function downHandler({key}) {
-        console.log(key)
-        setKeyPressed(key);
+            if(selChild){
+                return selChild
+            }else{
+                return undefined
+            }
+        }else{
+            return undefined
+        }
     }
 
     // Add event listeners
     useEffect(() => {
-        window.addEventListener("keydown", downHandler);
-        // Remove event listeners on cleanup
-        return () => {
-            window.removeEventListener("keydown", downHandler);
-        };
-    }, []); // Empty array ensures that effect is only run on mount and unmount
+        if(props.showMenuItem && menuRef){
+            setOpenMenuKeys([props.showMenuItem])
+            const menuItem = findChildByName(menuRef.current, "Add a following step")
+            setTimeout(() => {
+                menuItem.focus()
+            }, 300);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.showMenuItem, menuRef]);
+
+    // If pressed key is our target key then set to true
+    function downHandler(e) {
+        if(e.key === "Escape") closeMenu()
+    }
+
+    // Add event listeners
+    useEffect(() => {
+        if(props.showMenuItem){
+            window.addEventListener("keydown", downHandler);
+            // Remove event listeners on cleanup
+            return () => {
+                window.removeEventListener("keydown", downHandler);
+                closeMenu()
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.showMenuItem]); // Empty array ensures that effect is only run on mount and unmount
 
 
     useEffect(() => {
@@ -55,7 +91,7 @@ export default function AnalysisStepMenuItems(props) {
          */
         function handleClickOutside(event) {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
-                props.setMenuIsVisible(false)
+                closeMenu()
             }
         }
 
@@ -147,6 +183,8 @@ export default function AnalysisStepMenuItems(props) {
 
     const closeMenu = () => {
         props.setMenuIsVisible(false)
+        props.setShowMenuItem(undefined)
+        setOpenMenuKeys([])
     }
 
     const analysisParamList = (type, isNew) => {
@@ -280,23 +318,33 @@ export default function AnalysisStepMenuItems(props) {
         }
     }
 
+    const onOpenChange = (e) => {
+        setOpenMenuKeys(e)
+    }
+
+    const followingStepTitle = <span>Add a following step &nbsp;<em style={{color: "silver"}}>Shift A</em></span>
+
     return (
         <div ref={menuRef} align={"center"} className={"analysis-menu"} style={{minWidth: '200px'}}>
-            <span>{keyPressed}</span>
             <div><span className={"analysis-menu-title"}>{getType()} menu</span><Button
                 className={"analysis-menu-close"}
                 onClick={() => closeMenu()}
                 type={"text"}
                 icon={<CloseOutlined/>}></Button>
             </div>
-            <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}}>
+            <Menu selectable={false}
+                  onClick={() => closeMenu()}
+                  style={{minWidth: "250px"}}
+                  onOpenChange={onOpenChange}
+                  openKeys={openMenuKeys}
+                >
                 {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
                                           key={'params'}
                 >
                     <span>Change parameters..</span>
                 </Menu.Item>}
-                <Menu.SubMenu key={"sub-0"} title={"Add a following step"}>
-                    <Menu.SubMenu key={"sub-1"} title={"Filter (f)"}>
+                <Menu.SubMenu key={"add-step"} title={followingStepTitle}>
+                    <Menu.SubMenu key={"filters"} title={"Filter"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
                                    key={'remove-columns'}>

@@ -25,6 +25,7 @@ export default function Imputation(props) {
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
             />
         }>

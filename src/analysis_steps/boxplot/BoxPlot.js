@@ -170,6 +170,7 @@ export default function BoxPlot(props) {
                               hasPlot={true}
                               echartOptions={options ? options.data : null}
                               hasImputed={props.data.imputationTablePath != null}
+                              isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
             />
         }>

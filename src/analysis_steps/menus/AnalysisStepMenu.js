@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined, DownloadOutlined, PlusOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined, DownloadOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
 import FullProteinTable from "../../full_protein_table/FullProteinTable";
@@ -8,6 +8,26 @@ import FullProteinTable from "../../full_protein_table/FullProteinTable";
 export default function AnalysisStepMenu(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [showTable, setShowTable] = useState(false)
+    const [showMenuItem, setShowMenuItem] = useState()
+
+    // If pressed key is our target key then set to true
+    function downHandler(key) {
+        if(key.key.toLowerCase() === "a" && key.shiftKey){
+            setMenuIsVisible(true)
+            setShowMenuItem("add-step")
+        }
+    }
+
+    // Add event listeners
+    useEffect(() => {
+        if(props.isSelected){
+            window.addEventListener("keydown", downHandler);
+            // Remove event listeners on cleanup
+            return () => {
+                window.removeEventListener("keydown", downHandler);
+            };
+        }
+    }, [props.isSelected, props.stepId]);
 
     const statusTag = () => {
         if (props.status === "idle") {
@@ -60,6 +80,8 @@ export default function AnalysisStepMenu(props) {
 
             <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems type={props.paramType}
+                                                      showMenuItem={showMenuItem}
+                                                      setShowMenuItem={setShowMenuItem}
                                                       stepId={props.stepId}
                                                       tableNr={props.tableNr}
                                                       setMenuIsVisible={setMenuIsVisible}

@@ -25,6 +25,7 @@ export default function GroupFilter(props) {
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
                               hasImputed={props.data.imputationTablePath != null}
+                              isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
             />
         }>

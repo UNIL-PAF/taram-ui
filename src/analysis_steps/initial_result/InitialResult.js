@@ -21,7 +21,6 @@ export default function InitialResult(props) {
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
     const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some(a => a.group)
 
-
     useEffect(() => {
         if (!localParams && props.data) {
             const colMapping = props.data.columnInfo.columnMapping
@@ -146,6 +145,7 @@ export default function InitialResult(props) {
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               resType={props.resType}
+                              isSelected={props.isSelected}
                               hasImputed={false}/>
         }>
             <Space direction={'vertical'}>

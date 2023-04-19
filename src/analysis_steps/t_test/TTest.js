@@ -27,6 +27,7 @@ export default function TTest(props) {
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={props.data.imputationTablePath != null}
+                              isSelected={props.isSelected}
                               prepareParams={prepareTTestParams}
             />
         }>
