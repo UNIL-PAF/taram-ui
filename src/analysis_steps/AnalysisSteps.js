@@ -22,6 +22,7 @@ import SummaryStat from "./summary_stat/SummaryStat";
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [error, setError] = useState(undefined)
+    const [selStep, setSelStep] = useState()
 
     const badgeStatus = () => {
         switch (props.data.status) {
@@ -76,51 +77,69 @@ export default function AnalysisSteps(props) {
                     {props.data.analysisSteps && props.data.analysisSteps.map( (step, i) => {
                         const stepWithNr = {...step, nr: i+1}
                         const myKey = keyBase + "-" + step.id
+                        const onSelect = () => {
+                            console.log("select " + i)
+                            setSelStep(i)
+                        }
                         switch (step.type) {
                             case 'initial-result':
                                 return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey} resType={props.resType}/>
+                                                      data={stepWithNr} key={myKey} resType={props.resType}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             case 'boxplot':
                                 return <BoxPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={myKey}/>
+                                                data={stepWithNr} key={myKey}
+                                                onSelect={onSelect} isSelected={selStep === i}/>
                             case 'pca':
                                 return <PcaPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={myKey}/>
+                                                data={stepWithNr} key={myKey}
+                                                onSelect={onSelect} isSelected={selStep === i}/>
                             case 'log-transformation':
                                 return <LogTransformation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={stepWithNr} key={myKey}/>
+                                                       data={stepWithNr} key={myKey}
+                                                          onSelect={onSelect} isSelected={selStep === i}/>
                             case 'normalization':
                                 return <Normalization analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={myKey}/>
+                                                          data={stepWithNr} key={myKey}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             case 'summary-stat':
                                 return <SummaryStat analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey}/>
+                                                      data={stepWithNr} key={myKey}
+                                                    onSelect={onSelect} isSelected={selStep === i}/>
                             case 'imputation':
                                 return <Imputation analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={myKey}/>
+                                                          data={stepWithNr} key={myKey}
+                                                   onSelect={onSelect} isSelected={selStep === i}/>
                             case 'filter':
                                 return <Filter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                               data={stepWithNr} key={myKey}/>
+                                               data={stepWithNr} key={myKey}
+                                               onSelect={onSelect} isSelected={selStep === i}/>
                             case 'group-filter':
                                 return <GroupFilter analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}/>
+                                                    data={stepWithNr} key={myKey}
+                                                    onSelect={onSelect} isSelected={selStep === i}/>
                             case 't-test':
                                 return <TTest analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                              data={stepWithNr} key={myKey}/>
+                                              data={stepWithNr} key={myKey}
+                                              onSelect={onSelect} isSelected={selStep === i}/>
                             case 'volcano-plot':
                                 return <VolcanoPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}/>
+                                                    data={stepWithNr} key={myKey}
+                                                    onSelect={onSelect} isSelected={selStep === i}/>
                             case 'remove-imputed':
                                 return <RemoveImputed analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey}/>
+                                                      data={stepWithNr} key={myKey}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             case 'remove-columns':
                                 // since we need all headers if changing parameters, we have to get from the step before
                                 const commonResBefore = props.data.analysisSteps[i-1].commonResult
                                 return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}/>
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             case 'scatter-plot':
                                 return <ScatterPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}/>
+                                                    data={stepWithNr} key={myKey}
+                                                    onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
                         }

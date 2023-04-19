@@ -1,6 +1,11 @@
 .analysis-step-card {
     margin-bottom: 10px;
     box-shadow: 2px 2px 5px 1px lightgrey;
+    border-radius: 5px;
+}
+
+.analysis-step-sel {
+    border: 2px solid pink;
 }
 
 .comment-button:hover {

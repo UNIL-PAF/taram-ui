@@ -289,7 +289,7 @@ export default function AnalysisStepMenuItems(props) {
                 type={"text"}
                 icon={<CloseOutlined/>}></Button>
             </div>
-            <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}} openKeys={['sub-0', 'sub-1', 'filter']}>
+            <Menu selectable={false} onClick={() => closeMenu()} style={{minWidth: "250px"}}>
                 {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
                                           key={'params'}
                 >

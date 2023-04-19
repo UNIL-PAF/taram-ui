@@ -10,7 +10,10 @@ export default function Normalization(props) {
     const results = JSON.parse(props.data.results)
 
     return (
-        <Card className={'analysis-step-card'} title={props.data.nr + " - Normalization"} headStyle={{textAlign: 'left'}}
+        <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
+              onClick={props.onSelect}
+              title={props.data.nr + " - Normalization"}
+              headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}

@@ -133,7 +133,9 @@ export default function InitialResult(props) {
     }
 
     return (
-        <Card className={"analysis-step-card"} title={props.data.nr + " - Initial result"}
+        <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
+              onClick={props.onSelect}
+              title={props.data.nr + " - Initial result"}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined, DownloadOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, EllipsisOutlined, SyncOutlined, DownloadOutlined, PlusOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
 import FullProteinTable from "../../full_protein_table/FullProteinTable";
