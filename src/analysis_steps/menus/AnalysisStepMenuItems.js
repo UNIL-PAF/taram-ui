@@ -1,25 +1,13 @@
 import React, {useEffect, useState, useRef} from "react";
-import {Button, Menu, message, Modal, Popconfirm} from "antd";
+import {Button, Menu, message, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
 import '../../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "../BackendAnalysisSteps";
 import {clearTable} from "../../protein_table/proteinTableSlice";
-import BoxPlotParams from "../boxplot/BoxPlotParams";
-import FilterParams from "../filter/FilterParams";
-import GroupFilterParams from "../group_filter/GroupFilterParams";
-import LogTransformationParams from "../log_transformation/LogTransformationParams";
-import ImputationParams from "../imputation/ImputationParams";
-import TTestParams from "../t_test/TTestParams";
 import {prepareTTestParams} from "../t_test/TTestPrepareParams"
-import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
 import DownloadZipModal from "./DownloadZipModal"
-import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
-import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
-import PcaPlotParams from "../pca/PcaPlotParams";
-import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
-import NormalizationParams from "../normalization/NormalizationParams";
-import SummaryStatParams from "../summary_stat/SummaryStatParams";
+import ParameterModal from "./ParametersModal"
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -68,7 +56,9 @@ export default function AnalysisStepMenuItems(props) {
 
     // If pressed key is our target key then set to true
     function downHandler(e) {
-        if(e.key === "Escape") closeMenu()
+        if(e.key === "Escape"){
+            closeMenu()
+        }
     }
 
     // Add event listeners
@@ -84,13 +74,12 @@ export default function AnalysisStepMenuItems(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.showMenuItem]); // Empty array ensures that effect is only run on mount and unmount
 
-
     useEffect(() => {
         /**
          * Alert if clicked on outside of element
          */
         function handleClickOutside(event) {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
+            if (menuRef.current && (event.target.id !== "menu-item" && !menuRef.current.contains(event.target))) {
                 closeMenu()
             }
         }
@@ -111,16 +100,6 @@ export default function AnalysisStepMenuItems(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDownload])
-
-    const handleOk = (name) => {
-        switch (name) {
-            case 'parameters':
-                handleParamsOk()
-                break;
-            default:
-                setStartDownload(true)
-        }
-    }
 
     const handleParamsOk = () => {
         dispatch(clearTable())
@@ -162,10 +141,23 @@ export default function AnalysisStepMenuItems(props) {
         message.success('Delete ' + getType() + '.');
     };
 
-    const showModal = (name) => {
+    const showModal = (name, newStepParams) => {
+        const myParams = showStepParams ? newStepParams : props.stepParams
+        const mySetParams = showStepParams ? setNewStepParams : props.setStepParams
+
         switch (name) {
             case 'parameters':
-                return showStepParams ? analysisParamList(showStepParams, true) : analysisParamList(props.paramType, false)
+                return <ParameterModal
+                    type={showStepParams ? showStepParams : props.paramType}
+                    commonResult={props.commonResult}
+                    params={myParams}
+                    setParams={mySetParams}
+                    intCol={props.intCol}
+                    stepId={props.stepId}
+                    experimentDetails={props.experimentDetails}
+                    handleOk={handleParamsOk}
+                    handleCancel={handleCancel}
+                ></ParameterModal>
             case 'download-zip':
                 return <DownloadZipModal
                     stepId={props.stepId}
@@ -174,8 +166,10 @@ export default function AnalysisStepMenuItems(props) {
                     startDownload={startDownload}
                     tableNr={props.tableNr}
                     hasPlot={props.hasPlot}
-                    hasImputed={props.hasImputed}>
-                    ></DownloadZipModal>
+                    hasImputed={props.hasImputed}
+                    handleCancel={handleCancel}
+                    handleOk={() => setStartDownload(true)}
+                ></DownloadZipModal>
             default:
                 return null
         }
@@ -185,95 +179,6 @@ export default function AnalysisStepMenuItems(props) {
         props.setMenuIsVisible(false)
         props.setShowMenuItem(undefined)
         setOpenMenuKeys([])
-    }
-
-    const analysisParamList = (type, isNew) => {
-        // eslint-disable-next-line
-        switch (type) {
-            case 'remove-columns':
-                return <RemoveColumnsParams commonResult={props.commonResult}
-                                            params={isNew ? newStepParams : props.stepParams}
-                                            setParams={isNew ? setNewStepParams : props.setStepParams}
-                                            intCol={props.intCol}
-                                            stepId={props.stepId}
-                ></RemoveColumnsParams>
-            case 'remove-imputed':
-                return <RemoveImputedParams commonResult={props.commonResult}
-                                            params={isNew ? newStepParams : props.stepParams}
-                                            setParams={isNew ? setNewStepParams : props.setStepParams}
-                                            intCol={props.intCol}
-                                            stepId={props.stepId}
-                ></RemoveImputedParams>
-            case 'boxplot':
-                return <BoxPlotParams commonResult={props.commonResult}
-                                      params={isNew ? newStepParams : props.stepParams}
-                                      setParams={isNew ? setNewStepParams : props.setStepParams}
-                                      intCol={props.intCol}
-                                      stepId={props.stepId}
-                ></BoxPlotParams>
-            case 'pca':
-                return <PcaPlotParams commonResult={props.commonResult}
-                                      params={isNew ? newStepParams : props.stepParams}
-                                      setParams={isNew ? setNewStepParams : props.setStepParams}
-                                      intCol={props.intCol}
-                                      stepId={props.stepId}
-                ></PcaPlotParams>
-            case 'filter':
-                return <FilterParams commonResult={props.commonResult}
-                                     params={isNew ? newStepParams : props.stepParams}
-                                     setParams={isNew ? setNewStepParams : props.setStepParams}
-                                     intCol={props.intCol}
-                                     resType={props.resType}
-                ></FilterParams>
-            case 'group-filter':
-                return <GroupFilterParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams : props.stepParams}
-                                          setParams={isNew ? setNewStepParams : props.setStepParams}
-                                          intCol={props.intCol}
-                ></GroupFilterParams>
-            case 'log-transformation':
-                return <LogTransformationParams commonResult={props.commonResult}
-                                                params={isNew ? newStepParams : props.stepParams}
-                                                setParams={isNew ? setNewStepParams : props.setStepParams}
-                                                intCol={props.intCol}
-                ></LogTransformationParams>
-            case 'normalization':
-                return <NormalizationParams commonResult={props.commonResult}
-                                            params={isNew ? newStepParams : props.stepParams}
-                                            setParams={isNew ? setNewStepParams : props.setStepParams}
-                                            intCol={props.intCol}
-                ></NormalizationParams>
-            case 'summary-stat':
-                return <SummaryStatParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams : props.stepParams}
-                                          setParams={isNew ? setNewStepParams : props.setStepParams}
-                                          intCol={props.intCol}
-                ></SummaryStatParams>
-            case 'imputation':
-                return <ImputationParams commonResult={props.commonResult}
-                                         params={isNew ? newStepParams : props.stepParams}
-                                         setParams={isNew ? setNewStepParams : props.setStepParams}
-                                         intCol={props.intCol}
-                ></ImputationParams>
-            case 't-test':
-                return <TTestParams commonResult={props.commonResult}
-                                    params={isNew ? newStepParams : props.stepParams}
-                                    setParams={isNew ? setNewStepParams : props.setStepParams}
-                                    experimentDetails={props.experimentDetails}
-                                    intCol={props.intCol}
-                ></TTestParams>
-            case 'volcano-plot':
-                return <VolcanoPlotParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams : props.stepParams}
-                                          setParams={isNew ? setNewStepParams : props.setStepParams}
-                ></VolcanoPlotParams>
-            case 'scatter-plot':
-                return <ScatterPlotParams commonResult={props.commonResult}
-                                          params={isNew ? newStepParams : props.stepParams}
-                                          setParams={isNew ? setNewStepParams : props.setStepParams}
-                                          intCol={props.intCol}
-                ></ScatterPlotParams>
-        }
     }
 
     const getType = () => {
@@ -291,31 +196,13 @@ export default function AnalysisStepMenuItems(props) {
     }
 
     const clickAddStep = function (type) {
+        setTimeout(() => {
+            closeMenu()
+        }, 300);
+        console.log("clickAddStep")
         setShowStepParams(type)
         setPrepareParams(getPrepareParamsFunction(type))
         setShowModalName('parameters')
-    }
-
-    const getModalTitle = function (name) {
-        switch (name) {
-            case 'parameters':
-                return 'Parameters'
-            case 'download-table':
-                return 'Download table'
-            case 'download-zip':
-                return 'Download ZIP'
-            default:
-                return ''
-        }
-    }
-
-    const getModalWidth = function (name) {
-        switch (name) {
-            case 'download-table':
-                return 300;
-            default:
-                return 1000;
-        }
     }
 
     const onOpenChange = (e) => {
@@ -332,10 +219,11 @@ export default function AnalysisStepMenuItems(props) {
                 type={"text"}
                 icon={<CloseOutlined/>}></Button>
             </div>
-            <Menu selectable={false}
+            <Menu
                   onClick={() => closeMenu()}
                   style={{minWidth: "250px"}}
                   onOpenChange={onOpenChange}
+                  //openKeys={(!openMenuKeys) ? undefined : openMenuKeys}
                   openKeys={openMenuKeys}
                 >
                 {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
@@ -348,73 +236,73 @@ export default function AnalysisStepMenuItems(props) {
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
                                    key={'remove-columns'}>
-                            <span>Remove columns</span>
+                            <span id={"menu-item"}>Remove columns</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("filter")}
                                    className="narrow-menu"
                                    key={'filter'}>
-                            <span>Filter</span>
+                            <span id={"menu-item"}>Filter</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("group-filter")}
                                    className="narrow-menu"
                                    key={'group-filter'}>
-                            <span>Filter on valid</span>
+                            <span id={"menu-item"}>Filter on valid</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("remove-imputed")}
                                    className="narrow-menu"
                                    key={'remove-imputed'}>
-                            <span>Remove imputed values</span>
+                            <span id={"menu-item"}>Remove imputed values</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Transform"}>
                         <Menu.Item onClick={() => clickAddStep("log-transformation")}
                                    className="narrow-menu"
                                    key={'log-transformation'}>
-                            <span>Log transformation</span>
+                            <span id={"menu-item"}>Log transformation</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("normalization")}
                                    className="narrow-menu"
                                    key={'normalization'}>
-                            <span>Normalization</span>
+                            <span id={"menu-item"}>Normalization</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("imputation")}
                                    className="narrow-menu"
                                    key={'imputation'}>
-                            <span>Imputation</span>
+                            <span id={"menu-item"}>Imputation</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-3"} title={"Plots"}>
                         <Menu.Item onClick={() => clickAddStep("scatter-plot")}
                                    className="narrow-menu"
                                    key={'scatter-plot'}>
-                            <span>Scatter plot</span>
+                            <span id={"menu-item"}>Scatter plot</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("boxplot")}
                                    className="narrow-menu"
                                    key={'boxplot'}>
-                            <span>Boxplot</span>
+                            <span id={"menu-item"}>Boxplot</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("pca")}
                                    className="narrow-menu"
                                    key={'pca'}>
-                            <span>PCA</span>
+                            <span id={"menu-item"}>PCA</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("volcano-plot")}
                                    className="narrow-menu"
                                    key={'volcano-plot'}>
-                            <span>Volcano plot</span>
+                            <span id={"menu-item"}>Volcano plot</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-4"} title={"Statistics"}>
                         <Menu.Item onClick={() => clickAddStep("summary-stat")}
                                    className="narrow-menu"
                                    key={'summary-stat'}>
-                            <span>Summary</span>
+                            <span id={"menu-item"}>Summary</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("t-test")}
                                    className="narrow-menu"
                                    key={'t-test'}>
-                            <span>t Test</span>
+                            <span id={"menu-item"}>t Test</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Divider key={'divider-2'}></Menu.Divider>
@@ -440,12 +328,9 @@ export default function AnalysisStepMenuItems(props) {
                     </Popconfirm>
                 </Menu.Item>}
             </Menu>
-            <Modal title={getModalTitle(showModalName)} visible={showModalName} onOk={() => handleOk(showModalName)}
-                   onCancel={() => handleCancel()}
-                   width={getModalWidth(showModalName)}
-            >
-                {showModal(showModalName)}
-            </Modal>
+
+            {showModalName && showModal(showModalName, newStepParams)}
+
         </div>
 
 

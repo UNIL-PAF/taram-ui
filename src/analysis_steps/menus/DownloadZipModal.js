@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Space} from "antd";
+import {Checkbox, Modal, Space} from "antd";
 import globalConfig from "../../globalConfig";
 import {useDispatch} from "react-redux";
 import {setError} from "../../analysis/analysisSlice";
@@ -40,12 +40,15 @@ export default function DownloadZipModal(props) {
                         a.click();
                     }
                 });
-                //window.location.href = response.url;
             });
     }
 
     return (
-        <>
+        <Modal title={"Download ZIP"} onOk={() => props.handleOk()}
+               onCancel={() => props.handleCancel()}
+               width={300}
+               visible={true}
+        >
             <h3>Download ZIP file</h3>
             <Space direction={'vertical'}>
                 <Checkbox
@@ -59,6 +62,6 @@ export default function DownloadZipModal(props) {
                     onChange={(val) => setPng(val.target.checked)}>PNG plot
                 </Checkbox>
             </Space>
-        </>
+        </Modal>
     );
 }
