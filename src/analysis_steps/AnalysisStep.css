@@ -42,8 +42,9 @@
 }
 
 .analysis-step-param-content {
-    margin: 10px 0px 10px 15px;
+    margin: 10px 10px 10px 15px;
     font-size: 12px;
+    white-space: initial;
 }
 
 .analysis-step-param-line {

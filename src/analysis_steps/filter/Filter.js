@@ -18,12 +18,10 @@ export default function Filter(props) {
     "se": "<="
     }
 
-    console.log(params)
-
     const getColFilters = () => {
-        return params.colFilters.map( flt => {
+        return params.colFilters.map( (flt, i) => {
             const fltAction = flt.removeSelected ? "Remove" : "Keep"
-            return <p>{fltAction} <em>{flt.colName}</em> {comparators[flt.comparator]} {flt.compareToValue}</p>
+            return <p key={i} className={"analysis-step-param-line"}>{fltAction} <em>{flt.colName}</em> {comparators[flt.comparator]} {flt.compareToValue}</p>
         })
     }
 
@@ -58,8 +56,8 @@ export default function Filter(props) {
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
                                 {params.removeOnlyIdentifiedBySite && <p className={"analysis-step-param-line"}>Remove only-identified-by-site &nbsp;&nbsp;<CheckOutlined/></p>}
-                                {params.removeReverse && <p>Remove reverse &nbsp;&nbsp;<CheckOutlined/></p>}
-                                {params.removePotentialContaminant && <p>Remove potential contaminants &nbsp;&nbsp;<CheckOutlined/></p>}
+                                {params.removeReverse && <p className={"analysis-step-param-line"}>Remove reverse &nbsp;&nbsp;<CheckOutlined/></p>}
+                                {params.removePotentialContaminant && <p className={"analysis-step-param-line"}>Remove potential contaminants &nbsp;&nbsp;<CheckOutlined/></p>}
                                 {params.colFilters && getColFilters()}
                             </div>
                         </div>

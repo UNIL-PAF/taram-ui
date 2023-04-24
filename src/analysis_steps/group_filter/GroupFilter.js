@@ -8,6 +8,14 @@ export default function GroupFilter(props) {
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
 
+    const groupTxt = {
+        'one_group': "one group",
+        'all_groups': "all groups",
+        'total': "total"
+    }
+
+    const myIntField = params.field ? params.field : props.data.columnInfo.columnMapping.intCol
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -31,14 +39,22 @@ export default function GroupFilter(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <div>
-                    <Row>
-                        <Col><span><strong>Protein groups: </strong>{results.nrRows}</span></Col>
-                    </Row>
-                    <Row>
-                        <Col><span><strong>Removed: </strong>{results.nrRowsRemoved}</span></Col>
-                    </Row>
-                </div>
+                <Row>
+                    <Col span={8}>
+                        <span><strong>Protein groups: </strong>{results.nrRows}</span>
+                    </Col>
+                    <Col span={8}>
+                        <span><strong>Removed: </strong>{results.nrRowsRemoved}</span>
+                    </Col>
+                    <Col span={8}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                <p className={"analysis-step-param-line"}>Only keep rows where <em>{myIntField}</em> has
+                                    at least {params.minNrValid} valid values in {groupTxt[params.filterInGroup]}.</p>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
