@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Card} from "antd";
+import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 
@@ -7,6 +7,21 @@ export default function Imputation(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
+
+    const imputationText = {
+        "normal": "Replace missing values from normal distribution:",
+        "nan": "Replace missing values by NaN.",
+        "value": "Replace missing values by "
+
+    }
+
+    const getNormParams = () => {
+        return <>
+                <p className={"analysis-step-param-line"}>Width: {params.normImputationParams.width}</p>
+                <p className={"analysis-step-param-line"}>Down shift: {params.normImputationParams.downshift}</p>
+                <p className={"analysis-step-param-line"}>Seed: {params.normImputationParams.seed}</p>
+            </>
+    }
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -31,9 +46,19 @@ export default function Imputation(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <div>
-                    <p>Nr imputed: <strong>{results.nrImputedValues}</strong></p>
-                </div>
+                <Row>
+                    <Col span={16}>
+                        <p>Nr imputed: <strong>{results.nrImputedValues}</strong></p>
+                    </Col>
+                    <Col span={8}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                <p className={"analysis-step-param-line"}>{imputationText[params.imputationType]}</p>
+                                {params.imputationType === "normal" && getNormParams()}
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
