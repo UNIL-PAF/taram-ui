@@ -9,6 +9,8 @@ export default function LogTransformation(props) {
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
 
+    const transText = { "log2": "Log2"}
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -33,15 +35,22 @@ export default function LogTransformation(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Row><span><strong>Min: </strong>{formNum(results.min)}</span></Row>
                         <Row><span><strong>Max: </strong>{formNum(results.max)}</span></Row>
                         <Row><span><strong>Number of NaN: </strong>{results.nrNans}</span></Row>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Row><span><strong>Mean: </strong>{formNum(results.mean)}</span></Row>
                         <Row><span><strong>Median: </strong>{formNum(results.median)}</span></Row>
                         <Row><span><strong>Sum: </strong>{formNum(results.sum)}</span></Row>
+                    </Col>
+                    <Col span={8}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                {transText[params.transformationType]} transformation
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             }
