@@ -1,12 +1,31 @@
 import React, {useState} from "react";
-import {Card} from "antd";
+import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {CheckOutlined} from "@ant-design/icons";
 
 export default function Filter(props) {
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
+
+    const comparators = {
+    "gt": ">",
+    "sd": "<",
+    "eq": "==",
+    "not": "!=",
+    "ge": ">=",
+    "se": "<="
+    }
+
+    console.log(params)
+
+    const getColFilters = () => {
+        return params.colFilters.map( flt => {
+            const fltAction = flt.removeSelected ? "Remove" : "Keep"
+            return <p>{fltAction} <em>{flt.colName}</em> {comparators[flt.comparator]} {flt.compareToValue}</p>
+        })
+    }
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -30,10 +49,22 @@ export default function Filter(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <div>
-                    <p>Protein groups: <strong>{results.nrRows}</strong></p>
-                    <p>Removed: <strong>{results.nrRowsRemoved}</strong></p>
-                </div>
+                <Row>
+                    <Col span={16}>
+                        <p>Protein groups: <strong>{results.nrRows}</strong></p>
+                        <p>Removed: <strong>{results.nrRowsRemoved}</strong></p>
+                    </Col>
+                    <Col span={8}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                {params.removeOnlyIdentifiedBySite && <p className={"analysis-step-param-line"}>Remove only-identified-by-site &nbsp;&nbsp;<CheckOutlined/></p>}
+                                {params.removeReverse && <p>Remove reverse &nbsp;&nbsp;<CheckOutlined/></p>}
+                                {params.removePotentialContaminant && <p>Remove potential contaminants &nbsp;&nbsp;<CheckOutlined/></p>}
+                                {params.colFilters && getColFilters()}
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>

@@ -34,3 +34,18 @@
 .comment-box {
     padding-top: 12px;
 }
+
+.analysis-step-param-box {
+    border: 1px solid #91caff;
+    background-color: #e6f4ff;
+    border-radius: 5px;
+}
+
+.analysis-step-param-content {
+    margin: 10px 0px 10px 15px;
+    font-size: 12px;
+}
+
+.analysis-step-param-line {
+    margin-bottom: 0;
+}
