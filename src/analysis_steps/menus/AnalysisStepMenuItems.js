@@ -240,7 +240,7 @@ export default function AnalysisStepMenuItems(props) {
                         <Menu.Item onClick={() => clickAddStep("filter")}
                                    className="narrow-menu"
                                    key={'filter'}>
-                            <span id={"menu-item"}>Filter</span>
+                            <span id={"menu-item"}>Filter rows</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("group-filter")}
                                    className="narrow-menu"
