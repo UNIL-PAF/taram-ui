@@ -100,7 +100,7 @@ export default function AnalysisStepMenu(props) {
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>
-                <Button type={"default"} size="small" icon={<EllipsisOutlined/>}></Button>
+                <Button type={"default"} size="small">Menu</Button>
             </Dropdown>
             {showTable && <Modal visible={true} title={getTitle()} onCancel={() => setShowTable(false)}
                    width={"95%"} height={"95%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
