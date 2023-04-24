@@ -82,7 +82,6 @@ export default function ImputationParams(props) {
                 <h3>Imputation</h3>
                 <span>
                 <Select value={props.params.imputationType} style={{width: 250}} onChange={impChange}>
-                    <Option value={'none'}>None</Option>
                     <Option value={'normal'}>Normal distribution</Option>
                     <Option value={'nan'}>Replace by NaN</Option>
                     <Option value={'value'}>Fix value</Option>

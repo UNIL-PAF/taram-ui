@@ -51,7 +51,6 @@ export default function NormalizationParams(props) {
                 </Select>
                 <h3>Normalization</h3>
                 <Select value={props.params.normalizationType} style={{width: 250}} onChange={normChange}>
-                    <Option value={'none'}>None</Option>
                     <Option value={'median'}>Median</Option>
                     <Option value={'mean'}>Mean</Option>
                 </Select>

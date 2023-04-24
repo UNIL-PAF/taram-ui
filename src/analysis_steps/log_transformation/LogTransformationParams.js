@@ -51,7 +51,6 @@ import {Checkbox, Select, Space} from 'antd';
                                         </Select>
                                         <h3>Transformation</h3>
                                         <Select value={props.params.transformationType} style={{width: 250}} onChange={transChange}>
-                                            <Option value={'none'}>None</Option>
                                             <Option value={'log2'}>Log2</Option>
                                         </Select>
                                         </Space>
