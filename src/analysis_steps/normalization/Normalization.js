@@ -9,6 +9,12 @@ export default function Normalization(props) {
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
 
+    const normType = {
+        "median": "Median",
+        "mean": "Mean",
+        "none": "None"
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -33,15 +39,22 @@ export default function Normalization(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Row><span><strong>Min: </strong>{formNum(results.min)}</span></Row>
                         <Row><span><strong>Max: </strong>{formNum(results.max)}</span></Row>
                         <Row><span><strong>Number of NaN: </strong>{results.nrNans}</span></Row>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Row><span><strong>Mean: </strong>{formNum(results.mean)}</span></Row>
                         <Row><span><strong>Median: </strong>{formNum(results.median)}</span></Row>
                         <Row><span><strong>Sum: </strong>{formNum(results.sum)}</span></Row>
+                    </Col>
+                    <Col span={8}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                {<p className={"analysis-step-param-line"}>{normType[params.normalizationType]} normalization</p>}
+                            </div>
+                        </div>
                     </Col>
                 </Row>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
