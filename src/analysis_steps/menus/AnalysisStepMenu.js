@@ -103,7 +103,7 @@ export default function AnalysisStepMenu(props) {
                 <Button type={"default"} size="small">Menu</Button>
             </Dropdown>
             {showTable && <Modal visible={true} title={getTitle()} onCancel={() => setShowTable(false)}
-                   width={"95%"} height={"95%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
+                   width={"95%"} height={"90%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
             >
                 <FullProteinTable stepId={props.stepId} tableNr={props.tableNr}></FullProteinTable>
             </Modal>}
