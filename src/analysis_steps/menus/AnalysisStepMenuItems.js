@@ -247,11 +247,6 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'group-filter'}>
                             <span id={"menu-item"}>Filter on valid</span>
                         </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("remove-imputed")}
-                                   className="narrow-menu"
-                                   key={'remove-imputed'}>
-                            <span id={"menu-item"}>Remove imputed values</span>
-                        </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Transform"}>
                         <Menu.Item onClick={() => clickAddStep("log-transformation")}
@@ -268,6 +263,11 @@ export default function AnalysisStepMenuItems(props) {
                                    className="narrow-menu"
                                    key={'imputation'}>
                             <span id={"menu-item"}>Imputation</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("remove-imputed")}
+                                   className="narrow-menu"
+                                   key={'remove-imputed'}>
+                            <span id={"menu-item"}>Remove imputed values</span>
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-3"} title={"Plots"}>
