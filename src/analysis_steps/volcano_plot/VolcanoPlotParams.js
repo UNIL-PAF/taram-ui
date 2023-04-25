@@ -56,6 +56,14 @@ export default function BoxPlotParams(props) {
         props.setParams(newParams)
     }
 
+    function fcText(){
+        return props.commonResult.intColIsLog ? "log2 " : ""
+    }
+
+    function selValText(){
+        return props.params.useAdjustedPVal ? "q-values" : "p-values"
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
@@ -70,20 +78,21 @@ export default function BoxPlotParams(props) {
                 <span style={{paddingLeft: "10px"}}>Significance threshold &nbsp;<InputNumber
                     value={props.params.pValThresh}
                     onChange={(val) => valueChange("pValThresh", val)}></InputNumber></span>
-                <span style={{paddingLeft: "10px"}}>Fold change threshold &nbsp;<InputNumber
+                <span style={{paddingLeft: "10px"}}>Absolute {fcText()}fold change threshold &nbsp;<InputNumber
                     value={props.params.fcThresh}
                     onChange={(val) => valueChange("fcThresh", val)}></InputNumber></span>
                 <span>Use &nbsp;
                     <Switch onChange={(val) => changeSwitch(val)} checkedChildren="q-values" unCheckedChildren="p-values" checked={props.params.useAdjustedPVal} />
+                    &nbsp;on the y-axis.
                 </span>
                 <Checkbox
                     disabled={props.params.useAdjustedPVal}
                     onChange={(val) => checkboxChange("showQVal", val)} checked={props.params.showQVal}>
-                    Show significant q-values with different color.
+                    Show significant q-values above the selected absolute {fcText()} fold change with a different color.
                 </Checkbox>
                 <Checkbox
                     onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use
-                    -log10 values
+                    -log10 {selValText()} on the y-axis.
                 </Checkbox>
             </Space>
         </>

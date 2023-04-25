@@ -76,7 +76,7 @@ export default function VolcanoPlot(props) {
         const opts = {
             title: {text: params.comparison.group1 + " - " + params.comparison.group2, left: "center"},
             xAxis: {
-                name: "Fold change",
+                name: props.data.commonResult.intColIsLog ? "Log2 fold change" : "Fold change",
                 nameLocation: "center",
                 nameTextStyle: {padding: [8, 4, 5, 6]},
             },
@@ -137,11 +137,11 @@ export default function VolcanoPlot(props) {
             ],
             legend: {
                 top: "10%",
-                data: ["Sign" + (params.useAdjustedPVal ? " q-val" : "")].concat((!params.useAdjustedPVal && params.showQVal) ? ["Sign q-val"] : [])
+                data: ["Significant" + (params.useAdjustedPVal ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal) ? ["Significant q-values"] : [])
             },
             series: [
                 {
-                    name: "Sign" + (params.useAdjustedPVal ? " q-val" : ""),
+                    name: "Significant" + (params.useAdjustedPVal ? " q-values" : " p-values"),
                     label: {
                         show: false,
                     },
@@ -175,7 +175,7 @@ export default function VolcanoPlot(props) {
                             },
                             {
                                 yAxis: -1 * Math.log10(params.pValThresh),
-                                name: (params.useAdjustedPVal ? " q-Value" : "p-Value")
+                                name: (params.useAdjustedPVal ? " q-value" : "p-value")
                             },
                         ],
                     },
@@ -219,7 +219,7 @@ export default function VolcanoPlot(props) {
         }
 
         const qValSeries = {
-            name: "Sign q-val",
+            name: "Significant q-values",
             itemStyle: {
                 color: "#fac858"
             },
