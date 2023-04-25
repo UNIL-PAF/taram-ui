@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Select, Input} from 'antd';
+import {Button, Checkbox, Select, Input, Tag} from 'antd';
 import {Col, Row, Space} from 'antd';
 import {CloseCircleOutlined, PlusCircleOutlined} from "@ant-design/icons";
 
@@ -33,7 +33,7 @@ export default function FilterParams(props) {
     function clickAddFilter() {
         const emptyFilter = {
             colName: '',
-            comparator: 'gt',
+            comparator: 'eq',
             removeSelected: false,
             compareToValue: ''
         }
@@ -53,6 +53,20 @@ export default function FilterParams(props) {
         let newRemove = [...remove]
         newRemove[idx] = value
         setRemove(newRemove)
+    }
+
+    function getCompOptions(selColName){
+        const selHead = props.commonResult.headers.find(h => h.name === selColName)
+        const charType = (selHead && selHead.type === "CHARACTER") ? true : false
+
+        return <>
+            {!charType && <Option key={"gt"} value={"gt"}>{">"}</Option>}
+            {!charType && <Option key={"sd"} value={"sd"}>{"<"}</Option>}
+            <Option key={"eq"} value={"eq"}>{"=="}</Option>
+            <Option key={"not"} value={"not"}>{"!="}</Option>
+            {!charType && <Option key={"ge"} value={"ge"}>{">="}</Option>}
+            {!charType && <Option key={"se"} value={"se"}>{"<="}</Option>}
+        </>
     }
 
     function changeCompareVal(idx, e){
@@ -82,25 +96,22 @@ export default function FilterParams(props) {
                     value={filter.colName}
                     onChange={(v) => multiSelect(idx,"colName", v)}
                     size={"small"}
-                    style={{width: 250}}
+                    style={{width: 300}}
                     showSearch={true}
                     filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        option.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                 >
                     {props.commonResult.headers.map((n, i) => {
-                        return <Option key={i} value={n.name}>{n.name}</Option>
+                        const myTag = n.type === "CHARACTER" ? <Tag style={{float: "right"}} color={"gold"}>Char</Tag> : <Tag style={{float: "right"}} color={"green"}>Num</Tag>
+
+                        return <Option key={i} value={n.name}>{n.name} {myTag}</Option>
                     })}
                 </Select>
             </Col>
             <Col>
                 <Select value={filter.comparator} onChange={(v) => multiSelect(idx, "comparator", v)} size={"small"} style={{width: 60}}>
-                    <Option key={"gt"} value={"gt"}>{">"}</Option>
-                    <Option key={"sd"} value={"sd"}>{"<"}</Option>
-                    <Option key={"eq"} value={"eq"}>{"=="}</Option>
-                    <Option key={"not"} value={"not"}>{"!="}</Option>
-                    <Option key={"ge"} value={"ge"}>{">="}</Option>
-                    <Option key={"se"} value={"se"}>{"<="}</Option>
+                    {getCompOptions(filter.colName)}
                 </Select>
             </Col>
             <Col>
