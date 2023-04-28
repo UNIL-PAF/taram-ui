@@ -1,9 +1,5 @@
-import {isInteger} from "lodash";
-
 export const formNum = (n) => {
-    if(n === 0) {
-        return n
-    } else if(isInteger(n)){
+    if(typeof(n) !== "number" || n === 0) {
         return n
     } else if(Math.abs(n) > 1e4){
         return n.toExponential(3)

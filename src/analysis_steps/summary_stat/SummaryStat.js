@@ -1,13 +1,26 @@
 import React, {useState} from "react";
-import {Card, Col, Row} from "antd";
+import {Card} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {formNum} from "../../common/NumberFormatting"
+import "../AnalysisStep.css"
 
 export default function SummaryStat(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
+
+    const plotTr = (name, field) => {
+        const l = results[field].map((a, i) => {
+            const v = typeof (a) === "number" ? formNum(a) : a
+            return <td className={"sum-table-cell"} key={i}>{v}</td>
+        })
+
+        return <tr key={field}>
+            <th>{name}</th>
+            {l}
+        </tr>
+    }
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -31,18 +44,24 @@ export default function SummaryStat(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
-                    <Col span={12}>
-                        <Row><span><strong>Min: </strong>{formNum(results.min)}</span></Row>
-                        <Row><span><strong>Max: </strong>{formNum(results.max)}</span></Row>
-                        <Row><span><strong>Number of NaN: </strong>{results.nrNans}</span></Row>
-                    </Col>
-                    <Col span={12}>
-                        <Row><span><strong>Mean: </strong>{formNum(results.mean)}</span></Row>
-                        <Row><span><strong>Median: </strong>{formNum(results.median)}</span></Row>
-                        <Row><span><strong>Sum: </strong>{formNum(results.sum)}</span></Row>
-                    </Col>
-                </Row>}
+                <div>
+                    <table>
+                        <tbody>
+                        {plotTr("Name", "expNames")}
+                        {plotTr("Group", "groups")}
+                        {plotTr("Min", "min")}
+                        {plotTr("Max", "max")}
+                        {plotTr("Mean", "mean")}
+                        {plotTr("Median", "median")}
+                        {plotTr("Sum", "sum")}
+                        {plotTr("Std dev", "stdDev")}
+                        {plotTr("Std err", "stdErr")}
+                        {plotTr("Coef of var", "coefOfVar")}
+                        </tbody>
+                    </table>
+
+                </div>
+            }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
