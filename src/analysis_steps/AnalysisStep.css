@@ -54,3 +54,7 @@
 .sum-table-cell {
     padding-left: 20px;
 }
+
+.sum-table-zoom {
+    width: 100%;
+}

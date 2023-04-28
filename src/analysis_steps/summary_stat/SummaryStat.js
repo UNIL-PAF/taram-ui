@@ -1,26 +1,18 @@
 import React, {useState} from "react";
-import {Card} from "antd";
+import {Button, Card} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {formNum} from "../../common/NumberFormatting"
 import "../AnalysisStep.css"
+import {FullscreenOutlined} from "@ant-design/icons";
+import SummaryTableZoom from "./SummaryTableZoom";
+import SummaryTable from "./SummaryTable";
 
 export default function SummaryStat(props) {
+    const [showZoom, setShowZoom] = useState(null)
+
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
-
-    const plotTr = (name, field) => {
-        const l = results[field].map((a, i) => {
-            const v = typeof (a) === "number" ? formNum(a) : a
-            return <td className={"sum-table-cell"} key={i}>{v}</td>
-        })
-
-        return <tr key={field}>
-            <th>{name}</th>
-            {l}
-        </tr>
-    }
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -45,25 +37,16 @@ export default function SummaryStat(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <div>
-                    <table>
-                        <tbody>
-                        {plotTr("Name", "expNames")}
-                        {plotTr("Group", "groups")}
-                        {plotTr("Min", "min")}
-                        {plotTr("Max", "max")}
-                        {plotTr("Mean", "mean")}
-                        {plotTr("Median", "median")}
-                        {plotTr("Sum", "sum")}
-                        {plotTr("Std dev", "stdDev")}
-                        {plotTr("Std err", "stdErr")}
-                        {plotTr("Coef of var", "coefOfVar")}
-                        {plotTr("Nr of valid", "nrValid")}
-                        </tbody>
-                    </table>
-
+                    <div style={{textAlign: 'right'}}>
+                        <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                                icon={<FullscreenOutlined/>}>Expand</Button>
+                    </div>
+                    <SummaryTable results={results}></SummaryTable>
                 </div>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {results && <SummaryTableZoom showZoom={showZoom} setShowZoom={setShowZoom}
+                                     results={results} stepId={props.data.id} stepNr={props.data.nr}></SummaryTableZoom>}
         </Card>
     );
 }
