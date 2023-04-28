@@ -36,14 +36,14 @@ export default function LogTransformation(props) {
             {results &&
                 <Row>
                     <Col span={8}>
-                        <Row><span><strong>Min: </strong>{formNum(results.min)}</span></Row>
-                        <Row><span><strong>Max: </strong>{formNum(results.max)}</span></Row>
-                        <Row><span><strong>Number of NaN: </strong>{results.nrNans}</span></Row>
+                        <Row><span><strong>Min: </strong>{results.min && formNum(results.min[0])}</span></Row>
+                        <Row><span><strong>Max: </strong>{results.max && formNum(results.max[0])}</span></Row>
+                        <Row><span><strong>Nr of NaN: </strong>{results.nrNaN && formNum(results.nrNaN[0])}</span></Row>
                     </Col>
                     <Col span={8}>
-                        <Row><span><strong>Mean: </strong>{formNum(results.mean)}</span></Row>
-                        <Row><span><strong>Median: </strong>{formNum(results.median)}</span></Row>
-                        <Row><span><strong>Sum: </strong>{formNum(results.sum)}</span></Row>
+                        <Row><span><strong>Mean: </strong>{results.mean && formNum(results.mean[0])}</span></Row>
+                        <Row><span><strong>Median: </strong>{results.median && formNum(results.median[0])}</span></Row>
+                        <Row><span><strong>Sum: </strong>{results.sum && formNum(results.sum[0])}</span></Row>
                     </Col>
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>

@@ -57,6 +57,7 @@ export default function SummaryStat(props) {
                         {plotTr("Std dev", "stdDev")}
                         {plotTr("Std err", "stdErr")}
                         {plotTr("Coef of var", "coefOfVar")}
+                        {plotTr("Nr of valid", "nrValid")}
                         </tbody>
                     </table>
 
