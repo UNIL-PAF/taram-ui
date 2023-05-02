@@ -3,6 +3,7 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {prepareTTestParams} from "./TTestPrepareParams"
+import {getStepTitle} from "../CommonStep";
 
 export default function TTest(props) {
     const params = JSON.parse(props.data.parameters)
@@ -17,7 +18,7 @@ export default function TTest(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - t-test"}
+              title={getStepTitle(props.data.nr, "t-test", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

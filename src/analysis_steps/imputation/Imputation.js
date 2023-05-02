@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {getStepTitle} from "../CommonStep";
 
 export default function Imputation(props) {
     const params = JSON.parse(props.data.parameters)
@@ -26,7 +27,7 @@ export default function Imputation(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Imputation"}
+              title={getStepTitle(props.data.nr, "Imputation", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

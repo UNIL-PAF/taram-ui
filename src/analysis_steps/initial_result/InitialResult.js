@@ -6,6 +6,7 @@ import DefineGroupsParams from "./DefineGroupsParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
+import {getStepTitle} from "../CommonStep";
 
 export default function InitialResult(props) {
     const {Option} = Select;
@@ -135,7 +136,7 @@ export default function InitialResult(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Initial result"}
+              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -169,9 +170,6 @@ export default function InitialResult(props) {
                     {results && results.maxQuantParameters &&
                         <span><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}
                 </span>}
-                </Row>
-                <Row className={"analysis-step-row"}>
-                    <span><strong>Protein groups: </strong>{results && results.nrProteinGroups}</span>
                 </Row>
                 { results.fastaFiles &&
                     <Row className={"analysis-step-row"}>

@@ -3,7 +3,7 @@ import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {replacePlotIfChanged} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged} from "../CommonStep";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
@@ -169,7 +169,7 @@ export default function ScatterPlot(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Scatter plot"}
+              title={getStepTitle(props.data.nr, "Scatter plot", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}

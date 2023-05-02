@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Card, Row, Col} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {getStepTitle} from "../CommonStep";
 
 export default function RemoveImputed(props) {
     const params = JSON.parse(props.data.parameters)
@@ -11,7 +12,7 @@ export default function RemoveImputed(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Remove imputed"}
+              title={getStepTitle(props.data.nr, "Remove imputed", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

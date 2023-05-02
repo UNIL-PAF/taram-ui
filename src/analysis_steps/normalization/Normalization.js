@@ -3,6 +3,7 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {formNum} from "../../common/NumberFormatting";
+import {getStepTitle} from "../CommonStep";
 
 export default function Normalization(props) {
     const params = JSON.parse(props.data.parameters)
@@ -18,7 +19,7 @@ export default function Normalization(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Normalization"}
+              title={getStepTitle(props.data.nr, "Normalization", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

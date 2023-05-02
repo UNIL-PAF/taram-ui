@@ -7,7 +7,7 @@ import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
-import {replacePlotIfChanged} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged} from "../CommonStep";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -260,7 +260,7 @@ export default function VolcanoPlot(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Volcano plot"}
+              title={getStepTitle(props.data.nr, "Volcano plot", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}

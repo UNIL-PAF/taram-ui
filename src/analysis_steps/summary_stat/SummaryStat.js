@@ -6,6 +6,7 @@ import "../AnalysisStep.css"
 import {FullscreenOutlined} from "@ant-design/icons";
 import SummaryTableZoom from "./SummaryTableZoom";
 import SummaryTable from "./SummaryTable";
+import {getStepTitle} from "../CommonStep";
 
 export default function SummaryStat(props) {
     const [showZoom, setShowZoom] = useState(null)
@@ -17,7 +18,7 @@ export default function SummaryStat(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Summary"}
+              title={getStepTitle(props.data.nr, "Summary", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

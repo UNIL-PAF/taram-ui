@@ -3,6 +3,7 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {CheckOutlined} from "@ant-design/icons";
+import {getStepTitle} from "../CommonStep";
 
 export default function Filter(props) {
     const params = JSON.parse(props.data.parameters)
@@ -28,7 +29,7 @@ export default function Filter(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Filter rows"}
+              title={getStepTitle(props.data.nr, "Filter rows", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -49,7 +50,6 @@ export default function Filter(props) {
             {results &&
                 <Row className={"analysis-step-row"}>
                     <Col span={16}>
-                        <p><strong>Protein groups:</strong> {results.nrRows}</p>
                         <p><strong>Removed: </strong>{results.nrRowsRemoved}</p>
                     </Col>
                     <Col span={8}>

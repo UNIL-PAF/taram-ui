@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
+import {getStepTitle} from "../CommonStep";
 
 export default function GroupFilter(props) {
     const params = JSON.parse(props.data.parameters)
@@ -19,7 +20,7 @@ export default function GroupFilter(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={props.data.nr + " - Filter on valid"}
+              title={getStepTitle(props.data.nr, "Filter on valid", props.data.nrProteinGroups)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -40,10 +41,7 @@ export default function GroupFilter(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row className={"analysis-step-row"}>
-                    <Col span={8}>
-                        <span><strong>Protein groups: </strong>{results.nrRows}</span>
-                    </Col>
-                    <Col span={8}>
+                    <Col span={16}>
                         <span><strong>Removed: </strong>{results.nrRowsRemoved}</span>
                     </Col>
                     <Col span={8}>
