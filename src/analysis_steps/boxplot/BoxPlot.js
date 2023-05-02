@@ -179,6 +179,7 @@ export default function BoxPlot(props) {
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
+                className={"analysis-step-row"}
                 onChange={checkboxChange} checked={localParams && localParams.groupByCondition}>Group by condition
             </Checkbox>
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}

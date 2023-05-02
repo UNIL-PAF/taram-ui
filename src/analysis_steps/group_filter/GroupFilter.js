@@ -39,7 +39,7 @@ export default function GroupFilter(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
+                <Row className={"analysis-step-row"}>
                     <Col span={8}>
                         <span><strong>Protein groups: </strong>{results.nrRows}</span>
                     </Col>

@@ -47,10 +47,10 @@ export default function Filter(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
+                <Row className={"analysis-step-row"}>
                     <Col span={16}>
-                        <p>Protein groups: <strong>{results.nrRows}</strong></p>
-                        <p>Removed: <strong>{results.nrRowsRemoved}</strong></p>
+                        <p><strong>Protein groups:</strong> {results.nrRows}</p>
+                        <p><strong>Removed: </strong>{results.nrRowsRemoved}</p>
                     </Col>
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>

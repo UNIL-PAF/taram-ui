@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Modal, Row, Select, Space, Col} from 'antd';
+import {Button, Card, Col, Modal, Row, Select} from 'antd';
 import AnalysisStepMenu from "../menus/AnalysisStepMenu"
 import StepComment from "../StepComment";
 import DefineGroupsParams from "./DefineGroupsParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
+import "../AnalysisStep.css"
 
 export default function InitialResult(props) {
     const {Option} = Select;
@@ -148,41 +149,41 @@ export default function InitialResult(props) {
                               isSelected={props.isSelected}
                               hasImputed={false}/>
         }>
-            <Space direction={'vertical'}>
+            <div>
                 <Row>
                     <Button onClick={() => changGroups()}
                             danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
-                            type={'primary'}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
+                            type={'primary'} size={"small"}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
                 </Row>
-                <Row>
-                <span>Default intensity column: <strong>
-                    <Select value={props.data.columnInfo.columnMapping.intCol}
+                <Row className={"analysis-step-row"}>
+                    <span><strong>Default intensity column: </strong>
+                    <Select className={"analysis-step-row"} value={props.data.columnInfo.columnMapping.intCol}
                             style={{width: 250}}
                             onChange={changeIntensity}>
                         {props.data.commonResult.numericalColumns.map((n, i) => {
                             return <Option key={i} value={i}>{n}</Option>
                         })}</Select>
-                </strong></span>
+                </span>
                 </Row>
-                <Row>
+                <Row className={"analysis-step-row"}>
                     {results && results.maxQuantParameters &&
-                        <span>Match between runs: <strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</strong>
+                        <span><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}
                 </span>}
                 </Row>
-                <Row>
-                    <span>Protein groups: <strong>{results && results.nrProteinGroups}</strong></span>
+                <Row className={"analysis-step-row"}>
+                    <span><strong>Protein groups: </strong>{results && results.nrProteinGroups}</span>
                 </Row>
                 { results.fastaFiles &&
-                    <Row>
-                        <Col>Fasta files:</Col>
+                    <Row className={"analysis-step-row"}>
+                        <Col><strong>Fasta files:</strong></Col>
                         <Col>
-                            {results.fastaFiles.map(f => {return <Row key={f}>&nbsp;<strong>{f}</strong></Row>})}
+                            {results.fastaFiles.map(f => {return <Row key={f}>&nbsp;{f}</Row>})}
                         </Col>
                     </Row>
                 }
                 <StepComment stepId={props.data.id} resultId={props.resultId}
                              comment={props.data.comments}></StepComment>
-            </Space>
+            </div>
             <Modal visible={showModal} onOk={() => handleGroupModalOk()}
                    onCancel={() => changGroups()} width={1000}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}

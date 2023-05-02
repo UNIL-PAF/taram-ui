@@ -38,7 +38,7 @@ export default function Normalization(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
+                <Row className={"analysis-step-row"}>
                     <Col span={8}>
                         <Row><span><strong>Min: </strong>{results.min && formNum(results.min[0])}</span></Row>
                         <Row><span><strong>Max: </strong>{results.max && formNum(results.max[0])}</span></Row>

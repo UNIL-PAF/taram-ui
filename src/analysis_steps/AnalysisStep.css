@@ -53,8 +53,13 @@
 
 .sum-table-cell {
     padding-left: 20px;
+    font-size: small;
 }
 
 .sum-table-zoom {
     width: 100%;
+}
+
+.analysis-step-row {
+    font-size: small;
 }

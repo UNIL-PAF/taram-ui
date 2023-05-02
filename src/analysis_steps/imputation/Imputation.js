@@ -46,9 +46,9 @@ export default function Imputation(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
+                <Row className={"analysis-step-row"}>
                     <Col span={16}>
-                        <p>Nr imputed: <strong>{results.nrImputedValues}</strong></p>
+                        <p><strong>Nr imputed: </strong>{results.nrImputedValues}</p>
                     </Col>
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>

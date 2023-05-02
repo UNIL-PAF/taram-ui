@@ -38,12 +38,12 @@ export default function TTest(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row>
+                <Row className={"analysis-step-row"}>
                     <Col span={16}>
-                        <h3>Nr of significant results:</h3>
+                        <h4>Nr of significant results:</h4>
                         {results.comparisions.map((comp, i) => {
                             return <p
-                                key={i}>{comp.firstGroup} - {comp.secondGroup} : <strong>{comp.numberOfSignificant}</strong>
+                                key={i}><strong>{comp.firstGroup} - {comp.secondGroup}:</strong> {comp.numberOfSignificant}
                             </p>
                         })}
                     </Col>

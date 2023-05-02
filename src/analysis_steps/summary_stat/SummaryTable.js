@@ -12,7 +12,7 @@ export default function SummaryTable(props) {
         })
 
         return <tr key={field}>
-            <th>{name}</th>
+            <th className={"analysis-step-row"}>{name}</th>
             {l}
         </tr>
     }
