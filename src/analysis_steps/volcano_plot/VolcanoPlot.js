@@ -59,18 +59,19 @@ export default function VolcanoPlot(props) {
 
     const getOptions = (results, mySelProts) => {
         const params = JSON.parse(props.data.parameters)
+        const qValExists = results.data[0].qVal !== undefined
 
         // we set the default selProts
         const defSelProts = (mySelProts ? mySelProts : params.selProteins)
 
         const dataWithLabel = results.data.filter(d => {
-            return params.useAdjustedPVal ? d.qVal : d.pVal
+            return (params.useAdjustedPVal && qValExists) ? d.qVal : d.pVal
         }).map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
             return {...d, showLab: showLab}
         })
 
-        const valueName = params.useAdjustedPVal ? "q-value" : "p-value"
+        const valueName = (params.useAdjustedPVal && qValExists) ? "q-value" : "p-value"
         const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
 
         const opts = {
@@ -99,7 +100,7 @@ export default function VolcanoPlot(props) {
                         return "Gene: <strong>" + myParams.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + myParams.data.prot + "</strong><br>" +
                             "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
-                            "q-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" +
+                            (myParams.data.qVal ? "q-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
                             "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong>"
                     }
                 },
@@ -112,13 +113,13 @@ export default function VolcanoPlot(props) {
                 {
                     transform: {
                         type: 'filter',
-                        config: {dimension: params.useAdjustedPVal ? 'qIsSign' : 'isSign', value: true}
+                        config: {dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign', value: true}
                     }
                 },
                 {
                     transform: {
                         type: 'filter',
-                        config: {dimension: params.useAdjustedPVal ? 'qIsSign' : 'isSign', value: false}
+                        config: {dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign', value: false}
                     }
                 },
                 {
@@ -137,11 +138,11 @@ export default function VolcanoPlot(props) {
             ],
             legend: {
                 top: "10%",
-                data: ["Significant" + (params.useAdjustedPVal ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal) ? ["Significant q-values"] : [])
+                data: ["Significant" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Significant q-values"] : [])
             },
             series: [
                 {
-                    name: "Significant" + (params.useAdjustedPVal ? " q-values" : " p-values"),
+                    name: "Significant" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
                     label: {
                         show: false,
                     },
@@ -237,7 +238,7 @@ export default function VolcanoPlot(props) {
 
         const finalOpts = {
             ...opts,
-            series: ((!params.useAdjustedPVal && params.showQVal) ? opts.series.concat(qValSeries) : opts.series)
+            series: ((!params.useAdjustedPVal && params.showQVal && qValExists) ? opts.series.concat(qValSeries) : opts.series)
         }
 
         return finalOpts
