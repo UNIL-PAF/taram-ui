@@ -75,7 +75,11 @@ export default function VolcanoPlot(props) {
         const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
 
         const opts = {
-            title: {text: params.comparison.group1 + " - " + params.comparison.group2, left: "center"},
+            title: {
+                text: params.comparison.group1 + " - " + params.comparison.group2,
+                left: "center",
+                textStyle: {fontSize: 14}
+            },
             xAxis: {
                 name: props.data.commonResult.intColIsLog ? "Log2 fold change" : "Fold change",
                 nameLocation: "center",
@@ -205,7 +209,7 @@ export default function VolcanoPlot(props) {
                         position: 'right',
                         minMargin: 2,
                         fontWeight: 'bold',
-                        fontSize: 14
+                        fontSize: 12
                     },
                     symbolSize: 8,
                     itemStyle: {
