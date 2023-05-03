@@ -10,6 +10,7 @@ export default function EchartsZoom(props) {
             {props.echartsOptions &&
                 <div style={{height: '100%'}}>
                     <ReactECharts
+                        onEvents={props.onEvents}
                         option={{
                             ...props.echartsOptions, toolbox: {
                                 feature: {
