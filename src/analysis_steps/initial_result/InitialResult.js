@@ -136,7 +136,7 @@ export default function InitialResult(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups)}
+              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups, props.data.status === "done")}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
