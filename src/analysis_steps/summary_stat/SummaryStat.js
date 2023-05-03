@@ -36,7 +36,7 @@ export default function SummaryStat(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {results &&
+            {results && results.stdDev &&
                 <div>
                     <div style={{textAlign: 'right'}}>
                         <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
