@@ -179,6 +179,12 @@ export default function InitialResult(props) {
                         </Col>
                     </Row>
                 }
+                { results.softwareVersion &&
+                    <Row className={"analysis-step-row"}>
+                        <Col><strong>Version:</strong></Col>
+                        <Col>&nbsp;{results.softwareVersion}</Col>
+                    </Row>
+                }
                 <StepComment stepId={props.data.id} resultId={props.resultId}
                              comment={props.data.comments}></StepComment>
             </div>
