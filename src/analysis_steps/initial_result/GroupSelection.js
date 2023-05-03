@@ -18,7 +18,7 @@ export default function GroupSelection(props) {
 
     const changeGroupName = (groupId, groupName) => {
         const newCols = {...props.groupData}
-        newCols[groupId].name = groupName
+        newCols[groupId].name = groupName.trim()
         props.setGroupData(newCols)
     }
 
