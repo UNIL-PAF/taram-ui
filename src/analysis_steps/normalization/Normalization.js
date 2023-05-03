@@ -19,7 +19,7 @@ export default function Normalization(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Normalization", props.data.nrProteinGroups)}
+              title={getStepTitle(props.data.nr, "Normalization", props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

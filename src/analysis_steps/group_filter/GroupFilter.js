@@ -20,7 +20,7 @@ export default function GroupFilter(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Filter on valid", props.data.nrProteinGroups)}
+              title={getStepTitle(props.data.nr, "Filter on valid", props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

@@ -28,6 +28,9 @@ export function replacePlotIfChanged(stepId, results, options, dispatch){
     }
 }
 
-export function getStepTitle(nr, type, nrProteinGroups){
-    return <div><span style={{width: "100px"}}>{nr + " - " + type}</span><span style={{marginLeft: "30%", fontSize: "small"}}><strong>Protein groups:</strong> {nrProteinGroups}</span></div>
+export function getStepTitle(nr, type, nrProteinGroups, isDone){
+    return <div>
+        <span style={{width: "100px"}}>{nr + " - " + type}</span>
+        {isDone && <span style={{marginLeft: "30%", fontSize: "small"}}><strong>Protein groups:</strong> {nrProteinGroups}</span>}
+    </div>
 }
