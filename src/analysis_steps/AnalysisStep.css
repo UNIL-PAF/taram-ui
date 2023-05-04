@@ -53,11 +53,21 @@
 
 .sum-table-cell {
     padding-left: 20px;
+    padding-right: 10px;
     font-size: small;
+    white-space: nowrap;
+    border: 1px solid lightgrey;
 }
 
 .sum-table-zoom {
     width: 100%;
+}
+
+.sum-table-header {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: small;
+    border: 1px solid lightgrey;
 }
 
 .analysis-step-row {

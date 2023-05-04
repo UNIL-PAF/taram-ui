@@ -189,7 +189,7 @@ export default function InitialResult(props) {
                              comment={props.data.comments}></StepComment>
             </div>
             <Modal visible={showModal} onOk={() => handleGroupModalOk()}
-                   onCancel={() => changGroups()} width={1000}>
+                   onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}
                                     params={localParams}
                                     commonResult={props.data.commonResult}
