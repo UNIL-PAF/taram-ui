@@ -32,7 +32,7 @@ export default function Results(props) {
                 closable
             />}
             {newResultsId && <Navigate to={"/viewer/"+newResultsId} replace={true} />}
-            <Space direction="vertical">
+            <Space direction="vertical" style={{marginLeft: "20px", marginRight: "20px"}}>
                 <BrowseResults refreshResults={refreshResults}/>
                 <ResultsTable results={results} refreshResults={refreshResults}/>
             </Space>
