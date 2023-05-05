@@ -5,6 +5,9 @@ import {Button} from 'antd';
 
 export default function TTestGroupSelection(props) {
 
+    const maxNameLen = Math.max.apply(Math, props.columns.available.items.map(i => i.name.length))
+    const boxHeight = maxNameLen > 20 ? "60px" : "30px"
+
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
         const {source, destination} = result;
@@ -81,7 +84,7 @@ export default function TTestGroupSelection(props) {
             paddingTop: "4px",
             margin: "0 0 8px 0",
             minHeight: "30px",
-            height: "30px",
+            height: boxHeight,
             backgroundColor: itemColor(item),
             color: "white",
             borderRadius: "5px"
@@ -138,7 +141,8 @@ export default function TTestGroupSelection(props) {
                                                             : "whitesmoke",
                                                         padding: 4,
                                                         width: 150,
-                                                        minHeight: 400
+                                                        minHeight: 400,
+                                                        fontSize: "smaller"
                                                     }}
                                                 >
                                                     {column.items.map((item, index) => {
@@ -161,16 +165,24 @@ export default function TTestGroupSelection(props) {
                                                                                 <span style={{
                                                                                     color: "white",
                                                                                 }}>{item.name}
-                                                                                </span>
                                                                                 {columnId !== "available" && <Button
                                                                                     onClick={() => removeItem(column.id, item.id)}
                                                                                     style={{
                                                                                         float: "right",
                                                                                         marginRight: "4px",
-                                                                                        marginBottom: "4px"
+                                                                                        marginBottom: "4px",
+                                                                                        minWidth: "15px",
+                                                                                        width: "15px",
+                                                                                        height: "15px"
                                                                                     }} type="default" shape="circle"
-                                                                                    icon={<CloseOutlined/>}
+                                                                                    icon={<CloseOutlined style={{
+                                                                                        width: "12px",
+                                                                                        height: "12px",
+                                                                                        paddingLeft: "1px",
+                                                                                        paddingBottom: "6px"
+                                                                                    }}/>}
                                                                                     size={"small"}/>}
+                                                                                    </span>
                                                                             </div>
                                                                             {columnId === "available" && snapshot.isDragging &&
                                                                                 <div style={myStyle}><span style={{
