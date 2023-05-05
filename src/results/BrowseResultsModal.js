@@ -6,10 +6,12 @@ import {useDispatch} from "react-redux";
 
 const { Option } = Select;
 
-const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) => {
+const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs, setSelFile, selFile }) => {
     const [form] = Form.useForm();
 
     const [fltDirs, setFltDirs] = useState(availableDirs);
+    const [resultFiles, setResultFiles] = useState(availableDirs);
+
     const initialType = "MaxQuant"
 
     useEffect(() => {
@@ -20,6 +22,12 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
 
     const onChangeType = (e) => {
         setFltDirs(availableDirs.filter((a) => a.type === e.target.value))
+    }
+
+    const selectDir = (e) => {
+        const resDir = fltDirs[e]
+        setSelFile(resDir.resFile)
+        setResultFiles(resDir.resFileList.map( (f, i) => { return {value: f, label: f}}))
     }
 
     return (
@@ -62,6 +70,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                 >
                     <Select
                         placeholder="Select a directory from NAS"
+                        onSelect={selectDir}
                         showSearch
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -74,6 +83,16 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
                         }
                     </Select>
                 </Form.Item>
+                <Select
+                    placeholder="Select a result file"
+                    style={{width: "50%"}}
+                    options={resultFiles}
+                    value={selFile}
+                    onSelect={setSelFile}
+                >
+                </Select>
+                <br></br>
+                <br></br>
                 <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={initialType}>
                     <Radio.Group onChange={onChangeType}>
                         <Radio value="MaxQuant">MaxQuant</Radio>
@@ -103,14 +122,16 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs }) =>
 export function BrowseResultsModal({buttonText, refreshResults}){
     const [visible, setVisible] = useState(false);
     const [availableDirs, setAvailableDirs] = useState();
+    const [selFile, setSelFile] = useState();
     const dispatch = useDispatch();
 
     const onCreate = (values) => {
         const selDir = availableDirs.filter((a) => a.type === values.type)[values.resDir]
         let localVals = values
         localVals.path = selDir.path
-        localVals.resFile = selDir.resFile
+        localVals.resFile = selFile
         localVals.fileCreationDate = selDir.fileCreationDate
+
         dispatch(addResult(localVals))
         setVisible(false);
     };
@@ -124,6 +145,8 @@ export function BrowseResultsModal({buttonText, refreshResults}){
                 {buttonText}
             </Button>
             <CollectionCreateForm
+                setSelFile={setSelFile}
+                selFile={selFile}
                 visible={visible}
                 onCreate={onCreate}
                 onCancel={() => {

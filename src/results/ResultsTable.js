@@ -33,6 +33,12 @@ export default function ResultsTable(props) {
             key: 'path',
         },
         {
+            title: 'Result file',
+            dataIndex: 'resFile',
+            key: 'resFile',
+            ellipsis: true
+        },
+        {
             title: 'Creation date',
             dataIndex: 'lastModifDate',
             key: 'lastModifDate',
