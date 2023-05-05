@@ -1,129 +1,160 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, Input, Modal, Radio, Select} from 'antd';
+import {Button, Form, Input, Modal, Radio, Select, Spin, Alert} from 'antd';
 import {addResult, getAvailableDirs} from "./BackendResults"
 import _ from "lodash"
 import {useDispatch} from "react-redux";
 
-const { Option } = Select;
+const {Option} = Select;
 
-const CollectionCreateForm = ({ visible, onCreate, onCancel, availableDirs, setSelFile, selFile }) => {
+const CollectionCreateForm = (props) => {
     const [form] = Form.useForm();
 
-    const [fltDirs, setFltDirs] = useState(availableDirs);
-    const [resultFiles, setResultFiles] = useState(availableDirs);
+    const [fltDirs, setFltDirs] = useState(props.availableDirs);
+    const [resultFiles, setResultFiles] = useState(props.availableDirs);
 
     const initialType = "MaxQuant"
 
     useEffect(() => {
-        if(availableDirs){
-            setFltDirs(availableDirs.filter((a) => a.type === initialType))
+        if (props.availableDirs) {
+            setFltDirs(props.availableDirs.filter((a) => a.type === initialType))
         }
-    }, [availableDirs])
+    }, [props.availableDirs])
 
     const onChangeType = (e) => {
-        setFltDirs(availableDirs.filter((a) => a.type === e.target.value))
+        setFltDirs(props.availableDirs.filter((a) => a.type === e.target.value))
     }
 
     const selectDir = (e) => {
         const resDir = fltDirs[e]
-        setSelFile(resDir.resFile)
-        setResultFiles(resDir.resFileList.map( (f, i) => { return {value: f, label: f}}))
+        props.setSelFile(resDir.resFile)
+        setResultFiles(resDir.resFileList.map((f, i) => {
+            return {value: f, label: f}
+        }))
     }
+
+    const isDisabled = props.status !== "done"
+//<Button style={"primary"} onClick={() => props.refreshData()}>Sync with NAS</Button>
+    const title = <div>Add a new analysis<Button style={{marginLeft: "30px"}} type="primary" onClick={() => props.refreshData()}>Sync with NAS</Button></div>
 
     return (
         <Modal
-            visible={visible}
-            title="Add a new analysis"
+            visible={props.visible}
+            title={title}
             okText="Add"
             cancelText="Cancel"
             width={1000}
-            onCancel={onCancel}
+            onCancel={props.onCancel}
             onOk={() => {
                 form
                     .validateFields()
                     .then((values) => {
                         form.resetFields();
-                        onCreate(values);
+                        props.onCreate(values);
                     })
                     .catch((info) => {
                         console.log('Validate Failed:', info);
                     });
             }}
         >
-            <Form
-                form={form}
-                layout="vertical"
-                name="form_in_modal"
-                initialValues={{
-                    modifier: 'public',
-                }}
-            >
-                <Form.Item
-                    name="resDir"
-                    label="Result directory"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please select a directory.',
-                        },
-                    ]}
+            <div>
+                {props.status === "loading" &&
+                    <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                        <div className="content"/>
+                    </Spin>
+                }
+                {
+                    props.status === "error" &&
+                    <Alert
+                        message="An error occured while trying to check for available results."
+                        type="error"
+                        closable
+                        style={{marginLeft: "20px"}}
+                    />
+                }
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="form_in_modal"
+                    initialValues={{
+                        modifier: 'public',
+                    }}
                 >
-                    <Select
-                        placeholder="Select a directory from NAS"
-                        onSelect={selectDir}
-                        showSearch
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+                    <Form.Item
+                        name="resDir"
+                        label="Result directory"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please select a directory.',
+                            },
+                        ]}
                     >
-                        {
-                            _.map(fltDirs, (dir, i) => {
-                                return <Option key={i} value={i}>{dir.path}</Option>
-                            })
-                        }
+                        <Select
+                            disabled={isDisabled}
+                            placeholder="Select a directory from NAS"
+                            onSelect={selectDir}
+                            showSearch
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            {
+                                _.map(fltDirs, (dir, i) => {
+                                    return <Option key={i} value={i}>{dir.path}</Option>
+                                })
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Select
+                        disabled={isDisabled}
+                        placeholder="Select a result file"
+                        style={{width: "50%"}}
+                        options={resultFiles}
+                        value={props.selFile}
+                        onSelect={props.setSelFile}
+                    >
                     </Select>
-                </Form.Item>
-                <Select
-                    placeholder="Select a result file"
-                    style={{width: "50%"}}
-                    options={resultFiles}
-                    value={selFile}
-                    onSelect={setSelFile}
-                >
-                </Select>
-                <br></br>
-                <br></br>
-                <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={initialType}>
-                    <Radio.Group onChange={onChangeType}>
-                        <Radio value="MaxQuant">MaxQuant</Radio>
-                        <Radio value="Spectronaut">Spectronaut</Radio>
-                    </Radio.Group>
-                </Form.Item>
-                <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please specify a name for the analysis.',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item name="description" label="Description">
-                    <Input type="textarea" />
-                </Form.Item>
-            </Form>
+                    <br></br>
+                    <br></br>
+                    <Form.Item name="type" className="collection-create-form_last-form-item" initialValue={initialType}>
+                        <Radio.Group onChange={onChangeType} disabled={isDisabled}>
+                            <Radio value="MaxQuant">MaxQuant</Radio>
+                            <Radio value="Spectronaut">Spectronaut</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item
+                        name="name"
+                        label="Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please specify a name for the analysis.',
+                            },
+                        ]}
+                    >
+                        <Input disabled={isDisabled}/>
+                    </Form.Item>
+                    <Form.Item name="description" label="Description">
+                        <Input type="textarea" disabled={isDisabled}/>
+                    </Form.Item>
+                </Form>
+            </div>
         </Modal>
+
     );
 };
 
-export function BrowseResultsModal({buttonText, refreshResults}){
+export function BrowseResultsModal({buttonText, refreshResults}) {
+
+    const [selFile, setSelFile] = useState();
     const [visible, setVisible] = useState(false);
     const [availableDirs, setAvailableDirs] = useState();
-    const [selFile, setSelFile] = useState();
+    const [status, setStatus] = useState();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        getAvailableDirs(setVisible, setAvailableDirs, setStatus)
+    }, [])
 
     const onCreate = (values) => {
         const selDir = availableDirs.filter((a) => a.type === values.type)[values.resDir]
@@ -138,17 +169,21 @@ export function BrowseResultsModal({buttonText, refreshResults}){
 
     return (
         <div>
-            <Button
-                type="primary"
-                onClick={() => getAvailableDirs(setVisible,setAvailableDirs)}
-            >
-                {buttonText}
-            </Button>
+            <span style={{display: "inline-flex"}}>
+                    <Button
+                        type="primary"
+                        onClick={() => setVisible(true)}
+                    >
+                        {buttonText}
+                    </Button>
+            </span>
             <CollectionCreateForm
+                status={status}
                 setSelFile={setSelFile}
                 selFile={selFile}
                 visible={visible}
                 onCreate={onCreate}
+                refreshData={() => getAvailableDirs(setVisible, setAvailableDirs, setStatus)}
                 onCancel={() => {
                     setVisible(false);
                 }}

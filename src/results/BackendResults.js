@@ -2,7 +2,8 @@ import axios from 'axios';
 import globalConfig from "../globalConfig";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 
-function getAvailableDirs(setVisible, setAvailableDirs){
+function getAvailableDirs(setVisible, setAvailableDirs, setStatus){
+    setStatus("loading")
     axios.get(globalConfig.urlBackend + "result/available-dirs")
         .then((response) => {
             // handle success
@@ -11,12 +12,13 @@ function getAvailableDirs(setVisible, setAvailableDirs){
                 r.key = r.id
                 return r
             })
-            setVisible(true)
             setAvailableDirs(results)
+            setStatus("done")
         })
         .catch(function (error) {
             // handle error
             console.log(error);
+            setStatus("error")
         })
         .then(function () {
             // always executed
