@@ -83,7 +83,7 @@ export default function ScatterPlot(props) {
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
 
         const options = {
-            title: {text: params.xAxis + " - " + params.yAxis, left: "center"},
+            title: {text: params.xAxis + " - " + params.yAxis, left: "center", textStyle: {fontSize: 14}},
             dataset: [
                 {
                     dimensions: ["x", "y", "name", "col"],
@@ -93,7 +93,7 @@ export default function ScatterPlot(props) {
                 }
             ],
             xAxis: {
-                name: intCol + " " + params.xAxis,
+                name: params.xAxis,
                 nameLocation: "center",
                 nameTextStyle: {
                     padding: [8, 4, 5, 6],
@@ -109,7 +109,7 @@ export default function ScatterPlot(props) {
                 max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
             },
             yAxis: {
-                name: intCol + " " + params.yAxis,
+                name: params.yAxis,
                 nameLocation: "center",
                 nameTextStyle: {
                     padding: [8, 4, 45, 6],
@@ -201,7 +201,7 @@ export default function ScatterPlot(props) {
                 <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
-                                     paramType={type} stepId={props.data.id}></EchartsZoom>}
+                                     paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
 }

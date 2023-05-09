@@ -22,7 +22,7 @@ export default function EchartsZoom(props) {
                             }
                         }}
                         style={{
-                            height: '100%',
+                            height: props.minHeight ? props.minHeight : '100%',
                             width: '100%',
                         }}
                     />

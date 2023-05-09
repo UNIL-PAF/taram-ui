@@ -195,7 +195,7 @@ export default function BoxPlot(props) {
             </Checkbox>
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id}></EchartsZoom>}
+            {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
 }

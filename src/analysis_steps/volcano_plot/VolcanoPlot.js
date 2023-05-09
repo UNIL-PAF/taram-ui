@@ -300,7 +300,7 @@ export default function VolcanoPlot(props) {
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
-                                     paramType={type} stepId={props.data.id} onEvents={onEvents}></EchartsZoom>}
+                                     paramType={type} stepId={props.data.id} onEvents={onEvents} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
 }
