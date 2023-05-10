@@ -13,6 +13,7 @@ export default function EchartsZoom(props) {
                         onEvents={props.onEvents}
                         option={{
                             ...props.echartsOptions, toolbox: {
+                                right: 40,
                                 feature: {
                                     dataZoom: {},
                                     saveAsImage: {

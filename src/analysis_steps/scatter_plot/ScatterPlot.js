@@ -19,9 +19,8 @@ export default function ScatterPlot(props) {
 
     useEffect(() => {
         if(localParams && props.data && props.data.status === 'done'){
-            const intCol = localParams.column || props.data.columnInfo.columnMapping.intCol
             const results = JSON.parse(props.data.results)
-            const echartOptions = getOptions(results, localParams, intCol)
+            const echartOptions = getOptions(results, localParams)
             setOptions({...options, data: echartOptions})
             replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
         }
@@ -35,8 +34,7 @@ export default function ScatterPlot(props) {
 
             if (isWaiting && props.data.status === 'done') {
                 const results = JSON.parse(props.data.results)
-                const intCol = params.column || props.data.columnInfo.columnMapping.intCol
-                const echartOptions = getOptions(results, params, intCol)
+                const echartOptions = getOptions(results, params)
                 replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
@@ -78,7 +76,7 @@ export default function ScatterPlot(props) {
         }, [undefined, undefined])
     }
 
-    const getOptions = (results, params, intCol) => {
+    const getOptions = (results, params) => {
         const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
 
@@ -105,8 +103,8 @@ export default function ScatterPlot(props) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-                min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
-                max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
+               // min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
+               // max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
             },
             yAxis: {
                 name: params.yAxis,
@@ -121,8 +119,8 @@ export default function ScatterPlot(props) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-                min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
-                max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
+               // min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
+               // max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
             },
             tooltip: {
                 showDelay: 0,
