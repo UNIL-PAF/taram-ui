@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
+import {getNumCols} from "../CommonStep";
 
 const {Option} = Select;
 
 export default function GroupFilterParams(props) {
 
-    const numCols = props.commonResult.numericalColumns
+    const numCols = getNumCols(props.commonResult.headers)
     const [useDefaultCol, setUseDefaultCol] = useState()
 
     useEffect(() => {

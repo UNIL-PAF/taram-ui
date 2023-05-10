@@ -3,13 +3,14 @@ import {Checkbox, Select, Space, Divider} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
+import {getNumCols} from "../CommonStep";
 
 const {Option} = Select;
 
 export default function BoxPlotParams(props) {
 
     const [useDefaultCol, setUseDefaultCol] = useState()
-    const numCols = props.commonResult.numericalColumns
+    const numCols = getNumCols(props.commonResult.headers)
     const proteinTable = useSelector(state => state.proteinTable.data)
     const proteinTableError = useSelector(state => state.proteinTable.error)
     const dispatch = useDispatch();

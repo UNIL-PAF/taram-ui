@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
 import TTestGroupSelection from "./TTestGroupSelection"
+import {getNumCols} from "../CommonStep";
 
 const {Option} = Select;
 
 export default function TTestParams(props) {
 
-    const numCols = props.commonResult.numericalColumns
+    const numCols = getNumCols(props.commonResult.headers)
     const intCol = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()
 

@@ -6,7 +6,7 @@ import DefineGroupsParams from "./DefineGroupsParams";
 import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
-import {getStepTitle} from "../CommonStep";
+import {getNumCols, getStepTitle} from "../CommonStep";
 
 export default function InitialResult(props) {
     const {Option} = Select;
@@ -19,7 +19,7 @@ export default function InitialResult(props) {
 
     const results = JSON.parse(props.data.results)
     const colInfo = props.data.columnInfo
-    const numCols = props.data.commonResult.numericalColumns
+    const numCols = getNumCols(props.data.commonResult.headers)
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
     const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some(a => a.group)
 
@@ -161,7 +161,7 @@ export default function InitialResult(props) {
                     <Select className={"analysis-step-row"} value={props.data.columnInfo.columnMapping.intCol}
                             style={{width: 250}}
                             onChange={changeIntensity}>
-                        {props.data.commonResult.numericalColumns.map((n, i) => {
+                        {numCols.map((n, i) => {
                             return <Option key={i} value={i}>{n}</Option>
                         })}</Select>
                 </span>

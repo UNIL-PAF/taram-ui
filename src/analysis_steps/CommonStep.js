@@ -34,3 +34,11 @@ export function getStepTitle(nr, type, nrProteinGroups, isDone){
         {isDone && <span style={{marginLeft: "30%", fontSize: "small"}}>{nrProteinGroups} protein groups</span>}
     </div>
 }
+
+export function getNumCols(headers){
+    function onlyUnique(value, index, array) {
+        return array.indexOf(value) === index;
+    }
+    const numHeaders = headers.filter(h => h.type === "NUMBER" && h.experiment)
+    return numHeaders.map(h => h.experiment.field).filter(onlyUnique);
+}

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Select, Space} from 'antd';
+import {getNumCols} from "../CommonStep";
 
 const {Option} = Select;
 
 export default function PcaPlotParams(props) {
 
     const [useDefaultCol, setUseDefaultCol] = useState()
-    const numCols = props.commonResult.numericalColumns
+    const numCols = getNumCols(props.commonResult.headers)
 
     useEffect(() => {
         if (props.params) {

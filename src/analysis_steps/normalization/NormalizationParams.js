@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Select, Space} from 'antd';
+import {getNumCols} from "../CommonStep";
 
 const {Option} = Select;
 
 export default function NormalizationParams(props) {
 
-    const numCols = props.commonResult.numericalColumns
+    const numCols = getNumCols(props.commonResult.headers)
     const intColName = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()
 
