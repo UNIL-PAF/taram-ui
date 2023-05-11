@@ -22,22 +22,10 @@ export default function InitialResult(props) {
     const numCols = getNumCols(props.data.commonResult.headers)
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
     const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some(a => a.group)
-
+    
     useEffect(() => {
         if (!localParams && props.data) {
             const colMapping = props.data.columnInfo.columnMapping
-
-            const expData = colMapping.experimentNames.map((e) => {
-                const exp = colMapping.experimentDetails[e]
-                return {
-                    name: exp.name,
-                    fileName: exp.fileName,
-                    originalName: exp.originalName,
-                    key: e,
-                    isSelected: exp.isSelected
-                }
-            })
-
             const expList = Object.values(colMapping.experimentDetails)
 
             const newGroupData = {
@@ -47,7 +35,7 @@ export default function InitialResult(props) {
                         return !d.group
                     }).map((d) => {
                         return {
-                            id: d.name,
+                            id: d.originalName,
                             name: d.name,
                             fileName: d.fileName,
                             originalName: d.originalName
@@ -65,7 +53,7 @@ export default function InitialResult(props) {
 
             const loadedGroupData = expList.reduce((acc, cur) => {
                 const cleaned = {
-                    id: cur.name,
+                    id: cur.originalName,
                     name: cur.name,
                     fileName: cur.fileName,
                     originalName: cur.originalName
@@ -77,7 +65,7 @@ export default function InitialResult(props) {
             }, initialGroups)
 
             const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
-            setLocalParams({expData: expData, groupData: groupData, column: colMapping.intCol})
+            setLocalParams({groupData: groupData, column: colMapping.intCol})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, localParams])
@@ -85,15 +73,17 @@ export default function InitialResult(props) {
 
     // format the data for the backend
     const prepareParams = (params) => {
-        const experimentDetails = params.expData.reduce((sum, d) => {
+        const colMapping = props.data.columnInfo.columnMapping
+
+        const experimentDetails = Object.values(colMapping.experimentDetails).reduce((sum, d) => {
             const group = Object.values(params.groupData).find((g) => {
                 return g.items.find((i) => {
                     return i.originalName === d.originalName
                 })
             })
-            sum[d.key] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
+            sum[d.originalName] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
             if (group && group.name !== "Experiments") {
-                sum[d.key].group = group.name
+                sum[d.originalName].group = group.name
             }
             return sum
         }, {})
@@ -112,7 +102,18 @@ export default function InitialResult(props) {
         }))
     }
 
+    const computeNewGroupData = (expIdx, newName) => {
+        return Object.entries(localParams.groupData).reduce((a, [key, v]) => {
+            const items = v.items.map(i => i.id === expIdx ? {...i, name: newName} : i)
+            a[key] = {...v, items: items};
+            return a;
+        }, {});
+    }
+
     const changeExpName = (expIdx, newName) =>{
+        const newGroupData = computeNewGroupData(expIdx, newName)
+        setLocalParams({...localParams, groupData: newGroupData})
+
         const exps = prepareParams(localParams)
         let newExpDetails = {...exps.experimentDetails}
         newExpDetails[expIdx] = {...newExpDetails[expIdx], name: newName}

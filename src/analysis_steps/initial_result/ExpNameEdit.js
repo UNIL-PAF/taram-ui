@@ -8,7 +8,6 @@ export default function ExpNameEdit(props) {
     const [name, setName] = useState(props.name)
 
     const save = () => {
-        console.log("save", name)
         props.changeExpName(props.expIdx, name)
         props.cancel()
     }

@@ -136,7 +136,8 @@ export default function GroupSelection(props) {
                                                                                     color: "black",
                                                                                 }}>{item.name}</span>
                                                                             <Popover content={popoverContent}
-                                                                                     title={<strong>{item.name}</strong>}>
+                                                                                     title={
+                                                                                         <strong>{item.name}</strong>}>
                                                                                 <Button
                                                                                     style={{
                                                                                         float: "right",
@@ -155,7 +156,10 @@ export default function GroupSelection(props) {
                                                                                     size={"small"}/>
                                                                             </Popover>
                                                                             <Button
-                                                                                onClick={() => setShowEdit({col: i, idx: index})}
+                                                                                onClick={() => setShowEdit({
+                                                                                    col: i,
+                                                                                    idx: index
+                                                                                })}
                                                                                 style={{
                                                                                     float: "right",
                                                                                     marginRight: "5px",
@@ -171,7 +175,11 @@ export default function GroupSelection(props) {
                                                                                     paddingTop: "1px"
                                                                                 }}/>}
                                                                                 size={"small"}/>
-                                                                            {showEdit && showEdit.col === i && showEdit.idx === index && <ExpNameEdit name={item.name} expIdx={item.originalName} changeExpName={props.changeExpName} cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
+                                                                            {showEdit && showEdit.col === i && showEdit.idx === index &&
+                                                                                <ExpNameEdit name={item.name}
+                                                                                             expIdx={item.originalName}
+                                                                                             changeExpName={props.changeExpName}
+                                                                                             cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
                                                                         </div>
                                                                     );
                                                                 }}
