@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Input} from 'antd';
 
-
 export default function GroupNameInput(props) {
     const placeholder = "Condition"
 

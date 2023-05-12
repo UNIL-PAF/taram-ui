@@ -59,7 +59,6 @@ export default function GroupSelection(props) {
         }
     };
 
-
     return (
         <div>
             <div
@@ -177,7 +176,7 @@ export default function GroupSelection(props) {
                                                                                 size={"small"}/>
                                                                             {showEdit && showEdit.col === i && showEdit.idx === index &&
                                                                                 <ExpNameEdit name={item.name}
-                                                                                             expIdx={item.originalName}
+                                                                                             expIdx={item.name}
                                                                                              changeExpName={props.changeExpName}
                                                                                              cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
                                                                         </div>

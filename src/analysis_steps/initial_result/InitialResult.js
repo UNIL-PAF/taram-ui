@@ -35,7 +35,7 @@ export default function InitialResult(props) {
                         return !d.group
                     }).map((d) => {
                         return {
-                            id: d.originalName,
+                            id: d.name,
                             name: d.name,
                             fileName: d.fileName,
                             originalName: d.originalName
@@ -53,7 +53,7 @@ export default function InitialResult(props) {
 
             const loadedGroupData = expList.reduce((acc, cur) => {
                 const cleaned = {
-                    id: cur.originalName,
+                    id: cur.name,
                     name: cur.name,
                     fileName: cur.fileName,
                     originalName: cur.originalName
@@ -76,17 +76,22 @@ export default function InitialResult(props) {
         const colMapping = props.data.columnInfo.columnMapping
 
         const experimentDetails = Object.values(colMapping.experimentDetails).reduce((sum, d) => {
-            const group = Object.values(params.groupData).find((g) => {
-                return g.items.find((i) => {
-                    return i.originalName === d.originalName
+            const group = Object.values(params.groupData).reduce((acc, g) => {
+                const item = g.items.find((i) => {
+                    return i.name === d.name
                 })
-            })
-            sum[d.originalName] = {fileName: d.fileName, name: d.name, isSelected: d.isSelected, originalName: d.originalName}
+                return item ? {name: g.name, item: item}: acc
+            }, {})
+
+            const myName = group && group.item ? group.item.name : d.name
+
+            sum[myName] = {fileName: d.fileName, name: myName, isSelected: d.isSelected, originalName: d.originalName}
             if (group && group.name !== "Experiments") {
-                sum[d.originalName].group = group.name
+                sum[myName].group = group.name
             }
             return sum
         }, {})
+
         return {experimentDetails: experimentDetails, intCol: params.column}
     }
 
@@ -104,20 +109,21 @@ export default function InitialResult(props) {
 
     const computeNewGroupData = (expIdx, newName) => {
         return Object.entries(localParams.groupData).reduce((a, [key, v]) => {
-            const items = v.items.map(i => i.id === expIdx ? {...i, name: newName} : i)
+            const items = v.items.map(i => i.id === expIdx ? {...i, name: newName, id: newName} : i)
             a[key] = {...v, items: items};
             return a;
         }, {});
     }
 
-    const changeExpName = (expIdx, newName) =>{
+    const changeExpName = (expIdx, newName) => {
         const newGroupData = computeNewGroupData(expIdx, newName)
-        setLocalParams({...localParams, groupData: newGroupData})
-
-        const exps = prepareParams(localParams)
-        let newExpDetails = {...exps.experimentDetails}
+        const newLocalParams = {...localParams, groupData: newGroupData}
+        setLocalParams(newLocalParams)
+        const colMapping = props.data.columnInfo.columnMapping
+        const newExpNames = colMapping.experimentNames.map(e => e === expIdx ? newName : e)
+        let newExpDetails = {...colMapping.experimentDetails}
         newExpDetails[expIdx] = {...newExpDetails[expIdx], name: newName}
-        const newParams = {...exps, experimentDetails: newExpDetails}
+        const newParams = {...colMapping, experimentDetails: newExpDetails, experimentNames: newExpNames}
         dispatch(setStepParameters({
             resultId: props.resultId,
             stepId: props.data.id,
