@@ -21,6 +21,14 @@ export default function VolcanoPlot(props) {
     const [onEvents, setOnEvents] = useState()
     const [showZoom, setShowZoom] = useState(null)
 
+    const colPalette = {
+        "down1": "#5470c6",
+        "down2": "#73c0de",
+        "up1": "#ee6666",
+        "up2": "#fac858",
+        "none": "silver"
+    }
+
     useEffect(() => {
         if (props.data.parameters) {
             const params = JSON.parse(props.data.parameters)
@@ -68,7 +76,7 @@ export default function VolcanoPlot(props) {
             return (params.useAdjustedPVal && qValExists) ? d.qVal : d.pVal
         }).map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
-            return {...d, showLab: showLab}
+            return {...d, showLab: showLab, isUp: d.fc > 0}
         })
 
         const valueName = (params.useAdjustedPVal && qValExists) ? "q-value" : "p-value"
@@ -111,14 +119,38 @@ export default function VolcanoPlot(props) {
             },
             dataset: [
                 {
-                    dimensions: ["fc", "plotVal", "isSign", "showLab", "qVal", "qIsSign"],
+                    dimensions: ["fc", "plotVal", "isSign", "showLab", "qVal", "qIsSign", "isUp"],
                     source: dataWithLabel,
                 },
                 {
-                    transform: {
-                        type: 'filter',
-                        config: {dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign', value: true}
-                    }
+                    transform: [
+                        {
+                            type: 'filter',
+                            config: {
+                                dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign',
+                                value: true
+                            }
+                        },
+                        {
+                            type: 'filter',
+                            config: {dimension: 'isUp', value: true}
+                        }
+                    ]
+                },
+                {
+                    transform: [
+                        {
+                            type: 'filter',
+                            config: {
+                                dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign',
+                                value: true
+                            }
+                        },
+                        {
+                            type: 'filter',
+                            config: {dimension: 'isUp', value: false}
+                        }
+                    ]
                 },
                 {
                     transform: {
@@ -133,20 +165,38 @@ export default function VolcanoPlot(props) {
                     }
                 },
                 {
-                    transform: {
-                        type: 'filter',
-                        config: {dimension: 'qIsSign', value: true}
-                    },
+                    transform: [
+                        {
+                            type: 'filter',
+                            config: {dimension: 'qIsSign', value: true}
+                        },
+                        {
+                            type: 'filter',
+                            config: {dimension: 'isUp', value: true}
+                        }
+                    ],
+                },
+                {
+                    transform: [
+                        {
+                            type: 'filter',
+                            config: {dimension: 'qIsSign', value: true}
+                        },
+                        {
+                            type: 'filter',
+                            config: {dimension: 'isUp', value: false}
+                        }
+                    ],
                 },
 
             ],
             legend: {
-                top: "10%",
-                data: ["Significant" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Significant q-values"] : [])
+                top: "30px",
+                data: ["Upregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Upregulated q-values"] : []).concat(["Downregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")]).concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Upregulated q-values", "Downregulated q-values"] : [])
             },
             series: [
                 {
-                    name: "Significant" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
+                    name: "Upregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
                     label: {
                         show: false,
                     },
@@ -160,7 +210,7 @@ export default function VolcanoPlot(props) {
                         y: 'plotPVal'
                     },
                     itemStyle: {
-                        color: "#91cc75"
+                        color: colPalette["up1"]
                     },
                     markLine: {
                         lineStyle: {
@@ -186,12 +236,28 @@ export default function VolcanoPlot(props) {
                     },
                 },
                 {
+                    name: "Downregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
                     itemStyle: {
-                        color: "#5470c6"
+                        color: colPalette["down1"]
                     },
                     label: {show: false},
                     symbolSize: 5,
                     datasetIndex: 2,
+                    large: true,
+                    largeThreshold: 1,
+                    type: 'scatter',
+                    encode: {
+                        x: 'fc',
+                        y: 'plotPVal'
+                    }
+                },
+                {
+                    itemStyle: {
+                        color: colPalette["none"]
+                    },
+                    label: {show: false},
+                    symbolSize: 5,
+                    datasetIndex: 3,
                     large: true,
                     largeThreshold: 1,
                     type: 'scatter',
@@ -217,28 +283,46 @@ export default function VolcanoPlot(props) {
                         borderWidth: 1,
                         borderColor: 'green'
                     },
-                    datasetIndex: 3,
+                    datasetIndex: 4,
                     type: 'scatter',
                 },
             ]
         }
 
-        const qValSeries = {
-            name: "Significant q-values",
-            itemStyle: {
-                color: "#fac858"
+        const qValSeries = [
+            {
+                name: "Upregulated q-values",
+                itemStyle: {
+                    color: colPalette["up2"]
+                },
+                label: {show: false},
+                symbolSize: 5,
+                datasetIndex: 5,
+                large: true,
+                largeThreshold: 1,
+                type: 'scatter',
+                encode: {
+                    x: 'fc',
+                    y: 'plotPVal'
+                }
             },
-            label: {show: false},
-            symbolSize: 5,
-            datasetIndex: 4,
-            large: true,
-            largeThreshold: 1,
-            type: 'scatter',
-            encode: {
-                x: 'fc',
-                y: 'plotPVal'
+            {
+                name: "Downregulated q-values",
+                itemStyle: {
+                    color: colPalette["down2"]
+                },
+                label: {show: false},
+                symbolSize: 5,
+                datasetIndex: 6,
+                large: true,
+                largeThreshold: 1,
+                type: 'scatter',
+                encode: {
+                    x: 'fc',
+                    y: 'plotPVal'
+                }
             }
-        }
+        ]
 
         const finalOpts = {
             ...opts,
@@ -300,7 +384,8 @@ export default function VolcanoPlot(props) {
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
-                                     paramType={type} stepId={props.data.id} onEvents={onEvents} minHeight={"800px"}></EchartsZoom>}
+                                     paramType={type} stepId={props.data.id} onEvents={onEvents}
+                                     minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
 }
