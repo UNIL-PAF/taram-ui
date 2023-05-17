@@ -12,9 +12,9 @@ export default function TTestParams(props) {
     const [useDefaultCol, setUseDefaultCol] = useState()
 
     const groups = props.commonResult.headers.reduce((acc, cur) => {
-        if(cur.experiment && cur.experiment.group && ! acc.includes(cur.experiment.group)){
-            return acc.concat(cur.experiment.group)
-        }else return acc
+        const expName = cur.experiment && cur.experiment.name ? cur.experiment.name : null
+        const group = expName ? props.experimentDetails[expName].group : null
+        return (group && !acc.includes(group)) ? acc.concat(group) : acc
     }, [])
 
     const getGroupColor = (availableGroups, name) => {
