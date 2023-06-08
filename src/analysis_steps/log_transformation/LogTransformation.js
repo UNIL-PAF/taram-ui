@@ -39,7 +39,8 @@ export default function LogTransformation(props) {
                     <Col span={8}>
                         <Row><span><strong>Min: </strong>{results.min && formNum(results.min)}</span></Row>
                         <Row><span><strong>Max: </strong>{results.max && formNum(results.max)}</span></Row>
-                        <Row><span><strong>Nr of NaN: </strong>{results.nrNans && formNum(results.nrNans)}</span></Row>
+                        <Row><span><strong>Nr of valid: </strong>{results.nrValid && formNum(results.nrValid)}</span></Row>
+                        <Row><span><strong>Nr of NaN: </strong>{results.nrNaN && formNum(results.nrNaN)}</span></Row>
                     </Col>
                     <Col span={8}>
                         <Row><span><strong>Mean: </strong>{results.mean && formNum(results.mean)}</span></Row>
