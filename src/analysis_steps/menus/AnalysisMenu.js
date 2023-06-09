@@ -72,7 +72,7 @@ export default function AnalysisMenu(props) {
                         let url = window.URL.createObjectURL(blob);
                         let a = document.createElement('a');
                         a.href = url;
-                        a.download = 'analysis_' + props.analysisId + '.pdf';
+                        a.download = props.resultName + '.pdf';
                         a.click();
                     })
                 }else {

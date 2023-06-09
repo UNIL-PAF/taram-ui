@@ -13,7 +13,6 @@ export default function Imputation(props) {
         "normal": "Replace missing values from normal distribution:",
         "nan": "Replace missing values by NaN.",
         "value": "Replace missing values by "
-
     }
 
     const getNormParams = () => {

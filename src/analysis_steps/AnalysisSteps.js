@@ -58,6 +58,7 @@ export default function AnalysisSteps(props) {
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
                                                  setError={setError}
                                                  resultId={props.data.result.id}
+                                                 resultName={props.data.result.name}
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
