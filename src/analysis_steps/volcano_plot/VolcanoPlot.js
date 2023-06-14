@@ -7,7 +7,7 @@ import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStep";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -42,7 +42,8 @@ export default function VolcanoPlot(props) {
                 if (backendSelProts) setSelProts(backendSelProts)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
-                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+                const optsToSave = replaceProgressiveSeries(echartOptions)
+                replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
             }
             setOnEvents({'click': showToolTipOnClick})
         } else {
@@ -202,8 +203,6 @@ export default function VolcanoPlot(props) {
                     },
                     symbolSize: 5,
                     datasetIndex: 1,
-                    large: true,
-                    largeThreshold: 1,
                     type: 'scatter',
                     encode: {
                         x: 'fc',
@@ -243,8 +242,6 @@ export default function VolcanoPlot(props) {
                     label: {show: false},
                     symbolSize: 5,
                     datasetIndex: 2,
-                    large: true,
-                    largeThreshold: 1,
                     type: 'scatter',
                     encode: {
                         x: 'fc',
@@ -274,8 +271,10 @@ export default function VolcanoPlot(props) {
                         },
                         position: 'right',
                         minMargin: 2,
-                        fontWeight: 'bold',
-                        fontSize: 12
+                        //fontWeight: 'bold',
+                        fontSize: 12,
+                        color: 'black'
+
                     },
                     symbolSize: 8,
                     itemStyle: {
@@ -298,8 +297,6 @@ export default function VolcanoPlot(props) {
                 label: {show: false},
                 symbolSize: 5,
                 datasetIndex: 5,
-                large: true,
-                largeThreshold: 1,
                 type: 'scatter',
                 encode: {
                     x: 'fc',
@@ -314,8 +311,6 @@ export default function VolcanoPlot(props) {
                 label: {show: false},
                 symbolSize: 5,
                 datasetIndex: 6,
-                large: true,
-                largeThreshold: 1,
                 type: 'scatter',
                 encode: {
                     x: 'fc',

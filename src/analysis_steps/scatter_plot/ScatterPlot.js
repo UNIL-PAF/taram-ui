@@ -3,7 +3,7 @@ import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStep";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
@@ -22,10 +22,13 @@ export default function ScatterPlot(props) {
             const results = JSON.parse(props.data.results)
             const echartOptions = getOptions(results, localParams)
             setOptions({...options, data: echartOptions})
-            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+            const optsToSave = replaceProgressiveSeries(echartOptions)
+            replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localParams])
+
+
 
     useEffect(() => {
         if (props.data) {
@@ -35,7 +38,8 @@ export default function ScatterPlot(props) {
             if (isWaiting && props.data.status === 'done') {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results, params)
-                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+                const optsToSave = replaceProgressiveSeries(echartOptions)
+                replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
             }
@@ -140,7 +144,7 @@ export default function ScatterPlot(props) {
                     x: 'x',
                     y: 'y',
                 },
-                symbolSize: 5,
+                symbolSize: 5
             }],
             grid: {
                 left: 75

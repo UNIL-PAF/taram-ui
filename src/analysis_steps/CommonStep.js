@@ -42,3 +42,8 @@ export function getNumCols(headers){
     const numHeaders = headers.filter(h => h.type === "NUMBER" && h.experiment)
     return numHeaders.map(h => h.experiment.field).filter(onlyUnique);
 }
+
+export function replaceProgressiveSeries(opts){
+    const newSeries = opts.series.map( s => { return {...s, progressive: 0 }})
+    return {...opts, series: newSeries}
+}
