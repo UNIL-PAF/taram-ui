@@ -46,12 +46,21 @@ export default function ScatterPlot(props) {
 
             if (!isWaiting && props.data.status !== 'done') {
                 setIsWaiting(true)
-                const greyOpt = {...options.data, color: Array(30).fill('lightgrey')}
+                const greyOpt = greyOptions(options.data)
                 setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting])
+
+    const greyOptions = (options) => {
+        const greyCol = 'lightgrey'
+        let newOpts = {...options, color: Array(30).fill(greyCol), visualMap: null}
+        newOpts.series.forEach((s, i) => {
+            if (s.itemStyle) newOpts.series[i].itemStyle = {color: greyCol}
+        })
+        return newOpts
+    }
 
     const checkboxChange = (e) => {
         const newLocalParams = {...localParams, logTrans: e.target.checked}

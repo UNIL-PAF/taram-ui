@@ -11,8 +11,6 @@ export default function ScatterPlotParams(props) {
     useEffect(() => {
         if (props.params) {
             if (useColorBy === undefined) setUseColorBy(props.params.colorBy ? true : false)
-            // we have to reset Log transform to undefined
-            if(props.params.logTrans) props.setParams({...props.params, logTrans: undefined})
         } else {
             props.setParams({xAxis: dataCols[0], yAxis: dataCols[1]})
         }
