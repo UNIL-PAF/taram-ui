@@ -49,10 +49,11 @@ export default function FilterParams(props) {
 
     function changeRemove(idx, value){
         let newColFilters = props.params.colFilters
-        newColFilters[idx].remove = value === "remove" ? true : false
+        newColFilters[idx].removeSelected = (value === "remove" ? true : false)
         let newRemove = [...remove]
         newRemove[idx] = value
         setRemove(newRemove)
+        props.setParams({...props.params, colFilters: newColFilters})
     }
 
     function getCompOptions(selColName){
