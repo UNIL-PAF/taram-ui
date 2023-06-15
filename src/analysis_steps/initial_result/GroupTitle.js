@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Input} from "antd";
-import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined} from "@ant-design/icons";
 
 export default function GroupTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -15,23 +15,33 @@ export default function GroupTitle(props) {
         setIsEditing(!isEditing)
     }
 
-    return (
-        <>
-            {!isEditing &&
-                <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>{props.name}</h4>
-            }
-            { isEditing &&
-                <span>
+    const deleteGroup = () => {
+        props.deleteGroup(props.id)
+    }
+
+    return (<>
+            {!isEditing && <div>
+                    <span style={{display: "block", float: "left", paddingTop: "5px"}}>
+                        <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>
+                            {props.name}
+                        </h4>
+                    </span>
+                {props.id !== "experiments" &&
+                    <span style={{display: "block", float: "right"}}>
+                        <Button onClick={() => deleteGroup()} type={"text"} icon={<DeleteOutlined/>}></Button>
+                    </span>}
+            </div>}
+            {isEditing && <span>
                             <Input
-                                style={{ width: 100 }}
+                                style={{width: 100}}
                                 defaultValue={props.name}
                                 onPressEnter={save}
                                 onChange={(e) => setName(e.target.value)}
                                 onBlur={save}/>
-                                <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>} onClick={() => save()} size={"small"}></Button>
-                                <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>} onClick={() => cancel()} size={"small"} danger></Button>
-                </span>
-            }
-        </>
-    );
+                                <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>}
+                                        onClick={() => save()} size={"small"}></Button>
+                                <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>}
+                                        onClick={() => cancel()} size={"small"} danger></Button>
+                </span>}
+        </>);
 }

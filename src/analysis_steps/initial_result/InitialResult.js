@@ -19,9 +19,9 @@ export default function InitialResult(props) {
 
     const results = JSON.parse(props.data.results)
     const colInfo = props.data.columnInfo
-    const numCols = getNumCols(props.data.commonResult.headers)
+    const numCols = props.data.commonResult ? getNumCols(props.data.commonResult.headers) : []
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
-    const groupsDefined = Object.values(props.data.columnInfo.columnMapping.experimentDetails).some(a => a.group)
+    const groupsDefined = colInfo ? Object.values(colInfo.columnMapping.experimentDetails).some(a => a.group) : null
     
     useEffect(() => {
         if (!localParams && props.data) {
@@ -157,7 +157,7 @@ export default function InitialResult(props) {
                               isSelected={props.isSelected}
                               hasImputed={false}/>
         }>
-            <div>
+            {colInfo && <div>
                 <Row>
                     <Button onClick={() => changGroups()}
                             danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
@@ -194,7 +194,7 @@ export default function InitialResult(props) {
                 }
                 <StepComment stepId={props.data.id} resultId={props.resultId}
                              comment={props.data.comments}></StepComment>
-            </div>
+            </div>}
             <Modal visible={showModal} onOk={() => handleGroupModalOk()}
                    onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}

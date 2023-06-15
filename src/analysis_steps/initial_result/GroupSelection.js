@@ -11,7 +11,9 @@ export default function GroupSelection(props) {
 
     const addGroup = () => {
         let newCols = {...props.groupData}
-        const nextIdx = Object.keys(props.groupData).length
+        var nextIdx = Object.keys(props.groupData).length
+        // if this name already exists, we have to go to the next nextIdx
+        while(newCols["group-"+nextIdx]){ nextIdx = nextIdx + 1}
         newCols["group-" + nextIdx] = {name: "Group " + nextIdx, items: []}
         props.setGroupData(newCols)
     }
@@ -20,6 +22,13 @@ export default function GroupSelection(props) {
         const newCols = {...props.groupData}
         newCols[groupId].name = groupName.trim()
         props.setGroupData(newCols)
+    }
+
+    const deleteGroup = (groupId) => {
+        var myGroups = props.groupData
+        myGroups.experiments.items = myGroups.experiments.items.concat(myGroups[groupId].items)
+        delete myGroups[groupId]
+        props.setGroupData(myGroups)
     }
 
     const onDragEnd = (result, columns, setColumns) => {
@@ -79,7 +88,7 @@ export default function GroupSelection(props) {
                                 key={columnId}
                             >
                                 <GroupTitle id={columnId} name={column.name}
-                                            changeGroupName={changeGroupName}></GroupTitle>
+                                            changeGroupName={changeGroupName} deleteGroup={deleteGroup}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
                                         {(provided, snapshot) => {
