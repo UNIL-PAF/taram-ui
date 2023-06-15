@@ -157,7 +157,7 @@ export default function InitialResult(props) {
                               isSelected={props.isSelected}
                               hasImputed={false}/>
         }>
-            {colInfo && <div>
+            {colInfo && results && <div>
                 <Row>
                     <Button onClick={() => changGroups()}
                             danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
