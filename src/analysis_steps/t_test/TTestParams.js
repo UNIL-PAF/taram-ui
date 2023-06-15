@@ -32,8 +32,8 @@ export default function TTestParams(props) {
             id: 0,
             items: availableGroups
         },
-        first: {name: "First group (right)", id: 1, items: firstGroup},
-        second: {name: "Second group (left)", id: 2, items: secondGroup}
+        first: {name: "First group (left)", id: 1, items: firstGroup},
+        second: {name: "Second group (right)", id: 2, items: secondGroup}
     }
 
     useEffect(() => {
