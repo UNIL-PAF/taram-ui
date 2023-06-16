@@ -29,7 +29,7 @@ export default function AnalysisStepMenu(props) {
                 window.removeEventListener("keydown", downHandler);
             };
         }
-    }, [props.isSelected, props.stepId]);
+    }, [props.isSelected, props.stepId, stopMenuShortcut]);
 
     const statusTag = () => {
         if (props.status === "idle") {
