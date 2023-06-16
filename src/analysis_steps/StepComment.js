@@ -18,6 +18,7 @@ export default function StepComment(props) {
         if(isEditing){
             dispatch(setStopMenuShortcut(true))
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditing])
 
     useEffect(() => {
