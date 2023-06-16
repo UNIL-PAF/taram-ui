@@ -8,6 +8,7 @@ import {clearTable} from "../../protein_table/proteinTableSlice";
 import {prepareTTestParams} from "../t_test/TTestPrepareParams"
 import DownloadZipModal from "./DownloadZipModal"
 import ParameterModal from "./ParametersModal"
+import {setStopMenuShortcut} from "../../analysis/analysisSlice";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -18,6 +19,16 @@ export default function AnalysisStepMenuItems(props) {
     const [openMenuKeys, setOpenMenuKeys] = useState()
     const dispatch = useDispatch();
     const menuRef = useRef(null);
+
+    useEffect(() => {
+        if(showModalName){
+            dispatch(setStopMenuShortcut(true))
+        }else{
+            dispatch(setStopMenuShortcut(false))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showModalName])
+
 
     const findChildByName = (myRef, name) => {
         const children = Object.values(myRef.children)
