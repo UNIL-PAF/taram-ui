@@ -1,13 +1,24 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import GroupTitle from "./GroupTitle";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {Button, Popover} from "antd";
 import {InfoOutlined, EditOutlined} from "@ant-design/icons";
 import ExpNameEdit from "./ExpNameEdit"
+import {setStopMenuShortcut} from "../../analysis/analysisSlice";
+import {useDispatch} from "react-redux";
 
 export default function GroupSelection(props) {
-
+    const dispatch = useDispatch();
     const [showEdit, setShowEdit] = useState()
+
+    useEffect(() => {
+        if(showEdit){
+            dispatch(setStopMenuShortcut(true))
+        }else{
+            dispatch(setStopMenuShortcut(false))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showEdit])
 
     const addGroup = () => {
         let newCols = {...props.groupData}
