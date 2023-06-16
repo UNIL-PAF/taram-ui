@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import {Table, Spin, Input, Space, Button} from "antd";
+import {Table, Spin, Input, Space, Button, Tooltip} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import {useDispatch, useSelector} from "react-redux";
@@ -101,19 +101,29 @@ export default function FullProteinTable(props) {
     });
 
     const getColumns = () => {
+        const elliThresh = 20
+
         return table.data.headers.map( h => {
             let myCol =  {
                 title: h.name,
                 dataIndex: h.idx,
-                key: h.idx,
-                width: 200,
-                ellipsis: true
+                key: h.idx
             }
             if(h.type === "NUMBER"){
                 myCol.sorter = (a, b) => a[h.idx] - b[h.idx]
                 myCol.render = (text) => formNum(text)
             }else{
                 myCol = {...myCol, ...getColumnSearchProps(h.idx)}
+                myCol.render = (text) => {
+                    if(text.length > elliThresh){
+                        const shortText = text.slice(0, elliThresh) + "..."
+                        return   <Tooltip title={text}>
+                            <span style={{whiteSpace: "nowrap"}}>{shortText}</span>
+                        </Tooltip>
+                    }else{
+                        return <span style={{whiteSpace: "nowrap"}}>{text}</span>
+                    }
+                }
             }
             return myCol
         })
