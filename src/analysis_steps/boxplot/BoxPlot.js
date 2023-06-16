@@ -136,10 +136,10 @@ export default function BoxPlot(props) {
                 return {
                     type: 'category',
                     scale: true,
-                    axisLabel: {interval: 0, rotate: 50},
+                    axisLabel: {interval: 0, rotate: 50 },
                     show: (i === 0 ? true : false),
                     data: experimentNames,
-                    axisLine: { onZero: false }
+                    axisLine: { onZero: false}
                 }
             }),
             yAxis: {
@@ -149,7 +149,8 @@ export default function BoxPlot(props) {
                     padding: [0, 0, 0, -50]
                 },
                 nameGap: 20,
-                min: (yMin - range * 0.2).toFixed(1)
+                min: (yMin - range * 0.2).toFixed(1),
+                axisLabel: {showMinLabel: false}
             }
         };
 
