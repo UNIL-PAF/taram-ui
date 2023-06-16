@@ -4,13 +4,25 @@ import {ClockCircleOutlined, DownloadOutlined, SyncOutlined} from "@ant-design/i
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
 import FullProteinTable from "../../full_protein_table/FullProteinTable";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setStopMenuShortcut} from "../../analysis/analysisSlice";
 
 export default function AnalysisStepMenu(props) {
+    const dispatch = useDispatch();
+
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [showTable, setShowTable] = useState(false)
     const [showMenuItem, setShowMenuItem] = useState()
     const stopMenuShortcut = useSelector(state => state.analysis.stopMenuShortcut)
+
+    useEffect(() => {
+        if(showTable){
+            dispatch(setStopMenuShortcut(true))
+        }else{
+            dispatch(setStopMenuShortcut(false))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showTable])
 
     // If pressed key is our target key then set to true
     function downHandler(key) {
