@@ -4,11 +4,13 @@ import {ClockCircleOutlined, DownloadOutlined, SyncOutlined} from "@ant-design/i
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import globalConfig from "../../globalConfig";
 import FullProteinTable from "../../full_protein_table/FullProteinTable";
+import {useSelector} from "react-redux";
 
 export default function AnalysisStepMenu(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [showTable, setShowTable] = useState(false)
     const [showMenuItem, setShowMenuItem] = useState()
+    const stopMenuShortcut = useSelector(state => state.analysis.stopMenuShortcut)
 
     // If pressed key is our target key then set to true
     function downHandler(key) {
@@ -20,7 +22,7 @@ export default function AnalysisStepMenu(props) {
 
     // Add event listeners
     useEffect(() => {
-        if(props.isSelected){
+        if(props.isSelected && ! stopMenuShortcut){
             window.addEventListener("keydown", downHandler);
             // Remove event listeners on cleanup
             return () => {

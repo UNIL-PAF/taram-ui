@@ -8,7 +8,8 @@ export const analysisSlice = createSlice({
         data: null,
         status: 'idle',
         error: null,
-        globalStatus: null
+        globalStatus: null,
+        stopMenuShortcut: true
     },
     reducers: {
         setError(state, action) {
