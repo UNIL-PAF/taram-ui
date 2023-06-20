@@ -242,12 +242,19 @@ export default function AnalysisStepMenuItems(props) {
                     <span>Change parameters..</span>
                 </Menu.Item>}
                 <Menu.SubMenu key={"add-step"} title={followingStepTitle}>
-                    <Menu.SubMenu key={"filters"} title={"Filter"}>
+                    <Menu.SubMenu key={"columns"} title={"Columns"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
                                    key={'remove-columns'}>
                             <span id={"menu-item"}>Remove columns</span>
                         </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("order-columns")}
+                                   className="narrow-menu"
+                                   key={'order-columns'}>
+                            <span id={"menu-item"}>Order and rename columns</span>
+                        </Menu.Item>
+                    </Menu.SubMenu>
+                    <Menu.SubMenu key={"filters"} title={"Filter"}>
                         <Menu.Item onClick={() => clickAddStep("filter")}
                                    className="narrow-menu"
                                    key={'filter'}>
@@ -260,11 +267,6 @@ export default function AnalysisStepMenuItems(props) {
                         </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"sub-2"} title={"Transform"}>
-                        <Menu.Item onClick={() => clickAddStep("order-columns")}
-                                   className="narrow-menu"
-                                   key={'order-columns'}>
-                            <span id={"menu-item"}>Order and rename columns</span>
-                        </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("log-transformation")}
                                    className="narrow-menu"
                                    key={'log-transformation'}>
