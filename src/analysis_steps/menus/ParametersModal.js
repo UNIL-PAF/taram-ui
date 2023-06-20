@@ -14,6 +14,7 @@ import PcaPlotParams from "../pca/PcaPlotParams";
 import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
 import NormalizationParams from "../normalization/NormalizationParams";
 import SummaryStatParams from "../summary_stat/SummaryStatParams";
+import OrderColumnsParams from "../order_columns/OrderColumnsParams";
 
 export default function ParametersModal(props) {
 
@@ -103,6 +104,14 @@ export default function ParametersModal(props) {
                                           setParams={props.setParams}
                                           intCol={props.intCol}
                 ></ScatterPlotParams>
+            case 'order-columns':
+                return <OrderColumnsParams commonResult={props.commonResult}
+                                           params={props.params}
+                                           setParams={props.setParams}
+                                           experimentDetails={props.experimentDetails}
+                                           intCol={props.intCol}
+                ></OrderColumnsParams>
+
         }
     }
 
