@@ -1,12 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import {onClick} from "./MultiDragUtils"
 
 export default function OrderColumnsDraggeable(props) {
 
+    const [selItems, setSelItems] = useState([])
+
     const onDragEnd = (result) => {
-        const newCols = arrayMove(props.columns, Number(result.draggableId), result.destination.index)
+        const from = Number(result.draggableId)
+        const to = result.destination.index
+        const newCols = arrayMove(props.columns, from, to)
         const newColsIdx = newCols.map((n, i) => {return {...n, idx: i}})
         props.setColumns(newColsIdx)
+        const newMove = props.params.move.concat({from: from, to: to})
+        props.setParams({...props.params, move: newMove})
     };
 
     const arrayMove = (columns, fromIndex, toIndex) => {
@@ -16,6 +23,8 @@ export default function OrderColumnsDraggeable(props) {
         arr.splice(toIndex, 0, element);
         return arr
     }
+
+    const allItems = props.columns.map( a => a.idx)
 
     return (
         <div
@@ -47,6 +56,9 @@ export default function OrderColumnsDraggeable(props) {
                                     }}
                                 >
                                     {props.columns.map((item, index) => {
+
+                                        const isSelected = selItems.includes(item.idx)
+
                                         return (
                                             <Draggable
                                                 key={item.idx}
@@ -59,6 +71,7 @@ export default function OrderColumnsDraggeable(props) {
                                                             ref={provided.innerRef}
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
+                                                            onClick={(e) => onClick(e, item.idx, allItems, selItems, setSelItems)}
                                                             style={{
                                                                 userSelect: "none",
                                                                 paddingLeft: "5px",
@@ -76,7 +89,7 @@ export default function OrderColumnsDraggeable(props) {
                                                             }}
                                                         >
                                                                                 <span style={{
-                                                                                    color: "black",
+                                                                                    color: isSelected ? "blue" : "black",
                                                                                 }}>{item.name}</span>
 
                                                         </div>

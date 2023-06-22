@@ -1,16 +1,9 @@
 import React, {useEffect, useState} from "react";
 import OrderColumnsDraggeable from "./OrderColumnsDraggeable";
-import {Checkbox} from "antd";
+import {Button, Checkbox} from "antd";
 
 export default function OrderColumnsParams(props) {
     const [columns, setColumns] = useState()
-
-    function handleChange(field, checked) {
-        let newParams = {...props.params}
-        newParams[field] = checked
-        props.setParams(newParams)
-        if(checked) setColumns(moveSelIntFirst(columns))
-    }
 
     useEffect(() => {
         const myCols = (!columns && props.commonResult && props.commonResult.headers) ? props.commonResult.headers : undefined
@@ -18,16 +11,39 @@ export default function OrderColumnsParams(props) {
         if (!props.params) {
             props.setParams({
                 moveSelIntFirst: false,
-                moveFromeTo: []
+                move: []
             })
             if(myCols) setColumns(myCols)
         }else{
             if(myCols){
-                const colsMoved = (props.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
+                const intFirst = (props.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
+                const colsMoved = moveCols(intFirst, props.params.move)
                 setColumns(colsMoved)
             }
         }
     }, [props, columns])
+
+    const moveCols = (headers, move) => {
+        return headers
+    }
+
+    function handleChange(field, checked) {
+        let newParams = {...props.params}
+        newParams[field] = checked
+        props.setParams(newParams)
+
+        const intMoved = checked ? moveSelIntFirst(columns) : columns
+        const resetCols = !checked ? moveCols(props.commonResult.headers, props.params.move) : intMoved
+        setColumns(resetCols)
+    }
+
+    const reset = () => {
+        props.setParams({
+            moveSelIntFirst: false,
+            move: []
+        })
+        setColumns(props.commonResult.headers)
+    }
 
     const moveSelIntFirst = (myCols) => {
         const selCols = myCols.filter( a => a.experiment && a.experiment.field === props.intCol)
@@ -43,6 +59,8 @@ export default function OrderColumnsParams(props) {
 
     return (
         <>
+            <div><Button type="primary" onClick={() => reset()}>Reset</Button></div>
+            <br></br>
             {props.params && <span>
                     <Checkbox checked={props.params.moveSelIntFirst}
                               onChange={(e) => handleChange("moveSelIntFirst", e.target.checked)}>
@@ -56,6 +74,8 @@ export default function OrderColumnsParams(props) {
                 columns && <OrderColumnsDraggeable
                     columns={columns}
                     setColumns={setColumns}
+                    params={props.params}
+                    setParams={props.setParams}
                 ></OrderColumnsDraggeable>
             }
         </>
