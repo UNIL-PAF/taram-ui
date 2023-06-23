@@ -101,3 +101,48 @@ const multiSelectTo = (newItemId, allItems, selItems, setSelItems) => {
 
     setSelItems(combined)
 };
+
+export const onDragEnd = (result, allItems, selItems) => {
+    const destination = result.destination;
+    const sourceIdx = result.source.index
+
+    // nothing to do
+    if (!destination || result.reason === 'CANCEL') {
+        return;
+    }
+
+    const processed = mutliDragAwareReorder({
+        allItems,
+        selItems,
+        destination,
+        sourceIdx
+    });
+
+    return processed
+};
+
+const mutliDragAwareReorder = (args) => {
+    if (args.selItems.length > 1) {
+        return reorderMultiDrag(args.allItems, args.selItems, args.destination, args.sourceIdx);
+    }
+    return reorderSingleDrag(args.allItems, args.sourceIdx, args.destination);
+};
+
+const reorderSingleDrag = (allItems, sourceIdx, destination) => {
+    const before = allItems.slice(0, destination.index).filter( (id) => id.idx !==  sourceIdx)
+    const after = allItems.slice(destination.index + 1).filter( (id) => id.idx !== sourceIdx)
+    const final = before.concat(allItems.find( (a) => a.idx === sourceIdx) ).concat(after)
+    return final.map( (a, i) => {return {...a, idx: i}} )
+};
+
+const reorderMultiDrag = (allItems, selItems, destination, sourceIdx) => {
+    const orderedSelItems = [...selItems];
+    orderedSelItems.sort()
+
+    const offset = sourceIdx < destination.index ? 1 : 0
+
+    const itemsMoved = orderedSelItems.map( (id) => allItems.find( (a) => a.idx === id))
+    const before = allItems.slice(0, destination.index + offset).filter( (id) => !selItems.includes(id.idx) )
+    const after = allItems.slice(destination.index + offset).filter( (id) => !selItems.includes(id.idx) )
+    return before.concat(itemsMoved).concat(after)
+};

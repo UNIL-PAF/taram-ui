@@ -15,6 +15,8 @@ export default function OrderColumnsParams(props) {
             })
             if(myCols) setColumns(myCols)
         }else{
+            console.log(props.params)
+
             if(myCols){
                 const intFirst = (props.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
                 const colsMoved = moveCols(intFirst, props.params.move)
