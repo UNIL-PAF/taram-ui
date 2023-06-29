@@ -97,14 +97,14 @@ export default function BoxPlot(props) {
             }
         })
 
-        const groupByCondition = parsedRes.boxPlotData.reduce(
+        const groupedByCondition = parsedRes.boxPlotData.reduce(
             (acc, curr) => acc.concat(curr.data.map(d => d[0])),
             []
         );
 
-        const sortByCondition = (groupByCondition) => {
-            const sortArr = parsedRes.experimentNames.map((n, i) => {
-                return groupByCondition.indexOf(n)
+        const sortByCondition = () => {
+            const sortArr = experimentNames.map((n) => {
+                return parsedRes.experimentNames.indexOf(n)
             })
 
             return parsedRes.selProtData.map(p => {
@@ -113,13 +113,12 @@ export default function BoxPlot(props) {
             })
         }
 
-        const experimentNames = params.groupByCondition ? groupByCondition : parsedRes.experimentNames
+        const experimentNames = params.groupByCondition ? groupedByCondition : parsedRes.experimentNames
 
-        const selProtSeries = (groupByCondition) => {
+        const selProtSeries = () => {
             if (!parsedRes.selProtData) return null
-            const mySel = params.groupByCondition ? sortByCondition(groupByCondition) : parsedRes.selProtData
 
-            return mySel.map(d => {
+            return sortByCondition().map(d => {
                 return {
                     name: d.gene ? d.gene : d.prot,
                     type: 'line',
@@ -128,7 +127,7 @@ export default function BoxPlot(props) {
             })
         }
 
-        const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries(groupByCondition)) : boxplotSeries
+        const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
         const legendNames = series.map(a => a.name)
 
         const options = {
