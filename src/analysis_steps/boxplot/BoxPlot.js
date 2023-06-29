@@ -86,7 +86,7 @@ export default function BoxPlot(props) {
 
         const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
             return {
-                name: d.group,
+                name: "group_" + d.group,
                 type: type,
                 datasetIndex: i,
                 encode: {
@@ -128,10 +128,21 @@ export default function BoxPlot(props) {
             })
         }
 
+        const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries(groupByCondition)) : boxplotSeries
+        const legendNames = series.map(a => a.name)
+
         const options = {
             dataset: boxplotDatasets,
-            series: parsedRes.selProtData ? boxplotSeries.concat(selProtSeries(groupByCondition)) : boxplotSeries,
-            legend: {},
+            series: series,
+            legend: {
+                formatter: function (name) {
+                    if(name.includes("group_")){
+                        return name.substring(6)
+                    }
+                    return name;
+                },
+                data: legendNames
+            },
             xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
                     type: 'category',
