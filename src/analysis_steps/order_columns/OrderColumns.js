@@ -19,7 +19,7 @@ export default function OrderColumns(props) {
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"remove-columns"}
+                              paramType={"order-columns"}
                               commonResult={props.commonResBefore}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

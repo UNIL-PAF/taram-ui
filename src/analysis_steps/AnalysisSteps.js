@@ -18,6 +18,7 @@ import PcaPlot from "./pca/PcaPlot";
 import ScatterPlot from "./scatter_plot/ScatterPlot";
 import Normalization from "./normalization/Normalization";
 import SummaryStat from "./summary_stat/SummaryStat";
+import OrderColumns from "./order_columns/OrderColumns";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -81,6 +82,10 @@ export default function AnalysisSteps(props) {
                         const onSelect = () => {
                             setSelStep(i)
                         }
+
+                        // since we need all headers if changing parameters, we have to get from the step before
+                        const commonResBefore = (i > 0) ? props.data.analysisSteps[i-1].commonResult : null
+
                         switch (step.type) {
                             case 'initial-result':
                                 return <InitialResult analysisIdx={props.analysisIdx} resultId={props.data.result.id}
@@ -131,8 +136,6 @@ export default function AnalysisSteps(props) {
                                                       data={stepWithNr} key={myKey}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'remove-columns':
-                                // since we need all headers if changing parameters, we have to get from the step before
-                                const commonResBefore = props.data.analysisSteps[i-1].commonResult
                                 return <RemoveColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
@@ -140,6 +143,10 @@ export default function AnalysisSteps(props) {
                                 return <ScatterPlot analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                     data={stepWithNr} key={myKey}
                                                     onSelect={onSelect} isSelected={selStep === i}/>
+                            case 'order-columns':
+                                return <OrderColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
                         }
