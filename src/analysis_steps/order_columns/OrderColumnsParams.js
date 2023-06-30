@@ -15,14 +15,13 @@ export default function OrderColumnsParams(props) {
             })
             if(myCols) setColumns(myCols)
         }else{
-            console.log(props.params)
-
             if(myCols){
-                const intFirst = (props.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
+                const intFirst = (props.params.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
                 const colsMoved = moveCols(intFirst, props.params.move)
                 setColumns(colsMoved)
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, columns])
 
     const moveCols = (headers, move) => {
@@ -56,6 +55,7 @@ export default function OrderColumnsParams(props) {
 
         const newCols = myCols.slice(first, last).concat(myCols.slice(0, first)).concat(myCols.slice(last))
         const newColsIdx = newCols.map((n, i) => {return {...n, idx: i}})
+
         return newColsIdx
     }
 
