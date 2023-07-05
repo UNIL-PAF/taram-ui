@@ -3,7 +3,6 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle} from "../CommonStep";
-import {formNum} from "../../common/NumberFormatting";
 
 export default function OrderColumns(props) {
     const params = JSON.parse(props.data.parameters)
