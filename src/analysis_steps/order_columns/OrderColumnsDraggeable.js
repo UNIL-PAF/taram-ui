@@ -39,14 +39,24 @@ export default function OrderColumnsDraggeable(props) {
 
     const localDragEnd = (result) => {
         const newColumns = onDragEnd(result, props.columns, selItems)
-        const newIdxs = newColumns.map( (a) => a.idx)
 
-        const moved = allItems.reduce( (acc, orig) => {
-            const newIdx = newIdxs.indexOf(orig)
-            if(newIdx !== orig){
-                return acc.concat({from: orig, to: newIdx})
-            } else return acc
-        }, [])
+        const destinationIdx = Number(result.destination.index)
+        const sourceIdx = Number(result.source.index)
+        const moveIdx = ((selItems && selItems.length) ? selItems : [sourceIdx]).sort((a,b) => a-b).reverse()
+
+        const moved = moveIdx.reduce( (acc, idx) => {
+            let currOffset = [0,0]
+            let newOffset = acc.offset
+            if(idx > destinationIdx){
+                currOffset[0] = acc.offset[0]
+                newOffset[0] = acc.offset[0] + 1
+            }else{
+                currOffset[1] = acc.offset[1]
+                newOffset[1] = acc.offset[1] - 1
+            }
+            acc.moved.push({from: (idx + currOffset[0]), to: (destinationIdx + currOffset[1])})
+            return {...acc, offset: newOffset}
+        }, {moved: [], offset: [0, 0]}).moved
 
         if(newColumns){
             const corrIdx = newColumns.map( (a, i) => {return {...a, idx: i}} )
@@ -55,6 +65,7 @@ export default function OrderColumnsDraggeable(props) {
         setDraggingItemId(null)
         setSelItems([])
         const newMoved = props.params.move.concat(moved)
+
         props.setParams({...props.params, move: newMoved})
     }
 

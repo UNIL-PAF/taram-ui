@@ -130,9 +130,9 @@ const mutliDragAwareReorder = (args) => {
 
 const reorderSingleDrag = (allItems, sourceIdx, destination) => {
     const before = allItems.slice(0, destination.index).filter( (id) => id.idx !==  sourceIdx)
-    const after = allItems.slice(destination.index + 1).filter( (id) => id.idx !== sourceIdx)
+    const after = allItems.slice(destination.index).filter( (id) => id.idx !== sourceIdx)
     const final = before.concat(allItems.find( (a) => a.idx === sourceIdx) ).concat(after)
-    return final.map( (a, i) => {return {...a, idx: i}} )
+    return final
 };
 
 const reorderMultiDrag = (allItems, selItems, destination, sourceIdx) => {
