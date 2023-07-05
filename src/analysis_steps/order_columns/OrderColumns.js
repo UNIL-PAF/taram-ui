@@ -1,13 +1,15 @@
 import React, {useState} from "react";
-import {Card, Row} from "antd";
+import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle} from "../CommonStep";
+import {formNum} from "../../common/NumberFormatting";
 
 export default function OrderColumns(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
+    const intCol = props.data.columnInfo.columnMapping.intCol
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -22,7 +24,7 @@ export default function OrderColumns(props) {
                               paramType={"order-columns"}
                               commonResult={props.commonResBefore}
                               stepParams={localParams}
-                              intCol={props.data.columnInfo.columnMapping.intCol}
+                              intCol={intCol}
                               setStepParams={setLocalParams}
                               tableNr={props.data.tableNr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
@@ -32,15 +34,15 @@ export default function OrderColumns(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <div>
-                    <Row className={"analysis-step-row"}>
-                        <span><strong>Nr of columns: </strong>{results.nrOfColumns}</span>
-                    </Row>
-                    <Row className={"analysis-step-row"}>
-                        <span><strong>Nr of columns removed: </strong>{results.nrOfColumnsRemoved}</span>
-                    </Row>
-                </div>
-            }
+                <Row className={"analysis-step-row"}>
+                    <Col span={12}>
+                        <div className={"analysis-step-param-box"}>
+                            <div className={"analysis-step-param-content"}>
+                                {<p className={"analysis-step-param-line"}>Move default intensity column [{intCol}] first.</p>}
+                            </div>
+                        </div>
+                    </Col>
+                </Row>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>
     );
