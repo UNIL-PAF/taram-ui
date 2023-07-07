@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, InputNumber, Select, Space} from 'antd';
 import TTestGroupSelection from "./TTestGroupSelection"
-import {getNumCols} from "../CommonStep";
+import {getNumCols} from "../CommonStepUtils";
 
 const {Option} = Select;
 

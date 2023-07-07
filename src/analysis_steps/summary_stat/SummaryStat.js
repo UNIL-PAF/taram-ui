@@ -6,7 +6,7 @@ import "../AnalysisStep.css"
 import {FullscreenOutlined} from "@ant-design/icons";
 import SummaryTableZoom from "./SummaryTableZoom";
 import SummaryTable from "./SummaryTable";
-import {getStepTitle} from "../CommonStep";
+import {getStepTitle} from "../CommonStepUtils";
 
 export default function SummaryStat(props) {
     const [showZoom, setShowZoom] = useState(null)

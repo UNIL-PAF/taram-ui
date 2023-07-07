@@ -3,7 +3,7 @@ import {Checkbox, Select, Space, Divider} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
-import {getNumCols} from "../CommonStep";
+import {getNumCols} from "../CommonStepUtils";
 
 const {Option} = Select;
 

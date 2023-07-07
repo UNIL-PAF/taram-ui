@@ -2,12 +2,15 @@ import React, {useState} from "react";
 import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {getStepTitle} from "../CommonStep";
+import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 
 export default function Imputation(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
+
+    const [showTable, setShowTable] = useState(false)
+    const isDone = props.data.status === "done"
 
     const imputationText = {
         "normal": "Replace missing values from normal distribution:",
@@ -26,7 +29,7 @@ export default function Imputation(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Imputation", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, "Imputation")}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -47,9 +50,6 @@ export default function Imputation(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row className={"analysis-step-row"}>
-                    <Col span={16}>
-                        <p><strong>Nr imputed: </strong>{results.nrImputedValues}</p>
-                    </Col>
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
@@ -58,9 +58,14 @@ export default function Imputation(props) {
                             </div>
                         </div>
                     </Col>
+                    <Col span={8} className={"analysis-step-middle-col"}>
+                        <p><strong>Nr imputed: </strong>{results.nrImputedValues}</p>
+                    </Col>
+                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
 }

@@ -3,12 +3,15 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {prepareTTestParams} from "./TTestPrepareParams"
-import {getStepTitle} from "../CommonStep";
+import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 
 export default function TTest(props) {
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
+
+    const [showTable, setShowTable] = useState(false)
+    const isDone = props.data.status === "done"
 
     const multiTestCorrText = {
         'BH': "Benjamini & Hochberg (FDR)",
@@ -18,7 +21,7 @@ export default function TTest(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "t-test", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, "t-test")}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -40,14 +43,6 @@ export default function TTest(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row className={"analysis-step-row"}>
-                    <Col span={16}>
-                        <h4>Nr of significant results:</h4>
-                        {results.comparisions.map((comp, i) => {
-                            return <p
-                                key={i}><strong>{comp.firstGroup} - {comp.secondGroup}:</strong> {comp.numberOfSignificant}
-                            </p>
-                        })}
-                    </Col>
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
@@ -58,10 +53,20 @@ export default function TTest(props) {
                             </div>
                         </div>
                     </Col>
+                    <Col span={8} className={"analysis-step-middle-col"}>
+                        <h4>Nr of significant results:</h4>
+                        {results.comparisions.map((comp, i) => {
+                            return <p
+                                key={i}><strong>{comp.firstGroup} - {comp.secondGroup}:</strong> {comp.numberOfSignificant}
+                            </p>
+                        })}
+                    </Col>
+                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
 
             }
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
 }

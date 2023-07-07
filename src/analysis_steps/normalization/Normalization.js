@@ -3,12 +3,15 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {formNum} from "../../common/NumberFormatting";
-import {getStepTitle} from "../CommonStep";
+import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 
 export default function Normalization(props) {
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
+
+    const [showTable, setShowTable] = useState(false)
+    const isDone = props.data.status === "done"
 
     const normType = {
         "median": "Median",
@@ -19,7 +22,7 @@ export default function Normalization(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Normalization", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, "Normalization")}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -41,25 +44,20 @@ export default function Normalization(props) {
             {results &&
                 <Row className={"analysis-step-row"}>
                     <Col span={8}>
-                        <Row><span><strong>Min: </strong>{results.min && formNum(results.min)}</span></Row>
-                        <Row><span><strong>Max: </strong>{results.max && formNum(results.max)}</span></Row>
-                        <Row><span><strong>Nr of valid: </strong>{results.nrValid && formNum(results.nrValid)}</span></Row>
-                        <Row><span><strong>Nr of NaN: </strong>{results.nrNaN && formNum(results.nrNaN)}</span></Row>
-                    </Col>
-                    <Col span={8}>
-                        <Row><span><strong>Mean: </strong>{results.mean && formNum(results.mean)}</span></Row>
-                        <Row><span><strong>Median: </strong>{results.median && formNum(results.median)}</span></Row>
-                        <Row><span><strong>Sum: </strong>{results.sum && formNum(results.sum)}</span></Row>
-                    </Col>
-                    <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
                                 {<p className={"analysis-step-param-line"}>{normType[params.normalizationType]} normalization</p>}
                             </div>
                         </div>
                     </Col>
+                    <Col span={8} className={"analysis-step-middle-col"}>
+                        <Row><span><strong>Min: </strong>{results.min && formNum(results.min)}</span></Row>
+                        <Row><span><strong>Max: </strong>{results.max && formNum(results.max)}</span></Row>
+                    </Col>
+                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
 }

@@ -53,11 +53,15 @@ export default function StepComment(props) {
                      align="top"
                      className={"comment-box"}
                 >
-                    <Col span={21}>
-                        {props.comment && <p style={{whiteSpace: 'pre-wrap'}} onClick={() => setIsEditing(true)}>{props.comment}</p>}
+                    <Col span={23}>
+                        {props.comment && <p style={{
+                            whiteSpace: 'pre-wrap',
+                            backgroundColor: "yellow",
+                            paddingLeft: "5px"
+                        }} onClick={() => setIsEditing(true)}>{props.comment}</p>}
                         {!props.comment && <div><Button onClick={() => setIsEditing(true)} size={"small"}>Add comment</Button></div>}
                     </Col>
-                    <Col span={3}>
+                    <Col span={1}>
                         {props.comment && mouseOver && <div>
                             <Button className={"comment-button"} type={"text"} icon={<CloseCircleOutlined/>}
                                     onClick={() => deleteComment()}></Button>

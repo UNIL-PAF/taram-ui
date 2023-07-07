@@ -7,7 +7,7 @@ import {switchSelProt} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'

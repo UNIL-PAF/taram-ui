@@ -3,7 +3,7 @@ import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStep";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";

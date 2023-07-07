@@ -73,3 +73,12 @@
 .analysis-step-row {
     font-size: small;
 }
+
+.analysis-step-row-end {
+    font-size: small;
+    justify-content: end;
+}
+
+.analysis-step-middle-col {
+    padding-left: 15px;
+}
