@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import Filter from "./filter/Filter"
-import {BarsOutlined} from "@ant-design/icons";
 import {Alert, Badge, Button, Dropdown} from "antd";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'

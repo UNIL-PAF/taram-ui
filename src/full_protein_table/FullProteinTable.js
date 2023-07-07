@@ -5,6 +5,7 @@ import Highlighter from 'react-highlight-words';
 import {useDispatch, useSelector} from "react-redux";
 import {getFullProteinTable} from "./BackendFullProteinTable";
 import {formNum} from "../common/NumberFormatting";
+import {setStopMenuShortcut} from "../analysis/analysisSlice";
 
 
 export default function FullProteinTable(props) {
@@ -15,6 +16,14 @@ export default function FullProteinTable(props) {
     const searchInput = useRef(null);
     const table = useSelector(state => state.fullProteinTable)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setStopMenuShortcut(true))
+        return () => {
+            dispatch(setStopMenuShortcut(false))
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => {
         if(!table || !table.data || table.data.stepId !== props.stepId){

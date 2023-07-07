@@ -1,26 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {ClockCircleOutlined, DownloadOutlined, SyncOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, SyncOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
-import {useDispatch, useSelector} from "react-redux";
-import {setStopMenuShortcut} from "../../analysis/analysisSlice";
+import {useSelector} from "react-redux";
 
 export default function AnalysisStepMenu(props) {
-    const dispatch = useDispatch();
 
     const [menuIsVisible, setMenuIsVisible] = useState(false)
-    const [showTable, setShowTable] = useState(false)
     const [showMenuItem, setShowMenuItem] = useState()
     const stopMenuShortcut = useSelector(state => state.analysis.stopMenuShortcut)
-
-    useEffect(() => {
-        if(showTable){
-            dispatch(setStopMenuShortcut(true))
-        }else{
-            dispatch(setStopMenuShortcut(false))
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showTable])
 
     // If pressed key is our target key then set to true
     function downHandler(key) {
