@@ -44,7 +44,9 @@ export default function AnalysisSteps(props) {
 
     return (
         <>
-            {props.data && props.data.analysisSteps && <div className={"analysis-col"}>
+            {props.data && props.data.analysisSteps && <div
+                style={{width: (props.multipleAnalysis ? "45%" : "65%")}}
+                className={"analysis-col"} >
                 <h3>
                 <span style={{float: "left", marginLeft: "10px"}}>
                     <Badge status={badgeStatus()}/>

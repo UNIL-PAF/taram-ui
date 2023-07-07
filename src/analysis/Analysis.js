@@ -46,12 +46,20 @@ export default function Analysis() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [analysisFetchStatus, params.resultId, analysisData, analysisStatus, resultsId])
 
+    const multipleAnalysis = analysisData && analysisData.length > 1
+
     return (
         <div>
             {analysisData && <div className={"analysis-container"}>
                 {
                     analysisData.map(a => {
-                        return <AnalysisSteps analysisIdx={a.idx} data={a} key={a.idx} resType={a.result.type}/>
+                        return <AnalysisSteps
+                            analysisIdx={a.idx}
+                            data={a}
+                            key={a.idx}
+                            resType={a.result.type}
+                            multipleAnalysis={multipleAnalysis}
+                        />
                     })
                 }
             </div>
