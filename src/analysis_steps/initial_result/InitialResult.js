@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Modal, Row, Select} from 'antd';
+import {Button, Card, Col, Modal, Row, Select, Divider} from 'antd';
 import AnalysisStepMenu from "../menus/AnalysisStepMenu"
 import StepComment from "../StepComment";
 import DefineGroupsParams from "./DefineGroupsParams";
@@ -7,6 +7,7 @@ import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
 import {getNumCols, getStepTitle} from "../CommonStep";
+import {formNum} from "../../common/NumberFormatting";
 
 export default function InitialResult(props) {
     const {Option} = Select;
@@ -22,7 +23,7 @@ export default function InitialResult(props) {
     const numCols = props.data.commonResult ? getNumCols(props.data.commonResult.headers) : []
     const intCol = colInfo ? colInfo.columnMapping.intCol : null
     const groupsDefined = colInfo ? Object.values(colInfo.columnMapping.experimentDetails).some(a => a.group) : null
-    
+
     useEffect(() => {
         if (!localParams && props.data) {
             const colMapping = props.data.columnInfo.columnMapping
@@ -80,7 +81,7 @@ export default function InitialResult(props) {
                 const item = g.items.find((i) => {
                     return i.name === d.name
                 })
-                return item ? {name: g.name, item: item}: acc
+                return item ? {name: g.name, item: item} : acc
             }, {})
 
             const myName = group && group.item ? group.item.name : d.name
@@ -140,10 +141,12 @@ export default function InitialResult(props) {
         setShowModal(false)
     }
 
+    const isDone = props.data.status === "done"
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups, props.data.status === "done")}
+              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups, isDone)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -158,54 +161,70 @@ export default function InitialResult(props) {
                               hasImputed={false}/>
         }>
             {colInfo && results && <div>
-                <Row>
-                    <Button onClick={() => changGroups()}
-                            danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
-                            type={'primary'} size={"small"}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
-                </Row>
                 <Row className={"analysis-step-row"}>
-                    <span><strong>Default intensity column: </strong>
+                <Col span={8}>
+                    <Row>
+                        <Button onClick={() => changGroups()}
+                                danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
+                                type={'primary'}
+                                size={"small"}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
+                    </Row>
+                    <br></br>
+                    <Row className={"analysis-step-row"}>
+                        <span><strong>Default intensity column</strong><br></br>
                     <Select className={"analysis-step-row"} value={props.data.columnInfo.columnMapping.intCol}
-                            style={{width: 250}}
+                            style={{width: "100%"}}
                             onChange={changeIntensity}>
                         {numCols.map((n, i) => {
                             return <Option key={i} value={i}>{n}</Option>
                         })}</Select>
                 </span>
-                </Row>
-                <Row className={"analysis-step-row"}>
-                    {results && results.maxQuantParameters &&
-                        <span><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}
+                    </Row>
+                </Col>
+                <Col span={8}>
+                    {results.fastaFiles &&
+                        <Row className={"analysis-step-row"}>
+                            <Col><strong>Fasta files:</strong></Col>
+                            <Col>
+                                {results.fastaFiles.map(f => {
+                                    return <Row key={f}>&nbsp;{f}</Row>
+                                })}
+                            </Col>
+                        </Row>
+                    }
+                    {results.softwareVersion &&
+                        <Row className={"analysis-step-row"}>
+                            <Col><strong>Version:</strong></Col>
+                            <Col>&nbsp;{results.softwareVersion}</Col>
+                        </Row>
+                    }
+                    <Row className={"analysis-step-row"}>
+                        {results && results.maxQuantParameters &&
+                            <span><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}
                 </span>}
-                </Row>
-                { results.fastaFiles &&
-                    <Row className={"analysis-step-row"}>
-                        <Col><strong>Fasta files:</strong></Col>
-                        <Col>
-                            {results.fastaFiles.map(f => {return <Row key={f}>&nbsp;{f}</Row>})}
-                        </Col>
                     </Row>
-                }
-                { results.softwareVersion &&
-                    <Row className={"analysis-step-row"}>
-                        <Col><strong>Version:</strong></Col>
-                        <Col>&nbsp;{results.softwareVersion}</Col>
-                    </Row>
-                }
-                <StepComment stepId={props.data.id} resultId={props.resultId}
-                             comment={props.data.comments}></StepComment>
-            </div>}
-            <Modal visible={showModal} onOk={() => handleGroupModalOk()}
-                   onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
-                <DefineGroupsParams analysisIdx={props.analysisIdx}
-                                    params={localParams}
-                                    commonResult={props.data.commonResult}
-                                    prepareParams={prepareParams}
-                                    setParams={setLocalParams}
-                                    changeExpName={changeExpName}
-                >
-                </DefineGroupsParams>
-            </Modal>
-        </Card>
-    );
+                </Col>
+                <Col span={8}>
+                    {isDone && <span style={{marginLeft: "30%", fontSize: "small"}}>{results.nrProteinGroups} protein groups</span>}
+                </Col>
+            </Row>
+
+            <StepComment stepId={props.data.id} resultId={props.resultId}
+                         comment={props.data.comments}></StepComment>
+        </div>
+}
+<Modal visible={showModal} onOk={() => handleGroupModalOk()}
+       onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
+    <DefineGroupsParams analysisIdx={props.analysisIdx}
+                        params={localParams}
+                        commonResult={props.data.commonResult}
+                        prepareParams={prepareParams}
+                        setParams={setLocalParams}
+                        changeExpName={changeExpName}
+    >
+    </DefineGroupsParams>
+</Modal>
+</Card>
+)
+;
 }

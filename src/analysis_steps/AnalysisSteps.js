@@ -65,7 +65,7 @@ export default function AnalysisSteps(props) {
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
-                    <Button type={"text"} icon={<BarsOutlined style={{fontSize: '24px'}}/>}></Button>
+                    <Button type={"primary"} shape="round">Analysis menu</Button>
                 </Dropdown>
 
             </span>

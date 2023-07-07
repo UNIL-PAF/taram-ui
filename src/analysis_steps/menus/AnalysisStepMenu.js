@@ -114,7 +114,7 @@ export default function AnalysisStepMenu(props) {
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>
-                <Button type={"default"} size="small">Menu</Button>
+                <Button type={"primary"} shape={"round"} size="small">Menu</Button>
             </Dropdown>
             {showTable && <Modal visible={true} title={getTitle()} onCancel={() => setShowTable(false)}
                    width={"95%"} height={"90%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
