@@ -40,7 +40,7 @@ export default function RemoveImputed(props) {
                         <Col span={8}></Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
                             <Row><Col><strong>Nr of replacements:</strong> {results.nrValuesReplaced}</Col></Row>
-                            <Row><Col><strong>Nr protein groups with replacements:</strong> {results.nrProteinGroupsReplaced}</Col></Row>
+                            <Row><Col><strong>Nr of protein groups with replacements:</strong> {results.nrProteinGroupsReplaced}</Col></Row>
                         </Col>
                         {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                     </Row>

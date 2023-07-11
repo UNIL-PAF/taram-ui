@@ -59,7 +59,8 @@ export default function Imputation(props) {
                         </div>
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
-                        <p><strong>Nr imputed: </strong>{results.nrImputedValues}</p>
+                        <Row><Col><strong>Nr of imputed values: </strong>{results.nrImputedValues}</Col></Row>
+                        <Row><Col><strong>Nr of protein groups with imputation: </strong>{results.nrOfImputedGroups}</Col></Row>
                     </Col>
                     {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
