@@ -253,6 +253,11 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'order-columns'}>
                             <span id={"menu-item"}>Order columns</span>
                         </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("rename-columns")}
+                                   className="narrow-menu"
+                                   key={'rename-columns'}>
+                            <span id={"menu-item"}>Rename columns</span>
+                        </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.SubMenu key={"filters"} title={"Filter"}>
                         <Menu.Item onClick={() => clickAddStep("filter")}

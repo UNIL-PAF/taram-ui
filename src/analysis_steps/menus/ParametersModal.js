@@ -15,6 +15,7 @@ import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
 import NormalizationParams from "../normalization/NormalizationParams";
 import SummaryStatParams from "../summary_stat/SummaryStatParams";
 import OrderColumnsParams from "../order_columns/OrderColumnsParams";
+import RenameColumnsParams from "../rename_columns/RenameColumnsParams";
 
 export default function ParametersModal(props) {
 
@@ -111,6 +112,13 @@ export default function ParametersModal(props) {
                                            experimentDetails={props.experimentDetails}
                                            intCol={props.intCol}
                 ></OrderColumnsParams>
+            case 'rename-columns':
+                return <RenameColumnsParams commonResult={props.commonResult}
+                                           params={props.params}
+                                           setParams={props.setParams}
+                                           experimentDetails={props.experimentDetails}
+                                           intCol={props.intCol}
+                ></RenameColumnsParams>
 
         }
     }

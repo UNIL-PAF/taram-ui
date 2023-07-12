@@ -18,6 +18,7 @@ import ScatterPlot from "./scatter_plot/ScatterPlot";
 import Normalization from "./normalization/Normalization";
 import SummaryStat from "./summary_stat/SummaryStat";
 import OrderColumns from "./order_columns/OrderColumns";
+import RenameColumns from "./rename_columns/RenameColumns";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -148,6 +149,10 @@ export default function AnalysisSteps(props) {
                                 return <OrderColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
+                            case 'rename-columns':
+                                return <RenameColumns analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                     data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                     onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
                         }
