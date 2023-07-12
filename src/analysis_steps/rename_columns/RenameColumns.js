@@ -15,7 +15,7 @@ export default function RenameColumns(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Rename columns")}
+              title={getStepTitle(props.data.nr, "Rename headers")}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -38,14 +38,13 @@ export default function RenameColumns(props) {
                 <div>
                     <Row>
                         <Col span={8}>
+                            <div className={"analysis-step-param-box"}>
+                                <div className={"analysis-step-param-content"}>
+                                    {params.addConditionNames && <p className={"analysis-step-param-line"}>Add conditions to table headers.</p>}
+                                </div>
+                            </div>
                         </Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
-                    <Row className={"analysis-step-row"}>
-                        <span><strong>Nr of columns: </strong>{results.nrOfColumns}</span>
-                    </Row>
-                    <Row className={"analysis-step-row"}>
-                        <span><strong>Nr of columns removed: </strong>{results.nrOfColumnsRemoved}</span>
-                    </Row>
                         </Col>
                         {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                     </Row>

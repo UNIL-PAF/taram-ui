@@ -128,7 +128,7 @@ export default function RenameColumnsParams(props) {
                 <Checkbox disabled={!groupsDefined} checked={props.params && props.params.addConditionNames}
                           onChange={(e) => handleChange(e.target.checked)}>
                 </Checkbox>
-                <span style={{paddingLeft: "20px"}}>Add condition names to columns.</span>
+                <span style={{paddingLeft: "20px"}}>Add conditions to table headers.</span>
             </span>
             <br></br>
             <br></br>

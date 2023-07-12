@@ -40,7 +40,7 @@ export default function OrderColumns(props) {
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
-                                {<p className={"analysis-step-param-line"}>Move default intensity column [{intCol}] first.</p>}
+                                {params.moveSelIntFirst && <p className={"analysis-step-param-line"}>Move default intensity column [{intCol}] first.</p>}
                             </div>
                         </div>
                     </Col>
