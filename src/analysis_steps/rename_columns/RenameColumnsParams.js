@@ -17,10 +17,10 @@ export default function RenameColumnsParams(props) {
         return props.commonResult.headers.reduce((acc, val) => {
             if(val.experiment){
                 const renameItem = (props.params && props.params.rename) ? props.params.rename.find( r => r.idx === val.experiment.field) : undefined
-                const fieldName = renameItem ? renameItem.to : val.experiment.field
+                const fieldName = renameItem ? renameItem.name : val.experiment.field
 
                 const newVal =   {
-                    title: renameItem ? val.experiment.name + "." + renameItem.to : val.name,
+                    title: renameItem ? val.experiment.name + "." + renameItem.name : val.name,
                     key: val.idx,
                     type: val.type,
                     inExperiment: true
@@ -36,7 +36,7 @@ export default function RenameColumnsParams(props) {
                 const renameItem = (props.params && props.params.rename) ? props.params.rename.find( r => r.idx === val.idx) : undefined
 
                 const newVal =   {
-                    title: (renameItem ? renameItem.to : val.name),
+                    title: (renameItem ? renameItem.name : val.name),
                     key: val.idx,
                     type: val.type
                 }
@@ -75,8 +75,9 @@ export default function RenameColumnsParams(props) {
     const save = (e) => {
         e.stopPropagation()
         const oldRename = (props.params && props.params.rename) ? props.params.rename : []
-        const newItem = {idx: selItem.key, from: selItem.title, to: editName}
-        const newRename = oldRename.concat(newItem)
+        const newItem = {idx: selItem.key, name: editName}
+        const fltRename = oldRename.filter(r => r.idx !== newItem.idx)
+        const newRename = fltRename.concat(newItem)
         props.setParams({...props.stepParams, rename: newRename})
         setSelItem(undefined)
         setEditName(undefined)
