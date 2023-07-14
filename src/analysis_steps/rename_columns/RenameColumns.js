@@ -41,7 +41,7 @@ export default function RenameColumns(props) {
                             <div className={"analysis-step-param-box"}>
                                 <div className={"analysis-step-param-content"}>
                                     {params.addConditionNames && <p className={"analysis-step-param-line"}>Add conditions to table headers.</p>}
-                                    {params.rename && <p className={"analysis-step-param-line"}>Renamed: [{params.rename.map(r => r.name).join()}]</p>}
+                                    {params.rename && <p className={"analysis-step-param-line"}>Renamed: [{params.rename.map(r => r.name).join(", ")}]</p>}
                                 </div>
                             </div>
                         </Col>
