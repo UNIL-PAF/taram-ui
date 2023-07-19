@@ -7,7 +7,7 @@ import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../C
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
-import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps";
+import {setStepParametersWithoutRunning, switchSelProt} from "../BackendAnalysisSteps";
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -15,20 +15,16 @@ export default function ScatterPlot(props) {
     const [options, setOptions] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
+    // to show the selected proteins before the reload
+    const [selProts, setSelProts] = useState([])
+    const [onEvents, setOnEvents] = useState()
     const dispatch = useDispatch();
 
+
     useEffect(() => {
-        if(localParams && props.data && props.data.status === 'done'){
-            const results = JSON.parse(props.data.results)
-            const echartOptions = getOptions(results, localParams)
-            setOptions({...options, data: echartOptions})
-            const optsToSave = replaceProgressiveSeries(echartOptions)
-            replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
-        }
+        setOnEvents({'click': showToolTipOnClick})
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [localParams])
-
-
+    }, [selProts])
 
     useEffect(() => {
         if (props.data) {
@@ -42,6 +38,8 @@ export default function ScatterPlot(props) {
                 replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
+                const backendSelProts = JSON.parse(props.data.parameters).selProteins
+                if (backendSelProts) setSelProts(backendSelProts)
             }
 
             if (!isWaiting && props.data.status !== 'done') {
@@ -89,19 +87,31 @@ export default function ScatterPlot(props) {
         }, [undefined, undefined])
     }
 
-    const getOptions = (results, params) => {
+    const getOptions = (results, params, mySelProteins) => {
         const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
+        const defSelProts = (mySelProteins ? mySelProteins : params.selProteins)
+
+        const dataWithLabel = myData.d.map(d => {
+            const showLab = defSelProts && defSelProts.includes(d.n)
+            return {...d, showLab: showLab}
+        })
 
         const options = {
             title: {text: params.xAxis + " - " + params.yAxis, left: "center", textStyle: {fontSize: 14}},
             dataset: [
                 {
-                    dimensions: ["x", "y", "name", "col"],
-                    source: myData.d.map(p => {
-                        return [p.x, p.y, p.n, p.d]
+                    dimensions: ["x", "y", "name", "col", "showLab"],
+                    source: dataWithLabel.map(p => {
+                        return [p.x, p.y, p.n, p.d, p.showLab]
                     }),
-                }
+                },
+                {
+                    transform: {
+                        type: 'filter',
+                        config: {dimension: 'showLab', value: true}
+                    }
+                },
             ],
             xAxis: {
                 name: params.xAxis,
@@ -116,8 +126,8 @@ export default function ScatterPlot(props) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-               // min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
-               // max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
+                // min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
+                // max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
             },
             yAxis: {
                 name: params.yAxis,
@@ -132,8 +142,8 @@ export default function ScatterPlot(props) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-               // min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
-               // max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
+                // min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
+                // max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
             },
             tooltip: {
                 showDelay: 0,
@@ -146,15 +156,43 @@ export default function ScatterPlot(props) {
                 },
             },
             legend: {},
-            series: [{
-                datasetIndex: 0,
-                type: 'scatter',
-                encode: {
-                    x: 'x',
-                    y: 'y',
+            series: [
+                {
+                    datasetIndex: 0,
+                    type: 'scatter',
+                    encode: {
+                        x: 'x',
+                        y: 'y',
+                    },
+                    symbolSize: 5
                 },
-                symbolSize: 5
-            }],
+                {
+                    label: {
+                        show: true,
+                        formatter: function (v) {
+                            return v.value[2]
+                        },
+                        position: 'right',
+                        minMargin: 2,
+                        //fontWeight: 'bold',
+                        fontSize: 12,
+                        color: 'black'
+
+                    },
+                    symbolSize: 8,
+                    itemStyle: {
+                        color: "rgba(0, 128, 0, 0)",
+                        borderWidth: 1,
+                        borderColor: 'green'
+                    },
+                    datasetIndex: 1,
+                    type: 'scatter',
+                    encode: {
+                        x: 'x',
+                        y: 'y',
+                    },
+                },
+            ],
             grid: {
                 left: 75
             }
@@ -175,6 +213,21 @@ export default function ScatterPlot(props) {
                 text: [params.colorBy, ''],
             }
         } : options
+    }
+
+    function showToolTipOnClick(e) {
+        const prot = e.data[2]
+        const protIndex = (selProts ? selProts.indexOf(prot) : -1)
+        const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
+        setSelProts(newSelProts)
+
+        const results = JSON.parse(props.data.results)
+        const echartOptions = getOptions(results, localParams, newSelProts)
+        const callback = () => {
+            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+        }
+        dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
+        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
     }
 
     return (
@@ -209,9 +262,10 @@ export default function ScatterPlot(props) {
                 onChange={checkboxChange} checked={localParams && localParams.logTrans}>Log transform [log10]
             </Checkbox>
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data}/>}
+                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
+                                     onEvents={onEvents}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
