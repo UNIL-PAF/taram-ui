@@ -181,6 +181,18 @@ export default function InitialResult(props) {
                         </Row>
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
+                        {results.softwareVersion &&
+                            <Row className={"analysis-step-row"}>
+                                <Col><strong>Version:</strong></Col>
+                                <Col>&nbsp;{results.softwareVersion}</Col>
+                            </Row>
+                        }
+                        {results.spectronautSetup &&
+                            <Row className={"analysis-step-row"}>
+                                <Col><strong>Analysis date:</strong></Col>
+                                <Col>&nbsp;{results.spectronautSetup.analysisDate}</Col>
+                            </Row>
+                        }
                         {results.fastaFiles &&
                             <Row className={"analysis-step-row"}>
                                 <Col><strong>Fasta files:</strong></Col>
@@ -191,10 +203,14 @@ export default function InitialResult(props) {
                                 </Col>
                             </Row>
                         }
-                        {results.softwareVersion &&
+                        {results.spectronautSetup &&
                             <Row className={"analysis-step-row"}>
-                                <Col><strong>Version:</strong></Col>
-                                <Col>&nbsp;{results.softwareVersion}</Col>
+                                <Col><strong>Libraries:</strong></Col>
+                                <Col>
+                                    {results.spectronautSetup.libraries.map(f => {
+                                        return <Row key={f.name}>&nbsp;{f.name}</Row>
+                                    })}
+                                </Col>
                             </Row>
                         }
                         <Row className={"analysis-step-row"}>
