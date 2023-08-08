@@ -7,10 +7,11 @@ import {FullscreenOutlined} from "@ant-design/icons";
 import SummaryTableZoom from "./SummaryTableZoom";
 import SummaryTable from "./SummaryTable";
 import {getStepTitle} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function SummaryStat(props) {
+    const type = "summary-stat"
     const [showZoom, setShowZoom] = useState(null)
-
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
@@ -18,14 +19,14 @@ export default function SummaryStat(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Summary", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"summary-stat"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

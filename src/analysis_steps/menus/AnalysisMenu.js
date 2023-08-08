@@ -64,6 +64,10 @@ export default function AnalysisMenu(props) {
         dispatch(copyAnalysis({analysisId: props.analysisId, resultsId: props.resultId}))
     }
 
+    const downloadZip = () => {
+        props.setShowDownloadZip(true)
+    }
+
     const downloadPdf = () => {
         fetch(globalConfig.urlBackend + 'analysis/pdf/' + props.analysisId)
             .then(response => {
@@ -112,7 +116,12 @@ export default function AnalysisMenu(props) {
                 <Menu.Item onClick={() => downloadPdf()}
                            key={'pdf'}
                 >
-                    <span>Download PDF</span>
+                    <span>Download PDF report</span>
+                </Menu.Item>
+                <Menu.Item onClick={() => downloadZip()}
+                           key={'zip'}
+                >
+                    <span>Download results as ZIP...</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-1'}></Menu.Divider>
                 <Menu.Item onClick={() => clickDuplicate()}

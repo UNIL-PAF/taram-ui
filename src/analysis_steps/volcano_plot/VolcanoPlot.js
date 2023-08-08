@@ -8,10 +8,10 @@ import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
 import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
-
     const dispatch = useDispatch();
     const [localParams, setLocalParams] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
@@ -344,7 +344,7 @@ export default function VolcanoPlot(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Volcano plot", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}

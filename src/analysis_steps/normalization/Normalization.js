@@ -4,8 +4,10 @@ import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {formNum} from "../../common/NumberFormatting";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function Normalization(props) {
+    const type = "normalization"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
@@ -22,14 +24,14 @@ export default function Normalization(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Normalization")}
+              title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"normalization"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

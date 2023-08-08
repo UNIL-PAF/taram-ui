@@ -4,8 +4,10 @@ import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {CheckOutlined} from "@ant-design/icons";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function Filter(props) {
+    const type = "filter"
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
@@ -32,13 +34,13 @@ export default function Filter(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Filter rows")}
+              title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
-                              error={props.data.error} paramType={"filter"}
+                              error={props.data.error} paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

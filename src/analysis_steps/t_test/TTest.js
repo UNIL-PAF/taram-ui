@@ -4,12 +4,13 @@ import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {prepareTTestParams} from "./TTestPrepareParams"
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function TTest(props) {
+    const type = "t-test"
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
-
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
@@ -21,14 +22,14 @@ export default function TTest(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "t-test")}
+              title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"t-test"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

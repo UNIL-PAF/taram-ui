@@ -19,9 +19,11 @@ import Normalization from "./normalization/Normalization";
 import SummaryStat from "./summary_stat/SummaryStat";
 import OrderColumns from "./order_columns/OrderColumns";
 import RenameColumns from "./rename_columns/RenameColumns";
+import DownloadZippedResults from "./menus/DownloadZippedResults";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
+    const [showDownloadZip, setShowDownloadZip] = useState()
     const [error, setError] = useState(undefined)
     const [selStep, setSelStep] = useState()
 
@@ -62,6 +64,7 @@ export default function AnalysisSteps(props) {
                                                  setError={setError}
                                                  resultId={props.data.result.id}
                                                  resultName={props.data.result.name}
+                                                 setShowDownloadZip={setShowDownloadZip}
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
@@ -159,6 +162,11 @@ export default function AnalysisSteps(props) {
                     })}
                 </div>
             </div>}
+            {showDownloadZip && <DownloadZippedResults
+                handleOk={() => setShowDownloadZip(false)}
+                handleCancel={() => setShowDownloadZip(false)}
+                data={props.data}
+            ></DownloadZippedResults>}
         </>
     );
 }

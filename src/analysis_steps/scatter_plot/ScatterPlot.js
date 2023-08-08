@@ -8,6 +8,7 @@ import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
 import {setStepParametersWithoutRunning, switchSelProt} from "../BackendAnalysisSteps";
+import {typeToName} from "../TypeNameMapping"
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -233,7 +234,7 @@ export default function ScatterPlot(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Scatter plot", props.data.nrProteinGroups, props.data.status === 'done')}
+              title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}

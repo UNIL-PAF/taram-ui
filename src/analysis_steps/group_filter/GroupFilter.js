@@ -3,8 +3,10 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function GroupFilter(props) {
+    const type = "group-filter"
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
@@ -23,14 +25,14 @@ export default function GroupFilter(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Filter on valid")}
+              title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"group-filter"}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

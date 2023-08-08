@@ -7,8 +7,10 @@ import {setStepParameters} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
 import {getNumCols, getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function InitialResult(props) {
+    const type = "initial-result"
     const {Option} = Select;
     const [showModal, setShowModal] = useState(false)
     const [showTable, setShowTable] = useState(false)
@@ -146,7 +148,7 @@ export default function InitialResult(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Initial result", results.nrProteinGroups, isDone)}
+              title={getStepTitle(props.data.nr, typeToName(type), results.nrProteinGroups, isDone)}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}

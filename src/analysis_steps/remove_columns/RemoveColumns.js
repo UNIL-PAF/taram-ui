@@ -3,8 +3,10 @@ import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {typeToName} from "../TypeNameMapping"
 
 export default function RemoveColumns(props) {
+    const type = "remove-columns"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
@@ -15,14 +17,14 @@ export default function RemoveColumns(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, "Remove columns")}
+              title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}
-                              paramType={"remove-columns"}
+                              paramType={type}
                               commonResult={props.commonResBefore}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
