@@ -163,9 +163,9 @@ export default function AnalysisSteps(props) {
                 </div>
             </div>}
             {showDownloadZip && <DownloadZippedResults
-                handleOk={() => setShowDownloadZip(false)}
                 handleCancel={() => setShowDownloadZip(false)}
                 data={props.data}
+                analysisId={props.data.id}
             ></DownloadZippedResults>}
         </>
     );
