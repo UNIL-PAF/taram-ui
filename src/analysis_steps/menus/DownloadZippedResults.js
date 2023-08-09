@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Modal, Table} from "antd";
+import globalConfig from "../../globalConfig";
+import {typeToName} from "../TypeNameMapping";
 
 export default function DownloadZippedResults(props) {
 
@@ -18,6 +20,27 @@ export default function DownloadZippedResults(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selRowKeys])
+
+    const downloadZip = () => {
+        fetch(globalConfig.urlBackend + 'analysis/zip/' + props.analysisId)
+            .then(response => {
+                if(response.ok){
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = props.resultName + '.zip';
+                        a.click();
+                    })
+                }else {
+                    response.text().then(text => {
+                        const err = JSON.parse(text).message
+                        console.error("ZIP download error: " + err)
+                        props.setError(err)
+                    })
+                }
+            })
+    }
 
     const greyItem = (text, item) => {
         if (!selRowKeys) return <span></span>
@@ -70,7 +93,7 @@ export default function DownloadZippedResults(props) {
         const hasPlot = (result && result.plot) ? true : false
         return {
             key: s.id,
-            type: s.type,
+            type: typeToName(s.type),
             idx: i + 1,
             table: (s.modifiesResult && s.tableNr) ? "Table-" + s.tableNr : undefined,
             plots: hasPlot ? s.type + "-" + (i + 1) : undefined,
