@@ -21,27 +21,6 @@ export default function DownloadZippedResults(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selRowKeys])
 
-    const downloadZip = () => {
-        fetch(globalConfig.urlBackend + 'analysis/zip/' + props.analysisId)
-            .then(response => {
-                if(response.ok){
-                    response.blob().then(blob => {
-                        let url = window.URL.createObjectURL(blob);
-                        let a = document.createElement('a');
-                        a.href = url;
-                        a.download = props.resultName + '.zip';
-                        a.click();
-                    })
-                }else {
-                    response.text().then(text => {
-                        const err = JSON.parse(text).message
-                        console.error("ZIP download error: " + err)
-                        props.setError(err)
-                    })
-                }
-            })
-    }
-
     const greyItem = (text, item) => {
         if (!selRowKeys) return <span></span>
         return (selRowKeys.includes(item.key)) ? <span>{text}</span> : <span style={{color: "grey"}}>{text}</span>
@@ -111,6 +90,35 @@ export default function DownloadZippedResults(props) {
         const selTables = selItems.table.filter(s => selRowKeys.includes(s))
         const mergedSelItems = {plots: selPlots, tables: selTables, steps: selRowKeys, analysisId: props.analysisId}
         console.log("Download: ", mergedSelItems)
+
+        console.log(props.analysisName, props.resultName)
+        const fileName = props.resultName + "-" + (props.analysisName ? props.analysisName : "").replace(/\\s+/, "-").replace(/--+/, "-")
+
+        fetch(globalConfig.urlBackend + 'analysis/zip/' + props.analysisId, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(mergedSelItems)
+        }).then(response => {
+                if(response.ok){
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = fileName + '.zip';
+                        a.click();
+                    })
+                }else {
+                    response.text().then(text => {
+                        const err = JSON.parse(text).message
+                        console.error("ZIP download error: " + err)
+                        //props.setError(err)
+                    })
+                }
+            })
+
         props.handleCancel()
     }
 

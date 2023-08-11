@@ -166,6 +166,8 @@ export default function AnalysisSteps(props) {
                 handleCancel={() => setShowDownloadZip(false)}
                 data={props.data}
                 analysisId={props.data.id}
+                analysisName={props.data.name}
+                resultName={props.data.result.name}
             ></DownloadZippedResults>}
         </>
     );
