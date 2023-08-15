@@ -2,11 +2,15 @@ import React, {useEffect, useState} from "react";
 import {Checkbox, Modal, Table} from "antd";
 import globalConfig from "../../globalConfig";
 import {typeToName} from "../TypeNameMapping";
+import {useDispatch} from "react-redux";
+import {setText, setError, setIdle} from "../../navigation/loadingSlice"
 
 export default function DownloadZippedResults(props) {
 
     const [selItems, setSelItems] = useState({'table': [], 'plots': []})
     const [selRowKeys, setSelRowKeys] = useState()
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!selRowKeys && props.data && props.data.analysisSteps) {
@@ -89,9 +93,7 @@ export default function DownloadZippedResults(props) {
         const selPlots = selItems.plots.filter(s => selRowKeys.includes(s))
         const selTables = selItems.table.filter(s => selRowKeys.includes(s))
         const mergedSelItems = {plots: selPlots, tables: selTables, steps: selRowKeys, analysisId: props.analysisId}
-        console.log("Download: ", mergedSelItems)
-
-        console.log(props.analysisName, props.resultName)
+        dispatch(setText("Prepare ZIP file.."))
         const fileName = props.resultName + "-" + (props.analysisName ? props.analysisName : "").replace(/\\s+/, "-").replace(/--+/, "-")
 
         fetch(globalConfig.urlBackend + 'analysis/zip/' + props.analysisId, {
@@ -110,10 +112,12 @@ export default function DownloadZippedResults(props) {
                         a.download = fileName + '.zip';
                         a.click();
                     })
+                    dispatch(setIdle())
                 }else {
                     response.text().then(text => {
                         const err = JSON.parse(text).message
                         console.error("ZIP download error: " + err)
+                        dispatch(setError({title: "Error while creating ZIP file", text: text}))
                         //props.setError(err)
                     })
                 }

@@ -1,6 +1,7 @@
 import {Col, Menu, Row} from "antd";
 import {Link, useLocation} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import LoadingInfo from "./LoadingInfo";
 
 export default function Navbar() {
 
@@ -55,10 +56,17 @@ export default function Navbar() {
                     </Menu.Item>
                 </Menu>
             </Col>
-            <Col span={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                {/*<Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
+            <Col span={3} style={{display: 'flex', justifyContent: 'center'}}>
+                <Menu theme="dark" mode="horizontal"  disabledOverflow={true}>
+                    <LoadingInfo></LoadingInfo>
+                </Menu>
+            </Col>
+            <Col span={3} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                {/*
+                <Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
                     <Menu.Item key={"user"}>User</Menu.Item>
-                </Menu>*/}
+                </Menu>
+                */}
             </Col>
         </Row>
     )
