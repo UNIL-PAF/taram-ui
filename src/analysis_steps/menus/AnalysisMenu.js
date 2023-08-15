@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {addTemplate, fetchAllTemplates, runTemplate} from "../../templates/BackendTemplates";
 import '../../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
+import {setError, setIdle, setText} from "../../navigation/loadingSlice";
 
 export default function AnalysisMenu(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -69,6 +70,7 @@ export default function AnalysisMenu(props) {
     }
 
     const downloadPdf = () => {
+        dispatch(setText("Prepare PDF file.."))
         fetch(globalConfig.urlBackend + 'analysis/pdf/' + props.analysisId)
             .then(response => {
                 if(response.ok){
@@ -79,11 +81,13 @@ export default function AnalysisMenu(props) {
                         a.download = props.resultName + '.pdf';
                         a.click();
                     })
+                    dispatch(setIdle())
                 }else {
                     response.text().then(text => {
                         const err = JSON.parse(text).message
                         console.error("PDF download error: " + err)
                         props.setError(err)
+                        dispatch(setError({title: "Error while creating ZIP file", text: text}))
                     })
                 }
             })
