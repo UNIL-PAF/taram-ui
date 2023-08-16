@@ -126,15 +126,15 @@ export const updateComment = createAsyncThunk(
     }
 )
 
-function switchSelProtCall(stepObj) {
-    return axios.post(globalConfig.urlBackend + "analysis-step/switch-sel-protein-ac/" + stepObj.proteinAc + "/step-id/" + stepObj.stepId)
+function switchSelCall(stepObj) {
+    return axios.post(globalConfig.urlBackend + "analysis-step/switch-sel/" + stepObj.selId + "/step-id/" + stepObj.stepId)
 }
 
-export const switchSelProt = createAsyncThunk(
-    'analysis-step/switch-sel-protein-ac',
+export const switchSel = createAsyncThunk(
+    'analysis-step/switch-sel',
     async (stepObj, thunkApi) => {
         try {
-            const response = await switchSelProtCall(stepObj)
+            const response = await switchSelCall(stepObj)
             return response.data
         } catch (err) {
             let error = err // cast the error for access

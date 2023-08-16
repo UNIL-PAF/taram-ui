@@ -3,7 +3,7 @@ import {Button, Card, Row, Col} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
-import {switchSelProt} from "../BackendAnalysisSteps";
+import {switchSel} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
@@ -337,7 +337,7 @@ export default function VolcanoPlot(props) {
         const callback = () => {
             replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
         }
-        dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
+        dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
     }
 

@@ -7,7 +7,7 @@ import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../C
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
-import {setStepParametersWithoutRunning, switchSelProt} from "../BackendAnalysisSteps";
+import {setStepParametersWithoutRunning, switchSel} from "../BackendAnalysisSteps";
 import {typeToName} from "../TypeNameMapping"
 
 export default function ScatterPlot(props) {
@@ -227,7 +227,7 @@ export default function ScatterPlot(props) {
         const callback = () => {
             replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
         }
-        dispatch(switchSelProt({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
+        dispatch(switchSel({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
     }
 
