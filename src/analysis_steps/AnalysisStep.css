@@ -82,3 +82,15 @@
 .analysis-step-middle-col {
     padding-left: 15px;
 }
+
+.step-menu-button {
+    background: white;
+    border-color: #096dd9;
+    color: #096dd9;
+}
+
+.step-menu-button:hover {
+    background: white;
+    border-color: #91d5ff;
+    color: #91d5ff;
+}

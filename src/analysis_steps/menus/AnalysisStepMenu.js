@@ -81,7 +81,7 @@ export default function AnalysisStepMenu(props) {
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>
-                <Button type={"primary"} shape={"round"} size="small">Menu</Button>
+                <Button className={"step-menu-button"} type={"primary"} shape={"round"} size="small">Menu</Button>
             </Dropdown>
         </>
 
