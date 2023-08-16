@@ -94,3 +94,16 @@
     border-color: #91d5ff;
     color: #91d5ff;
 }
+
+.table-download-button {
+    background: white;
+    border-color: #fa8c16;
+    color: #fa8c16;
+    border-width: 1px;
+}
+
+.table-download-button:hover {
+    background: white;
+    border-color: #ffc069;
+    color: #ffc069;
+}

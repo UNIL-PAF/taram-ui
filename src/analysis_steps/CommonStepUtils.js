@@ -102,8 +102,10 @@ export const getTableCol = (nrProteinGroups, tableNr, setShowTable) => {
             </Row>
         {tableNr &&
             <Row className={"analysis-step-row-end"} style={{marginTop: "10px"}}>
-                            <span><Button onClick={() => setShowTable(true)}
-                                          size={'small'}>{'Table-' + tableNr}</Button></span>
+                            <span><Button
+                                className={"table-download-button"}
+                                onClick={() => setShowTable(true)}
+                                size={'small'}><span style={{fontWeight: 500}}>{'Table-' + tableNr}</span></Button></span>
             </Row>}
     </Col>
 }
