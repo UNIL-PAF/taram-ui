@@ -56,7 +56,8 @@ export default function StepComment(props) {
                     <Col span={23}>
                         {props.comment && <p style={{
                             whiteSpace: 'pre-wrap',
-                            backgroundColor: "yellow",
+                            /*backgroundColor: "yellow",*/
+                            color: "blue",
                             paddingLeft: "5px"
                         }} onClick={() => setIsEditing(true)}>{props.comment}</p>}
                         {!props.comment && <div><Button onClick={() => setIsEditing(true)} size={"small"}>Add comment</Button></div>}
