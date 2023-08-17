@@ -29,7 +29,7 @@
     user-select: none;
     white-space: nowrap;
     background-image: url("blue_sky.jpg");
-    background-size: cover;
+    background-size: contain;
 }
 
 .copy-from-title {
