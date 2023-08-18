@@ -167,7 +167,7 @@ export default function PcaPlot(props) {
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
               title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
-              headStyle={{textAlign: 'left'}}
+              headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
                               stepId={props.data.id}

@@ -39,16 +39,18 @@ export function getStepTitle(nr, type){
             <Avatar style={{
                 backgroundColor: "white",
                 verticalAlign: 'middle',
-                color: "#8e8268",
+                color: "black",
                 border: "1px solid #8e8268",
                 marginBottom: "3px"
             }} size={"small"}>{nr}</Avatar>
             <span style={{
-                color: "white",
-                backgroundColor: "#8e8268",
+                color: "black",
+                backgroundColor: "white",
+                border: "1px solid #8e8268",
                 padding: "5px 9px 5px 9px",
                 marginLeft: "10px",
                 borderRadius: "5px",
+                fontSize: "14px"
             }}>{type}</span>
         </span>
     </div>
@@ -105,7 +107,7 @@ export const getTableCol = (nrProteinGroups, tableNr, setShowTable) => {
                             <span><Button
                                 className={"table-download-button"}
                                 onClick={() => setShowTable(true)}
-                                size={'small'}><span style={{fontWeight: 500}}>{'Table-' + tableNr}</span></Button></span>
+                                size={'small'}><span>{'Table-' + tableNr}</span></Button></span>
             </Row>}
     </Col>
 }

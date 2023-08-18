@@ -32,7 +32,7 @@ export default function Imputation(props) {
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
               title={getStepTitle(props.data.nr, typeToName(type))}
-              headStyle={{textAlign: 'left'}}
+              headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}

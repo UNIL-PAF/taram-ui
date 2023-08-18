@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
-import {ClockCircleOutlined, SyncOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, SyncOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 import {useSelector} from "react-redux";
 
@@ -81,7 +81,7 @@ export default function AnalysisStepMenu(props) {
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>
-                <Button className={"step-menu-button"} type={"primary"} shape={"round"} size="small">Menu</Button>
+                <Button type={"primary"} icon={<MenuUnfoldOutlined />}></Button>
             </Dropdown>
         </>
 

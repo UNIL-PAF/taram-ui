@@ -1,5 +1,5 @@
-import './App.css';
-import 'antd/dist/antd.css'
+import './App.less';
+import 'antd/dist/antd.less'
 import {Layout} from 'antd';
 import React from "react";
 import MyRoutes from "./navigation/MyRoutes";

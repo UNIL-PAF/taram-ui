@@ -68,7 +68,7 @@ export default function AnalysisSteps(props) {
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>
-                    <Button type={"primary"} shape="round">Analysis menu</Button>
+                    <Button type={"primary"}>Analysis menu</Button>
                 </Dropdown>
 
             </span>
