@@ -368,7 +368,7 @@ export default function VolcanoPlot(props) {
                 <Col span={12}></Col>
                 <Col span={12}>
                     <div style={{textAlign: 'right'}}>
-                        <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                        <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                                 icon={<FullscreenOutlined/>}>Expand</Button>
                     </div>
                 </Col>

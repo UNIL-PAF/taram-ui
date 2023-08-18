@@ -255,7 +255,7 @@ export default function ScatterPlot(props) {
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
-                <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                         icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

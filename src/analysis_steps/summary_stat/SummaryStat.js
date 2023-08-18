@@ -40,7 +40,7 @@ export default function SummaryStat(props) {
             {results && results.stdDev &&
                 <div>
                     <div style={{textAlign: 'right', marginBottom: '10px'}}>
-                        <Button size={'small'} type='default' onClick={() => setShowZoom(true)}
+                        <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                                 icon={<FullscreenOutlined/>}>Expand</Button>
                     </div>
                     <SummaryTable results={results}></SummaryTable>
