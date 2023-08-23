@@ -195,6 +195,7 @@ export default function BoxPlot(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
@@ -203,10 +204,11 @@ export default function BoxPlot(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
                 className={"analysis-step-row"}
+                disabled={props.isLocked}
                 onChange={checkboxChange} checked={localParams && localParams.groupByCondition}>Group by condition
             </Checkbox>
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments} isLocked={props.isLocked}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );

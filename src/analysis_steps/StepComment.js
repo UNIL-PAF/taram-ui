@@ -48,7 +48,7 @@ export default function StepComment(props) {
     return (
         <>
             {!isEditing &&
-                <Row onMouseEnter={() => setMouseOver(true)}
+                <Row onMouseEnter={() => {if(!props.isLocked) setMouseOver(true)}}
                      onMouseLeave={() => setMouseOver(false)}
                      align="top"
                      className={"comment-box"}
@@ -59,8 +59,8 @@ export default function StepComment(props) {
                             /*backgroundColor: "yellow",*/
                             color: "#006d75",
                             paddingLeft: "5px"
-                        }} onClick={() => setIsEditing(true)}>{props.comment}</p>}
-                        {!props.comment && <div><Button onClick={() => setIsEditing(true)} size={"small"} type={"primary"}>Add comment</Button></div>}
+                        }} onClick={() => {if(!props.isLocked) setIsEditing(true)}}>{props.comment}</p>}
+                        {!props.comment && <div><Button onClick={() => setIsEditing(true)} size={"small"} type={"primary"} disabled={props.isLocked}>Add comment</Button></div>}
                     </Col>
                     <Col span={1}>
                         {props.comment && mouseOver && <div>

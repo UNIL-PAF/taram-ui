@@ -49,6 +49,7 @@ export default function Filter(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
@@ -70,7 +71,7 @@ export default function Filter(props) {
                     {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
             }
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );

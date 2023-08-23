@@ -217,6 +217,9 @@ export default function ScatterPlot(props) {
     }
 
     function showToolTipOnClick(e) {
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
         const prot = e.data[2]
         const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
@@ -252,6 +255,7 @@ export default function ScatterPlot(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
@@ -260,11 +264,14 @@ export default function ScatterPlot(props) {
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
-                onChange={checkboxChange} checked={localParams && localParams.logTrans}>Log transform [log10]
+                onChange={checkboxChange}
+                checked={localParams && localParams.logTrans}
+                disabled={props.isLocked}
+            >Log transform [log10]
             </Checkbox>
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      onEvents={onEvents}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}

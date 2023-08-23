@@ -78,6 +78,7 @@ export default function AnalysisStepMenu(props) {
                                                       hasPlot={props.hasPlot}
                                                       experimentDetails={props.experimentDetails}
                                                       resType={props.resType}
+                                                      isLocked={props.isLocked}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
                       arrow>

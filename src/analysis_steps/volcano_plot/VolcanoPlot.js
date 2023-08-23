@@ -328,6 +328,9 @@ export default function VolcanoPlot(props) {
     }
 
     function showToolTipOnClick(e) {
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
         const prot = e.data.prot
         const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
@@ -362,6 +365,7 @@ export default function VolcanoPlot(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.status === 'done' && <Row>
@@ -377,7 +381,7 @@ export default function VolcanoPlot(props) {
 
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} onEvents={onEvents}
                                      minHeight={"800px"}></EchartsZoom>}

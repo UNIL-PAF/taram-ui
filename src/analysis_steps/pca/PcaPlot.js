@@ -149,6 +149,9 @@ export default function PcaPlot(props) {
     }
 
     function showToolTipOnClick(e) {
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
         const exp = e.data[0]
         const expIndex = (selExps ? selExps.indexOf(exp) : -1)
         const newSelExps = expIndex > -1 ? selExps.filter(e => e !== exp) : selExps.concat(exp)
@@ -184,6 +187,7 @@ export default function PcaPlot(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
@@ -193,7 +197,7 @@ export default function PcaPlot(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}
                                      onEvents={onEvents}></EchartsZoom>}

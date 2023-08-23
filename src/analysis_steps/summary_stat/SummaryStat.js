@@ -34,6 +34,7 @@ export default function SummaryStat(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
@@ -46,7 +47,7 @@ export default function SummaryStat(props) {
                     <SummaryTable results={results}></SummaryTable>
                 </div>
             }
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {results && <SummaryTableZoom showZoom={showZoom} setShowZoom={setShowZoom}
                                      results={results} stepId={props.data.id} stepNr={props.data.nr}></SummaryTableZoom>}
         </Card>

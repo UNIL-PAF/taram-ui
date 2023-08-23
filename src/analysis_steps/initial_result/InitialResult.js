@@ -160,6 +160,7 @@ export default function InitialResult(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               resType={props.resType}
                               isSelected={props.isSelected}
+                              isLocked={props.isLocked}
                               hasImputed={false}/>
         }>
             {colInfo && results && <div>
@@ -167,13 +168,14 @@ export default function InitialResult(props) {
                     <Col span={8}>
                         <Row>
                             <Button onClick={() => changGroups()}
+                                    disabled={props.isLocked}
                                     danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
                                     type={'primary'}
                                     size={"small"}>{groupsDefined ? ChangeGroupButton.text : defineGroupButton.text}</Button>
                         </Row>
                         <Row className={"analysis-step-row"} style={{marginTop: "10px"}}>
                         <span><strong>Default intensity column</strong><br></br>
-                    <Select className={"analysis-step-row"} value={props.data.columnInfo.columnMapping.intCol}
+                    <Select className={"analysis-step-row"} value={props.data.columnInfo.columnMapping.intCol} disabled={props.isLocked}
                             style={{width: "100%"}}
                             onChange={changeIntensity}>
                         {numCols.map((n, i) => {
@@ -224,7 +226,7 @@ export default function InitialResult(props) {
                         {isDone && getTableCol(results.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
 
-                <StepComment stepId={props.data.id} resultId={props.resultId}
+                <StepComment stepId={props.data.id} resultId={props.resultId} isLocked={props.isLocked}
                              comment={props.data.comments}></StepComment>
 
                 {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}

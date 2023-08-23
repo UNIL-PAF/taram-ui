@@ -236,12 +236,12 @@ export default function AnalysisStepMenuItems(props) {
                   //openKeys={(!openMenuKeys) ? undefined : openMenuKeys}
                   openKeys={openMenuKeys}
                 >
-                {props.type && <Menu.Item onClick={() => setShowModalName('parameters')}
+                {props.type && <Menu.Item disabled={props.isLocked} onClick={() => setShowModalName('parameters')}
                                           key={'params'}
                 >
                     <span>Change parameters..</span>
                 </Menu.Item>}
-                <Menu.SubMenu key={"add-step"} title={followingStepTitle}>
+                <Menu.SubMenu key={"add-step"} title={followingStepTitle} disabled={props.isLocked}>
                     <Menu.SubMenu key={"columns"} title={"Columns"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"
@@ -339,7 +339,7 @@ export default function AnalysisStepMenuItems(props) {
                         <span>Download ZIP..</span>
                     </Menu.Item>}
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
-                {props.type && <Menu.Item key={'delete-analysis'} danger={true}>
+                {props.type && <Menu.Item key={'delete-analysis'} danger={true} disabled={props.isLocked}>
                     <Popconfirm
                         title={"Are you sure you want to delete this " + getType() + "?"}
                         onConfirm={() => confirmDelete()}

@@ -33,6 +33,7 @@ export default function RenameColumns(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
+                              isLocked={props.isLocked}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
@@ -53,7 +54,7 @@ export default function RenameColumns(props) {
                     </Row>
                 </div>
             }
-            <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
