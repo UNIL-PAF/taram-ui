@@ -230,7 +230,7 @@ export default function InitialResult(props) {
                 {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
             </div>
             }
-            <Modal visible={showModal} onOk={() => handleGroupModalOk()}
+            <Modal open={showModal} onOk={() => handleGroupModalOk()}
                    onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}
                                     params={localParams}

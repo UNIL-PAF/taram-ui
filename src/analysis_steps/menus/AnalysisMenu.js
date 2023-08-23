@@ -182,7 +182,7 @@ export default function AnalysisMenu(props) {
                     </Popconfirm>
                 </Menu.Item>
             </Menu>
-            <Modal title="Save analysis as template" visible={isModalVisible} onOk={() => handleModalOk()}
+            <Modal title="Save analysis as template" open={isModalVisible} onOk={() => handleModalOk()}
                    onCancel={() => handleModalCancel()}>
                 <Row gutter={[16, 16]}>
                     <Col span={8}><span>Name</span></Col>

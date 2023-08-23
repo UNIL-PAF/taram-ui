@@ -17,7 +17,7 @@ export default function LoadingInfo() {
        <>
            {loading.status === "loading" && <span><Spin /> <strong>{loading.text}</strong></span>}
            {loading.error && <Modal
-               visible={loading.status === "error"}
+               open={loading.status === "error"}
                title={loading.error.title}
                footer={null}
                onCancel={() => cancelModal()}

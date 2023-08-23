@@ -5,8 +5,6 @@ import {deleteResult} from "./BackendResults";
 
 export default function ResultsTable(props) {
 
-    console.log(props.results)
-
     const confirmDelete = (resultId) => {
         deleteResult(resultId, props.refreshResults)
         message.success('Delete result [' + resultId + '].');

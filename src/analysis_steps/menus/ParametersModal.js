@@ -127,7 +127,7 @@ export default function ParametersModal(props) {
         <Modal title={"Parameters"} onOk={() => props.handleOk()}
                onCancel={() => props.handleCancel()}
                width={1000}
-               visible={true}
+               open={true}
         >
             {getParamContent(props.type)}
         </Modal>

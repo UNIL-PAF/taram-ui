@@ -8,7 +8,6 @@ import '../../analysis/analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 
 export default function TemplateModal(props) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const [nameText, setNameText] = useState("");
     const [descriptionText, setDescriptionText] = useState("");
     const dispatch = useDispatch();
@@ -30,7 +29,7 @@ export default function TemplateModal(props) {
 
     return (
         <div>
-            <Modal title="Save analysis as template" visible={true} onOk={() => props.handleOk()}
+            <Modal title="Save analysis as template" open={true} onOk={() => props.handleOk()}
                    onCancel={() => props.handleCancel()}>
                 <Row gutter={[16, 16]}>
                     <Col span={8}><span>Name</span></Col>

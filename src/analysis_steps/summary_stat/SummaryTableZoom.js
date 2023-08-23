@@ -29,7 +29,7 @@ export default function SummaryTableZoom(props) {
 
     return (
        <>
-           <Modal visible={props.showZoom} title={getTitle()} onCancel={() => props.setShowZoom(false)}
+           <Modal open={props.showZoom} title={getTitle()} onCancel={() => props.setShowZoom(false)}
                   width={"95%"} height={"100%"} footer={null} bodyStyle={{overflowY: 'scroll'}}
            >
                <div style={{height: '100%'}}>

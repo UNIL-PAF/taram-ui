@@ -35,7 +35,7 @@ export default function AnalysisStepMenuItems(props) {
         let selChild;
         if(children.length >= 1){
              children.forEach( c => {
-                 if(c.innerText && c.innerText.includes(name) && c.className.includes("ant-menu-submenu-title")){
+                 if(c.innerText && c.innerText.includes(name) && c.className.includes("ant-dropdown-menu-submenu-title")){
                      selChild = c;
                  }else if(!selChild){
                      selChild = findChildByName(c, name)

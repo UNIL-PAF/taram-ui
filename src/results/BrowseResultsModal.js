@@ -45,7 +45,7 @@ const CollectionCreateForm = (props) => {
 
     return (
         <Modal
-            visible={props.visible}
+            open={props.visible}
             title={title}
             okText="Add"
             cancelText="Cancel"
@@ -103,7 +103,7 @@ const CollectionCreateForm = (props) => {
                             value={props.selResDir}
                             showSearch
                             filterOption={(input, option) =>
-                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                option.items.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                         >
                             {

@@ -32,7 +32,7 @@ export default function EchartsZoom(props) {
     }
 
     return (
-        <Modal visible={props.showZoom} title="Plot" onCancel={() => props.setShowZoom(false)}
+        <Modal open={props.showZoom} title="Plot" onCancel={() => props.setShowZoom(false)}
                width={"95%"} height={"100%"} footer={null}
         >
             {showZoomModal()}

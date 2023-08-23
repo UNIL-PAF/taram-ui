@@ -90,7 +90,7 @@ const getTableTitle = (stepId, tableNr) => {
 }
 
 export const getTable = (stepId, tableNr, setShowTable) => {
-    return <Modal visible={true} title={getTableTitle(stepId, tableNr)} onCancel={() => setShowTable(false)}
+    return <Modal open={true} title={getTableTitle(stepId, tableNr)} onCancel={() => setShowTable(false)}
            width={"95%"} height={"90%"} footer={null} bodyStyle={{overflowX: 'scroll'}}
     >
         <FullProteinTable stepId={stepId} tableNr={tableNr}></FullProteinTable>

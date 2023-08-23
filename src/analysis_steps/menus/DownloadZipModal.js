@@ -47,7 +47,7 @@ export default function DownloadZipModal(props) {
         <Modal title={"Download ZIP"} onOk={() => props.handleOk()}
                onCancel={() => props.handleCancel()}
                width={300}
-               visible={true}
+               open={true}
         >
             <h3>Download ZIP file</h3>
             <Space direction={'vertical'}>

@@ -58,7 +58,7 @@ export default function AnalysisStepMenu(props) {
         <>
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}
 
-            <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
+            <Dropdown open={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems
                                                       type={props.paramType}
                                                       showMenuItem={showMenuItem}

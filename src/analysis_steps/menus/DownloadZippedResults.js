@@ -129,7 +129,7 @@ export default function DownloadZippedResults(props) {
     return (
         <Modal title={"Download results as ZIP"} onOk={() => startZipDownload()}
                onCancel={() => props.handleCancel()}
-               visible={true}
+               open={true}
                width={800}
         >
             <h3>Select steps to include:</h3>

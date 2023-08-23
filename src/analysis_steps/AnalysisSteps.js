@@ -63,7 +63,7 @@ export default function AnalysisSteps(props) {
                     {props.data.copyFromIdx != null && <span className={"copy-from-title"}>{"Copy from #" + (props.data.copyFromIdx+1)}</span>}
                     <span style={{float: "right", marginRight: "10px"}}>
 
-                <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
+                <Dropdown open={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
                                                  setError={setError}
                                                  resultId={props.data.result.id}
