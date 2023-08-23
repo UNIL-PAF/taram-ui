@@ -101,6 +101,22 @@ export default function AnalysisMenu(props) {
         props.setMenuIsVisible(false)
     }
 
+    const lockAnalysis = (analysidId) => {
+        fetch(globalConfig.urlBackend + 'analysis/switch-lock/' + analysidId, {method: "PUT"})
+            .then(response => {
+                if(response.ok){
+                    response.json().then(r => props.setIsLocked(r))
+                }else {
+                    response.text().then(text => {
+                        console.log("error", text)
+                        dispatch(setError({title: "Error while locking/unlocking analysis" , text: text}))
+                    })
+                }
+            }).catch(error => {
+                dispatch(setError({title: "Error while locking/unlocking analysis" , text: error.toString()}))
+            })
+    }
+
     return (
         <div ref={menuRef} align={"center"} className={"analysis-menu"}>
             {templatesError && <Alert
@@ -152,6 +168,9 @@ export default function AnalysisMenu(props) {
                     <span>Save analysis as template...</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
+                <Menu.Item onClick={() => lockAnalysis(props.analysisId)} key={'lock-analysis'}>
+                        <span>Lock analysis (mark as done)</span>
+                </Menu.Item>
                 <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
                         title="Are you sure you want to delete this analysis?"

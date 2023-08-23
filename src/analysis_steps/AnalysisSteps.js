@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import Filter from "./filter/Filter"
 import {Alert, Badge, Button, Dropdown} from "antd";
+import {LockTwoTone} from "@ant-design/icons";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import LogTransformation from "./log_transformation/LogTransformation";
@@ -26,6 +27,7 @@ export default function AnalysisSteps(props) {
     const [showDownloadZip, setShowDownloadZip] = useState()
     const [error, setError] = useState(undefined)
     const [selStep, setSelStep] = useState()
+    const [isLocked, setIsLocked] = useState(false)
 
     const badgeStatus = () => {
         switch (props.data.status) {
@@ -44,6 +46,8 @@ export default function AnalysisSteps(props) {
 
     const keyBase = (props.data.copyFromIdx ? props.data.copyFromIdx : "")
 
+    console.log(props.data)
+
     return (
         <>
             {props.data && props.data.analysisSteps && <div
@@ -54,17 +58,20 @@ export default function AnalysisSteps(props) {
                     <Badge status={badgeStatus()}/>
                     <span style={{fontSize: "large"}}>{props.data.idx + 1}</span>
                 </span>
+                    {(props.data.isLocked || isLocked) && <span style={{fontSize: "x-large", paddingRight: "20px"}}><LockTwoTone twoToneColor={"#d4b106"}/></span>}
                     <span className={"results-name-title"}>{props.data.result.name}</span>
                     <span style={{marginRight: "10px"}}>-</span>
                     <AnalysisTitle id={props.data.id} name={props.data.name} idx={props.data.idx} resultId={props.data.result.id}></AnalysisTitle>
                     {props.data.copyFromIdx != null && <span className={"copy-from-title"}>{"Copy from #" + (props.data.copyFromIdx+1)}</span>}
                     <span style={{float: "right", marginRight: "10px"}}>
+
                 <Dropdown visible={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                           overlay={<AnalysisMenu analysisId={props.data.id} setMenuIsVisible={setMenuIsVisible}
                                                  setError={setError}
                                                  resultId={props.data.result.id}
                                                  resultName={props.data.result.name}
                                                  setShowDownloadZip={setShowDownloadZip}
+                                                 setIsLocked={setIsLocked}
                                                  initialStep={props.data.analysisSteps[0]}></AnalysisMenu>}
                           placement="bottomLeft"
                           arrow>

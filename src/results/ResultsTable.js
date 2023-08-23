@@ -1,9 +1,11 @@
 import React from "react";
 import {Button, message, Popconfirm, Space, Table} from 'antd';
-import {DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined, FileDoneOutlined, PlayCircleTwoTone} from "@ant-design/icons";
 import {deleteResult} from "./BackendResults";
 
 export default function ResultsTable(props) {
+
+    console.log(props.results)
 
     const confirmDelete = (resultId) => {
         deleteResult(resultId, props.refreshResults)
@@ -49,6 +51,15 @@ export default function ResultsTable(props) {
                     ? 1
                     : -1,
             defaultSortOrder: "descend"
+        },
+        {
+            title: 'Status',
+            key: 'status',
+            render: (text, record) => (
+                <Space size="middle">
+                    <span>{text === "done" ? <FileDoneOutlined style={{color: "#389e0d"}} /> : <PlayCircleTwoTone style={{ fontSize: '150%'}} twoToneColor={"#389e0d"} />}</span>
+                </Space>
+            ),
         },
         {
             title: 'Action',
