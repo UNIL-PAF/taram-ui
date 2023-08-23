@@ -169,7 +169,7 @@ export default function AnalysisMenu(props) {
                 </Menu.Item>
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
                 <Menu.Item onClick={() => lockAnalysis(props.analysisId)} key={'lock-analysis'}>
-                        <span>Lock analysis (mark as done)</span>
+                    <span>{(props.isLocked ? "Unlock" : "Lock")  + " analysis"}</span>
                 </Menu.Item>
                 <Menu.Item key={'delete-analysis'} danger={true}>
                     <Popconfirm
