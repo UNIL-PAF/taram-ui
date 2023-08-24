@@ -117,6 +117,31 @@ export default function AnalysisMenu(props) {
             })
     }
 
+    const renderLockUnlock = () => {
+        const myOnClick = () => {
+            if(!props.isLocked) lockAnalysis(props.analysisId)
+        }
+
+        const myRender = () => {
+            if(props.isLocked){
+                return <Popconfirm
+                    title="Are you sure you want to unlock this analysis?"
+                    onConfirm={() => lockAnalysis(props.analysisId)}
+                    okText="Yes"
+                    cancelText="Cancel"
+                >
+                    <span>Unlock analysis</span>
+                </Popconfirm>
+            }else{
+                return <span>Lock analysis</span>
+            }
+        }
+
+        return <Menu.Item onClick={myOnClick} key={'lock-analysis'}>
+            {myRender()}
+        </Menu.Item>
+    }
+
     return (
         <div ref={menuRef} align={"center"} className={"analysis-menu"}>
             {templatesError && <Alert
@@ -153,7 +178,7 @@ export default function AnalysisMenu(props) {
                     <span>Start a new analysis</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-2'}></Menu.Divider>
-                <Menu.SubMenu key={"sub-1"} title={"Run template"}>
+                <Menu.SubMenu key={"sub-1"} title={"Run template"} disabled={props.isLocked }>
                     {templatesData && templatesData.map(t =>
                         <Menu.Item
                             key={t.id}
@@ -168,10 +193,8 @@ export default function AnalysisMenu(props) {
                     <span>Save analysis as template...</span>
                 </Menu.Item>
                 <Menu.Divider key={'divider-3'}></Menu.Divider>
-                <Menu.Item onClick={() => lockAnalysis(props.analysisId)} key={'lock-analysis'}>
-                    <span>{(props.isLocked ? "Unlock" : "Lock")  + " analysis"}</span>
-                </Menu.Item>
-                <Menu.Item key={'delete-analysis'} danger={true}>
+                {renderLockUnlock()}
+                <Menu.Item key={'delete-analysis'} danger={true} disabled={props.isLocked }>
                     <Popconfirm
                         title="Are you sure you want to delete this analysis?"
                         onConfirm={() => clickDelete()}
