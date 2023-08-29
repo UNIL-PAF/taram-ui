@@ -24,7 +24,7 @@ export default function BoxPlotParams(props) {
 
     useEffect(() => {
         if (!props.params) {
-            props.setParams({logScale: props.commonResult.intColIsLog ? false : true})
+            props.setParams({logScale: false})
             setUseDefaultCol(true)
         }else{
             if(useDefaultCol === undefined){
@@ -36,10 +36,6 @@ export default function BoxPlotParams(props) {
 
     function handleChange(value) {
         props.setParams({...props.params, column: numCols[value]})
-    }
-
-    function checkboxChange(e) {
-        props.setParams({...props.params, logScale: e.target.checked})
     }
 
     function changeUseDefaultCol(e){
@@ -57,9 +53,6 @@ export default function BoxPlotParams(props) {
                     {numCols.map((n, i) => {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
-                <Checkbox
-                    onChange={checkboxChange} checked={props.params.logScale}>Use logarithmic scale (log2)
-                </Checkbox>
                 <Divider />
                 <h3>Protein table</h3>
                 <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable}></ProteinTable>

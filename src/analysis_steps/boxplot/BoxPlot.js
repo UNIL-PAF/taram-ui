@@ -51,10 +51,10 @@ export default function BoxPlot(props) {
 
     const getOptions = (results) => {
         const params = localParams || JSON.parse(props.data.parameters)
-
         const newData = results.boxPlotData.map(d => {
             const dataWithName = d.groupData.map(box => {
-                return [box.name].concat(box.data)
+                const myData = params.logScale ? box.logData : box.data
+                return [box.name].concat(myData)
             })
             return {
                 group: d.group ? d.group : null,
@@ -109,7 +109,8 @@ export default function BoxPlot(props) {
             })
 
             return parsedRes.selProtData.map(p => {
-                let newInts = sortArr.map(sortIdx => p.ints[sortIdx])
+                const myInts = (params.logScale && p.logInts) ? p.logInts : p.ints
+                let newInts = sortArr.map(sortIdx => myInts[sortIdx])
                 return {...p, ints: newInts}
             })
         }
@@ -168,8 +169,9 @@ export default function BoxPlot(props) {
         return options
     }
 
-    const checkboxChange = (e) => {
-        const newLocalParams = {...localParams, groupByCondition: e.target.checked}
+    const checkboxChange = (e, field) => {
+        const newLocalParams = {...localParams}
+        newLocalParams[field] = e.target.checked
         setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
         setLocalParams(newLocalParams)
     }
@@ -204,9 +206,17 @@ export default function BoxPlot(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
                 className={"analysis-step-row"}
+                onChange={(e) => checkboxChange(e, "logScale")}
+                checked={localParams && localParams.logScale}
                 disabled={props.isLocked}
-                onChange={checkboxChange} checked={localParams && localParams.groupByCondition}>Group by condition
+            >Use logarithmic scale [log2]
             </Checkbox>
+            <Checkbox
+                className={"analysis-step-row"}
+                disabled={props.isLocked}
+                onChange={(e) => checkboxChange(e, "groupByCondition")} checked={localParams && localParams.groupByCondition}>Group by condition
+            </Checkbox>
+            <div style={{margin: "13px"}}></div>
             {options && options.data && options.data.series.length > 0 && <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments} isLocked={props.isLocked}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data} paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}

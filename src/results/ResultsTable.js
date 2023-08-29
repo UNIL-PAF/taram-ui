@@ -16,7 +16,6 @@ export default function ResultsTable(props) {
             dataIndex: 'name',
             key: 'name',
             render: (text, record) => {
-                console.log(record)
                 return <a href={'/viewer/' + record.id}>{text} {record.status === "done" ?
                     <>&nbsp;<CheckCircleTwoTone style={{fontSize: "large"}} twoToneColor={"#52c41a"}/></> : <></>}</a>
             }
