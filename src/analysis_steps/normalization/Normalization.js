@@ -21,6 +21,15 @@ export default function Normalization(props) {
         "none": "None"
     }
 
+    const normalizationText = () => {
+        const myType = normType[params.normalizationType]
+        if(params.normalizationCalculation === "division"){
+            return "Divide by " + myType
+        }else{
+            return "Substract " + myType
+        }
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -49,7 +58,7 @@ export default function Normalization(props) {
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
-                                {<p className={"analysis-step-param-line"}>{normType[params.normalizationType]} normalization</p>}
+                                {<p className={"analysis-step-param-line"}>{normalizationText()}</p>}
                             </div>
                         </div>
                     </Col>
