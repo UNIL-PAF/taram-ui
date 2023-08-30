@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, message, Popconfirm, Space, Table} from 'antd';
-import {DeleteOutlined, CheckCircleTwoTone} from "@ant-design/icons";
+import {DeleteOutlined, LockTwoTone} from "@ant-design/icons";
 import {deleteResult} from "./BackendResults";
 
 export default function ResultsTable(props) {
@@ -17,7 +17,7 @@ export default function ResultsTable(props) {
             key: 'name',
             render: (text, record) => {
                 return <a href={'/viewer/' + record.id}>{text} {record.status === "done" ?
-                    <>&nbsp;<CheckCircleTwoTone style={{fontSize: "large"}} twoToneColor={"#52c41a"}/></> : <></>}</a>
+                    <>&nbsp;<LockTwoTone style={{fontSize: "large"}} twoToneColor={"#d4b106"}/></>: <></>}</a>
             }
         },
         {
