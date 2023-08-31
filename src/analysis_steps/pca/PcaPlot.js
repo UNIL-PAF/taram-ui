@@ -26,7 +26,7 @@ export default function PcaPlot(props) {
     }, [selExps])
 
     useEffect(() => {
-        if (props.data) {
+        if (props.data && props.data.results) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
 

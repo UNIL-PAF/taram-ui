@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
@@ -9,6 +9,9 @@ import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
 import {setStepParametersWithoutRunning, switchSel} from "../BackendAnalysisSteps";
 import {typeToName} from "../TypeNameMapping"
+import {useOnScreen} from "../../common/UseOnScreen";
+import globalConfig from "../../globalConfig";
+import {setError} from "../../navigation/loadingSlice";
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -20,7 +23,31 @@ export default function ScatterPlot(props) {
     const [selProts, setSelProts] = useState([])
     const [onEvents, setOnEvents] = useState()
     const dispatch = useDispatch();
+    const [stepResults, setStepResults] = useState()
 
+    // check if element is shown
+    const elementRef = useRef(null);
+    const isOnScreen = useOnScreen(elementRef);
+
+    useEffect(() => {
+        if(isOnScreen){
+            if(! stepResults){
+                fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
+                    .then(response => {
+                        if(response.ok){
+                            response.text().then(t => {
+                                setStepResults(JSON.parse(t))
+                            })
+                        }else {
+                            response.text().then(text => {
+                                dispatch(setError({title: "Error while fetching results for step [" + props.data.id + "]", text: text}))
+                            })
+                        }
+                    })
+            }
+        } else setStepResults(undefined)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults, isOnScreen])
 
     useEffect(() => {
         setOnEvents({'click': showToolTipOnClick})
@@ -28,15 +55,14 @@ export default function ScatterPlot(props) {
     }, [selProts])
 
     useEffect(() => {
-        if (props.data) {
+        if (props.data && stepResults) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
 
             if (isWaiting && props.data.status === 'done') {
-                const results = JSON.parse(props.data.results)
-                const echartOptions = getOptions(results, params)
+                const echartOptions = getOptions(stepResults, params)
                 const optsToSave = replaceProgressiveSeries(echartOptions)
-                replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
+                replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
                 setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
                 const backendSelProts = JSON.parse(props.data.parameters).selProteins
@@ -50,7 +76,7 @@ export default function ScatterPlot(props) {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, isWaiting])
+    }, [props, isWaiting, stepResults])
 
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
@@ -225,10 +251,9 @@ export default function ScatterPlot(props) {
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
 
-        const results = JSON.parse(props.data.results)
-        const echartOptions = getOptions(results, localParams, newSelProts)
+        const echartOptions = getOptions(stepResults, localParams, newSelProts)
         const callback = () => {
-            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
         }
         dispatch(switchSel({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
@@ -236,6 +261,7 @@ export default function ScatterPlot(props) {
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
+              ref={elementRef}
               onClick={props.onSelect}
               title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}

@@ -34,7 +34,7 @@ export default function VolcanoPlot(props) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
         }
-        if (props.data.status === 'done') {
+        if (props.data.status === 'done' && props.data.results) {
             if (isWaiting) {
                 const results = JSON.parse(props.data.results)
                 const echartOptions = getOptions(results)
