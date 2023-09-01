@@ -20,6 +20,8 @@ export default function BoxPlot(props) {
     const [options, setOptions] = useState({count: 0})
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
+    const [logScale, setLogScale] = useState()
+    const [groupByCondition, setGroupByCondition] = useState()
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
 
@@ -27,54 +29,75 @@ export default function BoxPlot(props) {
     const elementRef = useRef(null);
     const isOnScreen = useOnScreen(elementRef);
 
+    // Download results
     useEffect(() => {
-        if (isOnScreen) {
-            if (!stepResults) {
-                fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
-                    .then(response => {
-                        if (response.ok) {
-                            response.text().then(t => {
-                                const res = JSON.parse(t)
-                                setStepResults(res)
-                            })
-                        } else {
-                            response.text().then(text => {
-                                dispatch(setError({
-                                    title: "Error while fetching results for step [" + props.data.id + "]",
-                                    text: text
-                                }))
-                            })
-                        }
-                    })
-            }
-        } else setStepResults(undefined)
+        if(props.data && props.data.status === "done") {
+            if (isOnScreen) {
+                if (!stepResults) {
+                    fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
+                        .then(response => {
+                            if (response.ok) {
+                                response.text().then(t => {
+                                    const res = JSON.parse(t)
+                                    setStepResults(res)
+                                })
+                            } else {
+                                response.text().then(text => {
+                                    dispatch(setError({
+                                        title: "Error while fetching results for step [" + props.data.id + "]",
+                                        text: text
+                                    }))
+                                })
+                            }
+                        })
+                }
+            } else setStepResults(undefined)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stepResults, isOnScreen])
+    }, [stepResults, isOnScreen, props.data])
 
+    // update if logScale or groupByCondition changed
     useEffect(() => {
-        if (localParams && props.data && props.data.status === 'done' && stepResults) {
+       if(props.data && props.data.status === 'done' && stepResults){
+           const echartOptions = getOptions(stepResults)
+           const withColors = {...echartOptions, color: defaultColors}
+           setOptions({...options, data: withColors})
+           replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+       }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [logScale, groupByCondition])
+
+    // update if stepResults arrive
+    useEffect(() => {
+        if (props.data && props.data.status === 'done' && stepResults) {
             const echartOptions = getOptions(stepResults)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
             replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [localParams, props, stepResults])
+    }, [stepResults])
+
+    // set initial params
+    useEffect(() => {
+        if(!localParams && props.data && props.data.parameters){
+            const params = JSON.parse(props.data.parameters)
+            setLocalParams(params)
+            if(typeof params.logScale !== "undefined") setLogScale(params.logScale)
+            if(typeof params.groupByCondition !== "undefined") setGroupByCondition(params.groupByCondition)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data, localParams])
 
     useEffect(() => {
         if (props.data && stepResults) {
-            if (!localParams) {
-                const params = JSON.parse(props.data.parameters)
-                setLocalParams(params)
-            }
-
-            if (isWaiting && props.data.status === "done" && stepResults) {
+            if (isWaiting && props.data.status === "done") {
                 setIsWaiting(false)
                 setStepResults(undefined)
-                setOptions({...options, count: options.count+1})
+                setOptions({count: 0})
             }
 
-            if (!isWaiting && props.data.status === "running" && stepResults) {
+            if (!isWaiting && options.data && props.data.status === "running") {
                 setIsWaiting(true)
                 const greyOpt = {...options.data, color: Array(9).fill('lightgrey')}
                 setOptions({count: options.count + 1, data: greyOpt})
@@ -208,6 +231,8 @@ export default function BoxPlot(props) {
         newLocalParams[field] = e.target.checked
         setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
         setLocalParams(newLocalParams)
+        if(field === "logScale") setLogScale(e.target.checked)
+        if(field === "groupByCondition") setGroupByCondition(e.target.checked)
     }
 
     return (
@@ -243,7 +268,7 @@ export default function BoxPlot(props) {
             <Checkbox
                 className={"analysis-step-row"}
                 onChange={(e) => checkboxChange(e, "logScale")}
-                checked={localParams && localParams.logScale}
+                checked={logScale}
                 disabled={props.isLocked}
             >Use logarithmic scale [log2]
             </Checkbox>

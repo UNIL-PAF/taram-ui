@@ -137,7 +137,6 @@ export default function AnalysisStepMenuItems(props) {
             dispatch(addAnalysisStep(stepObj))
             setShowStepParams(undefined)
         }
-
     };
 
     const handleCancel = () => {
