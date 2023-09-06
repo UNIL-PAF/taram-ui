@@ -1,17 +1,18 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState, useCallback} from "react";
 import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
+import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
-import {setStepParametersWithoutRunning, switchSel} from "../BackendAnalysisSteps";
+import {switchSel} from "../BackendAnalysisSteps";
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import globalConfig from "../../globalConfig";
 import {setError} from "../../navigation/loadingSlice";
+import {defaultColors} from "../../common/PlotColors";
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -19,9 +20,9 @@ export default function ScatterPlot(props) {
     const [options, setOptions] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
+    const [count, setCount] = useState(1)
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
-    const [onEvents, setOnEvents] = useState()
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
 
@@ -30,46 +31,79 @@ export default function ScatterPlot(props) {
     const isOnScreen = useOnScreen(elementRef);
 
     useEffect(() => {
-        if(isOnScreen){
-            if(! stepResults){
-                fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
-                    .then(response => {
-                        if(response.ok){
-                            response.text().then(t => {
-                                setStepResults(JSON.parse(t))
-                            })
-                        }else {
-                            response.text().then(text => {
-                                dispatch(setError({title: "Error while fetching results for step [" + props.data.id + "]", text: text}))
-                            })
-                        }
-                    })
-            }
-        } else setStepResults(undefined)
+        if(props.data && props.data.status === "done") {
+            if (isOnScreen) {
+                if (!stepResults) {
+                    fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
+                        .then(response => {
+                            if (response.ok) {
+                                response.text().then(t => {
+                                    setStepResults(JSON.parse(t))
+                                })
+                            } else {
+                                response.text().then(text => {
+                                    dispatch(setError({
+                                        title: "Error while fetching results for step [" + props.data.id + "]",
+                                        text: text
+                                    }))
+                                })
+                            }
+                        })
+                }
+            } else setStepResults(undefined)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stepResults, isOnScreen])
+    }, [stepResults, isOnScreen, props.data])
 
-    useEffect(() => {
-        setOnEvents({'click': showToolTipOnClick})
+    const updatePlot = useCallback(() => {
+        const newParams = {...localParams, selProteins: selProts}
+        const echartOptions = getOptions(stepResults, newParams)
+        const withColors = {...echartOptions, color: defaultColors}
+        setOptions({count: options ? options.count + 1 : 0, data: withColors})
+        replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selProts])
+        }, [selProts]
+    );
+
+    // update if selProts changed
+    useEffect(() => {
+        if (props.data && props.data.status === 'done' && stepResults) {
+            updatePlot()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [count])
+
+    // update if stepResults arrive
+    useEffect(() => {
+        if (localParams && props.data && props.data.status === 'done' && stepResults) {
+            const echartOptions = getOptions(stepResults, localParams)
+            const withColors = {...echartOptions, color: defaultColors}
+            setOptions({...options, data: withColors})
+            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults])
+
+    // set initial params
+    useEffect(() => {
+        if(!localParams && props.data && props.data.parameters){
+            const params = JSON.parse(props.data.parameters)
+            setLocalParams(params)
+            const backendSelProts = JSON.parse(props.data.parameters).selProteins
+            if (backendSelProts) setSelProts(backendSelProts)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data, localParams])
 
     useEffect(() => {
         if (props.data && stepResults) {
-            const params = JSON.parse(props.data.parameters)
-            setLocalParams(params)
-
             if (isWaiting && props.data.status === 'done') {
-                const echartOptions = getOptions(stepResults, params)
-                const optsToSave = replaceProgressiveSeries(echartOptions)
-                replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
-                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
                 setIsWaiting(false)
-                const backendSelProts = JSON.parse(props.data.parameters).selProteins
-                if (backendSelProts) setSelProts(backendSelProts)
+                setStepResults(undefined)
+                setOptions({count: 0})
             }
 
-            if (!isWaiting && props.data.status !== 'done') {
+            if (!isWaiting && props.data && props.data.status !== 'done') {
                 setIsWaiting(true)
                 const greyOpt = greyOptions(options.data)
                 setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
@@ -88,22 +122,34 @@ export default function ScatterPlot(props) {
     }
 
     const checkboxChange = (e) => {
-        const newLocalParams = {...localParams, logTrans: e.target.checked}
-        setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
-        setLocalParams(newLocalParams)
+        //const newLocalParams = {...localParams, logTrans: e.target.checked}
+        //setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
+        //setLocalParams(newLocalParams)
     }
 
+    /*
+    const computeLimits = (min, max) => {
+        const newMin = Math.abs(min) > 0 ? Math.floor(min) : min
+        const newMax = Math.abs(max) > 0 ? Math.ceil(max) : max
+        return [newMin, newMax]
+    }
+
+     */
+
     const computeLogData = (d) => {
-        const myD = d.filter(d => d.x !== 0 && d.y !== 0).map(a => {
+        const myD = d.filter(d => d.x > 0 && d.y > 0).map(a => {
             return {...a, x: Math.log10(a.x), y: Math.log10(a.y)}
         })
 
+        /*
         const xMin = Math.min(...myD.map(a => a.x))
         const xMax = Math.max(...myD.map(a => a.x))
         const yMin = Math.min(...myD.map(a => a.y))
         const yMax = Math.max(...myD.map(a => a.y))
 
-        return {lims: [[xMin, xMax], [yMin, yMax]], d: myD}
+        return {lims: [computeLimits(xMin, xMax), computeLimits(yMin, yMax)], d: myD}
+         */
+        return {d: myD}
     }
 
     const computeColLimits = (d) => {
@@ -147,14 +193,13 @@ export default function ScatterPlot(props) {
                     padding: [8, 4, 5, 6],
                     fontWeight: 'bold'
                 },
-                type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-                // min: (params.logTrans) ? Math.floor(myData.lims[0][0]) : null,
-                // max: (params.logTrans) ? Math.ceil(myData.lims[0][1]) : null
+                 //min: (params.logTrans) ? myData.lims[0][0] : null,
+                 //max: (params.logTrans) ? myData.lims[0][1] : null
             },
             yAxis: {
                 name: params.yAxis,
@@ -163,14 +208,13 @@ export default function ScatterPlot(props) {
                     padding: [8, 4, 45, 6],
                     fontWeight: 'bold'
                 },
-                type: params.logTrans ? "log" : "value",
                 axisLabel: {
                     formatter: function (value) {
                         return String(value).length > 5 ? value.toExponential(1) : value
                     }
                 },
-                // min: (params.logTrans) ? Math.floor(myData.lims[1][0]) : null,
-                // max: (params.logTrans) ? Math.ceil(myData.lims[1][1]) : null
+                 //min: (params.logTrans) ? myData.lims[1][0] : null,
+                 //max: (params.logTrans) ? myData.lims[1][1] : null
             },
             tooltip: {
                 showDelay: 0,
@@ -242,22 +286,22 @@ export default function ScatterPlot(props) {
         } : options
     }
 
-    function showToolTipOnClick(e) {
-        // don't do anything if the analysis is locked
-        if(props.isLocked) return
-
+    const showToolTipOnClick = useCallback((e) => {
         const prot = e.data[2]
         const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
-
-        const echartOptions = getOptions(stepResults, localParams, newSelProts)
         const callback = () => {
-            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+            setCount(count+1)
         }
-        dispatch(switchSel({resultId: props.resultId, proteinAc: prot, stepId: props.data.id, callback: callback}))
-        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-    }
+        dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selProts, count]
+    );
+
+    const onEvents = {
+        click: showToolTipOnClick,
+    };
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
