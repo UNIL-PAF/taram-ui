@@ -3,7 +3,7 @@ import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
@@ -60,7 +60,8 @@ export default function ScatterPlot(props) {
         const echartOptions = getOptions(stepResults, newParams)
         const withColors = {...echartOptions, color: defaultColors}
         setOptions({count: options ? options.count + 1 : 0, data: withColors})
-        replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+        const optsToSave = replaceProgressiveSeries(withColors)
+        replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selProts]
     );
@@ -79,7 +80,8 @@ export default function ScatterPlot(props) {
             const echartOptions = getOptions(stepResults, localParams)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
-            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+            const optsToSave = replaceProgressiveSeries(withColors)
+            replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stepResults])
