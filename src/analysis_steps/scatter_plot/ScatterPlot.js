@@ -23,6 +23,7 @@ export default function ScatterPlot(props) {
     const [count, setCount] = useState(1)
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
+    const [logScale, setLogScale] = useState(false)
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
 
@@ -63,7 +64,7 @@ export default function ScatterPlot(props) {
         const optsToSave = replaceProgressiveSeries(withColors)
         replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selProts]
+        }, [selProts, logScale]
     );
 
     // update if selProts changed
@@ -72,7 +73,7 @@ export default function ScatterPlot(props) {
             updatePlot()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [count])
+    }, [count, logScale])
 
     // update if stepResults arrive
     useEffect(() => {
@@ -91,8 +92,8 @@ export default function ScatterPlot(props) {
         if(!localParams && props.data && props.data.parameters){
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
-            const backendSelProts = JSON.parse(props.data.parameters).selProteins
-            if (backendSelProts) setSelProts(backendSelProts)
+            if (params.selProteins) setSelProts(params.selProteins)
+            if(typeof params.logScale !== "undefined") setLogScale(params.logScale)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data, localParams])
@@ -124,9 +125,7 @@ export default function ScatterPlot(props) {
     }
 
     const checkboxChange = (e) => {
-        //const newLocalParams = {...localParams, logTrans: e.target.checked}
-        //setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
-        //setLocalParams(newLocalParams)
+        setLogScale(e.target.checked)
     }
 
     /*
@@ -135,7 +134,6 @@ export default function ScatterPlot(props) {
         const newMax = Math.abs(max) > 0 ? Math.ceil(max) : max
         return [newMin, newMax]
     }
-
      */
 
     const computeLogData = (d) => {
@@ -163,7 +161,7 @@ export default function ScatterPlot(props) {
     }
 
     const getOptions = (results, params, mySelProteins) => {
-        const myData = (params.logTrans) ? computeLogData(results.data) : {d: results.data}
+        const myData = (logScale) ? computeLogData(results.data) : {d: results.data}
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
         const defSelProts = (mySelProteins ? mySelProteins : params.selProteins)
 
@@ -337,7 +335,7 @@ export default function ScatterPlot(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
                 onChange={checkboxChange}
-                checked={localParams && localParams.logTrans}
+                checked={logScale}
                 disabled={props.isLocked}
             >Log transform [log10]
             </Checkbox>
