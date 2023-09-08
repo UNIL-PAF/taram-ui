@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {Button, Card, Row, Col} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
@@ -7,8 +7,9 @@ import {switchSel} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
+import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries, getStepResults} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
+import {useOnScreen} from "../../common/UseOnScreen";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -20,6 +21,7 @@ export default function VolcanoPlot(props) {
     const [selProts, setSelProts] = useState([])
     const [onEvents, setOnEvents] = useState()
     const [showZoom, setShowZoom] = useState(null)
+    const [stepResults, setStepResults] = useState()
 
     const colPalette = {
         "down1": "#5470c6",
@@ -28,6 +30,25 @@ export default function VolcanoPlot(props) {
         "up2": "#fac858",
         "none": "silver"
     }
+
+    /*
+    // check if element is shown
+    const elementRef = useRef(null);
+    const isOnScreen = useOnScreen(elementRef);
+
+    useEffect(() => {
+        if(props.data && props.data.status === "done") {
+            if (isOnScreen) {
+                if (!stepResults) {
+                    getStepResults(props.data.id, setStepResults, dispatch)
+                }
+            } else setStepResults(undefined)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults, isOnScreen, props.data])
+
+     */
+
 
     useEffect(() => {
         if (props.data.parameters) {

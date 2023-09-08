@@ -3,15 +3,13 @@ import {Button, Card, Checkbox} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
+import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
-import {switchSel} from "../BackendAnalysisSteps";
+import {setStepParametersWithoutRunning, switchSel} from "../BackendAnalysisSteps";
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
-import globalConfig from "../../globalConfig";
-import {setError} from "../../navigation/loadingSlice";
 import {defaultColors} from "../../common/PlotColors";
 
 export default function ScatterPlot(props) {
@@ -23,7 +21,7 @@ export default function ScatterPlot(props) {
     const [count, setCount] = useState(1)
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
-    const [logScale, setLogScale] = useState(false)
+    const [logTrans, setLogTrans] = useState(false)
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
 
@@ -35,21 +33,7 @@ export default function ScatterPlot(props) {
         if(props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
-                    fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
-                        .then(response => {
-                            if (response.ok) {
-                                response.text().then(t => {
-                                    setStepResults(JSON.parse(t))
-                                })
-                            } else {
-                                response.text().then(text => {
-                                    dispatch(setError({
-                                        title: "Error while fetching results for step [" + props.data.id + "]",
-                                        text: text
-                                    }))
-                                })
-                            }
-                        })
+                    getStepResults(props.data.id, setStepResults, dispatch)
                 }
             } else setStepResults(undefined)
         }
@@ -58,13 +42,13 @@ export default function ScatterPlot(props) {
 
     const updatePlot = useCallback(() => {
         const newParams = {...localParams, selProteins: selProts}
-        const echartOptions = getOptions(stepResults, newParams)
+        const echartOptions = getOptions(stepResults, newParams, selProts)
         const withColors = {...echartOptions, color: defaultColors}
         setOptions({count: options ? options.count + 1 : 0, data: withColors})
         const optsToSave = replaceProgressiveSeries(withColors)
         replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selProts, logScale]
+        }, [selProts, logTrans]
     );
 
     // update if selProts changed
@@ -73,7 +57,7 @@ export default function ScatterPlot(props) {
             updatePlot()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [count, logScale])
+    }, [count])
 
     // update if stepResults arrive
     useEffect(() => {
@@ -93,7 +77,7 @@ export default function ScatterPlot(props) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
             if (params.selProteins) setSelProts(params.selProteins)
-            if(typeof params.logScale !== "undefined") setLogScale(params.logScale)
+            if(typeof params.logTrans !== "undefined") setLogTrans(params.logTrans)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data, localParams])
@@ -125,7 +109,10 @@ export default function ScatterPlot(props) {
     }
 
     const checkboxChange = (e) => {
-        setLogScale(e.target.checked)
+        setLogTrans(e.target.checked)
+        const newParams = {...localParams, logTrans: e.target.checked}
+        setLocalParams(newParams)
+        dispatch(setStepParametersWithoutRunning({stepId: props.data.id, params: newParams, callback: () => setCount(count + 1)}))
     }
 
     /*
@@ -161,7 +148,7 @@ export default function ScatterPlot(props) {
     }
 
     const getOptions = (results, params, mySelProteins) => {
-        const myData = (logScale) ? computeLogData(results.data) : {d: results.data}
+        const myData = (logTrans) ? computeLogData(results.data) : {d: results.data}
         const colLimits = (params.colorBy) ? computeColLimits(results.data) : null
         const defSelProts = (mySelProteins ? mySelProteins : params.selProteins)
 
@@ -291,6 +278,7 @@ export default function ScatterPlot(props) {
         const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
         setSelProts(newSelProts)
+        setLocalParams({...localParams, selProteins: newSelProts})
         const callback = () => {
             setCount(count+1)
         }
@@ -335,7 +323,7 @@ export default function ScatterPlot(props) {
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             <Checkbox
                 onChange={checkboxChange}
-                checked={logScale}
+                checked={logTrans}
                 disabled={props.isLocked}
             >Log transform [log10]
             </Checkbox>

@@ -68,9 +68,27 @@ export const addAnalysisStep = createAsyncThunk(
     }
 )
 
-export function setStepParametersWithoutRunning(paramsObj){
+function setStepParametersWithoutRunningCall(paramsObj){
     return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId + "?doNotRun=true", paramsObj.params)
 }
+
+export const setStepParametersWithoutRunning = createAsyncThunk(
+        'analysis-step/parameters-without-running',
+        async (stepObj, thunkApi) => {
+            try {
+                const response = await setStepParametersWithoutRunningCall(stepObj)
+                return response.data
+            } catch (err) {
+                let error = err // cast the error for access
+                if (!error.response) {
+                    throw err
+                }
+                return thunkApi.rejectWithValue(error.response.data)
+            } finally {
+                if(stepObj.callback) stepObj.callback()
+            }
+        }
+    )
 
 function setStepParametersCall(paramsObj) {
     return axios.post(globalConfig.urlBackend + "analysis-step/parameters/" + paramsObj.stepId, paramsObj.params)
