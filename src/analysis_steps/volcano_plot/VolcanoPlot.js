@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, useCallback} from "react";
 import {Button, Card, Row, Col} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
@@ -10,6 +10,7 @@ import {FullscreenOutlined} from "@ant-design/icons";
 import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries, getStepResults} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
+import {defaultColors} from "../../common/PlotColors";
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -19,9 +20,9 @@ export default function VolcanoPlot(props) {
     const [options, setOptions] = useState()
     // to show the selected proteins before the reload
     const [selProts, setSelProts] = useState([])
-    const [onEvents, setOnEvents] = useState()
     const [showZoom, setShowZoom] = useState(null)
     const [stepResults, setStepResults] = useState()
+    const [count, setCount] = useState(1)
 
     const colPalette = {
         "down1": "#5470c6",
@@ -31,7 +32,6 @@ export default function VolcanoPlot(props) {
         "none": "silver"
     }
 
-    /*
     // check if element is shown
     const elementRef = useRef(null);
     const isOnScreen = useOnScreen(elementRef);
@@ -47,35 +47,62 @@ export default function VolcanoPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stepResults, isOnScreen, props.data])
 
-     */
+    const updatePlot = useCallback(() => {
+            const echartOptions = getOptions(stepResults, selProts)
+            const withColors = {...echartOptions, color: defaultColors}
+            setOptions({count: options ? options.count + 1 : 0, data: withColors})
+            const optsToSave = replaceProgressiveSeries(withColors)
+            replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selProts]
+    );
 
-
+    // update if selProts changed
     useEffect(() => {
-        if (props.data.parameters) {
+        if (props.data && props.data.status === 'done' && stepResults) {
+            updatePlot()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [count])
+
+    // update if stepResults arrive
+    useEffect(() => {
+        if (localParams && props.data && props.data.status === 'done' && stepResults) {
+            const echartOptions = getOptions(stepResults, localParams.selProteins)
+            const withColors = {...echartOptions, color: defaultColors}
+            setOptions({...options, data: withColors})
+            const optsToSave = replaceProgressiveSeries(withColors)
+            replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults])
+
+    // set initial params
+    useEffect(() => {
+        if(!localParams && props.data && props.data.parameters){
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
+            if (params.selProteins) setSelProts(params.selProteins)
         }
-        if (props.data.status === 'done' && props.data.results) {
-            if (isWaiting) {
-                const results = JSON.parse(props.data.results)
-                const echartOptions = getOptions(results)
-                const backendSelProts = JSON.parse(props.data.parameters).selProteins
-                if (backendSelProts) setSelProts(backendSelProts)
-                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data, localParams])
+
+    useEffect(() => {
+        if (props.data && stepResults) {
+            if (isWaiting && props.data.status === 'done') {
                 setIsWaiting(false)
-                const optsToSave = replaceProgressiveSeries(echartOptions)
-                replacePlotIfChanged(props.data.id, results, optsToSave, dispatch)
+                setStepResults(undefined)
+                setOptions({count: 0})
             }
-            setOnEvents({'click': showToolTipOnClick})
-        } else {
-            if (!isWaiting) {
+
+            if (!isWaiting && props.data && props.data.status !== 'done') {
                 setIsWaiting(true)
                 const greyOpt = greyOptions(options.data)
                 setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, selProts])
+    }, [props, isWaiting, stepResults])
 
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
@@ -348,26 +375,29 @@ export default function VolcanoPlot(props) {
         return finalOpts
     }
 
-    function showToolTipOnClick(e) {
-        // don't do anything if the analysis is locked
-        if(props.isLocked) return
+    const showToolTipOnClick = useCallback((e) => {
+            const prot = e.data.prot
+            const protIndex = (selProts ? selProts.indexOf(prot) : -1)
+            const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
+            setSelProts(newSelProts)
+            setLocalParams({...localParams, selProteins: newSelProts})
+            const callback = () => {
+                setCount(count+1)
+            }
+            console.log("showToolTipOnClick", newSelProts)
+            dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selProts, count]
+    );
 
-        const prot = e.data.prot
-        const protIndex = (selProts ? selProts.indexOf(prot) : -1)
-        const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
-        setSelProts(newSelProts)
-        const results = JSON.parse(props.data.results)
-        const echartOptions = getOptions(results, newSelProts)
-        const callback = () => {
-            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
-        }
-        dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
-        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-    }
+    const onEvents = {
+        click: showToolTipOnClick,
+    };
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
+              ref={elementRef}
               title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
