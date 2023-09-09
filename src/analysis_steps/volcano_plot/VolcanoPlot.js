@@ -376,7 +376,10 @@ export default function VolcanoPlot(props) {
     }
 
     const showToolTipOnClick = useCallback((e) => {
-            const prot = e.data.prot
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
+        const prot = e.data.prot
             const protIndex = (selProts ? selProts.indexOf(prot) : -1)
             const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
             setSelProts(newSelProts)

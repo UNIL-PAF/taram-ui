@@ -274,6 +274,9 @@ export default function ScatterPlot(props) {
     }
 
     const showToolTipOnClick = useCallback((e) => {
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
         const prot = e.data[2]
         const protIndex = (selProts ? selProts.indexOf(prot) : -1)
         const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)

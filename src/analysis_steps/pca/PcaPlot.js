@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef, useCallback} from "react";
 import {Button, Card} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
+import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
 import {typeToName} from "../TypeNameMapping"
 import {switchSel} from "../BackendAnalysisSteps";
+import {useOnScreen} from "../../common/UseOnScreen";
+import {defaultColors} from "../../common/PlotColors";
 
 export default function PcaPlot(props) {
     const type = 'pca'
@@ -16,14 +18,94 @@ export default function PcaPlot(props) {
     const [options, setOptions] = useState()
     const [isWaiting, setIsWaiting] = useState(true)
     const [showZoom, setShowZoom] = useState(null)
-    const [onEvents, setOnEvents] = useState()
     const [selExps, setSelExps] = useState([])
     const dispatch = useDispatch();
+    const [stepResults, setStepResults] = useState()
+    const [count, setCount] = useState(1)
+
+    // check if element is shown
+    const elementRef = useRef(null);
+    const isOnScreen = useOnScreen(elementRef);
 
     useEffect(() => {
-        setOnEvents({'click': showToolTipOnClick})
+        if(props.data && props.data.status === "done") {
+            if (isOnScreen) {
+                if (!stepResults) {
+                    getStepResults(props.data.id, setStepResults, dispatch)
+                }
+            } else setStepResults(undefined)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selExps])
+    }, [stepResults, isOnScreen, props.data])
+
+    const updatePlot = useCallback(() => {
+            const newParams = {...localParams, selExps: selExps}
+            const echartOptions = getOptions(stepResults, newParams, selExps)
+            const withColors = {...echartOptions, color: defaultColors}
+            setOptions({count: options ? options.count + 1 : 0, data: withColors})
+            const optsToSave = replaceProgressiveSeries(withColors)
+            replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selExps]
+    );
+
+    // update if selExps changed
+    useEffect(() => {
+        if (props.data && props.data.status === 'done' && stepResults) {
+            updatePlot()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [count])
+
+// update if stepResults arrive
+    useEffect(() => {
+        if (localParams && props.data && props.data.status === 'done' && stepResults) {
+            const echartOptions = getOptions(stepResults, localParams)
+            const withColors = {...echartOptions, color: defaultColors}
+            setOptions({...options, data: withColors})
+            const optsToSave = replaceProgressiveSeries(withColors)
+            replacePlotIfChanged(props.data.id, stepResults, optsToSave, dispatch)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults])
+
+    // set initial params
+    useEffect(() => {
+        if(!localParams && props.data && props.data.parameters){
+            const params = JSON.parse(props.data.parameters)
+            setLocalParams(params)
+            if (params.selExps) setSelExps(params.selExps)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data, localParams])
+
+    useEffect(() => {
+        if (props.data && stepResults) {
+            if (isWaiting && props.data.status === 'done') {
+                setIsWaiting(false)
+                setStepResults(undefined)
+                setOptions({count: 0})
+            }
+
+            if (!isWaiting && props.data && props.data.status !== 'done') {
+                setIsWaiting(true)
+                const greyOpt = greyOptions(options.data)
+                setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props, isWaiting, stepResults])
+
+    const greyOptions = (options) => {
+        const greyCol = 'lightgrey'
+        let newOpts = {...options, color: Array(30).fill(greyCol), visualMap: null}
+        newOpts.series.forEach((s, i) => {
+            if (s.itemStyle) newOpts.series[i].itemStyle = {color: greyCol}
+        })
+        return newOpts
+    }
+
+    /*
 
     useEffect(() => {
         if (props.data && props.data.results) {
@@ -48,6 +130,8 @@ export default function PcaPlot(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting])
+
+     */
 
     const getOptions = (results, params, mySelExps) => {
         const xAxisPc = 0
@@ -148,6 +232,7 @@ export default function PcaPlot(props) {
         return options
     }
 
+    /*
     function showToolTipOnClick(e) {
         // don't do anything if the analysis is locked
         if(props.isLocked) return
@@ -166,8 +251,33 @@ export default function PcaPlot(props) {
         setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
     }
 
+     */
+
+    const showToolTipOnClick = useCallback((e) => {
+        // don't do anything if the analysis is locked
+        if(props.isLocked) return
+
+        const exp = e.data[0]
+        const expIndex = (selExps ? selExps.indexOf(exp) : -1)
+        const newSelExps = expIndex > -1 ? selExps.filter(e => e !== exp) : selExps.concat(exp)
+        setSelExps(newSelExps)
+
+            setLocalParams({...localParams, selExps: newSelExps})
+            const callback = () => {
+                setCount(count+1)
+            }
+            dispatch(switchSel({resultId: props.resultId, selId: exp, stepId: props.data.id, callback: callback}))
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selExps, count]
+    );
+
+    const onEvents = {
+        click: showToolTipOnClick,
+    };
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
+              ref={elementRef}
               onClick={props.onSelect}
               title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
