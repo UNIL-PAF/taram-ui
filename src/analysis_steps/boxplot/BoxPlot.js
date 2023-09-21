@@ -24,6 +24,7 @@ export default function BoxPlot(props) {
     const [groupByCondition, setGroupByCondition] = useState()
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
+    const [count, setCount] = useState(1)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -65,7 +66,7 @@ export default function BoxPlot(props) {
            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [logScale, groupByCondition])
+    }, [count])
 
     // update if stepResults arrive
     useEffect(() => {
@@ -229,7 +230,7 @@ export default function BoxPlot(props) {
     const checkboxChange = (e, field) => {
         const newLocalParams = {...localParams}
         newLocalParams[field] = e.target.checked
-        setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams})
+        dispatch(setStepParametersWithoutRunning({stepId: props.data.id, params: newLocalParams, callback: () => setCount(count + 1)}))
         setLocalParams(newLocalParams)
         if(field === "logScale") setLogScale(e.target.checked)
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
@@ -276,7 +277,7 @@ export default function BoxPlot(props) {
                 className={"analysis-step-row"}
                 disabled={props.isLocked}
                 onChange={(e) => checkboxChange(e, "groupByCondition")}
-                checked={localParams && localParams.groupByCondition}>Group by condition
+                checked={groupByCondition}>Group by condition
             </Checkbox>
             <div style={{margin: "13px"}}></div>
             {options && options.data && options.data.series.length > 0 &&
