@@ -387,7 +387,6 @@ export default function VolcanoPlot(props) {
             const callback = () => {
                 setCount(count+1)
             }
-            console.log("showToolTipOnClick", newSelProts)
             dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selProts, count]
