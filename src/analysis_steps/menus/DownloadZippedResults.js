@@ -16,10 +16,7 @@ export default function DownloadZippedResults(props) {
         if (!selRowKeys && props.data && props.data.analysisSteps) {
             setSelRowKeys(props.data.analysisSteps.map(s => s.id))
             const allTableIds = props.data.analysisSteps.filter(s => s.modifiesResult && s.tableNr).map(s => s.id)
-            const allPlotIds = props.data.analysisSteps.filter(s => {
-                const result = JSON.parse(s.results)
-                return result && result.plot
-            }).map(s => s.id)
+            const allPlotIds = props.data.analysisSteps.filter(s => s.results == null).map(s => s.id)
             setSelItems({...selItems, table: allTableIds, plots: allPlotIds})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,8 +69,7 @@ export default function DownloadZippedResults(props) {
     ];
 
     const data = props.data.analysisSteps.map((s, i) => {
-        const result = JSON.parse(s.results)
-        const hasPlot = (result && result.plot) ? true : false
+        const hasPlot = (s.results == null) ? true : false
         return {
             key: s.id,
             type: typeToName(s.type),
