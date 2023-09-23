@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState, useCallback} from "react";
-import {Button, Card, Checkbox} from "antd";
+import {Button, Card, Checkbox, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
@@ -11,6 +11,8 @@ import {setStepParametersWithoutRunning, switchSel} from "../BackendAnalysisStep
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
+
+const { Text } = Typography;
 
 export default function ScatterPlot(props) {
     const type = 'scatter-plot'
@@ -24,6 +26,8 @@ export default function ScatterPlot(props) {
     const [logTrans, setLogTrans] = useState(false)
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
+    const [showLoading, setShowLoading] = useState(false)
+    const [showError, setShowError] = useState(false)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -33,7 +37,8 @@ export default function ScatterPlot(props) {
         if(props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
-                    getStepResults(props.data.id, setStepResults, dispatch)
+                    setShowLoading(true)
+                    getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
         }
@@ -330,6 +335,10 @@ export default function ScatterPlot(props) {
                 disabled={props.isLocked}
             >Log transform [log10]
             </Checkbox>
+            {showLoading && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                <div className="content"/>
+            </Spin>}
+            {showError && <Text type="danger">Error while trying to get the plot from the server..</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>

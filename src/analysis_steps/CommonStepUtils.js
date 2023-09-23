@@ -69,12 +69,13 @@ export function replaceProgressiveSeries(opts){
     return {...opts, series: newSeries}
 }
 
-export function getStepResults(stepId, setStepResults, dispatch){
+export function getStepResults(stepId, setStepResults, dispatch, callback, errorCallback){
     fetch(globalConfig.urlBackend + 'analysis-step/results/' + stepId)
         .then(response => {
             if (response.ok) {
                 response.text().then(t => {
                     setStepResults(JSON.parse(t))
+                    if(callback) callback()
                 })
             } else {
                 response.text().then(text => {
@@ -82,6 +83,7 @@ export function getStepResults(stepId, setStepResults, dispatch){
                         title: "Error while fetching results for step [" + stepId + "]",
                         text: text
                     }))
+                    if(errorCallback) errorCallback()
                 })
             }
         })

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
-import {Button, Card, Row, Col} from "antd";
+import {Button, Card, Row, Col, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
@@ -12,6 +12,8 @@ import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
 
+const { Text } = Typography;
+
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
     const dispatch = useDispatch();
@@ -23,6 +25,8 @@ export default function VolcanoPlot(props) {
     const [showZoom, setShowZoom] = useState(null)
     const [stepResults, setStepResults] = useState()
     const [count, setCount] = useState(1)
+    const [showLoading, setShowLoading] = useState(false)
+    const [showError, setShowError] = useState(false)
 
     const colPalette = {
         "down1": "#5470c6",
@@ -40,7 +44,8 @@ export default function VolcanoPlot(props) {
         if(props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
-                    getStepResults(props.data.id, setStepResults, dispatch)
+                    setShowLoading(true)
+                    getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
         }
@@ -431,7 +436,10 @@ export default function VolcanoPlot(props) {
                 </Col>
             </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-
+            {showLoading && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                <div className="content"/>
+            </Spin>}
+            {showError && <Text type="danger">Error while trying to get the plot from the server..</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
