@@ -436,7 +436,7 @@ export default function VolcanoPlot(props) {
                 </Col>
             </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {showLoading && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+            {showLoading && !(options && options.data) && <Spin tip="Loading" style={{marginLeft: "20px"}}>
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Error while trying to get the plot from the server..</Text>}
