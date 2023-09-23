@@ -207,7 +207,7 @@ export default function InitialResult(props) {
                                 </Col>
                             </Row>
                         }
-                        {results.spectronautSetup &&
+                        {results.spectronautSetup && results.spectronautSetup.libraries && 
                             <Row className={"analysis-step-row"}>
                                 <Col><strong>Libraries:</strong></Col>
                                 <Col>
