@@ -335,7 +335,7 @@ export default function ScatterPlot(props) {
                 disabled={props.isLocked}
             >Log transform [log10]
             </Checkbox>
-            {showLoading && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+            {showLoading && !(options && options.data) && <Spin tip="Loading" style={{marginLeft: "20px"}}>
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Error while trying to get the plot from the server..</Text>}
