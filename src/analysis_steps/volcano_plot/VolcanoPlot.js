@@ -436,10 +436,10 @@ export default function VolcanoPlot(props) {
                 </Col>
             </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {showLoading && !(options && options.data) && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+            {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
                 <div className="content"/>
             </Spin>}
-            {showError && <Text type="danger">Error while trying to get the plot from the server..</Text>}
+            {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>

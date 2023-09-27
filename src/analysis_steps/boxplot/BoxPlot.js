@@ -1,18 +1,18 @@
 import React, {useEffect, useState, useRef} from "react";
-import {Button, Card, Checkbox} from "antd";
+import {Button, Card, Checkbox, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
+import {getStepResults, getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
 import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps"
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
-import globalConfig from "../../globalConfig";
-import {setError} from "../../navigation/loadingSlice";
 import {defaultColors} from "../../common/PlotColors"
+
+const { Text } = Typography;
 
 export default function BoxPlot(props) {
     const type = 'boxplot'
@@ -25,6 +25,8 @@ export default function BoxPlot(props) {
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
     const [count, setCount] = useState(1)
+    const [showLoading, setShowLoading] = useState(false)
+    const [showError, setShowError] = useState(false)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -35,22 +37,8 @@ export default function BoxPlot(props) {
         if(props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
-                    fetch(globalConfig.urlBackend + 'analysis-step/results/' + props.data.id)
-                        .then(response => {
-                            if (response.ok) {
-                                response.text().then(t => {
-                                    const res = JSON.parse(t)
-                                    setStepResults(res)
-                                })
-                            } else {
-                                response.text().then(text => {
-                                    dispatch(setError({
-                                        title: "Error while fetching results for step [" + props.data.id + "]",
-                                        text: text
-                                    }))
-                                })
-                            }
-                        })
+                    setShowLoading(true)
+                    getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
         }
@@ -280,6 +268,10 @@ export default function BoxPlot(props) {
                 checked={groupByCondition}>Group by condition
             </Checkbox>
             <div style={{margin: "13px"}}></div>
+            {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                <div className="content"/>
+            </Spin>}
+            {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}

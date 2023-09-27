@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
-import {Button, Card} from "antd";
+import {Button, Card, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
@@ -12,6 +12,8 @@ import {switchSel} from "../BackendAnalysisSteps";
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
 
+const { Text } = Typography;
+
 export default function PcaPlot(props) {
     const type = 'pca'
     const [localParams, setLocalParams] = useState()
@@ -22,6 +24,8 @@ export default function PcaPlot(props) {
     const dispatch = useDispatch();
     const [stepResults, setStepResults] = useState()
     const [count, setCount] = useState(1)
+    const [showLoading, setShowLoading] = useState(false)
+    const [showError, setShowError] = useState(false)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -31,7 +35,8 @@ export default function PcaPlot(props) {
         if(props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
-                    getStepResults(props.data.id, setStepResults, dispatch)
+                    setShowLoading(true)
+                    getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
         }
@@ -104,34 +109,6 @@ export default function PcaPlot(props) {
         })
         return newOpts
     }
-
-    /*
-
-    useEffect(() => {
-        if (props.data && props.data.results) {
-            const params = JSON.parse(props.data.parameters)
-            setLocalParams(params)
-
-            if (isWaiting && props.data.status === 'done') {
-                const results = JSON.parse(props.data.results)
-                const backendSelExps = JSON.parse(props.data.parameters).selExps
-                if (backendSelExps) setSelExps(backendSelExps)
-                const echartOptions = getOptions(results, params, backendSelExps)
-                replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
-                setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-                setIsWaiting(false)
-            }
-
-            if (!isWaiting && props.data.status !== 'done') {
-                setIsWaiting(true)
-                const greyOpt = {...options.data, color: Array(30).fill('lightgrey')}
-                setOptions({count: options ? options.count + 1 : 0, data: greyOpt})
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, isWaiting])
-
-     */
 
     const getOptions = (results, params, mySelExps) => {
         const xAxisPc = 0
@@ -232,27 +209,6 @@ export default function PcaPlot(props) {
         return options
     }
 
-    /*
-    function showToolTipOnClick(e) {
-        // don't do anything if the analysis is locked
-        if(props.isLocked) return
-
-        const exp = e.data[0]
-        const expIndex = (selExps ? selExps.indexOf(exp) : -1)
-        const newSelExps = expIndex > -1 ? selExps.filter(e => e !== exp) : selExps.concat(exp)
-        setSelExps(newSelExps)
-
-        const results = JSON.parse(props.data.results)
-        const echartOptions = getOptions(results, localParams, newSelExps)
-        const callback = () => {
-            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
-        }
-        dispatch(switchSel({resultId: props.resultId, selId: exp, stepId: props.data.id, callback: callback}))
-        setOptions({count: options ? options.count + 1 : 0, data: echartOptions})
-    }
-
-     */
-
     const showToolTipOnClick = useCallback((e) => {
         // don't do anything if the analysis is locked
         if(props.isLocked) return
@@ -305,6 +261,10 @@ export default function PcaPlot(props) {
                         icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+            {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                <div className="content"/>
+            </Spin>}
+            {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
