@@ -27,7 +27,7 @@ export default function InitialResult(props) {
     const groupsDefined = colInfo ? Object.values(colInfo.columnMapping.experimentDetails).some(a => a.group) : null
 
     useEffect(() => {
-        if (!localParams && props.data) {
+        if (!localParams && props.data && props.data.columnInfo) {
             const colMapping = props.data.columnInfo.columnMapping
             const expList = Object.values(colMapping.experimentDetails)
 
@@ -148,7 +148,7 @@ export default function InitialResult(props) {
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
-              title={getStepTitle(props.data.nr, typeToName(type), results.nrProteinGroups, isDone)}
+              title={getStepTitle(props.data.nr, typeToName(type), results && results.nrProteinGroups, isDone)}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
@@ -157,10 +157,11 @@ export default function InitialResult(props) {
                               commonResult={props.data.commonResult}
                               intCol={intCol}
                               tableNr={props.data.tableNr}
-                              experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
+                              experimentDetails={props.data.columnInfo && props.data.columnInfo.columnMapping.experimentDetails}
                               resType={props.resType}
                               isSelected={props.isSelected}
                               isLocked={props.isLocked}
+                              error={props.data.error}
                               hasImputed={false}/>
         }>
             {colInfo && results && <div>
