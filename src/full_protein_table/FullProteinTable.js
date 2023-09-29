@@ -123,6 +123,7 @@ export default function FullProteinTable(props) {
                 myCol.render = (text) => formNum(text)
             }else{
                 myCol = {...myCol, ...getColumnSearchProps(h.idx)}
+                myCol.sorter = (a, b) => a[h.idx].localeCompare(b[h.idx])
                 myCol.render = (text) => {
                     if(text.length > elliThresh){
                         const shortText = text.slice(0, elliThresh) + "..."
