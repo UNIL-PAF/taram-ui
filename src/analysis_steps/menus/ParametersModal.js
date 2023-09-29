@@ -16,6 +16,7 @@ import NormalizationParams from "../normalization/NormalizationParams";
 import SummaryStatParams from "../summary_stat/SummaryStatParams";
 import OrderColumnsParams from "../order_columns/OrderColumnsParams";
 import RenameColumnsParams from "../rename_columns/RenameColumnsParams";
+import AddColumnParams from "../add_column/AddColumnParams";
 
 export default function ParametersModal(props) {
 
@@ -119,6 +120,14 @@ export default function ParametersModal(props) {
                                            experimentDetails={props.experimentDetails}
                                            intCol={props.intCol}
                 ></RenameColumnsParams>
+            case 'add-column':
+                return <AddColumnParams
+                    commonResult={props.commonResult}
+                    params={props.params}
+                    setParams={props.setParams}
+                    experimentDetails={props.experimentDetails}
+                    intCol={props.intCol}
+                ></AddColumnParams>
 
         }
     }
