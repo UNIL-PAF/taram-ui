@@ -112,7 +112,7 @@ export default function GroupSelection(props) {
                                                             ? "lightblue"
                                                             : "whitesmoke",
                                                         padding: 4,
-                                                        width: 150,
+                                                        width: 200,
                                                         minHeight: 500
                                                     }}
                                                 >
