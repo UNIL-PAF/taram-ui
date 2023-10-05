@@ -8,8 +8,6 @@ import {setStopMenuShortcut} from "../../analysis/analysisSlice";
 import {useDispatch} from "react-redux";
 
 export default function GroupSelection(props) {
-    console.log(props.groupsOrdered)
-
     const dispatch = useDispatch();
     const [showEdit, setShowEdit] = useState()
 
@@ -24,24 +22,33 @@ export default function GroupSelection(props) {
 
     const addGroup = () => {
         let newCols = {...props.groupData}
-        var nextIdx = Object.keys(props.groupData).length
+        let nextIdx = Object.keys(props.groupData).length
         // if this name already exists, we have to go to the next nextIdx
-        while(newCols["group-"+nextIdx]){ nextIdx = nextIdx + 1}
-        newCols["group-" + nextIdx] = {name: "Group " + nextIdx, items: []}
-        props.setGroupData(newCols)
-    }
-
-    const changeGroupName = (groupId, groupName) => {
-        const newCols = {...props.groupData}
-        newCols[groupId].name = groupName.trim()
-        props.setGroupData(newCols)
+        while(newCols["Group-"+nextIdx]){ nextIdx = nextIdx + 1}
+        const newName = "Group-" + nextIdx
+        newCols[newName] = {name: newName, items: []}
+        props.setParams({...props.params, groupsOrdered: props.groupsOrdered.concat(newName), groupData: newCols})
     }
 
     const deleteGroup = (groupId) => {
         var myGroups = props.groupData
         myGroups.experiments.items = myGroups.experiments.items.concat(myGroups[groupId].items)
         delete myGroups[groupId]
-        props.setGroupData(myGroups)
+        props.setParams({...props.params, groupsOrdered: props.groupsOrdered.filter(a => a !== groupId), groupData: myGroups})
+    }
+
+    const setGroupData = (gd) => {
+        props.setParams({...props.params, groupData: gd})
+    }
+
+    const changeGroupName =  (groupId, groupName) => {
+        const myName = groupName.trim()
+        const newCols = {...props.groupData}
+        newCols[myName] = newCols[groupId]
+        newCols[myName].name = myName
+        delete newCols[groupId]
+        const newGroupsOrdered = props.groupsOrdered.map(a => a === groupId ? groupName : a)
+        props.setParams({...props.params, groupsOrdered: newGroupsOrdered, groupData: newCols})
     }
 
     const onDragEnd = (result, columns, setColumns) => {
@@ -81,7 +88,7 @@ export default function GroupSelection(props) {
         }
     };
 
-    console.log(Object.entries(props.groupData))
+    const nrGroups = props.groupsOrdered && props.groupsOrdered.length
 
     return (
         <div>
@@ -89,10 +96,12 @@ export default function GroupSelection(props) {
                 style={{display: "flex", justifyContent: "left", height: "100%"}}
             >
                 <DragDropContext
-                    onDragEnd={(result) => onDragEnd(result, props.groupData, props.setGroupData)}
+                    onDragEnd={(result) => onDragEnd(result, props.groupData, setGroupData)}
                 >
                     {['experiments'].concat(props.groupsOrdered).map((columnId, i) => {
                         const column = props.groupData[columnId]
+                        if(!column){return null}
+
                         return (
                             <div
                                 style={{
@@ -104,7 +113,7 @@ export default function GroupSelection(props) {
                                 key={columnId}
                             >
                                 <GroupTitle id={columnId} name={column.name} i={i} moveLeft={props.moveGroupLeft}
-                                            moveRight={props.moveGroupRight}
+                                            moveRight={props.moveGroupRight} isLast={i === nrGroups}
                                             changeGroupName={changeGroupName} deleteGroup={deleteGroup}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>

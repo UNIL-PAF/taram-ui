@@ -27,14 +27,12 @@ export default function GroupTitle(props) {
         props.moveRight(props.name, props.i)
     }
 
-
-
     const renderMoveLeft = () => {
         if(!isEditing && props.id !== "experiments" && props.i > 1) return <span onClick={() => moveLeft()}>left</span>
     }
 
     const renderMoveRight = () => {
-        if(!isEditing && props.id !== "experiments") return <span onClick={() => moveRight()}>Right</span>
+        if(!isEditing && props.id !== "experiments" && !props.isLast) return <span onClick={() => moveRight()}>Right</span>
     }
 
     return (<>{renderMoveLeft()}
