@@ -68,7 +68,8 @@ export default function InitialResult(props) {
             }, initialGroups)
 
             const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
-            setLocalParams({groupData: groupData, column: colMapping.intCol, groupsOrdered: colMapping.groupsOrdered})
+            const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
+            setLocalParams({groupData: groupData, column: colMapping.intCol, groupsOrdered: myGroupsOrdered})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, localParams])
@@ -95,7 +96,7 @@ export default function InitialResult(props) {
             return sum
         }, {})
 
-        return {experimentDetails: experimentDetails, intCol: params.column}
+        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: params.groupsOrdered}
     }
 
     const changGroups = () => {

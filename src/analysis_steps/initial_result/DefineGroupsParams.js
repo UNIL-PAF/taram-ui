@@ -36,7 +36,7 @@ export default function DefineGroupsParams(props) {
                 <>
                     <h3>Group selection</h3>
                     <GroupSelection groupData={props.params.groupData}
-                                    groupsOrdered={props.params.groupsOrdered || []}
+                                    groupsOrdered={props.params.groupsOrdered}
                                     expData={props.params.expData}
                                     changeExpName={props.changeExpName}
                                     moveGroupLeft={moveGroupLeft}
