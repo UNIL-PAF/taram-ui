@@ -19,7 +19,25 @@ export default function GroupTitle(props) {
         props.deleteGroup(props.id)
     }
 
-    return (<>
+    const moveLeft = () => {
+        props.moveLeft(props.name, props.i)
+    }
+
+    const moveRight = () => {
+        props.moveRight(props.name, props.i)
+    }
+
+
+
+    const renderMoveLeft = () => {
+        if(!isEditing && props.id !== "experiments" && props.i > 1) return <span onClick={() => moveLeft()}>left</span>
+    }
+
+    const renderMoveRight = () => {
+        if(!isEditing && props.id !== "experiments") return <span onClick={() => moveRight()}>Right</span>
+    }
+
+    return (<>{renderMoveLeft()}
             {!isEditing && <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
                         <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>
@@ -43,5 +61,6 @@ export default function GroupTitle(props) {
                                 <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>}
                                         onClick={() => cancel()} size={"small"} danger></Button>
                 </span>}
+        {renderMoveRight()}
         </>);
 }

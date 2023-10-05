@@ -68,7 +68,7 @@ export default function InitialResult(props) {
             }, initialGroups)
 
             const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
-            setLocalParams({groupData: groupData, column: colMapping.intCol})
+            setLocalParams({groupData: groupData, column: colMapping.intCol, groupsOrdered: colMapping.groupsOrdered})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, localParams])

@@ -8,6 +8,8 @@ import {setStopMenuShortcut} from "../../analysis/analysisSlice";
 import {useDispatch} from "react-redux";
 
 export default function GroupSelection(props) {
+    console.log(props.groupsOrdered)
+
     const dispatch = useDispatch();
     const [showEdit, setShowEdit] = useState()
 
@@ -79,6 +81,8 @@ export default function GroupSelection(props) {
         }
     };
 
+    console.log(Object.entries(props.groupData))
+
     return (
         <div>
             <div
@@ -87,7 +91,8 @@ export default function GroupSelection(props) {
                 <DragDropContext
                     onDragEnd={(result) => onDragEnd(result, props.groupData, props.setGroupData)}
                 >
-                    {Object.entries(props.groupData).map(([columnId, column], i) => {
+                    {['experiments'].concat(props.groupsOrdered).map((columnId, i) => {
+                        const column = props.groupData[columnId]
                         return (
                             <div
                                 style={{
@@ -98,7 +103,8 @@ export default function GroupSelection(props) {
                                 }}
                                 key={columnId}
                             >
-                                <GroupTitle id={columnId} name={column.name}
+                                <GroupTitle id={columnId} name={column.name} i={i} moveLeft={props.moveGroupLeft}
+                                            moveRight={props.moveGroupRight}
                                             changeGroupName={changeGroupName} deleteGroup={deleteGroup}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
