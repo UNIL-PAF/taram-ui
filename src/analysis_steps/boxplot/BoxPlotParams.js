@@ -24,7 +24,7 @@ export default function BoxPlotParams(props) {
 
     useEffect(() => {
         if (!props.params) {
-            props.setParams({logScale: false})
+            props.setParams({logScale: false, groupByCondition: true})
             setUseDefaultCol(true)
         }else{
             if(useDefaultCol === undefined){
