@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Input} from "antd";
-import {CheckOutlined, CloseOutlined, DeleteOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined, LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 export default function GroupTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -28,14 +28,16 @@ export default function GroupTitle(props) {
     }
 
     const renderMoveLeft = () => {
-        if(!isEditing && props.id !== "experiments" && props.i > 1) return <span onClick={() => moveLeft()}>left</span>
+        if(!isEditing && props.id !== "experiments" && props.i > 1) return <Button onClick={() => moveLeft()} type={"text"} icon={<LeftOutlined/>}></Button>
+        else return <span></span>
     }
 
     const renderMoveRight = () => {
-        if(!isEditing && props.id !== "experiments" && !props.isLast) return <span onClick={() => moveRight()}>Right</span>
+        if(!isEditing && props.id !== "experiments" && !props.isLast) return <Button onClick={() => moveRight()} type={"text"} icon={<RightOutlined/>}></Button>
     }
 
-    return (<>{renderMoveLeft()}
+    return (<>
+            <div style={{minHeight: "35px"}}><span style={{float: "left"}}>{renderMoveLeft()}</span><span style={{float: "right"}}>{renderMoveRight()}</span></div>
             {!isEditing && <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
                         <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>
@@ -59,6 +61,5 @@ export default function GroupTitle(props) {
                                 <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>}
                                         onClick={() => cancel()} size={"small"} danger></Button>
                 </span>}
-        {renderMoveRight()}
         </>);
 }
