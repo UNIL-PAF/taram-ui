@@ -56,18 +56,19 @@ export default function ResultsTable(props) {
         {
             title: 'Action',
             key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Popconfirm
+            render: (_, record) => {
+                console.log(record)
+                return <Space size="middle">
+                    {record.status === "running" && <Popconfirm
                         title="Are you sure to delete this result?"
                         onConfirm={() => confirmDelete(record.id)}
                         okText="Yes"
                         cancelText="Cancel"
                     >
                         <Button type={"text"} icon={<DeleteOutlined/>}></Button>
-                    </Popconfirm>
+                    </Popconfirm>}
                 </Space>
-            ),
+            },
         },
     ]
 
