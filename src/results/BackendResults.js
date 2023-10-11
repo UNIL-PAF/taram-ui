@@ -41,6 +41,21 @@ function deleteResult(resultId, refreshResults){
         });
 }
 
+function updateInfo(resultId, name, description, refreshResults){
+    axios.put(globalConfig.urlBackend + 'result/update-info/' + resultId + "?name=" + name + (description ? ("&description="+description) : ""))
+        .then((response) => {
+            // handle success
+        })
+        .catch(function (error) {
+            // handle error
+            console.log("error")
+            console.log(error);
+        })
+        .then(function () {
+            refreshResults()
+        });
+}
+
 function getResults(setState) {
     axios.get(globalConfig.urlBackend + 'result/list')
         .then((response) => {
@@ -61,15 +76,11 @@ function getResults(setState) {
         });
 }
 
-function callAddResult(result){
-    return axios.post(globalConfig.urlBackend + 'result/add', result)
-}
-
 export const addResult = createAsyncThunk(
     'result/add',
     async (result, thunkApi) => {
         try {
-            const response = await callAddResult(result)
+            const response = await axios.post(globalConfig.urlBackend + 'result/add', result)
             return response.data
         }catch(err){
             let error = err // cast the error for access
@@ -81,5 +92,4 @@ export const addResult = createAsyncThunk(
     }
 )
 
-
-export {getAvailableDirs, getResults, deleteResult}
+export {getAvailableDirs, getResults, deleteResult, updateInfo}

@@ -28,50 +28,56 @@ export default function InitialResult(props) {
 
     useEffect(() => {
         if (!localParams && props.data && props.data.columnInfo) {
-            const colMapping = props.data.columnInfo.columnMapping
-            const expList = Object.values(colMapping.experimentDetails)
-
-            const newGroupData = {
-                experiments: {
-                    name: "Experiments",
-                    items: expList.filter((d) => {
-                        return !d.group
-                    }).map((d) => {
-                        return {
-                            id: d.name,
-                            name: d.name,
-                            fileName: d.fileName,
-                            originalName: d.originalName
-                        }
-                    })
-                }
-            }
-
-            const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
-
-            const initialGroups = groups.reduce((acc, cur) => ({
-                ...acc,
-                [cur]: {name: cur, items: []}
-            }), {})
-
-            const loadedGroupData = expList.reduce((acc, cur) => {
-                const cleaned = {
-                    id: cur.name,
-                    name: cur.name,
-                    fileName: cur.fileName,
-                    originalName: cur.originalName
-                }
-                groups.forEach((g) => {
-                    if (g === cur.group) acc[g].items.push(cleaned)
-                })
-                return acc
-            }, initialGroups)
-
-            const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
-            setLocalParams({groupData: groupData, column: colMapping.intCol})
+            setLocalParams(initializeLocalParams())
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, localParams])
+
+
+    const initializeLocalParams = () => {
+        const colMapping = props.data.columnInfo.columnMapping
+        const expList = Object.values(colMapping.experimentDetails)
+
+        const newGroupData = {
+            experiments: {
+                name: "Experiments",
+                items: expList.filter((d) => {
+                    return !d.group
+                }).map((d) => {
+                    return {
+                        id: d.name,
+                        name: d.name,
+                        fileName: d.fileName,
+                        originalName: d.originalName
+                    }
+                })
+            }
+        }
+
+        const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
+
+        const initialGroups = groups.reduce((acc, cur) => ({
+            ...acc,
+            [cur]: {name: cur, items: []}
+        }), {})
+
+        const loadedGroupData = expList.reduce((acc, cur) => {
+            const cleaned = {
+                id: cur.name,
+                name: cur.name,
+                fileName: cur.fileName,
+                originalName: cur.originalName
+            }
+            groups.forEach((g) => {
+                if (g === cur.group) acc[g].items.push(cleaned)
+            })
+            return acc
+        }, initialGroups)
+
+        const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
+        const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
+        return {groupData: groupData, column: colMapping.intCol, groupsOrdered: myGroupsOrdered}
+    }
 
 
     // format the data for the backend
@@ -95,11 +101,7 @@ export default function InitialResult(props) {
             return sum
         }, {})
 
-        return {experimentDetails: experimentDetails, intCol: params.column}
-    }
-
-    const changGroups = () => {
-        setShowModal(!showModal)
+        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: params.groupsOrdered}
     }
 
     const changeIntensity = (value) => {
@@ -143,6 +145,11 @@ export default function InitialResult(props) {
         setShowModal(false)
     }
 
+    const handleGroupModalCancel = () => {
+        setLocalParams(initializeLocalParams())
+        setShowModal(false)
+    }
+
     const isDone = props.data.status === "done"
 
     return (
@@ -168,7 +175,7 @@ export default function InitialResult(props) {
                 <Row>
                     <Col span={8}>
                         <Row>
-                            <Button onClick={() => changGroups()}
+                            <Button onClick={() => setShowModal(true)}
                                     disabled={props.isLocked}
                                     danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
                                     type={'primary'}
@@ -234,7 +241,7 @@ export default function InitialResult(props) {
             </div>
             }
             <Modal open={showModal} onOk={() => handleGroupModalOk()}
-                   onCancel={() => changGroups()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
+                   onCancel={() => handleGroupModalCancel()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}
                                     params={localParams}
                                     commonResult={props.data.commonResult}

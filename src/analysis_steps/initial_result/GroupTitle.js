@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Input} from "antd";
-import {CheckOutlined, CloseOutlined, DeleteOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined, LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 export default function GroupTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +19,25 @@ export default function GroupTitle(props) {
         props.deleteGroup(props.id)
     }
 
+    const moveLeft = () => {
+        props.moveLeft(props.name, props.i)
+    }
+
+    const moveRight = () => {
+        props.moveRight(props.name, props.i)
+    }
+
+    const renderMoveLeft = () => {
+        if(!isEditing && props.id !== "experiments" && props.i > 1) return <Button onClick={() => moveLeft()} type={"text"} icon={<LeftOutlined/>}></Button>
+        else return <span></span>
+    }
+
+    const renderMoveRight = () => {
+        if(!isEditing && props.id !== "experiments" && !props.isLast) return <Button onClick={() => moveRight()} type={"text"} icon={<RightOutlined/>}></Button>
+    }
+
     return (<>
+            <div style={{minHeight: "35px"}}><span style={{float: "left"}}>{renderMoveLeft()}</span><span style={{float: "right"}}>{renderMoveRight()}</span></div>
             {!isEditing && <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
                         <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>
