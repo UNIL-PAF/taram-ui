@@ -14,6 +14,15 @@ export default function AddColumn(props) {
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
+    const renderParamContent = () => {
+        if (params.charColParams) {
+            const charComp = params.charColParams.charComp === "matches" ? "matches" : "does not match"
+            return <p className={"analysis-step-param-line"}>Mark each row with
+                a <em>+</em> where <em>{params.selectedColumn}</em> {charComp} <em>{params.charColParams.strVal}</em>.
+            </p>
+        }
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -43,18 +52,19 @@ export default function AddColumn(props) {
                         <Col span={8}>
                             <div className={"analysis-step-param-box"}>
                                 <div className={"analysis-step-param-content"}>
-                                    {params.addConditionNames && <p className={"analysis-step-param-line"}>Add conditions to table headers.</p>}
-                                    {params.rename && <p className={"analysis-step-param-line"}>Renamed: [{params.rename.map(r => r.name).join(", ")}]</p>}
+                                    {renderParamContent()}
                                 </div>
                             </div>
                         </Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
+                            <Row className={"analysis-step-row"}>Added new column &nbsp;<em>{params.newColName}</em></Row>
                         </Col>
                         {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                     </Row>
                 </div>
             }
-            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
+                         comment={props.data.comments}></StepComment>
             {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
