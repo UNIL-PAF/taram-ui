@@ -15,7 +15,6 @@ export default function RemoveImputedParams(props) {
     }, [props])
 
     function handleChange(value) {
-        console.log(value)
         setReplaceBy(value)
         props.setParams({...props.params, replaceBy: value})
     }

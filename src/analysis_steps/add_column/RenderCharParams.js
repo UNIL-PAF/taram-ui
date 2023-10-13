@@ -1,12 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {Tree, Tag, Input, Button, Checkbox, Select} from 'antd';
-import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import React, {useEffect} from "react";
+import {Input, Select} from 'antd';
 
 const {Option} = Select;
 
 export default function RenderCharParams(props) {
-
-    const [compString, setCompString] = useState()
 
     useEffect(() => {
         if (!props.params.charColParams) {
