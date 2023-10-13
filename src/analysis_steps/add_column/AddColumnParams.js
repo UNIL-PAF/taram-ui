@@ -63,8 +63,14 @@ export default function AddColumnParams(props) {
         }
     }
 
+    const getType = (selCol) => {
+        const firstPart = (selCol.type === "CHARACTER") ? "char" : "num"
+        return selCol.isExperiment ? firstPart + "-exp" : firstPart
+    }
+
     const selectCol = (v) => {
-        props.setParams({...props.params, selectedColumn: v})
+        const selCol = colData.find(c => c.title === v)
+        props.setParams({...props.params, selectedColumn: v, type: getType(selCol)})
     }
 
     const onChangeNewName = (v) => {
