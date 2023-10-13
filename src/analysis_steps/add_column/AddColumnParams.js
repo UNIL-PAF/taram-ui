@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Tree, Tag, Input, Button, Checkbox, Select} from 'antd';
-import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import RenderCharParams from "./RenderCharParams";
 
 const {Option} = Select;
 
@@ -8,14 +8,21 @@ export default function AddColumnParams(props) {
 
     const [selColumn, setSelColumn] = useState()
     const [colData, setColData] = useState()
-    const [compString, setCompString] = useState()
     const [newColName, setNewColName] = useState()
+
+    console.log(props)
 
     useEffect(() => {
         const colData = computeColData()
         setColData(colData)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props])
+
+    useEffect(() => {
+     if(!props.params){
+         props.setParams({})
+     }
+    }, [])
 
     const computeColData = () => {
         return props.commonResult.headers.reduce((acc, val) => {
@@ -58,61 +65,29 @@ export default function AddColumnParams(props) {
     }
 
     const selectCol = (v) => {
-        console.log("selectCol", v)
+        props.setParams({...props.params, selectedColumn: v})
         setSelColumn(v)
+    }
+
+    const onChangeNewName = (v) => {
+        props.setParams({...props.params, newColName: v})
+        setNewColName(v)
     }
 
     const renderNewColSettings = () => {
         const selItem = colData.find(a => a.title === selColumn)
         if(selItem.isExperiment){
-            if(selItem.type === "CHARACTER") return renderExpChar()
-            else return renderExpNum()
+            if(selItem.type === "CHARACTER") return null
+            else return null
         }else{
-            if(selItem.type === "CHARACTER") return renderChar()
-            else return renderNum()
+            if(selItem.type === "CHARACTER") return <RenderCharParams
+                colData={colData}
+                selColumn={selColumn}
+                params={props.params}
+                setParams={props.setParams}
+            ></RenderCharParams>
+            else return null
         }
-    }
-
-    const renderExpChar = () => {
-        return <>
-            <span>Render Exp Char</span>
-        </>
-    }
-
-    const renderExpNum = () => {
-        return <>
-            <span>Render Exp Num</span>
-        </>
-    }
-
-    const onChangeComp = (v) => {
-        setCompString(v)
-    }
-
-    const renderChar = () => {
-        return <>
-            <span>New column will have a [+] if [<em>{selColumn}</em>]
-                <Select size={"small"} style={{width: 150}}>
-                    <Option key={"matches"} value={"matches"}>{"matches"}</Option>
-                    <Option key={"not"} value={"not"}>{"matches not"}</Option>
-                </Select>
-            </span>
-            <Input
-                style={{width: "150px"}}
-                onChange={(e) => onChangeComp(e.target.value)}
-                value={compString}
-            />
-        </>
-    }
-
-    const renderNum = () => {
-        return <>
-            <span>Render Num</span>
-        </>
-    }
-
-    const onChangeNewName = (v) => {
-        setNewColName(v)
     }
 
     return (
@@ -134,7 +109,7 @@ export default function AddColumnParams(props) {
                 })}
             </Select>
             <div>
-            {colData && selColumn && renderNewColSettings()}
+                {colData && selColumn && renderNewColSettings()}
             <h3>New column name</h3>
             <Input
                 style={{width: 300}}

@@ -21,6 +21,7 @@ import SummaryStat from "./summary_stat/SummaryStat";
 import OrderColumns from "./order_columns/OrderColumns";
 import RenameColumns from "./rename_columns/RenameColumns";
 import DownloadZippedResults from "./menus/DownloadZippedResults";
+import AddColumn from "./add_column/AddColumn";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -162,6 +163,10 @@ export default function AnalysisSteps(props) {
                                 return <RenameColumns isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
                                                      onSelect={onSelect} isSelected={selStep === i}/>
+                            case 'add-column':
+                                return <AddColumn isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
                         }

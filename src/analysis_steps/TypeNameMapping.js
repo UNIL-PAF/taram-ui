@@ -32,6 +32,8 @@ export function typeToName(type) {
             return 't-test'
         case 'volcano-plot':
             return 'Volcano plot'
+        case 'add-column':
+            return 'Add column'
         default: return "Missing type: [" + type + "]?!"
     }
 }

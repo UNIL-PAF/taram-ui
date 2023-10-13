@@ -6,7 +6,7 @@ import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 
 export default function AddColumn(props) {
-    const type = "rename-columns"
+    const type = "add-column"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const results = JSON.parse(props.data.results)
