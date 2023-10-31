@@ -103,7 +103,7 @@ const CollectionCreateForm = (props) => {
                             value={props.selResDir}
                             showSearch
                             filterOption={(input, option) =>
-                                option.items.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                         >
                             {
