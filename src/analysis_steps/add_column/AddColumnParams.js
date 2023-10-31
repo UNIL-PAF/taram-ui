@@ -1,18 +1,27 @@
 import React, {useEffect, useState} from "react";
 import {Input, Select, Tag} from 'antd';
 import RenderCharParams from "./RenderCharParams";
+import RenderNumExpParams from "./RenderNumExpParams";
 
 const {Option} = Select;
 
 export default function AddColumnParams(props) {
 
     const [colData, setColData] = useState()
+    const [selCol, setSelCol] = useState()
 
     useEffect(() => {
-        const colData = computeColData()
-        setColData(colData)
+        if (!colData && props.params) {
+            const colData = computeColData()
+            setColData(colData)
+            if(props.params.selectedColumnIdx){
+                const col = colData.find( c => c.key === props.params.selectedColumnIdx)
+                if(col) setSelCol(col.title)
+            }
+
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props.params, colData])
 
     useEffect(() => {
         if (!props.params) {
@@ -22,7 +31,7 @@ export default function AddColumnParams(props) {
     }, [])
 
     const computeColData = () => {
-        const headersWithoutNew = props.commonResult.headers.filter( h => h.name !== props.params.newColName)
+        const headersWithoutNew = (props.params && props.params.newColName) ? props.commonResult.headers.filter(h => h.name !== props.params.newColName) : props.commonResult.headers
 
         return headersWithoutNew.reduce((acc, val) => {
             if (val.experiment) {
@@ -68,9 +77,11 @@ export default function AddColumnParams(props) {
         return selCol.isExperiment ? firstPart + "-exp" : firstPart
     }
 
-    const selectCol = (v) => {
-        const selCol = colData.find(c => c.title === v)
-        props.setParams({...props.params, selectedColumn: v, type: getType(selCol)})
+    const selectCol = (v, a) => {
+        const col = colData[Number(a.key)]
+        const type = getType(col)
+        props.setParams({...props.params, selectedColumnIdx: col.key, type: type})
+        setSelCol(col.title)
     }
 
     const onChangeNewName = (v) => {
@@ -78,9 +89,16 @@ export default function AddColumnParams(props) {
     }
 
     const renderNewColSettings = () => {
-        const selItem = colData.find(a => a.title === props.params.selectedColumn)
+        const selItem = colData.find(a => a.key === props.params.selectedColumnIdx)
+        if(!selItem) return null
+
         if (selItem.isExperiment) {
-            if (selItem.type === "CHARACTER") return null
+            if (selItem.type === "NUMBER") return <RenderNumExpParams
+                colData={colData}
+                selColumn={props.params.selectedColumn}
+                params={props.params}
+                setParams={props.setParams}
+            ></RenderNumExpParams>
             else return null
         } else {
             if (selItem.type === "CHARACTER") return <RenderCharParams
@@ -98,8 +116,8 @@ export default function AddColumnParams(props) {
             {colData && props.params && <div>
                 <h3>Select a column</h3>
                 <Select
-                    value={props.params.selectedColumn}
-                    onChange={(v) => selectCol(v)}
+                    value={selCol}
+                    onChange={(v, a) => selectCol(v, a)}
                     size={"small"}
                     style={{width: 400}}
                     showSearch={true}
