@@ -22,6 +22,7 @@ export default function AddColumnParams(props) {
     useEffect(() => {
         const myColData = computeColData(numIsSel)
         setColData(myColData)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [numIsSel])
 
     useEffect(() => {

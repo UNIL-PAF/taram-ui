@@ -15,10 +15,14 @@ export default function AddColumn(props) {
     const isDone = props.data.status === "done"
 
     const renderParamContent = () => {
-        if (params.charColParams) {
-            const charComp = params.charColParams.compOp === "matches" ? "matches" : "does not match"
+        if (params.type === "char") {
+            const charComp = (params.charColParams.compSel === "any") ? (params.charColParams.compOp === "matches" ? "matches" : "does not match") : (params.charColParams.compOp === "matches" ? "match" : "do not match")
+            const entryOrEntries = (params.charColParams.compSel === "any") ? "entry" : "entries"
             return <p className={"analysis-step-param-line"}>Mark each row with&nbsp;
-                <strong>+</strong> where <strong><em>{params.charColParams.compSel}</em></strong> entry from <strong><em>[{results.selColNames.join(", ")}]</em></strong> {charComp} <strong><em>{params.charColParams.compVal}</em></strong>.
+                <strong>+</strong> where <strong><em>{params.charColParams.compSel}</em></strong> {entryOrEntries} from <em>[{results.selColNames.join(", ")}]</em> {charComp} <strong><em>{params.charColParams.compVal}</em></strong>.
+            </p>
+        }else{
+            return <p className={"analysis-step-param-line"}>Compute the <strong><em>{params.numColParams.mathOp}</em></strong> of columns <em>[{results.selColNames.join(", ")}]</em>.
             </p>
         }
     }
