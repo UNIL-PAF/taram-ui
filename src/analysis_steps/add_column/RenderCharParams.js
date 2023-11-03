@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Input, Select} from 'antd';
+import {Input, Select, Space} from 'antd';
 
 const {Option} = Select;
 
@@ -25,15 +25,15 @@ export default function RenderCharParams(props) {
     }
 
     return <>
-        {props.params.charColParams && <div>
+        {props.params.charColParams && <Space direction={"vertical"}>
             <span>New column will have a [+] if
                 <Select size={"small"} style={{width: 150}} onChange={changeSel}
                         value={props.params.charColParams.compSel}>
                     <Option key={"any"} value={"any"}>{"any"}</Option>
                     <Option key={"all"} value={"all"}>{"all"}</Option>
-                </Select>
+                </Select><br></br>
 
-                of the selected columns
+                of the selected column(s)<br></br>
 
                 <Select size={"small"} style={{width: 150}} onChange={changeOp}
                         value={props.params.charColParams.compOp}>
@@ -46,6 +46,6 @@ export default function RenderCharParams(props) {
                 onChange={(e) => onChangeStr(e.target.value)}
                 value={props.params.charColParams.compVal}
             />
-        </div>}
+        </Space>}
     </>
 }

@@ -17,13 +17,12 @@ export default function RenderNumParams(props) {
     }
 
     const changeRemoveNaN = (e) => {
-        console.log(e)
         props.setParams({...props.params, numColParams: {...props.params.numColParams, removeNaN: e.target.checked}})
     }
 
     return <>
         {props.params.numColParams && <div>
-            <span>Compute
+            <span>Compute&nbsp;
                 <Select size={"small"} style={{width: 150}} onChange={changeSel}
                         value={props.params.numColParams.mathOp}>
                     <Option key={"min"} value={"min"}>{"min"}</Option>

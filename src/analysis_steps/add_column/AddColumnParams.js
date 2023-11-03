@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Input, Tag, Switch, Tree} from 'antd';
+import {Input, Tag, Switch, Tree, Row, Col} from 'antd';
 import RenderCharParams from "./RenderCharParams";
 import RenderNumParams from "./RenderNumParams";
 
@@ -110,13 +110,16 @@ export default function AddColumnParams(props) {
 
     return (
         <>
-            {colData && props.params && <div>
+            {colData && props.params && <Row>
+                <Col span={7}>
             <h3>New column name</h3>
             <Input
-                style={{width: 300}}
+                style={{width: 250}}
                 onChange={(e) => onChangeNewName(e.target.value)}
                 value={props.params.newColName}
             />
+                </Col>
+                <Col span={9}>
                 <h3>Select columns</h3>
                 <Switch checkedChildren={"Numerical"} unCheckedChildren={"Character"} onChange={switchType} checked={numIsSel}></Switch>
                 <Tree
@@ -126,10 +129,11 @@ export default function AddColumnParams(props) {
                     onCheck={onCheck}
                     checkedKeys={checkedKeys}
                 />
-                <div>
+                </Col>
+                <Col span={8}>
                     {renderNewColSettings(numIsSel)}
-                </div>
-            </div>}
+                </Col>
+            </Row>}
         </>
     );
 }
