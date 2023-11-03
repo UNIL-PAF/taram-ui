@@ -16,9 +16,9 @@ export default function AddColumn(props) {
 
     const renderParamContent = () => {
         if (params.charColParams) {
-            const charComp = params.charColParams.charComp === "matches" ? "matches" : "does not match"
-            return <p className={"analysis-step-param-line"}>Mark each row with
-                a <em>+</em> where <em>{params.selectedColumn}</em> {charComp} <em>{params.charColParams.strVal}</em>.
+            const charComp = params.charColParams.compOp === "matches" ? "matches" : "does not match"
+            return <p className={"analysis-step-param-line"}>Mark each row with&nbsp;
+                <strong>+</strong> where <strong><em>{params.charColParams.compSel}</em></strong> entry from <strong><em>[{results.selColNames.join(", ")}]</em></strong> {charComp} <strong><em>{params.charColParams.compVal}</em></strong>.
             </p>
         }
     }
@@ -57,7 +57,7 @@ export default function AddColumn(props) {
                             </div>
                         </Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
-                            <Row className={"analysis-step-row"}>Added new column &nbsp;<em>{params.newColName}</em></Row>
+                            <Row className={"analysis-step-row"}>Added new column &nbsp;<strong><em>{params.newColName}</em></strong></Row>
                         </Col>
                         {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                     </Row>

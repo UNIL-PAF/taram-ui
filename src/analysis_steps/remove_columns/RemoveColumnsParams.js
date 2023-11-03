@@ -79,7 +79,6 @@ export default function RemoveColumnsParams(props) {
     }
 
     const checkedToParams = (checkedKeys) => {
-
         return checkedKeys.filter((a) => {return ! isNaN(a)})
     }
 
