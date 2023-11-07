@@ -90,6 +90,15 @@ export default function GroupSelection(props) {
 
     const nrGroups = props.groupsOrdered && props.groupsOrdered.length
 
+    const maxChars = Object.values(props.groupData).reduce( (acc, curr) => {
+        const myNew = (curr.name.length > acc) ? curr.name.length : acc
+        const myNewMax = Math.max.apply(Math, curr.items.map(a => a.name.length))
+        return (myNewMax > myNew) ? myNewMax : myNew
+    }, 0)
+
+    const defaultWidth = 200
+    const myWidth = (maxChars > 10) ? defaultWidth + (maxChars-10) * 5 : defaultWidth
+
     return (
         <div>
             <div
@@ -127,7 +136,7 @@ export default function GroupSelection(props) {
                                                             ? "lightblue"
                                                             : "whitesmoke",
                                                         padding: 4,
-                                                        width: 200,
+                                                        width: myWidth,
                                                         minHeight: 500
                                                     }}
                                                 >
