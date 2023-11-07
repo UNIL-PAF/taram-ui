@@ -19,6 +19,7 @@ export default function BoxPlot(props) {
     const [localParams, setLocalParams] = useState()
     const [options, setOptions] = useState({count: 0})
     const [isWaiting, setIsWaiting] = useState(true)
+    const [heightAndBottom, setHeightAndBottom] = useState({height: '400px', bottom: 60})
     const [showZoom, setShowZoom] = useState(null)
     const [logScale, setLogScale] = useState()
     const [groupByCondition, setGroupByCondition] = useState()
@@ -62,6 +63,7 @@ export default function BoxPlot(props) {
             const echartOptions = getOptions(stepResults)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
+            setHeightAndBottom(getPlotHeightAndBottom(stepResults))
             replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,6 +96,19 @@ export default function BoxPlot(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting, stepResults])
+
+    const getPlotHeightAndBottom = (stepResults) => {
+        const defaultHeight = 400
+        const defaultBottom =  60
+        const maxChars = 10
+        const maxNameChar =  Math.max.apply(Math, stepResults.experimentNames.map(a => a.length))
+        if(maxNameChar > maxChars) {
+            const charDiff = maxNameChar - maxChars
+            return {height: (defaultHeight + charDiff * 5).toString() + "px", bottom: (defaultBottom + charDiff * 5)}
+        } else {
+            return {height: defaultHeight.toString() + "px", bottom: defaultBottom}
+        }
+    }
 
     const getOptions = (myResults) => {
         const results = {...myResults}
@@ -210,6 +225,12 @@ export default function BoxPlot(props) {
                 nameGap: 20,
                 min: (yMin - range * 0.2).toFixed(1),
                 axisLabel: {showMinLabel: false}
+            },
+            grid: {
+                top:    60,
+                bottom: heightAndBottom.bottom,
+                left:   '10%',
+                right:  '10%',
             }
         };
         return options
@@ -273,7 +294,10 @@ export default function BoxPlot(props) {
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data}/>}
+                <ReactECharts key={options.count} option={options.data} style={{
+                    height: heightAndBottom.height,
+                    width: '100%',
+                }}/>}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}
                          isLocked={props.isLocked}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
