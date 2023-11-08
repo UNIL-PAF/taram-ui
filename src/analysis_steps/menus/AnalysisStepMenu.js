@@ -52,8 +52,6 @@ export default function AnalysisStepMenu(props) {
         });
     };
 
-
-
     return (
         <>
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}

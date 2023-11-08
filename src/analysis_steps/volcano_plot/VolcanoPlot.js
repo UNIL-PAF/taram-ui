@@ -424,6 +424,7 @@ export default function VolcanoPlot(props) {
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
                               isLocked={props.isLocked}
+                              resType={props.resType}
             />
         }>
             {props.data.status === 'done' && <Row>

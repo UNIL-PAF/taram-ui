@@ -254,6 +254,7 @@ export default function PcaPlot(props) {
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isLocked={props.isLocked}
+                              resType={props.resType}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>

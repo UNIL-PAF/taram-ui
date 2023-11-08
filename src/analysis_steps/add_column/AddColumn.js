@@ -47,6 +47,7 @@ export default function AddColumn(props) {
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
                               isLocked={props.isLocked}
+                              resType={props.resType}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

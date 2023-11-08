@@ -167,6 +167,7 @@ export default function AnalysisStepMenuItems(props) {
                     experimentDetails={props.experimentDetails}
                     handleOk={handleParamsOk}
                     handleCancel={handleCancel}
+                    resType={props.resType}
                 ></ParameterModal>
             case 'download-zip':
                 return <DownloadZipModal

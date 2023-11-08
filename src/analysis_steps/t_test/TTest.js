@@ -40,6 +40,7 @@ export default function TTest(props) {
                               isSelected={props.isSelected}
                               prepareParams={prepareTTestParams}
                               isLocked={props.isLocked}
+                              resType={props.resType}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

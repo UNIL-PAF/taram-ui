@@ -105,67 +105,67 @@ export default function AnalysisSteps(props) {
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'boxplot':
                                 return <BoxPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={myKey}
+                                                data={stepWithNr} key={myKey} resType={props.resType}
                                                 onSelect={onSelect} isSelected={selStep === i}/>
                             case 'pca':
                                 return <PcaPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                data={stepWithNr} key={myKey}
+                                                data={stepWithNr} key={myKey} resType={props.resType}
                                                 onSelect={onSelect} isSelected={selStep === i}/>
                             case 'log-transformation':
                                 return <LogTransformation isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={stepWithNr} key={myKey}
+                                                       data={stepWithNr} key={myKey} resType={props.resType}
                                                           onSelect={onSelect} isSelected={selStep === i}/>
                             case 'normalization':
                                 return <Normalization isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={myKey}
+                                                          data={stepWithNr} key={myKey} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'summary-stat':
                                 return <SummaryStat isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey}
+                                                      data={stepWithNr} key={myKey} resType={props.resType}
                                                     onSelect={onSelect} isSelected={selStep === i}/>
                             case 'imputation':
                                 return <Imputation isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                          data={stepWithNr} key={myKey}
+                                                          data={stepWithNr} key={myKey} resType={props.resType}
                                                    onSelect={onSelect} isSelected={selStep === i}/>
                             case 'filter':
                                 return <Filter isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                               data={stepWithNr} key={myKey}
+                                               data={stepWithNr} key={myKey} resType={props.resType}
                                                onSelect={onSelect} isSelected={selStep === i}/>
                             case 'group-filter':
                                 return <GroupFilter isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}
+                                                    data={stepWithNr} key={myKey} resType={props.resType}
                                                     onSelect={onSelect} isSelected={selStep === i}/>
                             case 't-test':
                                 return <TTest isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                              data={stepWithNr} key={myKey}
+                                              data={stepWithNr} key={myKey} resType={props.resType}
                                               onSelect={onSelect} isSelected={selStep === i}/>
                             case 'volcano-plot':
                                 return <VolcanoPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}
+                                                    data={stepWithNr} key={myKey} resType={props.resType}
                                                     onSelect={onSelect} isSelected={selStep === i}/>
                             case 'remove-imputed':
                                 return <RemoveImputed isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey}
+                                                      data={stepWithNr} key={myKey} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'remove-columns':
                                 return <RemoveColumns isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'scatter-plot':
                                 return <ScatterPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                    data={stepWithNr} key={myKey}
+                                                    data={stepWithNr} key={myKey} resType={props.resType}
                                                     onSelect={onSelect} isSelected={selStep === i}/>
                             case 'order-columns':
                                 return <OrderColumns isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             case 'rename-columns':
                                 return <RenameColumns isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                     data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                     data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                                      onSelect={onSelect} isSelected={selStep === i}/>
                             case 'add-column':
                                 return <AddColumn isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore}
+                                                      data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
