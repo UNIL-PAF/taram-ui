@@ -235,6 +235,7 @@ export default function AnalysisStepMenuItems(props) {
                   onOpenChange={onOpenChange}
                   //openKeys={(!openMenuKeys) ? undefined : openMenuKeys}
                   openKeys={openMenuKeys}
+                  subMenuCloseDelay={0.3}
                 >
                 {props.type && <Menu.Item disabled={props.isLocked} onClick={() => setShowModalName('parameters')}
                                           key={'params'}
