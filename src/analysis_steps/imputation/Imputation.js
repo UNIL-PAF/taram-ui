@@ -14,18 +14,32 @@ export default function Imputation(props) {
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
-    const imputationText = {
-        "normal": "Replace missing values from normal distribution:",
-        "nan": "Replace missing values by NaN.",
-        "value": "Replace missing values by "
+    const imputationText = () => {
+        const selColTxt = getSelColTxt()
+        return {
+            "normal": "Replace missing values in columns [" + selColTxt + "] from normal distribution:",
+            "nan": "Replace missing values in columns [" + selColTxt + "] by NaN.",
+            "value": "Replace missing values in columns [" + selColTxt + "] by " + localParams.replaceValue + "."
+        }
+    }
+
+    const getSelColTxt = () => {
+        if(!localParams.intCol && !localParams.selColIdxs){
+            return props.data.columnInfo.columnMapping.intCol + "..."
+        }else if(!localParams.intCol && localParams.selColIdxs){
+            const selColNames = props.data.commonResult.headers.filter(h => localParams.selColIdxs.includes(h.idx)).map(h => h.name)
+            return selColNames.join(", ")
+        }else{
+            return localParams.intCol + "..."
+        }
     }
 
     const getNormParams = () => {
         return <>
-                <p className={"analysis-step-param-line"}>Width: {params.normImputationParams.width}</p>
-                <p className={"analysis-step-param-line"}>Down shift: {params.normImputationParams.downshift}</p>
-                <p className={"analysis-step-param-line"}>Seed: {params.normImputationParams.seed}</p>
-            </>
+            <p className={"analysis-step-param-line"}>Width: {params.normImputationParams.width}</p>
+            <p className={"analysis-step-param-line"}>Down shift: {params.normImputationParams.downshift}</p>
+            <p className={"analysis-step-param-line"}>Seed: {params.normImputationParams.seed}</p>
+        </>
     }
 
     return (
@@ -57,19 +71,21 @@ export default function Imputation(props) {
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
-                                <p className={"analysis-step-param-line"}>{imputationText[params.imputationType]}</p>
+                                <p className={"analysis-step-param-line"}>{imputationText()[params.imputationType]}</p>
                                 {params.imputationType === "normal" && getNormParams()}
                             </div>
                         </div>
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
                         <Row><Col><strong>Nr of imputed values: </strong>{results.nrImputedValues}</Col></Row>
-                        <Row><Col><strong>Nr of protein groups with imputation: </strong>{results.nrOfImputedGroups}</Col></Row>
+                        <Row><Col><strong>Nr of protein groups with imputation: </strong>{results.nrOfImputedGroups}
+                        </Col></Row>
                     </Col>
                     {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
                 </Row>
             }
-            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
+                         comment={props.data.comments}></StepComment>
             {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );

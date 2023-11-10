@@ -22,20 +22,7 @@ export default function ImputationParams(props) {
                 setUseDefaultCol(true)
                 setCheckedKeys([props.intCol])
             } else {
-                if (useDefaultCol === undefined) {
-                    if (props.params.intCol === null) {
-                        if(!props.params.selColIdxs){
-                            setUseDefaultCol(true)
-                            setCheckedKeys([props.intCol])
-                        }else{
-                            setUseDefaultCol(false)
-                            setCheckedKeys(props.params.selColIdxs)
-                        }
-                    } else {
-                        setUseDefaultCol(false)
-                        setCheckedKeys([props.params.intCol])
-                    }
-                }
+                parseAndSetLocalParams()
 
                 if (!colData) {
                     const myColData = computeColData()
@@ -45,6 +32,25 @@ export default function ImputationParams(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [props.params, useDefaultCol, colData]
     )
+
+    const parseAndSetLocalParams = () => {
+        // set Columns
+        if (useDefaultCol === undefined) {
+            if (props.params.intCol === null) {
+                if(!props.params.selColIdxs){
+                    setUseDefaultCol(true)
+                    setCheckedKeys([props.intCol])
+                }else{
+                    setUseDefaultCol(false)
+                    setCheckedKeys(props.params.selColIdxs)
+                }
+            } else {
+                setUseDefaultCol(false)
+                setCheckedKeys([props.params.intCol])
+            }
+        }
+
+    }
 
     const computeColData = () => {
         return props.commonResult.headers.reduce((acc, val) => {
@@ -81,14 +87,14 @@ export default function ImputationParams(props) {
     }
 
     function valueChange(field, value) {
-        let newParams = {...props.params.imputationParams}
+        let newParams = {...props.params}
         newParams[[field]] = value
-        props.setParams({...props.params, imputationParams: newParams})
+        props.setParams(newParams)
     }
 
     function valueParams() {
         return <span style={{paddingLeft: "10px"}}>
-            <InputNumber onChange={(val) => valueChange("replaceValue", val)}></InputNumber>
+            <InputNumber value={props.params.replaceValue} onChange={(val) => valueChange("replaceValue", val)}/>
         </span>
     }
 
