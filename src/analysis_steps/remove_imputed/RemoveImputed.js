@@ -14,6 +14,10 @@ export default function RemoveImputed(props) {
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
+    const getReplaceVal = () => {
+        return localParams.replaceBy === "nan" ? "NaN" : 0
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -41,7 +45,7 @@ export default function RemoveImputed(props) {
             {results &&
                 <div>
                     <Row className={"analysis-step-row"}>
-                        <Col span={8}></Col>
+                        <Col span={8}>Replace imputed values by {getReplaceVal()}.</Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
                             <Row><Col><strong>Nr of replacements:</strong> {results.nrValuesReplaced}</Col></Row>
                             <Row><Col><strong>Nr of protein groups with replacements:</strong> {results.nrProteinGroupsReplaced}</Col></Row>

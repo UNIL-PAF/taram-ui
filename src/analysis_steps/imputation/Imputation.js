@@ -17,9 +17,9 @@ export default function Imputation(props) {
     const imputationText = () => {
         const selColTxt = getSelColTxt()
         return {
-            "normal": "Replace missing values in columns [" + selColTxt + "] from normal distribution:",
-            "nan": "Replace missing values in columns [" + selColTxt + "] by NaN.",
-            "value": "Replace missing values in columns [" + selColTxt + "] by " + localParams.replaceValue + "."
+            "normal": "Replace missing values in column(s) [" + selColTxt + "] by random numbers drawn from a normal distribution:",
+            "nan": "Replace missing values in column(s) [" + selColTxt + "] by NaN.",
+            "value": "Replace missing values in column(s) [" + selColTxt + "] by " + localParams.replaceValue + "."
         }
     }
 
