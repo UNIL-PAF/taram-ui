@@ -332,6 +332,11 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'t-test'}>
                             <span id={"menu-item"}>t Test</span>
                         </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("one-d-enrichment")}
+                                   className="narrow-menu"
+                                   key={'one-d-enrichment'}>
+                            <span id={"menu-item"}>1D Enrichment</span>
+                        </Menu.Item>
                     </Menu.SubMenu>
                     <Menu.Divider key={'divider-2'}></Menu.Divider>
                 </Menu.SubMenu>

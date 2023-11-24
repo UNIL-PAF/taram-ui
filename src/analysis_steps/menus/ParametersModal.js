@@ -17,6 +17,7 @@ import SummaryStatParams from "../summary_stat/SummaryStatParams";
 import OrderColumnsParams from "../order_columns/OrderColumnsParams";
 import RenameColumnsParams from "../rename_columns/RenameColumnsParams";
 import AddColumnParams from "../add_column/AddColumnParams";
+import OneDEnrichmentParams from "../one_d_enrichment/OneDEnrichmentParams";
 
 export default function ParametersModal(props) {
 
@@ -128,6 +129,14 @@ export default function ParametersModal(props) {
                     experimentDetails={props.experimentDetails}
                     intCol={props.intCol}
                 ></AddColumnParams>
+            case 'one-d-enrichment':
+                return <OneDEnrichmentParams
+                    commonResult={props.commonResult}
+                    params={props.params}
+                    setParams={props.setParams}
+                    experimentDetails={props.experimentDetails}
+                    intCol={props.intCol}
+                ></OneDEnrichmentParams>
 
         }
     }

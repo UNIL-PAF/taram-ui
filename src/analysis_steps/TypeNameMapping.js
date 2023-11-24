@@ -34,6 +34,8 @@ export function typeToName(type) {
             return 'Volcano plot'
         case 'add-column':
             return 'Add column'
+        case 'one-d-enrichment':
+            return '1D Enrichment'
         default: return "Missing type: [" + type + "]?!"
     }
 }

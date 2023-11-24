@@ -22,6 +22,7 @@ import OrderColumns from "./order_columns/OrderColumns";
 import RenameColumns from "./rename_columns/RenameColumns";
 import DownloadZippedResults from "./menus/DownloadZippedResults";
 import AddColumn from "./add_column/AddColumn";
+import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -167,6 +168,10 @@ export default function AnalysisSteps(props) {
                                 return <AddColumn isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                       data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                                       onSelect={onSelect} isSelected={selStep === i}/>
+                            case 'one-d-enrichment':
+                                return <OneDEnrichment isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                  data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
+                                                  onSelect={onSelect} isSelected={selStep === i}/>
                             default:
                                 return null
                         }
