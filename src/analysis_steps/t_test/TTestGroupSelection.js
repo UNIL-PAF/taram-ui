@@ -179,7 +179,7 @@ export default function TTestGroupSelection(props) {
                                                                                         width: "12px",
                                                                                         height: "12px",
                                                                                         paddingLeft: "1px",
-                                                                                        paddingBottom: "6px"
+                                                                                        paddingBottom: "0px"
                                                                                     }}/>}
                                                                                     size={"small"}/>}
                                                                                     </span>
