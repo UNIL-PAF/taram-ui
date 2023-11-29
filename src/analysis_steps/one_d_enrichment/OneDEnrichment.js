@@ -1,18 +1,16 @@
 import React, {useState} from "react";
-import {Card, Col, Row} from "antd";
+import {Card} from "antd";
 import AnalysisStepMenu from "../menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {CheckOutlined} from "@ant-design/icons";
-import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {getStepTitle} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
+import OneDEnrichmentTable from "./OneDEnrichmentTable";
 
 export default function OneDEnrichment(props) {
     const type = "one-d-enrichment"
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
-
-    const isDone = props.data.status === "done"
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -38,18 +36,10 @@ export default function OneDEnrichment(props) {
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
-                <Row className={"analysis-step-row"}>
-                    <Col span={8}>
-                        <div className={"analysis-step-param-box"}>
-                            <div className={"analysis-step-param-content"}>
-                                <p className={"analysis-step-param-line"}>Hohoho</p>}
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span={8} className={"analysis-step-middle-col"}>
-                        <p>Coucou</p>
-                    </Col>
-                </Row>
+                <>
+                    <h4>Selected results</h4>
+                    <OneDEnrichmentTable results={results}></OneDEnrichmentTable>
+                </>
             }
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
         </Card>

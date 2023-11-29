@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Select, Input, Tag} from 'antd';
+import React, {useEffect} from "react";
+import {Checkbox, Select, InputNumber} from 'antd';
 import {Col, Row, Space} from 'antd';
-import {CloseCircleOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import Annotations from "./Annotations";
 
 const {Option} = Select;
@@ -16,8 +15,7 @@ export default function OneDEnrichmentParams(props) {
         if (!props.params) {
             props.setParams({
                 fdrCorrection: true,
-                threshold: 0.02,
-                categoryNames: ["GOCC name", "GOBP name"]
+                threshold: 0.02
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,13 +31,19 @@ export default function OneDEnrichmentParams(props) {
         props.setParams(newParams)
     }
 
+    function valueChange(field, value) {
+        let newParams = {...props.params}
+        newParams[[field]] = value
+        props.setParams(newParams)
+    }
+
     return (<>
         {props.params &&
             <Row>
                 <Col span={8}>
                     <Space direction={"vertical"}>
                         <span><strong>Column</strong></span>
-                        <Select value={props.params.xAxis} style={{width: 250}}
+                        <Select value={props.params.colIdx} style={{width: 250}}
                                 showSearch={true}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -48,18 +52,23 @@ export default function OneDEnrichmentParams(props) {
                             {dataCols.map((n, i) => {
                                 return <Option key={i} value={n.idx}>{n.name}</Option>
                             })}</Select>
+                        <span>
+                        <Checkbox checked={props.params.fdrCorrection}
+                                  onChange={(e) => handleChange("fdrCorrection", e.target.checked)}>
+                        </Checkbox>
+                            <span style={{paddingLeft: "8px"}}>FDR correction</span>
+                        </span>
+                        <span>
+                        <span style={{paddingRight: "10px"}}>Significance threshold</span>
+                        <InputNumber
+                            min={0.000001} max={0.999}
+                            value={props.params.threshold}
+                            onChange={(val) => valueChange("threshold", val)}></InputNumber>
+                            </span>
                     </Space>
                 </Col>
-                <Col span={8}>
-                    <Annotations params={props.params} setParams={props.setParams}>
-                    </Annotations>
-                </Col>
-                <Col span={8}>
-                    <Checkbox checked={props.params.fdrCorrection}
-                              onChange={(e) => handleChange("fdrCorrection", e.target.checked)}>
-                    </Checkbox>
-                    <span style={{paddingLeft: "20px"}}>FDR correction</span>
-                </Col>
+                <Annotations params={props.params} setParams={props.setParams}>
+                </Annotations>
             </Row>}
     </>);
 }
