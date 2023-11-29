@@ -5,7 +5,6 @@ import axios from "axios";
 import globalConfig from "../../globalConfig";
 
 const {Text} = Typography;
-
 const {Option} = Select;
 
 export default function Annotations(props) {
