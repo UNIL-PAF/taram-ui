@@ -57,7 +57,7 @@ export default function ScatterPlotParams(props) {
                 </Row>
                 <Row>
                     <Space direction={"horizontal"}>
-                        <Col><span><strong>X axis</strong></span></Col>
+                        <Col><span><strong>Y axis</strong></span></Col>
                         <Col><Select value={props.params.yAxis} style={{width: 250}}
                                      showSearch={true}
                                      filterOption={(input, option) =>
