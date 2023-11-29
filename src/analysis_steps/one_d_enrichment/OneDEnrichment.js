@@ -58,6 +58,7 @@ export default function OneDEnrichment(props) {
                          comment={props.data.comments}></StepComment>
             {results && <OneDEnrichmentTableZoom showZoom={showZoom}
                                                  setShowZoom={setShowZoom}
+                                                 stepNr={props.data.nr}
                                                  stepId={props.data.id}></OneDEnrichmentTableZoom>}
         </Card>
     );
