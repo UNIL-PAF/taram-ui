@@ -14,29 +14,26 @@ export default function OneDErichmentTableZoom(props) {
     const [enrichment, setEnrichment] = useState();
     const [status, setStatus] = useState();
     const [searchText, setSearchText] = useState('');
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
 
     const searchInput = useRef(null);
 
     useEffect(() => {
-        if (!enrichment) {
+        if (props.showZoom && !enrichment) {
             axios.get(globalConfig.urlBackend + "analysis-step/full-enrichment-table/" + props.stepId)
                 .then((response) => {
                     // handle success
                     // add a unique key
-
-                    console.log(response.data)
-
                     const results = response.data.rows.map((r) => {
                         r.key = r.id
                         return r
                     })
 
-                    console.log(results)
+                    console.log(props.params)
 
                     setEnrichment(results)
                     setStatus("done")
+                    console.log(results)
                 })
                 .catch(function (error) {
                     // handle error
@@ -48,7 +45,7 @@ export default function OneDErichmentTableZoom(props) {
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enrichment])
+    }, [enrichment, props.showZoom])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -163,8 +160,7 @@ export default function OneDErichmentTableZoom(props) {
                 a.size > b.size &&
                 b.size
                     ? 1
-                    : -1,
-            defaultSortOrder: "descend"
+                    : -1
         },
         {
             title: 'score',
@@ -176,7 +172,6 @@ export default function OneDErichmentTableZoom(props) {
                 b.score
                     ? 1
                     : -1,
-            defaultSortOrder: "descend",
             render: (text) => formNum(text)
         },
         {
@@ -189,7 +184,7 @@ export default function OneDErichmentTableZoom(props) {
                 b.pvalue
                     ? 1
                     : -1,
-            defaultSortOrder: "ascend",
+            //defaultSortOrder: "ascend",
             render: (text) => formNum(text)
         },
         {
@@ -202,7 +197,6 @@ export default function OneDErichmentTableZoom(props) {
                 b.qvalue
                     ? 1
                     : -1,
-            defaultSortOrder: "ascend",
             render: (text) => formNum(text)
         },
         {
@@ -215,7 +209,6 @@ export default function OneDErichmentTableZoom(props) {
                 b.mean
                     ? 1
                     : -1,
-            defaultSortOrder: "descend",
             render: (text) => formNum(text)
         },
         {
@@ -228,13 +221,12 @@ export default function OneDErichmentTableZoom(props) {
                 b.median
                     ? 1
                     : -1,
-            defaultSortOrder: "descend",
             render: (text) => formNum(text)
         },
     ]
 
     const downloadTable = () => {
-        fetch(globalConfig.urlBackend + 'analysis-step/result/' + props.stepId )
+        fetch(globalConfig.urlBackend + 'analysis-step/result/' + props.stepId)
             .then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);
@@ -249,34 +241,49 @@ export default function OneDErichmentTableZoom(props) {
 
     const getTitle = () => {
         return <>
-            <span>Summary table <Button onClick={() => downloadTable()} type={"primary"} style={{marginLeft: "10px"}} icon={<DownloadOutlined />}>Download table</Button></span>
+            <span>Summary table <Button onClick={() => downloadTable()} type={"primary"} style={{marginLeft: "10px"}}
+                                        icon={<DownloadOutlined/>}>Download table</Button></span>
         </>
     }
 
-    const handleSelCol = (e) => {
-        console.log("handleSelCol: " + e)
-    }
+    const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            //props.setParams({...props.params, categoryNames: selectedRows.map(a => a.name)})
+        },
+        getCheckboxProps: (record) => ({
+            name: record.name,
+        }),
+        selectedRowKeys: props.params.selResults
+    };
 
     return (
-       <>
-           <Modal open={props.showZoom} title={getTitle()} onCancel={() => props.setShowZoom(false)}
-                  width={"95%"} height={"100%"} footer={null} bodyStyle={{overflowY: 'scroll'}}
-           >
-               <div style={{height: '100%'}}>
-                   {status === "done" && enrichment &&
-                       <Space direction={"vertical"}>
-                           <span><strong>Enrichment table</strong></span>
-                           <Table dataSource={enrichment} columns={columns}/>
-                       </Space>
-                   }
-                   {status === "loading" &&
-                       <span><Spin/> <strong>Loading enrichment table</strong></span>
-                   }
-                   {status === "error" &&
-                       <span><Text type="danger">Unable to load enrichment table from server.</Text></span>
-                   }
-               </div>
-           </Modal>
-       </>
+        <>
+            <Modal open={props.showZoom} title={getTitle()} onCancel={() => props.setShowZoom(false)}
+                   width={"95%"} height={"100%"} footer={null} bodyStyle={{overflowY: 'scroll'}}
+                   afterClose={console.log("OneDEnrichmentTableZoom closed.")}
+            >
+                <div style={{height: '100%'}}>
+                    {status === "done" && enrichment &&
+                        <Space direction={"vertical"}>
+                            <span><strong>Enrichment table</strong></span>
+                            <Table
+                                dataSource={enrichment}
+                                columns={columns}
+                                rowSelection={{
+                                    type: 'checkbox',
+                                    ...rowSelection,
+                                }}
+                            ></Table>
+                        </Space>
+                    }
+                    {status === "loading" &&
+                        <span><Spin/> <strong>Loading enrichment table</strong></span>
+                    }
+                    {status === "error" &&
+                        <span><Text type="danger">Unable to load enrichment table from server.</Text></span>
+                    }
+                </div>
+            </Modal>
+        </>
     );
 }

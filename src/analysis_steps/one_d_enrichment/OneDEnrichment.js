@@ -45,7 +45,7 @@ export default function OneDEnrichment(props) {
                            <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                                         icon={<FullscreenOutlined/>}>Expand</Button>
                         </div>
-                        <h4>Selected results</h4>
+                        <h4>Selected results:</h4>
                 </span>
 
 
@@ -58,6 +58,7 @@ export default function OneDEnrichment(props) {
                          comment={props.data.comments}></StepComment>
             {results && <OneDEnrichmentTableZoom showZoom={showZoom}
                                                  setShowZoom={setShowZoom}
+                                                 params={localParams}
                                                  stepNr={props.data.nr}
                                                  stepId={props.data.id}></OneDEnrichmentTableZoom>}
         </Card>
