@@ -15,12 +15,16 @@ export default function DownloadZippedResults(props) {
     useEffect(() => {
         if (!selRowKeys && props.data && props.data.analysisSteps) {
             setSelRowKeys(props.data.analysisSteps.map(s => s.id))
-            const allTableIds = props.data.analysisSteps.filter(s => s.modifiesResult && s.tableNr).map(s => s.id)
+            const allTableIds = props.data.analysisSteps.filter(s => (s.modifiesResult && s.tableNr) || hasOtherTable(s)).map(s => s.id)
             const allPlotIds = props.data.analysisSteps.filter(s => s.results == null).map(s => s.id)
             setSelItems({...selItems, table: allTableIds, plots: allPlotIds})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selRowKeys])
+
+    const hasOtherTable = (step) => {
+        return (step.type === "summary-stat" || step.type === "one-d-enrichment") ? true : false
+    }
 
     const greyItem = (text, item) => {
         if (!selRowKeys) return <span></span>
@@ -68,14 +72,24 @@ export default function DownloadZippedResults(props) {
         },
     ];
 
+    const getTable = (step, idx) => {
+        if(step.type === "summary-stat"){
+            return "Summary-table-" + idx
+        }else if(step.type === "one-d-enrichment"){
+            return "Enrichment-table-" + idx
+        }
+        return (step.modifiesResult && step.tableNr) ? "Table-" + step.tableNr : undefined
+    }
+
     const data = props.data.analysisSteps.map((s, i) => {
         const hasPlot = (s.results == null) ? true : false
+        const idx = i + 1
         return {
             key: s.id,
             type: typeToName(s.type),
-            idx: i + 1,
-            table: (s.modifiesResult && s.tableNr) ? "Table-" + s.tableNr : undefined,
-            plots: hasPlot ? s.type + "-" + (i + 1) : undefined,
+            idx: idx,
+            table: getTable(s, idx),
+            plots: hasPlot ? s.type + "-" + idx : undefined,
         }
     })
 
