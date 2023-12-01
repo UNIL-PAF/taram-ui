@@ -6,6 +6,8 @@ import globalConfig from "../../globalConfig";
 import axios from "axios";
 import Highlighter from "react-highlight-words";
 import {formNum} from "../../common/NumberFormatting";
+import {switchSel} from "../BackendAnalysisSteps";
+import {useDispatch} from "react-redux";
 
 const {Text} = Typography;
 
@@ -17,6 +19,7 @@ export default function OneDErichmentTableZoom(props) {
     const [searchedColumn, setSearchedColumn] = useState('');
 
     const searchInput = useRef(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (props.showZoom && !enrichment) {
@@ -28,12 +31,8 @@ export default function OneDErichmentTableZoom(props) {
                         r.key = r.id
                         return r
                     })
-
-                    console.log(props.params)
-
                     setEnrichment(results)
                     setStatus("done")
-                    console.log(results)
                 })
                 .catch(function (error) {
                     // handle error
@@ -247,8 +246,14 @@ export default function OneDErichmentTableZoom(props) {
     }
 
     const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            //props.setParams({...props.params, categoryNames: selectedRows.map(a => a.name)})
+        onChange: (selectedRowKeys) => {
+            const addSel = selectedRowKeys.filter(a => !props.params.selResults.includes(a))
+            const rmSel = props.params.selResults.filter(a => !selectedRowKeys.includes(a))
+
+            const selIds = addSel.length > 0 ? addSel : rmSel
+            addOrRemoveLocalResults(addSel, rmSel)
+            props.setParams({...props.params, selResults: selectedRowKeys})
+            switchAll(selIds)
         },
         getCheckboxProps: (record) => ({
             name: record.name,
@@ -256,11 +261,42 @@ export default function OneDErichmentTableZoom(props) {
         selectedRowKeys: props.params.selResults
     };
 
+    // we have to do it with the callback to avoid race conditions
+    const switchAll = (selIds) => {
+        const myFun = selIds.reverse().reduce((acc, curr) => {
+           return dispatchOne(curr, acc)
+        }, null)
+        myFun()
+    }
+
+    const dispatchOne = ( selId, nextFun) => {
+        return () => dispatch(switchSel({resultId: props.resultId, selId: selId, stepId: props.stepId, callback: nextFun}))
+    }
+
+    const sortByPValue = (a, b) => {
+        if(a.pvalue > b.pvalue){
+            return 1;
+        }else if(b.pvalue > a.pvalue){
+            return -1;
+        }
+        return 0;
+    }
+
+    const addOrRemoveLocalResults = (addSel, rmSel) => {
+        if(addSel.length > 0){
+            const newEl = enrichment.filter( e => addSel.includes(e.id))
+            const newRes = props.results.concat(newEl)
+            props.setResults(newRes.sort(sortByPValue))
+        }else if(rmSel.length > 0){
+            const newRes = props.results.filter(r => !rmSel.includes(r.id))
+            props.setResults(newRes.sort(sortByPValue))
+        }
+    }
+
     return (
         <>
             <Modal open={props.showZoom} title={getTitle()} onCancel={() => props.setShowZoom(false)}
                    width={"95%"} height={"100%"} footer={null} bodyStyle={{overflowY: 'scroll'}}
-                   afterClose={console.log("OneDEnrichmentTableZoom closed.")}
             >
                 <div style={{height: '100%'}}>
                     {status === "done" && enrichment &&

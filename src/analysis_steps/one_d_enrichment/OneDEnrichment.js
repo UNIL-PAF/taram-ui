@@ -13,7 +13,9 @@ export default function OneDEnrichment(props) {
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
+    const [localSelResults, setLocalSelResults] = useState(results.selResults)
     const [showZoom, setShowZoom] = useState(null)
+    const isDone = props.data.status === "done"
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -24,7 +26,8 @@ export default function OneDEnrichment(props) {
             <AnalysisStepMenu stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
-                              error={props.data.error} paramType={type}
+                              error={props.data.error}
+                              paramType={type}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
@@ -47,19 +50,19 @@ export default function OneDEnrichment(props) {
                         </div>
                         <h4>Selected results:</h4>
                 </span>
-
-
-                    <OneDEnrichmentTable results={results}></OneDEnrichmentTable>
-
-
+                    <OneDEnrichmentTable results={localSelResults}></OneDEnrichmentTable>
                 </>
             }
-            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
+            <StepComment isLocked={props.isLocked || !isDone} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
-            {results && <OneDEnrichmentTableZoom showZoom={showZoom}
+            {results && isDone && <OneDEnrichmentTableZoom showZoom={showZoom}
                                                  setShowZoom={setShowZoom}
                                                  params={localParams}
+                                                 setParams={setLocalParams}
                                                  stepNr={props.data.nr}
+                                                 resultId={props.resultId}
+                                                 setResults={setLocalSelResults}
+                                                 results={localSelResults}
                                                  stepId={props.data.id}></OneDEnrichmentTableZoom>}
         </Card>
     );
