@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useRef} from "react";
 import globalConfig from "../../globalConfig";
 import {Alert, Button, Col, Input, Menu, message, Modal, Popconfirm, Row, Tooltip} from "antd";
-import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../../analysis/BackendAnalysis";
+import {copyAnalysis, deleteAnalysis, duplicateAnalysis} from "../BackendAnalysis";
 import {useDispatch, useSelector} from "react-redux";
 import {addTemplate, fetchAllTemplates, runTemplate} from "../../templates/BackendTemplates";
-import '../../analysis/analysis.css'
+import '../analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 import {setError, setIdle, setText} from "../../navigation/loadingSlice";
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Modal, Row, Select} from 'antd';
-import AnalysisStepMenu from "../menus/AnalysisStepMenu"
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu"
 import StepComment from "../StepComment";
 import DefineGroupsParams from "./DefineGroupsParams";
 import {setStepParameters} from "../BackendAnalysisSteps";

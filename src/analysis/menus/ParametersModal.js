@@ -1,23 +1,23 @@
 import React from "react";
 import {Modal} from "antd";
-import '../../analysis/analysis.css'
-import BoxPlotParams from "../boxplot/BoxPlotParams";
-import FilterParams from "../filter/FilterParams";
-import GroupFilterParams from "../group_filter/GroupFilterParams";
-import LogTransformationParams from "../log_transformation/LogTransformationParams";
-import ImputationParams from "../imputation/ImputationParams";
-import TTestParams from "../t_test/TTestParams";
-import VolcanoPlotParams from "../volcano_plot/VolcanoPlotParams";
-import RemoveImputedParams from "../remove_imputed/RemoveImputedParams"
-import RemoveColumnsParams from "../remove_columns/RemoveColumnsParams"
-import PcaPlotParams from "../pca/PcaPlotParams";
-import ScatterPlotParams from "../scatter_plot/ScatterPlotParams";
-import NormalizationParams from "../normalization/NormalizationParams";
-import SummaryStatParams from "../summary_stat/SummaryStatParams";
-import OrderColumnsParams from "../order_columns/OrderColumnsParams";
-import RenameColumnsParams from "../rename_columns/RenameColumnsParams";
-import AddColumnParams from "../add_column/AddColumnParams";
-import OneDEnrichmentParams from "../one_d_enrichment/OneDEnrichmentParams";
+import '../analysis.css'
+import BoxPlotParams from "../../analysis_steps/boxplot/BoxPlotParams";
+import FilterParams from "../../analysis_steps/filter/FilterParams";
+import GroupFilterParams from "../../analysis_steps/group_filter/GroupFilterParams";
+import LogTransformationParams from "../../analysis_steps/log_transformation/LogTransformationParams";
+import ImputationParams from "../../analysis_steps/imputation/ImputationParams";
+import TTestParams from "../../analysis_steps/t_test/TTestParams";
+import VolcanoPlotParams from "../../analysis_steps/volcano_plot/VolcanoPlotParams";
+import RemoveImputedParams from "../../analysis_steps/remove_imputed/RemoveImputedParams"
+import RemoveColumnsParams from "../../analysis_steps/remove_columns/RemoveColumnsParams"
+import PcaPlotParams from "../../analysis_steps/pca/PcaPlotParams";
+import ScatterPlotParams from "../../analysis_steps/scatter_plot/ScatterPlotParams";
+import NormalizationParams from "../../analysis_steps/normalization/NormalizationParams";
+import SummaryStatParams from "../../analysis_steps/summary_stat/SummaryStatParams";
+import OrderColumnsParams from "../../analysis_steps/order_columns/OrderColumnsParams";
+import RenameColumnsParams from "../../analysis_steps/rename_columns/RenameColumnsParams";
+import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
+import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
 
 export default function ParametersModal(props) {
 

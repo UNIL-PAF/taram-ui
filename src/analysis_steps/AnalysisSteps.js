@@ -7,7 +7,7 @@ import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import LogTransformation from "./log_transformation/LogTransformation";
 import Imputation from "./imputation/Imputation";
-import AnalysisMenu from "./menus/AnalysisMenu";
+import AnalysisMenu from "../analysis/menus/AnalysisMenu";
 import GroupFilter from "./group_filter/GroupFilter";
 import TTest from "./t_test/TTest";
 import VolcanoPlot from "./volcano_plot/VolcanoPlot";
@@ -20,7 +20,7 @@ import Normalization from "./normalization/Normalization";
 import SummaryStat from "./summary_stat/SummaryStat";
 import OrderColumns from "./order_columns/OrderColumns";
 import RenameColumns from "./rename_columns/RenameColumns";
-import DownloadZippedResults from "./menus/DownloadZippedResults";
+import DownloadZippedResults from "../analysis/menus/DownloadZippedResults";
 import AddColumn from "./add_column/AddColumn";
 import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
 import {Button, Card, Spin, Typography} from "antd";
-import AnalysisStepMenu from "../menus/AnalysisStepMenu";
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
 import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";

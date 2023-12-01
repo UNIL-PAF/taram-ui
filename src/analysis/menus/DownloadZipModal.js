@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Checkbox, Modal, Space} from "antd";
 import globalConfig from "../../globalConfig";
 import {useDispatch} from "react-redux";
-import {setError} from "../../analysis/analysisSlice";
+import {setError} from "../analysisSlice";
 
 export default function DownloadZipModal(props) {
     const [svg, setSvg] = useState(undefined)

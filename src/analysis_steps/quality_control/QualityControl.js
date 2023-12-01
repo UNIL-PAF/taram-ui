@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, Spin} from 'antd';
-import AnalysisStepMenu from "../menus/AnalysisStepMenu"
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu"
 
 export default function QualityControl(props) {
     return (

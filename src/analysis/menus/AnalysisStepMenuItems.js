@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useRef} from "react";
 import {Button, Menu, message, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
-import '../../analysis/analysis.css'
+import '../analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
-import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "../BackendAnalysisSteps";
+import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "../../analysis_steps/BackendAnalysisSteps";
 import {clearTable} from "../../protein_table/proteinTableSlice";
-import {prepareTTestParams} from "../t_test/TTestPrepareParams"
+import {prepareTTestParams} from "../../analysis_steps/t_test/TTestPrepareParams"
 import DownloadZipModal from "./DownloadZipModal"
 import ParameterModal from "./ParametersModal"
-import {setStopMenuShortcut} from "../../analysis/analysisSlice";
+import {setStopMenuShortcut} from "../analysisSlice";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()

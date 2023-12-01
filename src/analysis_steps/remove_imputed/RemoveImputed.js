@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Card, Row, Col} from "antd";
-import AnalysisStepMenu from "../menus/AnalysisStepMenu";
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"

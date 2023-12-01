@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Card} from "antd";
-import AnalysisStepMenu from "../menus/AnalysisStepMenu";
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import "../AnalysisStep.css"
 import {FullscreenOutlined} from "@ant-design/icons";

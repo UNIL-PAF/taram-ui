@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
 import {Button, Card, Row, Col, Spin, Typography} from "antd";
-import AnalysisStepMenu from "../menus/AnalysisStepMenu";
+import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
 import {switchSel} from "../BackendAnalysisSteps";

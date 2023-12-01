@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Modal, Table} from "antd";
 import globalConfig from "../../globalConfig";
-import {typeToName} from "../TypeNameMapping";
+import {typeToName} from "../../analysis_steps/TypeNameMapping";
 import {useDispatch} from "react-redux";
 import {setText, setError, setIdle} from "../../navigation/loadingSlice"
 
