@@ -13,9 +13,8 @@ export default function Annotations(props) {
     const [status, setStatus] = useState();
 
     const handleSelCol = (e) => {
-        props.setParams({...props.params, annotationId: e})
+        props.setParams({...props.params, annotationId: e, categoryNames: null})
         setFields(getHeaders(annotations, e))
-        props.setParams({...props.params, categoryNames: null})
     }
 
     const getHeaders = (annotations, selId) => {

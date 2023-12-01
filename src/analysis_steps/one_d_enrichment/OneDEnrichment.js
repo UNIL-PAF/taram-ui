@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Button, Card} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
@@ -13,9 +13,16 @@ export default function OneDEnrichment(props) {
     const params = JSON.parse(props.data.parameters)
     const results = JSON.parse(props.data.results)
     const [localParams, setLocalParams] = useState(params)
-    const [localSelResults, setLocalSelResults] = useState(results.selResults)
+    const [localSelResults, setLocalSelResults] = useState()
     const [showZoom, setShowZoom] = useState(null)
     const isDone = props.data.status === "done"
+
+    useEffect(() => {
+        if(!localSelResults && results && results.selResults){
+            setLocalSelResults(results.selResults)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [results])
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -41,7 +48,7 @@ export default function OneDEnrichment(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {results &&
+            {localSelResults &&
                 <>
                    <span>
                         <div style={{textAlign: 'right', marginBottom: '10px'}}>
