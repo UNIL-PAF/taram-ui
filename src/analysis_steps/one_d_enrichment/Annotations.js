@@ -3,6 +3,7 @@ import {Button, Table, Select, Spin, Typography} from 'antd';
 import {Col, Space} from 'antd';
 import axios from "axios";
 import globalConfig from "../../globalConfig";
+import ManageAnnotations from "./ManageAnnotations";
 
 const {Text} = Typography;
 const {Option} = Select;
@@ -11,17 +12,18 @@ export default function Annotations(props) {
     const [annotations, setAnnotations] = useState();
     const [fields, setFields] = useState();
     const [status, setStatus] = useState();
+    const [manageAnnoOpen, setManageAnnoOpen] = useState(false)
 
     const handleSelCol = (e) => {
-        props.setParams({...props.params, annotationId: e, categoryNames: null})
+        props.setParams({...props.params, annotationId: e, categoryIds: null})
         setFields(getHeaders(annotations, e))
     }
 
     const getHeaders = (annotations, selId) => {
         const selAnnot = annotations.find(a => a.id === selId)
         if (selAnnot.headers) {
-            const headers = selAnnot.headers.split(';').map((h) => {
-                return {key: h, name: h}
+            const headers = selAnnot.headers.map((h) => {
+                return {key: h.id, name: h.name, id: h.id}
             })
             return headers
         }else{
@@ -30,42 +32,47 @@ export default function Annotations(props) {
         }
     }
 
+    const refreshAnnotations = () => {
+        axios.get(globalConfig.urlBackend + "annotation/list")
+            .then((response) => {
+                // handle success
+                // add a unique key
+                const results = response.data.map((r) => {
+                    r.key = r.id
+                    return r
+                })
+
+                setAnnotations(results.map(a => {return {...a, inUse: a.usedBy ? "true" : ""}}))
+                setStatus("done")
+                if(props.params.annotationId){
+                    setFields(getHeaders(results, props.params.annotationId))
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+                setStatus("error")
+            })
+            .then(function () {
+                // always executed
+            });
+    }
+
     useEffect(() => {
         if (!annotations) {
-            axios.get(globalConfig.urlBackend + "annotation/list")
-                .then((response) => {
-                    // handle success
-                    // add a unique key
-                    const results = response.data.map((r) => {
-                        r.key = r.id
-                        return r
-                    })
-                    setAnnotations(results)
-                    setStatus("done")
-                    if(props.params.annotationId){
-                        setFields(getHeaders(results, props.params.annotationId))
-                    }
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    setStatus("error")
-                })
-                .then(function () {
-                    // always executed
-                });
+            refreshAnnotations()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [annotations])
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            props.setParams({...props.params, categoryNames: selectedRows.map(a => a.name)})
+            props.setParams({...props.params, categoryIds: selectedRows.map(a => a.id)})
         },
         getCheckboxProps: (record) => ({
-            name: record.name,
+            id: record.id,
         }),
-        selectedRowKeys: props.params.categoryNames
+        selectedRowKeys: props.params.categoryIds
     };
 
     return (<>
@@ -82,7 +89,7 @@ export default function Annotations(props) {
                         {annotations.map((n, i) => {
                             return <Option key={i} value={n.id}>{n.name}</Option>
                         })}</Select>
-                    <Button type="primary" onClick={() => props.refreshData()}>Upload annotation file</Button>
+                    <Button type="primary" onClick={() => setManageAnnoOpen(true)}>Manage annotations</Button>
                 </Space>
             }
             {status === "loading" &&
@@ -110,5 +117,10 @@ export default function Annotations(props) {
                     />
                 </div>}
         </Col>
+        {manageAnnoOpen && <ManageAnnotations
+            setModalOpen={setManageAnnoOpen}
+            annotations={annotations}
+            refreshAnnotations={refreshAnnotations}
+        ></ManageAnnotations>}
     </>);
 }
