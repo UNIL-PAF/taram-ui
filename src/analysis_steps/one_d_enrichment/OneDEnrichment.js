@@ -24,6 +24,15 @@ export default function OneDEnrichment(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [results])
 
+    useEffect(() => {
+        if(localParams && props.data.status === "running"){
+            setLocalParams(undefined)
+        }else if(! localParams && props.data.status === "done"){
+            setLocalParams(params)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data, localParams])
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -62,7 +71,7 @@ export default function OneDEnrichment(props) {
             }
             <StepComment isLocked={props.isLocked || !isDone} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
-            {results && isDone && <OneDEnrichmentTableZoom showZoom={showZoom}
+            {results && isDone && localParams && <OneDEnrichmentTableZoom showZoom={showZoom}
                                                  setShowZoom={setShowZoom}
                                                  params={localParams}
                                                  setParams={setLocalParams}
