@@ -1,13 +1,16 @@
 import React, {useState} from "react";
-import {Button, Modal, Popconfirm, Space, Table} from 'antd';
+import {Button, Modal, Popconfirm, Space, Spin, Table} from 'antd';
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 import EditAnnotation from "./EditAnnotation";
+import AnnotationUpload from "./AnnotationUpload";
 
 export default function ManageAnnotations(props) {
 
     const [currentAnnotation, setCurrentAnnotation] = useState();
     const [showEditModal, setShowEditModal] = useState();
+    const [showUploadModal, setShowUploadModal] = useState();
+    const [isUploading, setIsUploading] = useState(false);
 
     const columns = [
         {
@@ -84,6 +87,15 @@ export default function ManageAnnotations(props) {
     return (<>
         <Modal open={true} title={"Manage annotations"} onCancel={() => props.setModalOpen(false)}
                width={"95%"} height={"100%"} footer={null}>
+                <Button disabled={isUploading} type="primary" onClick={() => setShowUploadModal(true)} style={{marginBottom: "15px"}}>
+                    {isUploading ? <div>Uploading annotation.. <Spin size={"small"}></Spin></div> : "Add new annotation"}
+                </Button>
+            {showUploadModal && <AnnotationUpload
+                setShowUploadModal={setShowUploadModal}
+                refreshAnnotations={props.refreshAnnotations}
+                setIsUploading={setIsUploading}
+            ></AnnotationUpload>
+            }
             <Table dataSource={props.annotations} columns={columns}/>
             {showEditModal && <EditAnnotation
                 annotation={currentAnnotation}
