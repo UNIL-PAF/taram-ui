@@ -1,9 +1,11 @@
 import React, {useState} from "react";
-import {Button, Modal, Popconfirm, Space, Spin, Table} from 'antd';
+import {Button, message, Modal, Popconfirm, Space, Spin, Table} from 'antd';
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 import EditAnnotation from "./EditAnnotation";
 import AnnotationUpload from "./AnnotationUpload";
+import axios from "axios";
+import globalConfig from "../../globalConfig";
 
 export default function ManageAnnotations(props) {
 
@@ -55,28 +57,34 @@ export default function ManageAnnotations(props) {
             title: 'Action',
             key: 'action',
             render: (_, record) => {
-                return <Space size="middle">
+                return <><Space size="middle">
                     <Button onClick={() => editAnnotation(record)} type={"text"} icon={<EditOutlined />}></Button>
-                    <Popconfirm
+                    {record.usedBy == null && <Popconfirm
                         title="Are you sure to delete this result?"
                         onConfirm={() => confirmDelete(record.id)}
                         okText="Yes"
                         cancelText="Cancel"
                     >
                         <Button type={"text"} icon={<DeleteOutlined/>}></Button>
-                    </Popconfirm>
+                    </Popconfirm>}
                 </Space>
+                </>
             },
         },
     ]
 
     const confirmDelete = (annoId) => {
-        console.log("delete " + annoId)
-        /*
-        deleteAnnotation(resultId, props.refreshAnnotations)
-        message.success('Delete result [' + resultId + '].');
-
-         */
+        axios.delete( globalConfig.urlBackend + 'annotation/' + annoId)
+            .then(() => {
+                message.success('Deleted annotation [' + annoId + '].');
+            })
+            .catch(() => {
+                console.log("failed")
+                message.error('Failed to delete annotation [' + annoId + '].');
+            })
+            .finally(() => {
+               props.refreshAnnotations()
+            });
     };
 
     const editAnnotation = (anno) => {
