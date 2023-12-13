@@ -26,7 +26,7 @@ export default function Normalization(props) {
         if(params.normalizationCalculation === "division"){
             return "Divide by " + myType
         }else{
-            return "Substract " + myType
+            return "Subtract " + myType
         }
     }
 
