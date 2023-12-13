@@ -11,8 +11,6 @@ export default function OneDEnrichmentTable(props) {
 
     const plotRow = (row) => {
         return <tr key={row.id}>
-
-                <td className={"sum-table-cell"}>{row.column}</td>
                 <td className={"sum-table-cell"}>{row.type}</td>
                 <td className={"sum-table-cell"}>{row.name}</td>
                 <td className={"sum-table-cell"}>{row.size}</td>
@@ -27,13 +25,12 @@ export default function OneDEnrichmentTable(props) {
         <table className={props.zoom ? "sum-table-zoom" : ""} >
             <thead>
             <tr>
-                <th className={"sum-table-header"}>Column</th>
                 <th className={"sum-table-header"}>Type</th>
                 <th className={"sum-table-header"}>Name</th>
                 <th className={"sum-table-header"}>Size</th>
                 <th className={"sum-table-header"}>Score</th>
-                <th className={"sum-table-header"}>p-value</th>
-                <th className={"sum-table-header"}>q-value</th>
+                <th className={"sum-table-header"}>P-value</th>
+                <th className={"sum-table-header"}>Q-value</th>
                 <th className={"sum-table-header"}>Mean</th>
                 <th className={"sum-table-header"}>Median</th>
             </tr>

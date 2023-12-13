@@ -151,7 +151,7 @@ export default function OneDErichmentTableZoom(props) {
             ...getColumnSearchProps('name'),
         },
         {
-            title: 'size',
+            title: 'Size',
             dataIndex: 'size',
             key: 'size',
             sorter: (a, b) =>
@@ -162,7 +162,7 @@ export default function OneDErichmentTableZoom(props) {
                     : -1
         },
         {
-            title: 'score',
+            title: 'Score',
             dataIndex: 'score',
             key: 'score',
             sorter: (a, b) =>
@@ -174,7 +174,7 @@ export default function OneDErichmentTableZoom(props) {
             render: (text) => formNum(text)
         },
         {
-            title: 'pvalue',
+            title: 'P-value',
             dataIndex: 'pvalue',
             key: 'pvalue',
             sorter: (a, b) =>
@@ -187,7 +187,7 @@ export default function OneDErichmentTableZoom(props) {
             render: (text) => formNum(text)
         },
         {
-            title: 'qvalue',
+            title: 'Q-value',
             dataIndex: 'qvalue',
             key: 'qvalue',
             sorter: (a, b) =>
@@ -199,7 +199,7 @@ export default function OneDErichmentTableZoom(props) {
             render: (text) => formNum(text)
         },
         {
-            title: 'mean',
+            title: 'Mean',
             dataIndex: 'mean',
             key: 'mean',
             sorter: (a, b) =>
@@ -211,7 +211,7 @@ export default function OneDErichmentTableZoom(props) {
             render: (text) => formNum(text)
         },
         {
-            title: 'median',
+            title: 'Median',
             dataIndex: 'median',
             key: 'median',
             sorter: (a, b) =>
@@ -240,7 +240,7 @@ export default function OneDErichmentTableZoom(props) {
 
     const getTitle = () => {
         return <>
-            <span>Summary table <Button onClick={() => downloadTable()} type={"primary"} style={{marginLeft: "10px"}}
+            <span>Enrichment table <Button onClick={() => downloadTable()} type={"primary"} style={{marginLeft: "10px"}}
                                         icon={<DownloadOutlined/>}>Download table</Button></span>
         </>
     }

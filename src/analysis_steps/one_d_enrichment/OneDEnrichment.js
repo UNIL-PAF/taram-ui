@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from "react";
-import {Button, Card} from "antd";
+import {Button, Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import OneDEnrichmentTable from "./OneDEnrichmentTable";
 import OneDEnrichmentTableZoom from "./OneDEnrichmentTableZoom";
-import {FullscreenOutlined} from "@ant-design/icons";
 
 export default function OneDEnrichment(props) {
     const type = "one-d-enrichment"
@@ -33,6 +32,17 @@ export default function OneDEnrichment(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data, localParams])
 
+    const multiTestCorrText = (fdrCorrection) => {
+        return  fdrCorrection ? "Benjamini & Hochberg (FDR)" : "None"
+    }
+
+    const getAnnotationString = (annotation) => {
+        return annotation.name + ", " +
+            (annotation.description && annotation.description !== "undefined" ? annotation.description + ", " : "") +
+            annotation.creationString + ", " +
+            annotation.nrEntries + " entries."
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -57,13 +67,35 @@ export default function OneDEnrichment(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+            { results && <Row className={"analysis-step-row"}>
+                <Col span={16}>
+                    <div className={"analysis-step-param-box"}>
+                        <div className={"analysis-step-param-content"}>
+                            <p className={"analysis-step-param-line"}>{"Annotation file: " + results.annotation.origFileName}</p>
+                            <p className={"analysis-step-param-line"}>{"Annotation info: " + getAnnotationString(results.annotation)}</p>
+                            <p className={"analysis-step-param-line"}>{"Selected annotations: " + results.annotation.selHeaderNames.join(", ")}</p>
+                            <p className={"analysis-step-param-line"}>{"Selected column: " + results.selColumn}</p>
+                            {<p className={"analysis-step-param-line"}>Significance
+                                threshold: {params.threshold}</p>}
+                            <p className={"analysis-step-param-line"}>Multiple testing
+                                correction: {multiTestCorrText(params.fdrCorrection)}</p>
+                        </div>
+                    </div>
+                </Col>
+                <Col span={8} className={"analysis-step-middle-col"}>
+                    <Row className={"analysis-step-row-end"} style={{marginTop: "10px"}}>
+                            <span><Button
+                                className={"table-download-button"}
+                                onClick={() => setShowZoom(true)}
+                                size={'small'}><span>{'Enrichment-table-' + props.data.nr}</span></Button></span>
+                    </Row>
+
+                </Col>
+            </Row>}
             {localSelResults &&
                 <>
+                    <br></br>
                    <span>
-                        <div style={{textAlign: 'right', marginBottom: '10px'}}>
-                           <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
-                                        icon={<FullscreenOutlined/>}>Expand</Button>
-                        </div>
                         <h4>Selected results:</h4>
                 </span>
                     <OneDEnrichmentTable results={localSelResults}></OneDEnrichmentTable>
