@@ -74,7 +74,7 @@ export default function OneDEnrichment(props) {
                             <p className={"analysis-step-param-line"}>{"Annotation file: " + results.annotation.origFileName}</p>
                             <p className={"analysis-step-param-line"}>{"Annotation info: " + getAnnotationString(results.annotation)}</p>
                             <p className={"analysis-step-param-line"}>{"Selected annotations: " + results.annotation.selHeaderNames.join(", ")}</p>
-                            <p className={"analysis-step-param-line"}>{"Selected column: " + results.selColumn}</p>
+                            <p className={"analysis-step-param-line"}>{"Selected columns: " + results.selColumns.join(', ')}</p>
                             {<p className={"analysis-step-param-line"}>Significance
                                 threshold: {params.threshold}</p>}
                             <p className={"analysis-step-param-line"}>Multiple testing
