@@ -67,7 +67,7 @@ export default function OneDEnrichment(props) {
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            { results && <Row className={"analysis-step-row"}>
+            { results && results.selColumns && <Row className={"analysis-step-row"}>
                 <Col span={16}>
                     <div className={"analysis-step-param-box"}>
                         <div className={"analysis-step-param-content"}>
