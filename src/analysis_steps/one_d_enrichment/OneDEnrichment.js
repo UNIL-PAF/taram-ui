@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
-import {Button, Card, Col, Row} from "antd";
+import {Button, Card, Col, Row, Space} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {getStepTitle} from "../CommonStepUtils";
+import {getStepTitle, getTable} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import OneDEnrichmentTable from "./OneDEnrichmentTable";
 import OneDEnrichmentTableZoom from "./OneDEnrichmentTableZoom";
@@ -14,6 +14,7 @@ export default function OneDEnrichment(props) {
     const [localParams, setLocalParams] = useState(params)
     const [localSelResults, setLocalSelResults] = useState()
     const [showZoom, setShowZoom] = useState(null)
+    const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
     useEffect(() => {
@@ -84,10 +85,16 @@ export default function OneDEnrichment(props) {
                 </Col>
                 <Col span={8} className={"analysis-step-middle-col"}>
                     <Row className={"analysis-step-row-end"} style={{marginTop: "10px"}}>
+                        <Space direction={"vertical"}>
                             <span><Button
                                 className={"table-download-button"}
                                 onClick={() => setShowZoom(true)}
                                 size={'small'}><span>{'Enrichment-table-' + props.data.nr}</span></Button></span>
+                        <span><Button
+                            className={"table-download-button"}
+                            onClick={() => setShowTable(true)}
+                            size={'small'}><span>{'Table-' + props.data.tableNr}</span></Button></span>
+                        </Space>
                     </Row>
 
                 </Col>
@@ -112,6 +119,8 @@ export default function OneDEnrichment(props) {
                                                  setResults={setLocalSelResults}
                                                  results={localSelResults}
                                                  stepId={props.data.id}></OneDEnrichmentTableZoom>}
+
+            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
         </Card>
     );
 }
