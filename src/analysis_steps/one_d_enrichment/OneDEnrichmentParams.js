@@ -55,7 +55,7 @@ export default function OneDEnrichmentParams(props) {
                     <Space direction={"vertical"}>
                         <span><strong>Choose column</strong></span>
                         <Select style={{width: 250}}
-                                value={""}
+                                value={null}
                                 showSearch={true}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0

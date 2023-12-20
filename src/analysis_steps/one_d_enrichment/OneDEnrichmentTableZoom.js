@@ -136,18 +136,21 @@ export default function OneDErichmentTableZoom(props) {
             title: 'Column',
             dataIndex: 'column',
             key: 'column',
+            sorter: (a, b) => a['column'].localeCompare(b['column']),
             ...getColumnSearchProps('column'),
         },
         {
             title: 'Type',
             dataIndex: 'type',
             key: 'type',
+            sorter: (a, b) => a['type'].localeCompare(b['type']),
             ...getColumnSearchProps('type'),
         },
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            sorter: (a, b) => a['name'].localeCompare(b['name']),
             ...getColumnSearchProps('name'),
         },
         {

@@ -127,7 +127,7 @@ export default function FullProteinTable(props) {
                 myCol.render = (text) => {
                     if(text.length > elliThresh){
                         const shortText = text.slice(0, elliThresh) + "..."
-                        return   <Tooltip title={text}>
+                        return <Tooltip title={text}>
                             <span style={{whiteSpace: "nowrap"}}>{shortText}</span>
                         </Tooltip>
                     }else{
