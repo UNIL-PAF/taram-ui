@@ -7,7 +7,7 @@ import {setText, setError, setIdle} from "../../navigation/loadingSlice"
 
 export default function DownloadZippedResults(props) {
 
-    const [selItems, setSelItems] = useState({'table': [], 'plots': []})
+    const [selItems, setSelItems] = useState({'mainTables': [], 'specialTables': [], 'plots': []})
     const [selRowKeys, setSelRowKeys] = useState()
 
     const dispatch = useDispatch();
@@ -15,9 +15,10 @@ export default function DownloadZippedResults(props) {
     useEffect(() => {
         if (!selRowKeys && props.data && props.data.analysisSteps) {
             setSelRowKeys(props.data.analysisSteps.map(s => s.id))
-            const allTableIds = props.data.analysisSteps.filter(s => (s.modifiesResult && s.tableNr) || hasOtherTable(s)).map(s => s.id)
+            const mainTableIds = props.data.analysisSteps.filter(s => (s.modifiesResult && s.tableNr)).map(s => s.id)
+            const specialTableIds = props.data.analysisSteps.filter(s => hasOtherTable(s)).map(s => s.id)
             const allPlotIds = props.data.analysisSteps.filter(s => s.results == null).map(s => s.id)
-            setSelItems({...selItems, table: allTableIds, plots: allPlotIds})
+            setSelItems({...selItems, mainTables: mainTableIds, specialTables: specialTableIds, plots: allPlotIds})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selRowKeys])
@@ -31,9 +32,9 @@ export default function DownloadZippedResults(props) {
         return (selRowKeys.includes(item.key)) ? <span>{text}</span> : <span style={{color: "grey"}}>{text}</span>
     }
 
-    const greyCheckbox = (text, item, field) => {
+    const greyCheckbox = (item, field) => {
         if (!selRowKeys) return <span></span>
-        if (item[field]) return renderCheckbox(text, field, item.key, selRowKeys.includes(item.key))
+        if (item[field]) return renderCheckbox(item[field], field, item.key, selRowKeys.includes(item.key))
     }
 
     const switchSelection = (field, id) => {
@@ -63,22 +64,27 @@ export default function DownloadZippedResults(props) {
         {
             title: 'Save table',
             dataIndex: 'table',
-            render: (text, item) => greyCheckbox(text, item, "table")
+            render: (text, item) => {
+                return <>
+                    {item.mainTables && greyCheckbox(item, "mainTables")}
+                    {item.specialTables && greyCheckbox(item, "specialTables")}
+                    </>
+            }
         },
         {
             title: 'Save plot (SVG and PNG)',
             dataIndex: 'plots',
-            render: (text, item) => greyCheckbox(text, item, "plots")
+            render: (text, item) => greyCheckbox(item, "plots")
         },
     ];
 
-    const getTable = (step, idx) => {
+    const getSpecialTable = (step, idx) => {
         if(step.type === "summary-stat"){
             return "Summary-table-" + idx
         }else if(step.type === "one-d-enrichment"){
             return "Enrichment-table-" + idx
         }
-        return (step.modifiesResult && step.tableNr) ? "Table-" + step.tableNr : undefined
+        return undefined
     }
 
     const data = props.data.analysisSteps.map((s, i) => {
@@ -88,7 +94,8 @@ export default function DownloadZippedResults(props) {
             key: s.id,
             type: typeToName(s.type),
             idx: idx,
-            table: getTable(s, idx),
+            mainTables: (s.modifiesResult && idx) ? "Table-" + idx : undefined,
+            specialTables: getSpecialTable(s, idx),
             plots: hasPlot ? s.type + "-" + idx : undefined,
         }
     })
@@ -101,8 +108,9 @@ export default function DownloadZippedResults(props) {
     const startZipDownload = () => {
         // keep only table and plots that are part of selected steps
         const selPlots = selItems.plots.filter(s => selRowKeys.includes(s))
-        const selTables = selItems.table.filter(s => selRowKeys.includes(s))
-        const mergedSelItems = {plots: selPlots, tables: selTables, steps: selRowKeys, analysisId: props.analysisId}
+        const selMainTables = selItems.mainTables.filter(s => selRowKeys.includes(s))
+        const selSpecialTables = selItems.specialTables.filter(s => selRowKeys.includes(s))
+        const mergedSelItems = {plots: selPlots, mainTables: selMainTables, specialTables: selSpecialTables, steps: selRowKeys, analysisId: props.analysisId}
         dispatch(setText("Prepare ZIP file.."))
         const fileName = props.resultName + "-" + (props.analysisName ? props.analysisName : "").replace(/\\s+/, "-").replace(/--+/, "-")
 

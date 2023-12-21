@@ -163,7 +163,7 @@ export default function InitialResult(props) {
                               status={props.data.status}
                               commonResult={props.data.commonResult}
                               intCol={intCol}
-                              tableNr={props.data.tableNr}
+                              tableNr={props.data.nr}
                               experimentDetails={props.data.columnInfo && props.data.columnInfo.columnMapping.experimentDetails}
                               resType={props.resType}
                               isSelected={props.isSelected}
@@ -231,13 +231,13 @@ export default function InitialResult(props) {
                 </span>}
                         </Row>
                     </Col>
-                        {isDone && getTableCol(results.nrProteinGroups, props.data.tableNr, setShowTable)}
+                        {isDone && getTableCol(results.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
 
                 <StepComment stepId={props.data.id} resultId={props.resultId} isLocked={props.isLocked}
                              comment={props.data.comments}></StepComment>
 
-                {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
+                {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
             </div>
             }
             <Modal open={showModal} onOk={() => handleGroupModalOk()}

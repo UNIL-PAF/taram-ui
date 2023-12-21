@@ -59,7 +59,7 @@ export default function OneDEnrichment(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
-                              tableNr={props.data.tableNr}
+                              tableNr={props.data.nr}
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
@@ -93,7 +93,7 @@ export default function OneDEnrichment(props) {
                         <span><Button
                             className={"table-download-button"}
                             onClick={() => setShowTable(true)}
-                            size={'small'}><span>{'Table-' + props.data.tableNr}</span></Button></span>
+                            size={'small'}><span>{'Table-' + props.data.nr}</span></Button></span>
                         </Space>
                     </Row>
 
@@ -120,7 +120,7 @@ export default function OneDEnrichment(props) {
                                                  results={localSelResults}
                                                  stepId={props.data.id}></OneDEnrichmentTableZoom>}
 
-            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
+            {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
         </Card>
     );
 }

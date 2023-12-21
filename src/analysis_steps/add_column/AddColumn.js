@@ -42,7 +42,7 @@ export default function AddColumn(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
-                              tableNr={props.data.tableNr}
+                              tableNr={props.data.nr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isSelected={props.isSelected}
                               hasImputed={props.data.imputationTablePath != null}
@@ -64,13 +64,13 @@ export default function AddColumn(props) {
                         <Col span={8} className={"analysis-step-middle-col"}>
                             <Row className={"analysis-step-row"}>Added new column &nbsp;<strong><em>{params.newColName}</em></strong></Row>
                         </Col>
-                        {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
+                        {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                     </Row>
                 </div>
             }
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
-            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
+            {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
         </Card>
     );
 }

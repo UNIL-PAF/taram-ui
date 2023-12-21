@@ -37,7 +37,7 @@ export default function GroupFilter(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
-                              tableNr={props.data.tableNr}
+                              tableNr={props.data.nr}
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
@@ -59,11 +59,11 @@ export default function GroupFilter(props) {
                     <Col span={8} className={"analysis-step-middle-col"}>
                         <span><strong>Removed: </strong>{results.nrRowsRemoved}</span>
                     </Col>
-                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
+                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
             }
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
+            {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
         </Card>
     );
 }

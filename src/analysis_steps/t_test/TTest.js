@@ -34,7 +34,7 @@ export default function TTest(props) {
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
-                              tableNr={props.data.tableNr}
+                              tableNr={props.data.nr}
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               hasImputed={props.data.imputationTablePath != null}
                               isSelected={props.isSelected}
@@ -64,12 +64,12 @@ export default function TTest(props) {
                             </p>
                         })}
                     </Col>
-                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.tableNr, setShowTable)}
+                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
 
             }
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {showTable && getTable(props.data.id, props.data.tableNr, setShowTable)}
+            {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
         </Card>
     );
 }
