@@ -219,7 +219,7 @@ export default function AnalysisStepMenuItems(props) {
         setOpenMenuKeys(e)
     }
 
-    const followingStepTitle = <span>Add a following step &nbsp;<em style={{color: "silver"}}>Shift A</em></span>
+    const followingStepTitle = <span>Add a following step</span>
 
     return (
         <div ref={menuRef} align={"center"} className={"analysis-menu"} style={{minWidth: '200px'}}>

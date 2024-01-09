@@ -1,33 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button, Dropdown, Modal, Tag} from 'antd';
 import {ClockCircleOutlined, SyncOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
-import {useSelector} from "react-redux";
 
 export default function AnalysisStepMenu(props) {
 
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [showMenuItem, setShowMenuItem] = useState()
-    const stopMenuShortcut = useSelector(state => state.analysis.stopMenuShortcut)
-
-    // If pressed key is our target key then set to true
-    function downHandler(key) {
-        if(key.key.toLowerCase() === "a" && key.shiftKey){
-            setMenuIsVisible(true)
-            setShowMenuItem("add-step")
-        }
-    }
-
-    // Add event listeners
-    useEffect(() => {
-        if(props.isSelected && ! stopMenuShortcut){
-            window.addEventListener("keydown", downHandler);
-            // Remove event listeners on cleanup
-            return () => {
-                window.removeEventListener("keydown", downHandler);
-            };
-        }
-    }, [props.isSelected, props.stepId, stopMenuShortcut]);
 
     const statusTag = () => {
         if (props.status === "idle") {
