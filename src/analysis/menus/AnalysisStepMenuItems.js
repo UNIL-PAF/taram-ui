@@ -79,7 +79,7 @@ export default function AnalysisStepMenuItems(props) {
          * Alert if clicked on outside of element
          */
         function handleClickOutside(event) {
-            if (menuRef.current && event.target.id !== "menu-item" && event.target.role !== "menuitem" && !menuRef.current.contains(event.target)) {
+            if (menuRef.current && event.target.id !== "menu-item" && !event.target.querySelector("#menu-item")) {
                 closeMenu()
             }
         }

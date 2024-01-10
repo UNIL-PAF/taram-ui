@@ -52,7 +52,6 @@ export default function GroupSelection(props) {
         setSelItems([])
 
         if (!result.destination) return;
-        const {source, destination} = result;
 
         const movingItems = Object.values(columns).reduce( (acc, col) => {
             const selIt = col.items.filter( a => selItems.includes(a.id))
@@ -60,7 +59,7 @@ export default function GroupSelection(props) {
         }, [])
 
         const newColumns = Object.fromEntries(Object.entries(columns).map( ([k, col]) => {
-            const newItems = (k === destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => !selItems.includes(a.id))
+            const newItems = (k === result.destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => !selItems.includes(a.id))
             return [k, {...col, items: newItems}]
         }))
 
