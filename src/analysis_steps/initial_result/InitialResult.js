@@ -15,6 +15,7 @@ export default function InitialResult(props) {
     const [showModal, setShowModal] = useState(false)
     const [showTable, setShowTable] = useState(false)
     const [localParams, setLocalParams] = useState(false)
+    const [localGroupParams, setLocalGroupParams] = useState()
     const dispatch = useDispatch();
 
     const defineGroupButton = {danger: true, text: "Define groups"}
@@ -140,14 +141,21 @@ export default function InitialResult(props) {
         dispatch(setStepParameters({
             resultId: props.resultId,
             stepId: props.data.id,
-            params: prepareParams(localParams)
+            params: prepareParams(localGroupParams)
         }))
         setShowModal(false)
+        setLocalGroupParams(undefined)
     }
 
     const handleGroupModalCancel = () => {
         setLocalParams(initializeLocalParams())
         setShowModal(false)
+        setLocalGroupParams(undefined)
+    }
+
+    const handleGroupModalOpen = () => {
+        setLocalGroupParams({...localParams})
+        setShowModal(true)
     }
 
     const isDone = props.data.status === "done"
@@ -175,7 +183,7 @@ export default function InitialResult(props) {
                 <Row>
                     <Col span={8}>
                         <Row>
-                            <Button onClick={() => setShowModal(true)}
+                            <Button onClick={() => handleGroupModalOpen()}
                                     disabled={props.isLocked}
                                     danger={groupsDefined ? ChangeGroupButton.danger : defineGroupButton.danger}
                                     type={'primary'}
@@ -243,10 +251,10 @@ export default function InitialResult(props) {
             <Modal open={showModal} onOk={() => handleGroupModalOk()}
                    onCancel={() => handleGroupModalCancel()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
                 <DefineGroupsParams analysisIdx={props.analysisIdx}
-                                    params={localParams}
+                                    params={localGroupParams}
                                     commonResult={props.data.commonResult}
                                     prepareParams={prepareParams}
-                                    setParams={setLocalParams}
+                                    setParams={setLocalGroupParams}
                                     changeExpName={changeExpName}
                 >
                 </DefineGroupsParams>
