@@ -4,21 +4,12 @@ import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {Button, Popover} from "antd";
 import {InfoOutlined, EditOutlined} from "@ant-design/icons";
 import ExpNameEdit from "./ExpNameEdit"
-import {setStopMenuShortcut} from "../../analysis/analysisSlice";
-import {useDispatch} from "react-redux";
+import {onClick} from "./GroupSelectionUtils";
 
 export default function GroupSelection(props) {
-    const dispatch = useDispatch();
     const [showEdit, setShowEdit] = useState()
-
-    useEffect(() => {
-        if(showEdit){
-            dispatch(setStopMenuShortcut(true))
-        }else{
-            dispatch(setStopMenuShortcut(false))
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showEdit])
+    const [selItems, setSelItems] = useState([])
+    const [draggingItemId, setDraggingItemId] = useState()
 
     const addGroup = () => {
         let newCols = {...props.groupData}
@@ -50,6 +41,14 @@ export default function GroupSelection(props) {
         const newGroupsOrdered = props.groupsOrdered.map(a => a === groupId ? groupName : a)
         props.setParams({...props.params, groupsOrdered: newGroupsOrdered, groupData: newCols})
     }
+
+    const onDragStart = (start) => {
+        // if dragging an item that is not selected - unselect all items
+        if (!selItems) {
+            console.log("unselectAll();")
+        }
+        setDraggingItemId(start.draggableId)
+    };
 
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
@@ -86,6 +85,9 @@ export default function GroupSelection(props) {
                 }
             });
         }
+
+        setDraggingItemId(null)
+        setSelItems([])
     };
 
     const nrGroups = props.groupsOrdered && props.groupsOrdered.length
@@ -99,12 +101,21 @@ export default function GroupSelection(props) {
     const defaultWidth = 200
     const myWidth = (maxChars > 10) ? defaultWidth + (maxChars-10) * 5 : defaultWidth
 
+    const backgroundColor = (isDragging, isSelected) => {
+        if(isDragging){
+            return "#91caff"
+        }else if(isSelected){
+            return "#bfe3ff"
+        }else return "#e6f4ff"
+    }
+
     return (
         <div>
             <div
                 style={{display: "flex", justifyContent: "left", height: "100%"}}
             >
                 <DragDropContext
+                    onDragStart={(start) => onDragStart(start)}
                     onDragEnd={(result) => onDragEnd(result, props.groupData, setGroupData)}
                 >
                     {['experiments'].concat(props.groupsOrdered).map((columnId, i) => {
@@ -127,6 +138,10 @@ export default function GroupSelection(props) {
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
                                         {(provided, snapshot) => {
+                                            const selectionCount = selItems.length
+                                            const shouldShowSelection = selectionCount > 1;
+                                            const allItems = column.items.map( a => a.id)
+
                                             return (
                                                 <div
                                                     {...provided.droppableProps}
@@ -141,6 +156,11 @@ export default function GroupSelection(props) {
                                                     }}
                                                 >
                                                     {column.items.map((item, index) => {
+
+                                                        const isSelected = selItems.includes(item.id)
+                                                        const isGhosting = shouldShowSelection && isSelected && draggingItemId && draggingItemId !== item.id;
+                                                        const showSelNr = shouldShowSelection && draggingItemId === item.id
+
                                                         return (
                                                             <Draggable
                                                                 key={item.id}
@@ -159,6 +179,7 @@ export default function GroupSelection(props) {
                                                                             ref={provided.innerRef}
                                                                             {...provided.draggableProps}
                                                                             {...provided.dragHandleProps}
+                                                                            onClick={(e) => onClick(e, item.id, allItems, selItems, setSelItems)}
                                                                             style={{
                                                                                 userSelect: "none",
                                                                                 paddingLeft: "5px",
@@ -166,12 +187,11 @@ export default function GroupSelection(props) {
                                                                                 margin: "0 0 8px 0",
                                                                                 minHeight: "30px",
                                                                                 height: "30px",
-                                                                                backgroundColor: snapshot.isDragging
-                                                                                    ? "#91caff"
-                                                                                    : "#e6f4ff",
+                                                                                backgroundColor: backgroundColor(snapshot.isDragging, isSelected),
                                                                                 color: "black",
                                                                                 border: "1px solid #91caff",
                                                                                 borderRadius: "5px",
+                                                                                visibility: isGhosting ? "collapse" : "visible",
                                                                                 ...provided.draggableProps.style
                                                                             }}
                                                                         >
@@ -223,6 +243,25 @@ export default function GroupSelection(props) {
                                                                                              expIdx={item.name}
                                                                                              changeExpName={props.changeExpName}
                                                                                              cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
+                                                                            {showSelNr && <div
+                                                                                style={{
+                                                                                    left: "-5px",
+                                                                                    top: "30px",
+                                                                                    color: "black",
+                                                                                    background: "white",
+                                                                                    borderRadius: "50%",
+                                                                                    height: "20px",
+                                                                                    width: "25px",
+                                                                                    border: "1px solid grey",
+                                                                                    position: "absolute",
+                                                                                    textAlign: "center",
+                                                                                }}
+                                                                            ><span
+                                                                                style={{
+                                                                                    position: "relative",
+                                                                                    top: "-2px"
+                                                                                }}
+                                                                            >{selectionCount}</span></div>}
                                                                         </div>
                                                                     );
                                                                 }}

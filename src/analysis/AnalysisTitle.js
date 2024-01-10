@@ -4,7 +4,6 @@ import {useDispatch} from "react-redux";
 import {Button, Input} from "antd";
 import {setAnalysisName} from "./BackendAnalysis";
 import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
-import {setStopMenuShortcut} from "./analysisSlice";
 
 export default function AnalysisTitle(props) {
     const [isEditing, setIsEditing] = useState(false);
@@ -12,13 +11,6 @@ export default function AnalysisTitle(props) {
     const [tempName, setTempName] = useState(undefined)
     const [name, setName] = useState(null)
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if(isEditing){
-            dispatch(setStopMenuShortcut(true))
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEditing])
 
     useEffect(() => {
         if (props.name) {
@@ -31,12 +23,10 @@ export default function AnalysisTitle(props) {
         setIsEditing(!isEditing)
         dispatch(setAnalysisName(alObj))
         setTempName(name)
-        dispatch(setStopMenuShortcut(false))
     }
 
     const cancel = () => {
         setIsEditing(!isEditing)
-        dispatch(setStopMenuShortcut(false))
     }
 
     return (

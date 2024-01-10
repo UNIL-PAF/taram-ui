@@ -9,15 +9,11 @@ export const analysisSlice = createSlice({
         status: 'idle',
         error: null,
         globalStatus: null,
-        stopMenuShortcut: false
     },
     reducers: {
         setError(state, action) {
             state.error = action.payload
         },
-        setStopMenuShortcut(state, action){
-            state.stopMenuShortcut = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -39,5 +35,5 @@ export const analysisSlice = createSlice({
             })
     },
 })
-export const { setError, setStopMenuShortcut } = analysisSlice.actions
+export const { setError } = analysisSlice.actions
 export default analysisSlice.reducer
