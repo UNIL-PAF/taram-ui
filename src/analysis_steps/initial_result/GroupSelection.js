@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import GroupTitle from "./GroupTitle";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {Button, Popover} from "antd";
@@ -33,7 +33,8 @@ export default function GroupSelection(props) {
     }
 
     const changeGroupName =  (groupId, groupName) => {
-        const myName = groupName.trim()
+        if(groupId === groupName) return
+        const myName = groupName.trim().replace('\t','')
         const newCols = {...props.groupData}
         newCols[myName] = newCols[groupId]
         newCols[myName].name = myName
@@ -43,51 +44,27 @@ export default function GroupSelection(props) {
     }
 
     const onDragStart = (start) => {
-        // if dragging an item that is not selected - unselect all items
-        if (!selItems) {
-            console.log("unselectAll();")
-        }
         setDraggingItemId(start.draggableId)
     };
 
     const onDragEnd = (result, columns, setColumns) => {
+        setDraggingItemId(null)
+        setSelItems([])
+
         if (!result.destination) return;
         const {source, destination} = result;
 
-        if (source.droppableId !== destination.droppableId) {
-            const sourceColumn = columns[source.droppableId];
-            const destColumn = columns[destination.droppableId];
-            const sourceItems = [...sourceColumn.items];
-            const destItems = [...destColumn.items];
-            const [removed] = sourceItems.splice(source.index, 1);
-            destItems.splice(destination.index, 0, removed);
-            setColumns({
-                ...columns,
-                [source.droppableId]: {
-                    ...sourceColumn,
-                    items: sourceItems
-                },
-                [destination.droppableId]: {
-                    ...destColumn,
-                    items: destItems
-                }
-            });
-        } else {
-            const column = columns[source.droppableId];
-            const copiedItems = [...column.items];
-            const [removed] = copiedItems.splice(source.index, 1);
-            copiedItems.splice(destination.index, 0, removed);
-            setColumns({
-                ...columns,
-                [source.droppableId]: {
-                    ...column,
-                    items: copiedItems
-                }
-            });
-        }
+        const movingItems = Object.values(columns).reduce( (acc, col) => {
+            const selIt = col.items.filter( a => selItems.includes(a.id))
+            return acc.concat(selIt)
+        }, [])
 
-        setDraggingItemId(null)
-        setSelItems([])
+        const newColumns = Object.fromEntries(Object.entries(columns).map( ([k, col]) => {
+            const newItems = (k === destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => !selItems.includes(a.id))
+            return [k, {...col, items: newItems}]
+        }))
+
+        setColumns(newColumns)
     };
 
     const nrGroups = props.groupsOrdered && props.groupsOrdered.length

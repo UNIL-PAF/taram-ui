@@ -36,30 +36,39 @@ export default function GroupTitle(props) {
         if(!isEditing && props.id !== "experiments" && !props.isLast) return <Button onClick={() => moveRight()} type={"text"} icon={<RightOutlined/>}></Button>
     }
 
+    const edit = () => {
+        setName(props.name)
+        setIsEditing(true)
+    }
+
+    const change = (e) => {
+        setName(e.target.value)
+    }
+
     return (<>
             <div style={{minHeight: "35px"}}><span style={{float: "left"}}>{renderMoveLeft()}</span><span style={{float: "right"}}>{renderMoveRight()}</span></div>
             {!isEditing && <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
-                        <h4 onClick={() => setIsEditing(true)} style={{paddingLeft: "18px"}}>
+                        <h4 onClick={() => edit()} style={{paddingLeft: "18px"}}>
                             {props.name}
                         </h4>
                     </span>
                 {props.id !== "experiments" &&
                     <span style={{display: "block", float: "right"}}>
-                        <Button onClick={() => deleteGroup()} type={"text"} icon={<DeleteOutlined/>}></Button>
+                        <Button onClick={(e) => deleteGroup(e)} type={"text"} icon={<DeleteOutlined/>}></Button>
                     </span>}
             </div>}
             {isEditing && <span>
                             <Input
                                 style={{width: 100}}
                                 defaultValue={props.name}
-                                onPressEnter={save}
-                                onChange={(e) => setName(e.target.value)}
-                                onBlur={save}/>
+                                onPressEnter={(e) => save(e)}
+                                onChange={(e) => change(e)}
+                                />
                                 <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>}
-                                        onClick={() => save()} size={"small"}></Button>
+                                        onClick={(e) => save(e)} size={"small"}></Button>
                                 <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>}
-                                        onClick={() => cancel()} size={"small"} danger></Button>
+                                        onClick={(e) => cancel(e)} size={"small"} danger></Button>
                 </span>}
         </>);
 }

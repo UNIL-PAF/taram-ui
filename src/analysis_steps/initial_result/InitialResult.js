@@ -15,6 +15,7 @@ export default function InitialResult(props) {
     const [showModal, setShowModal] = useState(false)
     const [showTable, setShowTable] = useState(false)
     const [localParams, setLocalParams] = useState(false)
+    const [groupModalKey, setGroupModalKey] = useState(1)
     const [localGroupParams, setLocalGroupParams] = useState()
     const dispatch = useDispatch();
 
@@ -147,14 +148,17 @@ export default function InitialResult(props) {
         setLocalGroupParams(undefined)
     }
 
-    const handleGroupModalCancel = () => {
-        setLocalParams(initializeLocalParams())
-        setShowModal(false)
-        setLocalGroupParams(undefined)
+    const handleGroupModalCancel = (e) => {
+        if(e.type !== "keydown"){
+            setLocalParams(initializeLocalParams())
+            setShowModal(false)
+            setLocalGroupParams(undefined)
+        }
     }
 
     const handleGroupModalOpen = () => {
         setLocalGroupParams({...localParams})
+        setGroupModalKey(groupModalKey + 1)
         setShowModal(true)
     }
 
@@ -249,8 +253,9 @@ export default function InitialResult(props) {
             </div>
             }
             <Modal open={showModal} onOk={() => handleGroupModalOk()}
-                   onCancel={() => handleGroupModalCancel()} width={1000} bodyStyle={{overflowY: 'scroll'}}>
-                <DefineGroupsParams analysisIdx={props.analysisIdx}
+                   onCancel={(e) => handleGroupModalCancel(e)} width={1000} bodyStyle={{overflowY: 'scroll'}}>
+                <DefineGroupsParams key={groupModalKey}
+                                    analysisIdx={props.analysisIdx}
                                     params={localGroupParams}
                                     commonResult={props.data.commonResult}
                                     prepareParams={prepareParams}
