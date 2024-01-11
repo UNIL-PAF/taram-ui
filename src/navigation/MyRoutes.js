@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Analysis from "../analysis/Analysis";
 import React from "react";
 import Templates from "../templates/Templates";
+import Versions from "../Versions"
 
 const {Header} = Layout;
 
@@ -18,6 +19,7 @@ class MyRoutes extends React.Component {
                 <Routes>
                     <Route path="/" element={<Results/>}/>
                     <Route path="analysis" element={<Results/>}/>
+                    <Route path="versions" element={<Versions/>}/>
                     <Route path="viewer" element={<Analysis/>}>
                         <Route path=":resultId" element={<Analysis />} />
                     </Route>

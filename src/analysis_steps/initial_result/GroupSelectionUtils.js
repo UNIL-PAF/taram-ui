@@ -22,7 +22,7 @@ export const onClick = (e, itemId, allItems, selItems, setSelItems) => {
 }
 
 const wasToggleInSelectionGroupKeyUsed = (event) => {
-    const isUsingWindows = navigator.userAgentData.platform.indexOf('Win') >= 0;
+    const isUsingWindows = navigator.userAgentData && navigator.userAgentData.platform.indexOf('Win') >= 0;
     return isUsingWindows ? event.ctrlKey : event.metaKey;
 };
 
