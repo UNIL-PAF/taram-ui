@@ -29,10 +29,10 @@ export default function VolcanoPlot(props) {
     const [showError, setShowError] = useState(false)
 
     const colPalette = {
-        "down1": "#5470c6",
-        "down2": "#73c0de",
-        "up1": "#ee6666",
-        "up2": "#fac858",
+        "down1": "#91cc75",
+        "down2": "#5470c6",
+        "up1": "#fac858",
+        "up2": "#ee6666",
         "none": "silver"
     }
 
@@ -262,7 +262,7 @@ export default function VolcanoPlot(props) {
                         y: 'plotPVal'
                     },
                     itemStyle: {
-                        color: colPalette["up1"]
+                        color: (params.useAdjustedPVal && qValExists) ? colPalette["up2"] : colPalette["up1"]
                     },
                     markLine: {
                         lineStyle: {
@@ -290,7 +290,7 @@ export default function VolcanoPlot(props) {
                 {
                     name: "Downregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
                     itemStyle: {
-                        color: colPalette["down1"]
+                        color: (params.useAdjustedPVal && qValExists) ? colPalette["down2"] : colPalette["down1"]
                     },
                     label: {show: false},
                     symbolSize: 5,
