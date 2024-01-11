@@ -19,7 +19,9 @@ export default function Navbar() {
     }
 
     const clickMainMenu = function (payload) {
-        setSelectedTab([payload.key])
+        setTimeout(() => {
+            setSelectedTab([payload.key])
+        }, 1000);
     }
 
     return (
