@@ -22,29 +22,29 @@ export default function AnalysisStepMenuItems(props) {
     const findChildByName = (myRef, name) => {
         const children = Object.values(myRef.children)
         let selChild;
-        if(children.length >= 1){
-             children.forEach( c => {
-                 if(c.innerText && c.innerText.includes(name) && c.className.includes("ant-dropdown-menu-submenu-title")){
-                     selChild = c;
-                 }else if(!selChild){
-                     selChild = findChildByName(c, name)
-                 }
-                 if(selChild) return
+        if (children.length >= 1) {
+            children.forEach(c => {
+                if (c.innerText && c.innerText.includes(name) && c.className.includes("ant-dropdown-menu-submenu-title")) {
+                    selChild = c;
+                } else if (!selChild) {
+                    selChild = findChildByName(c, name)
+                }
+                if (selChild) return
             })
 
-            if(selChild){
+            if (selChild) {
                 return selChild
-            }else{
+            } else {
                 return undefined
             }
-        }else{
+        } else {
             return undefined
         }
     }
 
     // Add event listeners
     useEffect(() => {
-        if(props.showMenuItem && menuRef){
+        if (props.showMenuItem && menuRef) {
             setOpenMenuKeys([props.showMenuItem])
             const menuItem = findChildByName(menuRef.current, "Add a following step")
             setTimeout(() => {
@@ -56,14 +56,14 @@ export default function AnalysisStepMenuItems(props) {
 
     // If pressed key is our target key then set to true
     function downHandler(e) {
-        if(e.key === "Escape"){
+        if (e.key === "Escape") {
             closeMenu()
         }
     }
 
     // Add event listeners
     useEffect(() => {
-        if(props.showMenuItem){
+        if (props.showMenuItem) {
             window.addEventListener("keydown", downHandler);
             // Remove event listeners on cleanup
             return () => {
@@ -79,7 +79,7 @@ export default function AnalysisStepMenuItems(props) {
          * Alert if clicked on outside of element
          */
         function handleClickOutside(event) {
-            if (menuRef.current && event.target.id !== "menu-item" && !event.target.querySelector("#menu-item")) {
+            if (menuRef.current && event.target.id !== "menu-item" && event.target.role !== "menuitem" && !menuRef.current.contains(event.target) && !event.target.querySelector("#menu-item")) {
                 closeMenu()
             }
         }
@@ -219,13 +219,13 @@ export default function AnalysisStepMenuItems(props) {
                 icon={<CloseOutlined/>}></Button>
             </div>
             <Menu
-                  onClick={() => closeMenu()}
-                  style={{minWidth: "250px"}}
-                  onOpenChange={onOpenChange}
-                  //openKeys={(!openMenuKeys) ? undefined : openMenuKeys}
-                  openKeys={openMenuKeys}
-                  subMenuCloseDelay={0.3}
-                >
+                onClick={() => closeMenu()}
+                style={{minWidth: "250px"}}
+                onOpenChange={onOpenChange}
+                //openKeys={(!openMenuKeys) ? undefined : openMenuKeys}
+                openKeys={openMenuKeys}
+                subMenuCloseDelay={0.3}
+            >
                 {props.type && <Menu.Item disabled={props.isLocked} onClick={() => setShowModalName('parameters')}
                                           key={'params'}
                 >
