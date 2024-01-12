@@ -192,7 +192,7 @@ export default function BoxPlot(props) {
         }
 
         const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
-        const legendNames = series.map(a => a.name)
+        const legendNames = series.filter(a => a.name !== "group_null").map(a => a.name)
 
         const options = {
             dataset: boxplotDatasets,
