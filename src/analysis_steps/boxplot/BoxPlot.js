@@ -194,8 +194,6 @@ export default function BoxPlot(props) {
         const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
         const legendNames = series.filter(a => a.name !== "group_null").map(a => a.name)
 
-        console.log(parsedRes)
-
         const options = {
             dataset: boxplotDatasets,
             series: series,
@@ -246,8 +244,6 @@ export default function BoxPlot(props) {
         if(field === "logScale") setLogScale(e.target.checked)
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
     }
-
-    console.log(options.data)
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
