@@ -51,15 +51,16 @@ export default function GroupSelection(props) {
         setDraggingItemId(null)
         setSelItems([])
 
-        if (!result.destination) return;
+        if (!result.destination || columns[result.destination.droppableId].items.some(a => a.id === result.draggableId)) return;
 
         const movingItems = Object.values(columns).reduce( (acc, col) => {
-            const selIt = col.items.filter( a => selItems.includes(a.id))
+            const selIt = col.items.filter( a => (selItems.length > 0) ? selItems.includes(a.id) : result.draggableId === a.id)
             return acc.concat(selIt)
         }, [])
 
         const newColumns = Object.fromEntries(Object.entries(columns).map( ([k, col]) => {
-            const newItems = (k === result.destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => !selItems.includes(a.id))
+            const filterBy = (a) => { return (selItems.length > 0) ? !selItems.includes(a.id) : result.draggableId !== a.id }
+            const newItems = (k === result.destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => filterBy(a))
             return [k, {...col, items: newItems}]
         }))
 

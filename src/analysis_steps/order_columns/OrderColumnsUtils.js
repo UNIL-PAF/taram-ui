@@ -22,8 +22,8 @@ export const onClick = (e, itemId, allItems, selItems, setSelItems) => {
 }
 
 const wasToggleInSelectionGroupKeyUsed = (event) => {
-    const isUsingWindows =navigator.userAgentData && navigator.userAgentData.platform.indexOf('Win') >= 0;
-    return isUsingWindows ? event.ctrlKey : event.metaKey;
+    const isMac = navigator.userAgentData.platform.toUpperCase().indexOf('MAC')>=0;
+    return isMac ? event.metaKey : event.ctrlKey
 };
 
 // Determines if the multiSelect key was used
