@@ -194,6 +194,8 @@ export default function BoxPlot(props) {
         const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
         const legendNames = series.filter(a => a.name !== "group_null").map(a => a.name)
 
+        console.log(parsedRes)
+
         const options = {
             dataset: boxplotDatasets,
             series: series,
@@ -245,6 +247,8 @@ export default function BoxPlot(props) {
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
     }
 
+    console.log(options.data)
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               ref={elementRef}
@@ -294,7 +298,7 @@ export default function BoxPlot(props) {
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
-            {options && options.data && options.data.series.length > 0 &&
+            {options && options.data && options.data.series.length > 0 && options.data.dataset.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} style={{
                     height: heightAndBottom.height,
                     width: '100%',
