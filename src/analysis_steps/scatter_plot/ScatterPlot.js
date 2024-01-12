@@ -292,7 +292,7 @@ export default function ScatterPlot(props) {
         }
         dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selProts, count]
+        }, [selProts, count, localParams]
     );
 
     const onEvents = {
