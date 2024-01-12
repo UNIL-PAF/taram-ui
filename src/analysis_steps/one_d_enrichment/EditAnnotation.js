@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Modal, Table, Select, Spin, Typography, Button, Popconfirm, message, Form, Input} from 'antd';
-import {Col, Space} from 'antd';
+import {Modal, Form, Input} from 'antd';
 import axios from "axios";
 import globalConfig from "../../globalConfig";
-import {DeleteOutlined, EditOutlined, LockTwoTone} from "@ant-design/icons";
-import {deleteResult, updateInfo} from "../../results/BackendResults";
 
-const {Text} = Typography;
-const {Option} = Select;
 
 export default function EditAnnotation(props) {
 
@@ -29,6 +24,7 @@ export default function EditAnnotation(props) {
     useEffect(() => {
         resultForm.setFieldValue("name", props.annotation.name)
         resultForm.setFieldValue("description", props.annotation.description)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.annotation])
 
     const cancelModal = () => {

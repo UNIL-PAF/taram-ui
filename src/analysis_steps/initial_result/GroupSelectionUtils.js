@@ -22,7 +22,8 @@ export const onClick = (e, itemId, allItems, selItems, setSelItems) => {
 }
 
 const wasToggleInSelectionGroupKeyUsed = (event) => {
-    const isMac = navigator.userAgentData.platform.toUpperCase().indexOf('MAC')>=0;
+    //navigator.userAgentData.platform.toUpperCase().indexOf('MAC')>=0;
+    const isMac = navigator.userAgent.toUpperCase().indexOf('MAC')>=0;
     return isMac ? event.metaKey : event.ctrlKey
 };
 
