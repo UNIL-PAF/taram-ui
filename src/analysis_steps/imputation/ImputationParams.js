@@ -49,7 +49,6 @@ export default function ImputationParams(props) {
                 setCheckedKeys([props.params.intCol])
             }
         }
-
     }
 
     const computeColData = () => {
