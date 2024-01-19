@@ -18,6 +18,7 @@ export default function LogTransformationParams(props) {
             props.setParams({
                 intCol: intColName,
                 transformationType: 'log2',
+                adaptHeaders: true
             })
             setUseDefaultCol(true)
             setCheckedKeys([props.intCol])
@@ -81,19 +82,19 @@ export default function LogTransformationParams(props) {
     }
 
     const onCheck = (e) => {
-        console.log(e)
         setCheckedKeys(e)
         if (e.length > 0) {
-            if (typeof e[0] === "string") {
-                props.setParams({...props.params, intCol: e[0], selColIdxs: null})
-            } else {
-                props.setParams({...props.params, intCol: null, selColIdxs: e})
-            }
+            const selColIdxs = e.filter(a => typeof a !== "string")
+            props.setParams({...props.params, intCol: null, selColIdxs: selColIdxs})
         }
     }
 
     function transChange(value) {
         props.setParams({...props.params, transformationType: value})
+    }
+
+    const checkboxChange = (e) => {
+        props.setParams({...props.params, adaptHeaders: e.target.checked})
     }
 
     const switchDefault = (e) => {
@@ -120,36 +121,19 @@ export default function LogTransformationParams(props) {
                 />
             </Col>
             <Col span={12}>
-                <Space direction="vertical" size="middle">
-                    <h3>Transformation</h3>
-                    <Select value={props.params.transformationType} style={{width: 250}} onChange={transChange}>
-                        <Option value={'log2'}>Log2</Option>
-                    </Select>
-                </Space>
+                        <Space direction="vertical" size="middle">
+                            <h3>Transformation</h3>
+                            <Select value={props.params.transformationType} style={{width: 250}} onChange={transChange}>
+                                <Option value={'log2'}>Log2</Option>
+                            </Select>
+                <Checkbox
+                    onChange={(e) => checkboxChange(e)}
+                    checked={props.params.adaptHeaders}>Add "<em>.{props.params.transformationType}</em>" to table headers
+                </Checkbox>
+                        </Space>
+
             </Col>
         </Row>
-
-        /*
-        return <>
-            <Space direction="vertical" size="middle">
-                <Checkbox
-                    onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values
-                    [{props.intCol}]
-                </Checkbox>
-                <Select disabled={useDefaultCol} value={props.params.intCol || props.intCol} style={{width: 250}}
-                        onChange={handleChange}>
-                    {numCols.map((n, i) => {
-                        return <Option key={i} value={i}>{n}</Option>
-                    })}
-                </Select>
-                <h3>Transformation</h3>
-                <Select value={props.params.transformationType} style={{width: 250}} onChange={transChange}>
-                    <Option value={'log2'}>Log2</Option>
-                </Select>
-            </Space>
-        </>
-
-         */
     }
 
     return (
