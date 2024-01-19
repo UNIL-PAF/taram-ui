@@ -11,6 +11,7 @@ export const getFullProteinTable = createAsyncThunk(
     async (stepObj, thunkApi) => {
         try {
             const response = await getFullProteinTableCall(stepObj.stepId)
+            if(stepObj.callback) stepObj.callback(response.data)
             return response.data
         } catch (err) {
             let error = err // cast the error for access

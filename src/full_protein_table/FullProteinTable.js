@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect} from "react";
 import {Table, Spin, Input, Space, Button, Tooltip} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {getFullProteinTable} from "./BackendFullProteinTable";
 import {formNum} from "../common/NumberFormatting";
 
@@ -12,20 +12,23 @@ export default function FullProteinTable(props) {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const searchInput = useRef(null);
-    const table = useSelector(state => state.fullProteinTable)
     const dispatch = useDispatch();
+    const [columns, setColumns] = useState()
+    const [rows, setRows] = useState()
 
     useEffect(() => {
-        if(!table || !table.data || table.data.stepId !== props.stepId){
-            if(!isLoading){
-                dispatch(getFullProteinTable({stepId: props.stepId}))
-                setIsLoading(true)
-            }
-        }else{
-            setIsLoading(false)
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [table, isLoading, props.stepId])
+        dispatch(getFullProteinTable({stepId: props.stepId, callback: (data) => setData(data)}))
+        setIsLoading(true)
+        setColumns(undefined)
+        setRows(undefined)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const setData = (data) => {
+        setColumns(getColumns(data))
+        setRows(getRows(data))
+        setIsLoading(false)
+    }
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -99,10 +102,9 @@ export default function FullProteinTable(props) {
             ),
     });
 
-    const getColumns = () => {
+    const getColumns = (data) => {
         const elliThresh = 20
-
-        return table.data.headers.map( h => {
+        return data.headers.map( h => {
             let myCol =  {
                 title: h.name,
                 dataIndex: h.idx,
@@ -129,13 +131,13 @@ export default function FullProteinTable(props) {
         })
     }
 
-    const getRows = () => {
-        return table.data.rows.map( (row, i) => {
+    const getRows = (data) => {
+        return data.rows.map( (row, i) => {
             return {
                 key: i,
                 ...row.cols.reduce((acc, cur, j) => {
                     let newAcc = acc
-                    newAcc[j] = table.data.headers[j].type === "NUMBER" ? Number(cur) : cur
+                    newAcc[j] = data.headers[j].type === "NUMBER" ? Number(cur) : cur
                     return newAcc
                 }, {})
                 }
@@ -158,9 +160,9 @@ export default function FullProteinTable(props) {
     return (
         <>
             {isLoading && <Spin tip="Loading..."></Spin>}
-            {!isLoading && table && table.data && <Table
-                columns={getColumns()}
-                dataSource={getRows()}
+            {!isLoading && columns && rows && <Table
+                columns={columns}
+                dataSource={rows}
             ></Table>}
         </>
     );
