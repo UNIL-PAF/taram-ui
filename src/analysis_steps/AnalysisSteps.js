@@ -114,7 +114,7 @@ export default function AnalysisSteps(props) {
                                                 onSelect={onSelect} isSelected={selStep === i}/>
                             case 'log-transformation':
                                 return <LogTransformation isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
-                                                       data={stepWithNr} key={myKey} resType={props.resType}
+                                                       data={stepWithNr} key={myKey} resType={props.resType} commonResBefore={commonResBefore}
                                                           onSelect={onSelect} isSelected={selStep === i}/>
                             case 'normalization':
                                 return <Normalization isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}

@@ -28,7 +28,7 @@ export default function LogTransformation(props) {
                               status={props.data.status}
                               error={props.data.error}
                               paramType={type}
-                              commonResult={props.data.commonResult}
+                              commonResult={props.commonResBefore}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}
                               setStepParams={setLocalParams}
