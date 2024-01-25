@@ -42,13 +42,15 @@ export default function RemoveColumns(props) {
                 <div>
                     <Row>
                         <Col span={8}>
+                            <div className={"analysis-step-param-box"}>
+                                <div className={"analysis-step-param-content"}>
+                                        <span>Nr of columns to remove: {results.nrOfColumnsRemoved}</span>
+                                </div>
+                            </div>
                         </Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
                     <Row className={"analysis-step-row"}>
                         <span><strong>Nr of columns: </strong>{results.nrOfColumns}</span>
-                    </Row>
-                    <Row className={"analysis-step-row"}>
-                        <span><strong>Nr of columns removed: </strong>{results.nrOfColumnsRemoved}</span>
                     </Row>
                         </Col>
                         {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
