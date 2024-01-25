@@ -45,7 +45,13 @@ export default function RemoveImputed(props) {
             {results &&
                 <div>
                     <Row className={"analysis-step-row"}>
-                        <Col span={8}>Replace imputed values by {getReplaceVal()}.</Col>
+                        <Col span={8}>
+                            <div className={"analysis-step-param-box"}>
+                                <div className={"analysis-step-param-content"}>
+                                    Replace imputed values by {getReplaceVal()}.
+                                </div>
+                            </div>
+                        </Col>
                         <Col span={8} className={"analysis-step-middle-col"}>
                             <Row><Col><strong>Nr of replacements:</strong> {results.nrValuesReplaced}</Col></Row>
                             <Row><Col><strong>Nr of protein groups with replacements:</strong> {results.nrProteinGroupsReplaced}</Col></Row>

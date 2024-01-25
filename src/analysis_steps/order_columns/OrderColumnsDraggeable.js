@@ -30,46 +30,23 @@ export default function OrderColumnsDraggeable(props) {
      */
 
     const onDragStart = (start) => {
-        // if dragging an item that is not selected - unselect all items
-        if (!selItems) {
-            console.log("unselectAll();")
-        }
         setDraggingItemId(start.draggableId)
     };
 
     const localDragEnd = (result) => {
         const newColumns = onDragEnd(result, props.columns, selItems)
 
-        const destinationIdx = Number(result.destination.index)
-        const sourceIdx = Number(result.source.index)
-        const moveIdx = ((selItems && selItems.length) ? selItems : [sourceIdx]).sort((a,b) => a-b).reverse()
-
-        const moved = moveIdx.reduce( (acc, idx) => {
-            let currOffset = [0,0]
-            let newOffset = acc.offset
-            if(idx > destinationIdx){
-                currOffset[0] = acc.offset[0]
-                newOffset[0] = acc.offset[0] + 1
-            }else{
-                currOffset[1] = acc.offset[1]
-                newOffset[1] = acc.offset[1] - 1
-            }
-            acc.moved.push({from: (idx + currOffset[0]), to: (destinationIdx + currOffset[1])})
-            return {...acc, offset: newOffset}
-        }, {moved: [], offset: [0, 0]}).moved
-
         if(newColumns){
-            const corrIdx = newColumns.map( (a, i) => {return {...a, idx: i}} )
-            props.setColumns(corrIdx)
+            const corrId = newColumns.map( (a, i) => {return {...a, id: i}} )
+            props.setColumns(corrId)
+            const newOrder = newColumns.map(a => a.idx)
+            props.setParams({...props.params, newOrder: newOrder})
         }
         setDraggingItemId(null)
         setSelItems([])
-        const newMoved = props.params.move.concat(moved)
-
-        props.setParams({...props.params, move: newMoved})
     }
 
-    const allItems = props.columns.map( a => a.idx)
+    const allItems = props.columns.map( a => a.id)
 
     const backgroundColor = (isDragging, isSelected) => {
         if(isDragging){
@@ -114,14 +91,14 @@ export default function OrderColumnsDraggeable(props) {
                                 >
                                     {props.columns.map((item, index) => {
 
-                                        const isSelected = selItems.includes(item.idx)
-                                        const isGhosting = isSelected && draggingItemId && Number(draggingItemId) !== item.idx;
-                                        const showSelNr = shouldShowSelection && Number(draggingItemId) === item.idx
+                                        const isSelected = selItems.includes(item.id)
+                                        const isGhosting = isSelected && draggingItemId && Number(draggingItemId) !== item.id;
+                                        const showSelNr = shouldShowSelection && Number(draggingItemId) === item.id
 
                                         return (
                                             <Draggable
-                                                key={item.idx}
-                                                draggableId={item.idx.toString()}
+                                                key={item.id}
+                                                draggableId={item.id.toString()}
                                                 index={index}
                                             >
                                                 {(provided, snapshot) => {
@@ -130,7 +107,7 @@ export default function OrderColumnsDraggeable(props) {
                                                             ref={provided.innerRef}
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
-                                                            onClick={(e) => onClick(e, item.idx, allItems, selItems, setSelItems)}
+                                                            onClick={(e) => onClick(e, item.id, allItems, selItems, setSelItems)}
                                                             style={{
                                                                 userSelect: "none",
                                                                 paddingLeft: "5px",

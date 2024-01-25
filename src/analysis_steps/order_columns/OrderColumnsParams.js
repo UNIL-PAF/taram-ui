@@ -6,44 +6,42 @@ export default function OrderColumnsParams(props) {
     const [columns, setColumns] = useState()
 
     useEffect(() => {
-        const myCols = (!columns && props.commonResult && props.commonResult.headers) ? props.commonResult.headers : undefined
+        if(!columns) {
+            const myCols = (props.commonResult && props.commonResult.headers) ? props.commonResult.headers : undefined
 
-        if (!props.params) {
-            props.setParams({
-                moveSelIntFirst: false,
-                move: []
-            })
-            if(myCols) setColumns(myCols)
-        }else{
-            if(myCols){
-                const intFirst = (props.params.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
-                const colsMoved = moveCols(intFirst, props.params.move)
-                setColumns(colsMoved)
+            if (!props.params) {
+                props.setParams({
+                    moveSelIntFirst: false,
+                })
+                if (myCols) {
+                    setColumns(myCols.map(a => {return {...a, id: a.idx}}))
+                }
+            } else {
+                if (myCols) {
+                    const intFirst = (props.params.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
+                    setColumns(intFirst.map(a => {return {...a, id: a.idx}}))
+                }
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, columns])
 
-    const moveCols = (headers, move) => {
-        return headers
-    }
 
     function handleChange(field, checked) {
         let newParams = {...props.params}
         newParams[field] = checked
         props.setParams(newParams)
 
-        const intMoved = checked ? moveSelIntFirst(columns) : columns
-        const resetCols = !checked ? moveCols(props.commonResult.headers, props.params.move) : intMoved
-        setColumns(resetCols)
+        const origHeaders = props.commonResult.headers
+        const intMoved = checked ? moveSelIntFirst(origHeaders) : origHeaders
+        setColumns(intMoved.map((a, i) => {return {...a, id: i}}))
     }
 
     const reset = () => {
         props.setParams({
             moveSelIntFirst: false,
-            move: []
         })
-        setColumns(props.commonResult.headers)
+        setColumns(props.commonResult.headers.map(a => {return {...a, id: a.idx}}))
     }
 
     const moveSelIntFirst = (myCols) => {
@@ -54,9 +52,7 @@ export default function OrderColumnsParams(props) {
         const last = 1 + Number(idxs.slice(-1))
 
         const newCols = myCols.slice(first, last).concat(myCols.slice(0, first)).concat(myCols.slice(last))
-        const newColsIdx = newCols.map((n, i) => {return {...n, idx: i}})
-
-        return newColsIdx
+        return newCols
     }
 
     return (

@@ -119,7 +119,7 @@ export const onDragEnd = (result, allItems, selItems) => {
         sourceIdx
     });
 
-    return processed
+    return processed.map((a, i) => {return {...a, id: i}})
 };
 
 const mutliDragAwareReorder = (args) => {
@@ -130,9 +130,10 @@ const mutliDragAwareReorder = (args) => {
 };
 
 const reorderSingleDrag = (allItems, sourceIdx, destination) => {
-    const before = allItems.slice(0, destination.index).filter( (id) => id.idx !==  sourceIdx)
-    const after = allItems.slice(destination.index).filter( (id) => id.idx !== sourceIdx)
-    const final = before.concat(allItems.find( (a) => a.idx === sourceIdx) ).concat(after)
+    const offset = (sourceIdx < destination.index) ? 1 : 0
+    const before = allItems.slice(0, destination.index + offset).filter( (id) => id.id !==  sourceIdx)
+    const after = allItems.slice(destination.index + offset).filter( (id) => id.id !== sourceIdx)
+    const final = before.concat(allItems.find( (a) => a.id === sourceIdx) ).concat(after)
     return final
 };
 
@@ -142,8 +143,8 @@ const reorderMultiDrag = (allItems, selItems, destination, sourceIdx) => {
 
     const offset = sourceIdx < destination.index ? 1 : 0
 
-    const itemsMoved = orderedSelItems.map( (id) => allItems.find( (a) => a.idx === id))
-    const before = allItems.slice(0, destination.index + offset).filter( (id) => !selItems.includes(id.idx) )
-    const after = allItems.slice(destination.index + offset).filter( (id) => !selItems.includes(id.idx) )
+    const itemsMoved = orderedSelItems.map( (id) => allItems.find( (a) => a.id === id))
+    const before = allItems.slice(0, destination.index + offset).filter( (id) => !selItems.includes(id.id) )
+    const after = allItems.slice(destination.index + offset).filter( (id) => !selItems.includes(id.id) )
     return before.concat(itemsMoved).concat(after)
 };

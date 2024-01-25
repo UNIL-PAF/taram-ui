@@ -42,11 +42,14 @@ export default function OrderColumns(props) {
             {results &&
                 <Row className={"analysis-step-row"}>
                     <Col span={8}>
-                        <div className={"analysis-step-param-box"}>
-                            <div className={"analysis-step-param-content"}>
-                                {params.moveSelIntFirst && <p className={"analysis-step-param-line"}>Move default intensity column [{intCol}] first.</p>}
+                        {params.moveSelIntFirst &&
+                            <div className={"analysis-step-param-box"}>
+                                <div className={"analysis-step-param-content"}>
+                                    {<p className={"analysis-step-param-line"}>Move default intensity columns [{intCol}]
+                                        first.</p>}
+                                </div>
                             </div>
-                        </div>
+                        }
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
                     </Col>
