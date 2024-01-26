@@ -143,12 +143,13 @@ export default function AnalysisStepMenuItems(props) {
     const showModal = (name, newStepParams) => {
         const myParams = showStepParams ? newStepParams : props.stepParams
         const mySetParams = showStepParams ? setNewStepParams : props.setStepParams
+        const myCommonRes = (!newStepParams && props.commonResBefore) ? props.commonResBefore : props.commonResult
 
         switch (name) {
             case 'parameters':
                 return <ParameterModal
                     type={showStepParams ? showStepParams : props.paramType}
-                    commonResult={props.commonResult}
+                    commonResult={myCommonRes}
                     params={myParams}
                     setParams={mySetParams}
                     intCol={props.intCol}

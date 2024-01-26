@@ -26,7 +26,8 @@ export default function OrderColumns(props) {
                               status={props.data.status}
                               error={props.data.error}
                               paramType={type}
-                              commonResult={props.commonResBefore}
+                              commonResBefore={props.commonResBefore}
+                              commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={intCol}
                               setStepParams={setLocalParams}

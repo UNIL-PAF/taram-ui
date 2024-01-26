@@ -20,7 +20,6 @@ import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
 import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
 
 export default function ParametersModal(props) {
-
     const getParamContent = (type) => {
         // eslint-disable-next-line
         switch (type) {

@@ -4,7 +4,6 @@ import {ClockCircleOutlined, SyncOutlined, MenuUnfoldOutlined} from "@ant-design
 import AnalysisStepMenuItems from "./AnalysisStepMenuItems";
 
 export default function AnalysisStepMenu(props) {
-
     const [menuIsVisible, setMenuIsVisible] = useState(false)
     const [showMenuItem, setShowMenuItem] = useState()
 
@@ -44,6 +43,7 @@ export default function AnalysisStepMenu(props) {
                                                       tableNr={props.tableNr}
                                                       setMenuIsVisible={setMenuIsVisible}
                                                       commonResult={props.commonResult}
+                                                      commonResBefore={props.commonResBefore}
                                                       params={props.stepParams}
                                                       setParams={props.setStepParams}
                                                       intCol={props.intCol}

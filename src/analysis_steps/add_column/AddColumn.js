@@ -38,6 +38,7 @@ export default function AddColumn(props) {
                               status={props.data.status}
                               error={props.data.error}
                               paramType={type}
+                              commonResBefore={props.commonResBefore}
                               commonResult={props.data.commonResult}
                               stepParams={localParams}
                               intCol={props.data.columnInfo.columnMapping.intCol}

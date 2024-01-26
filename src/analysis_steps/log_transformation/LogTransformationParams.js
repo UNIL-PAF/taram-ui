@@ -4,8 +4,6 @@ import {Checkbox, Col, Row, Select, Space, Switch, Tree} from 'antd';
 const {Option} = Select;
 
 export default function LogTransformationParams(props) {
-
-    //const numCols = getNumCols(props.commonResult.headers)
     const intColName = props.commonResult.intCol
 
     const [useDefaultCol, setUseDefaultCol] = useState()
