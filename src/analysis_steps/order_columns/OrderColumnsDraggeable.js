@@ -7,28 +7,6 @@ export default function OrderColumnsDraggeable(props) {
     const [selItems, setSelItems] = useState([])
     const [draggingItemId, setDraggingItemId] = useState()
 
-    /*
-    const onDragEnd = (result) => {
-        const from = Number(result.draggableId)
-        const to = result.destination.index
-        const newCols = arrayMove(props.columns, from, to)
-        const newColsIdx = newCols.map((n, i) => {return {...n, idx: i}})
-        props.setColumns(newColsIdx)
-        const newMove = props.params.move.concat({from: from, to: to})
-        props.setParams({...props.params, move: newMove})
-    };
-
-
-    const arrayMove = (columns, fromIndex, toIndex) => {
-        const element = columns[fromIndex];
-        let arr = [...columns]
-        arr.splice(fromIndex, 1);
-        arr.splice(toIndex, 0, element);
-        return arr
-    }
-
-     */
-
     const onDragStart = (start) => {
         setDraggingItemId(start.draggableId)
     };

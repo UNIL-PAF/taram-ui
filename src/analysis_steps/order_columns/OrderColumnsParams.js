@@ -30,16 +30,16 @@ export default function OrderColumnsParams(props) {
     function handleChange(field, checked) {
         let newParams = {...props.params}
         newParams[field] = checked
-        props.setParams(newParams)
-
         const origHeaders = props.commonResult.headers
         const intMoved = checked ? moveSelIntFirst(origHeaders) : origHeaders
         setColumns(intMoved.map((a, i) => {return {...a, id: i}}))
+        const newOrder = intMoved.map(a => a.idx)
+        props.setParams({...newParams, newOrder: newOrder})
     }
 
     const reset = () => {
         props.setParams({
-            moveSelIntFirst: false,
+            moveSelIntFirst: false
         })
         setColumns(props.commonResult.headers.map(a => {return {...a, id: a.idx}}))
     }
