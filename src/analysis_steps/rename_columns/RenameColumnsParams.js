@@ -1,15 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Tree, Tag, Input, Button, Checkbox} from 'antd';
-import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import React from "react";
+import {Checkbox} from 'antd';
+//import {CheckOutlined, CloseOutlined} from "@ant-design/icons";
 
 export default function RenameColumnsParams(props) {
 
+    /*
     const [selItem, setSelItem] = useState()
     const [editName, setEditName] = useState()
     const [treeData, setTreeData] = useState()
 
+     */
     const groupsDefined = (Object.values(props.experimentDetails).find(a => a.group)) ? true : false
 
+    /*
     useEffect(() => {
         setTreeData(computeTreeData())
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,51 +73,55 @@ export default function RenameColumnsParams(props) {
         }
     }
 
-    const setName = (s) => {
-        setEditName(s)
-    }
-
-    const save = (e) => {
-        e.stopPropagation()
-        const oldRename = (props.params && props.params.rename) ? props.params.rename : []
-        const newItem = {idx: selItem.key, name: editName}
-        const fltRename = oldRename.filter(r => r.idx !== newItem.idx)
-        const newRename = fltRename.concat(newItem)
-        props.setParams({...props.stepParams, rename: newRename})
-        setSelItem(undefined)
-        setEditName(undefined)
-    }
-
-    const cancel = (e) => {
-        e.stopPropagation()
-        setSelItem(undefined)
-        setEditName(undefined)
-    }
-
-    const renderTitle = item => {
-        // if we're editing we give back the input
-        if (selItem && selItem.key === item.key) {
-            return <div key={item.key} style={{whiteSpace: "nowrap"}}>
-                <Input defaultValue={item.title}
-                       onPressEnter={save}
-                       onChange={(e) => setName(e.target.value)}
-                       onBlur={save}/>
-                <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>} onClick={(e) => save(e)}
-                        size={"small"}></Button>
-                <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>} onClick={(e) => cancel(e)}
-                        size={"small"} danger></Button>
-            </div>
+        const setName = (s) => {
+            setEditName(s)
         }
 
-        //otherwise we give back the node element
-        return <div key={item.key}><span>{item.title}&nbsp;&nbsp;&nbsp;{getTag(item.type)}</span></div>
-    }
+        const save = (e) => {
+            e.stopPropagation()
+            const oldRename = (props.params && props.params.rename) ? props.params.rename : []
+            const newItem = {idx: selItem.key, name: editName}
+            const fltRename = oldRename.filter(r => r.idx !== newItem.idx)
+            const newRename = fltRename.concat(newItem)
+            props.setParams({...props.stepParams, rename: newRename})
+            setSelItem(undefined)
+            setEditName(undefined)
+        }
 
-    const reset = () => {
-        props.setParams(undefined)
-        setSelItem(undefined)
-        setEditName(undefined)
-    }
+
+        const cancel = (e) => {
+            e.stopPropagation()
+            setSelItem(undefined)
+            setEditName(undefined)
+        }
+
+
+        const renderTitle = item => {
+            // if we're editing we give back the input
+            if (selItem && selItem.key === item.key) {
+                return <div key={item.key} style={{whiteSpace: "nowrap"}}>
+                    <Input defaultValue={item.title}
+                           onPressEnter={save}
+                           onChange={(e) => setName(e.target.value)}
+                           onBlur={save}/>
+                    <Button shape="circle" icon={<CheckOutlined style={{fontSize: '10px'}}/>} onClick={(e) => save(e)}
+                            size={"small"}></Button>
+                    <Button shape="circle" icon={<CloseOutlined style={{fontSize: '10px'}}/>} onClick={(e) => cancel(e)}
+                            size={"small"} danger></Button>
+                </div>
+            }
+
+            //otherwise we give back the node element
+            return <div key={item.key}><span>{item.title}&nbsp;&nbsp;&nbsp;{getTag(item.type)}</span></div>
+        }
+
+        const reset = () => {
+            props.setParams(undefined)
+            setSelItem(undefined)
+            setEditName(undefined)
+        }
+
+         */
 
     const handleChange = (status) => {
         props.setParams({...props.params, addConditionNames: status})
@@ -122,14 +129,17 @@ export default function RenameColumnsParams(props) {
 
     return (
         <>
+            {/*
             <div><Button type="primary" onClick={() => reset()}>Reset</Button></div>
             <br></br>
+            */}
             <span>
                 <Checkbox disabled={!groupsDefined} checked={props.params && props.params.addConditionNames}
                           onChange={(e) => handleChange(e.target.checked)}>
                 </Checkbox>
                 <span style={{paddingLeft: "20px"}}>Add conditions to table headers.</span>
             </span>
+            {/*
             <br></br>
             <br></br>
             <h3>Only keep selected columns</h3>
@@ -137,7 +147,7 @@ export default function RenameColumnsParams(props) {
                 treeData={treeData}
                 titleRender={renderTitle}
                 onSelect={onClick}
-            />
+            />*/}
 
         </>
     );
