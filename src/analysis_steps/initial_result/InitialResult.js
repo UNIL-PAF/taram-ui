@@ -17,6 +17,7 @@ export default function InitialResult(props) {
     const [localParams, setLocalParams] = useState(false)
     const [groupModalKey, setGroupModalKey] = useState(1)
     const [localGroupParams, setLocalGroupParams] = useState()
+    const [currentHash, setCurrentHash] = useState()
     const dispatch = useDispatch();
 
     const defineGroupButton = {danger: true, text: "Define groups"}
@@ -29,11 +30,12 @@ export default function InitialResult(props) {
     const groupsDefined = colInfo ? Object.values(colInfo.columnMapping.experimentDetails).some(a => a.group) : null
 
     useEffect(() => {
-        if (!localParams && props.data && props.data.columnInfo) {
+        if((props.data && props.data.columnInfo && (!localParams || (!currentHash || currentHash !== props.data.columnInfo.columnMappingHash)))){
+            setCurrentHash(props.data.columnInfo.columnMappingHash)
             setLocalParams(initializeLocalParams())
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, localParams])
+    }, [props.data, localParams, currentHash])
 
 
     const initializeLocalParams = () => {
