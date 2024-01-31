@@ -1,13 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {Button, message, Modal, Popconfirm, Space, Table, Form, Input} from 'antd';
-import {DeleteOutlined, LockTwoTone, EditOutlined} from "@ant-design/icons";
+import {DeleteOutlined, LockTwoTone, EditOutlined, SearchOutlined} from "@ant-design/icons";
 import {deleteResult, updateInfo} from "./BackendResults";
+import Highlighter from "react-highlight-words";
 
 export default function ResultsTable(props) {
 
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
     const [currentResult, setCurrentResult] = useState()
     const [hasFormError, setHasFormError] = useState();
+    const searchInput = useRef(null);
     const [resultForm] = Form.useForm();
 
     useEffect(() => {
@@ -52,25 +56,114 @@ export default function ResultsTable(props) {
         setCurrentResult(undefined)
     }
 
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters, confirm, dataIndex) => {
+        setSearchText('');
+        setSearchedColumn(dataIndex);
+        clearFilters();
+        confirm();
+    };
+
+    const getColumnSearchProps = (dataIndex, isTitle) => ({
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+            >
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{
+                        marginBottom: 8,
+                        display: 'block',
+                    }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined/>}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters, confirm, dataIndex)}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? '#1890ff' : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) => {
+            const myRec = record[dataIndex]
+            return myRec ? myRec.toString().toLowerCase().includes(value.toLowerCase()) : false
+        },
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text, record) => {
+            const myText = searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{
+                        backgroundColor: '#ffc069',
+                        padding: 0,
+                    }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            )
+            return isTitle ? <a href={'/viewer/' + record.id}>{myText} {record.status === "done" ?
+                <>&nbsp;<LockTwoTone style={{fontSize: "large"}} twoToneColor={"#d4b106"}/></>: <></>}</a> : myText
+        },
+    });
+
+
     const columns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text, record) => {
-                return <a href={'/viewer/' + record.id}>{text} {record.status === "done" ?
-                    <>&nbsp;<LockTwoTone style={{fontSize: "large"}} twoToneColor={"#d4b106"}/></>: <></>}</a>
-            }
+            ...getColumnSearchProps('name', true)
         },
         {
             title: 'Type',
             dataIndex: 'type',
-            key: 'type',
+            key: 'type'
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
+            ...getColumnSearchProps('description')
         },
         {
             title: 'File path',
