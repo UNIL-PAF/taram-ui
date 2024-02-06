@@ -59,7 +59,7 @@ export default function ManageAnnotations(props) {
             render: (_, record) => {
                 return <><Space size="middle">
                     <Button onClick={() => editAnnotation(record)} type={"text"} icon={<EditOutlined />}></Button>
-                    {record.usedBy == null && <Popconfirm
+                    {<Popconfirm
                         title="Are you sure to delete this result?"
                         onConfirm={() => confirmDelete(record.id)}
                         okText="Yes"
