@@ -331,6 +331,9 @@ export default function ScatterPlot(props) {
                         x: 'x',
                         y: 'y',
                     },
+                    itemStyle: {
+                      color: '#fac858'
+                    },
                     symbolSize: 5,
                     markLine: logTrans ? null : getXYLines(results.linearRegression, myData.lims, params)
                 },
