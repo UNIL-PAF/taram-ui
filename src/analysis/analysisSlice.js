@@ -22,8 +22,8 @@ export const analysisSlice = createSlice({
             })
             .addCase(fetchAnalysisByResultId.fulfilled, (state, action) => {
                 state.status = 'succeeded'
-                state.data = action.payload.first
-                state.globalStatus = action.payload.second
+                state.data = action.payload.analysisList
+                state.globalStatus = action.payload.status
             })
             .addCase(fetchAnalysisByResultId.rejected, (state, action) => {
                 state.status = 'failed'

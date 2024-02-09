@@ -25,7 +25,6 @@ export default function Analysis() {
 
     useEffect(() => {
         let timeout
-
         if(params.resultId && analysisData && analysisData.length && analysisData[0].result.id !== Number(params.resultId)){
             dispatch(fetchAnalysisByResultId(params.resultId))
         }else if (analysisFetchStatus === 'idle') {
