@@ -58,7 +58,7 @@ export default function InitialResult(props) {
             }
         }
 
-        const groups = [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
+        const groups = colMapping.groupsOrdered || [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
 
         const initialGroups = groups.reduce((acc, cur) => ({
             ...acc,
@@ -105,7 +105,9 @@ export default function InitialResult(props) {
             return sum
         }, {})
 
-        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: params.groupsOrdered}
+        // keep only unique
+        const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i)
+        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered}
     }
 
     const changeIntensity = (value) => {
