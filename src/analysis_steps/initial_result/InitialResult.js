@@ -58,7 +58,7 @@ export default function InitialResult(props) {
             }
         }
 
-        const groups = colMapping.groupsOrdered
+        const groups = colMapping.groupsOrdered || [...new Set(expList.map((e) => e.group))].filter((e) => e != null)
 
         const initialGroups = groups.reduce((acc, cur) => ({
             ...acc,
