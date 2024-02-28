@@ -1,0 +1,44 @@
+.hints-box {
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    border-radius: 10px;
+    height: 100%;
+    width: 15%;
+    vertical-align: top;
+    horiz-align: left;
+    white-space: nowrap;
+    /* width: 500px; */
+    /*width: 65%;*/
+    background-color: rgb(244,240,236);
+    padding: 5px 5px 40px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.hint-card {
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 5px 1px grey;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.hint-card-sel {
+    border: 2px solid #fa8c16;
+}
+
+.hint-name {
+    white-space: initial;
+}
+
+.hint-done-icon {
+    position: absolute;
+    top: -3px;
+    left: -3px;
+}
+
+.hint-info-icon {
+    position: absolute;
+    top: -2px;
+    right: 0px;
+}

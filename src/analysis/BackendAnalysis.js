@@ -36,6 +36,7 @@ export const fetchAnalysisByResultId = createAsyncThunk(
     async (resultId, thunkApi) => {
         try {
             const response = await getAnalysisByResultId(resultId)
+            console.log(response)
             return response.data
         }catch(err){
             let error = err // cast the error for access

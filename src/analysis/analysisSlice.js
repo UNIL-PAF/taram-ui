@@ -6,6 +6,7 @@ export const analysisSlice = createSlice({
     initialState: {
         resultId: null,
         data: null,
+        hints: null,
         status: 'idle',
         error: null,
         globalStatus: null,
@@ -23,6 +24,7 @@ export const analysisSlice = createSlice({
             .addCase(fetchAnalysisByResultId.fulfilled, (state, action) => {
                 state.status = 'succeeded'
                 state.data = action.payload.analysisList
+                state.hints = action.payload.hints
                 state.globalStatus = action.payload.status
             })
             .addCase(fetchAnalysisByResultId.rejected, (state, action) => {

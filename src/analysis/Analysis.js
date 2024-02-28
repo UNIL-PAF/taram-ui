@@ -6,6 +6,7 @@ import {fetchAnalysisByResultId} from "./BackendAnalysis";
 import {useDispatch, useSelector} from 'react-redux';
 import AnalysisSteps from "../analysis_steps/AnalysisSteps";
 import {resetResults} from "../results/ResultsSlice"
+import Hints from "../hints/Hints";
 
 export default function Analysis() {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ export default function Analysis() {
     const analysisFetchStatus = useSelector(state => state.analysis.status)
     const analysisStatus = useSelector(state => state.analysis.globalStatus)
     const analysisData = useSelector(state => state.analysis.data)
+    const hints = useSelector(state => state.analysis.hints)
     const analysisError = useSelector(state => state.analysis.error)
     const resultsId = useSelector(state => state.results.resultId)
 
@@ -61,6 +63,7 @@ export default function Analysis() {
                         />
                     })
                 }
+                {hints && <Hints data={hints}></Hints>}
             </div>
             }
             {analysisError && <Alert
