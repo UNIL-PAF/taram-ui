@@ -218,13 +218,15 @@ export default function BoxPlot(props) {
             }),
             yAxis: {
                 name: params.column || props.data.columnInfo.columnMapping.intCol,
+                nameRotate: 90,
+                nameLocation: 'center',
                 nameTextStyle: {
-                    align: 'left',
-                    padding: [0, 0, 0, -50]
+                    padding: [0, 0, 10, 0]
                 },
-                nameGap: 20,
                 min: (yMin - range * 0.2).toFixed(1),
-                axisLabel: {showMinLabel: false}
+                axisLabel: {
+                    showMinLabel: false
+                }
             },
             grid: {
                 top:    60,
