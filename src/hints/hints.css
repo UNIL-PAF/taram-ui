@@ -2,7 +2,7 @@
     position: absolute;
     top: 30px;
     left: 10px;
-    border-radius: 10px;
+    border-radius: 2px;
     height: 100%;
     width: 15%;
     vertical-align: top;
@@ -18,9 +18,9 @@
 
 .hint-card {
     margin-bottom: 10px;
-    box-shadow: 2px 2px 5px 1px grey;
     border-radius: 5px;
     margin-top: 10px;
+    border: 1px solid lightgrey;
 }
 
 .hint-card-sel {

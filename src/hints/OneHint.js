@@ -10,8 +10,7 @@ export default function OneHint(props) {
 
     return (
         <div>
-            {props.data && <div className={"hint-card"}>
-                <Card className={"analysis-step-card" + (props.isNext ? " hint-card-sel" : "")}
+            {props.data && <Card className={"hint-card" + (props.isNext ? " hint-card-sel" : "")}
                       onClick={props.onSelect}
                       headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
                       bodyStyle={{textAlign: 'left', marginLeft: '10px'}}
@@ -24,8 +23,6 @@ export default function OneHint(props) {
                     </div>
                     <span className={"hint-name"}>{props.data.name}</span>
                 </Card>
-
-            </div>
             }
         </div>
     );
