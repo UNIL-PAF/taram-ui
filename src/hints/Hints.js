@@ -1,18 +1,27 @@
 import React,{useState} from "react";
 import './hints.css'
 import OneHint from "./OneHint";
-import {Button} from 'antd';
+import {Button, Popover} from 'antd';
 import {CloseOutlined, DownOutlined} from "@ant-design/icons";
 
 export default function Hints(props) {
     const [open, setIsOpen] = useState(props.defaultOpen)
     const [myClass, setMyClass] = useState(props.defaultOpen ? '' : 'hidden')
 
-    const icon = open ? <CloseOutlined /> : <DownOutlined />
-
     const switchShow = () => {
         setMyClass(open ? 'hidden' : '')
         setIsOpen(!open)
+    }
+
+    const button = () => {
+        if(open){
+            return <Button type="default" icon={<CloseOutlined />} size={"small"} onClick={switchShow}/>
+        }else{
+            return <Popover content={"Analysis process"} placement="right">
+                <Button type="default" size={"small"} icon={<DownOutlined />} onClick={switchShow} ></Button>
+            </Popover>
+        }
+
     }
 
     return (
@@ -25,7 +34,7 @@ export default function Hints(props) {
                 }
             </div>
             }
-            <Button type="default" icon={icon} size={"small"} onClick={switchShow}/>
+            {button()}
         </div>
     );
 }
