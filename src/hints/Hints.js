@@ -8,7 +8,7 @@ export default function Hints(props) {
             {props.data && <div className={"hints-box"}>
                 {
                     props.data.hintList.map(a => {
-                        return <OneHint key={a.id} isNext={props.data.nextHintId === a.id} data={a}></OneHint>
+                        return <OneHint key={a.id} isNext={props.data.nextHintId === a.id} data={a} resultId={props.resultId}></OneHint>
                     })
                 }
             </div>
