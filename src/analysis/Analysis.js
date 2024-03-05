@@ -63,7 +63,11 @@ export default function Analysis() {
                         />
                     })
                 }
-                {hints && analysisData && analysisData.length > 0 && <Hints data={hints} resultId={analysisData[0].result.id}></Hints>}
+                {hints && analysisData && analysisData.length > 0 && <Hints
+                    data={hints}
+                    resultId={analysisData[0].result.id}
+                    defaultOpen={analysisData.length === 1}
+                ></Hints>}
             </div>
             }
             {analysisError && <Alert
