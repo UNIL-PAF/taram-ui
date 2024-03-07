@@ -237,12 +237,20 @@ export default function ScatterPlot(props) {
             },
         }
 
-        const myCoords = [
-            {...xyBase, coord: [lims[0][1], lims[1][1]],},
-            {...xyBase, coord: [lims[0][0], lims[1][0]]}
-        ]
+        const xYCurve = {slope: 1, intercept: 0}
 
-        return  (reverseOrder ? myCoords : myCoords.reverse())
+        const evXMin = compX(lims[1][0], xYCurve)
+        const evXMax = compX(lims[1][1], xYCurve)
+
+        const xMin = evXMin > lims[0][0] ? evXMin : lims[0][0]
+        const xMax = evXMax < lims[0][1] ? evXMax : lims[0][1]
+
+        const myCoords = [
+            {...xyBase, coord: [xMin, compY(xMin, xYCurve)]},
+            {...xyBase, coord: [xMax, compY(xMax, xYCurve)]}
+        ]
+        
+        return  (!reverseOrder ? myCoords : myCoords.reverse())
     }
 
     const getXYLines = (reg, lims) => {
