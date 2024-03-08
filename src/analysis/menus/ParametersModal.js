@@ -99,6 +99,7 @@ export default function ParametersModal(props) {
                 return <VolcanoPlotParams commonResult={props.commonResult}
                                           params={props.params}
                                           setParams={props.setParams}
+                                          stepId={props.stepId}
                 ></VolcanoPlotParams>
             case 'scatter-plot':
                 return <ScatterPlotParams commonResult={props.commonResult}

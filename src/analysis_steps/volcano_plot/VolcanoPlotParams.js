@@ -1,12 +1,25 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, InputNumber, Select, Space, Switch} from 'antd';
+import {Checkbox, InputNumber, Select, Space, Switch, Divider} from 'antd';
+import {useDispatch, useSelector} from "react-redux";
+import {getProteinTable} from "../../protein_table/BackendProteinTable";
+import ProteinTable from "../../protein_table/ProteinTable";
 
 const {Option} = Select;
 
-export default function BoxPlotParams(props) {
+export default function VolcanoPlotParams(props) {
+    const proteinTable = useSelector(state => state.proteinTable.data)
+    const proteinTableError = useSelector(state => state.proteinTable.error)
+    const dispatch = useDispatch();
 
     const [selComp, setSelComp] = useState(0)
     const comparison = props.commonResult.headers.filter( h => h.name.includes("p.value")).map( h => h.experiment.comp)
+
+    useEffect(() => {
+        if(!proteinTable && !proteinTableError){
+            dispatch(getProteinTable({stepId: props.stepId}))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [proteinTable, proteinTableError])
 
     useEffect(() => {
         if (!props.params) {
@@ -94,6 +107,9 @@ export default function BoxPlotParams(props) {
                     onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use
                     -log10 {selValText()} on the y-axis.
                 </Checkbox>
+                <Divider />
+                <h3>Protein table</h3>
+                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"prot"}></ProteinTable>
             </Space>
         </>
     }

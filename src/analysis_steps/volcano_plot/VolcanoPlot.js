@@ -12,7 +12,7 @@ import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
 
-const { Text } = Typography;
+const {Text} = Typography;
 
 export default function VolcanoPlot(props) {
     const type = 'volcano-plot'
@@ -41,10 +41,11 @@ export default function VolcanoPlot(props) {
     const isOnScreen = useOnScreen(elementRef);
 
     useEffect(() => {
-        if(props.data && props.data.status === "done") {
+        if (props.data && props.data.status === "done") {
             if (isOnScreen) {
                 if (!stepResults) {
                     setShowLoading(true)
+                    setLocalParams(null)
                     getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
@@ -84,7 +85,7 @@ export default function VolcanoPlot(props) {
 
     // set initial params
     useEffect(() => {
-        if(!localParams && props.data && props.data.parameters){
+        if (!localParams && props.data && props.data.parameters) {
             const params = JSON.parse(props.data.parameters)
             setLocalParams(params)
             if (params.selProteins) setSelProts(params.selProteins)
@@ -381,16 +382,17 @@ export default function VolcanoPlot(props) {
     }
 
     const showToolTipOnClick = useCallback((e) => {
-        // don't do anything if the analysis is locked
-        if(props.isLocked) return
+            // don't do anything if the analysis is locked
+            if (props.isLocked) return
 
-        const prot = e.data.prot
+            const prot = e.data.prot
             const protIndex = (selProts ? selProts.indexOf(prot) : -1)
             const newSelProts = protIndex > -1 ? selProts.filter(e => e !== prot) : selProts.concat(prot)
+
             setSelProts(newSelProts)
             setLocalParams({...localParams, selProteins: newSelProts})
             const callback = () => {
-                setCount(count+1)
+                setCount(count + 1)
             }
             dispatch(switchSel({resultId: props.resultId, selId: prot, stepId: props.data.id, callback: callback}))
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -437,13 +439,15 @@ export default function VolcanoPlot(props) {
                 </Col>
             </Row>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
-                <div className="content"/>
-            </Spin>}
+            {showLoading && !(options && options.data) && !showError &&
+                <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                    <div className="content"/>
+                </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
-            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
+            <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
+                         comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} onEvents={onEvents}
                                      minHeight={"800px"}></EchartsZoom>}
