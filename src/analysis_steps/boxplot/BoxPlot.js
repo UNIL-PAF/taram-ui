@@ -14,6 +14,17 @@ import {defaultColors} from "../../common/PlotColors"
 
 const { Text } = Typography;
 
+/*
+  Random with seed ?
+  Taken from: https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+
+  var seed = 1;
+function random() {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+ */
+
 export default function BoxPlot(props) {
     const type = 'boxplot'
     const [localParams, setLocalParams] = useState()
