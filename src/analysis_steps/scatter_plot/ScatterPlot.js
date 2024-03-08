@@ -40,6 +40,7 @@ export default function ScatterPlot(props) {
             if (isOnScreen) {
                 if (!stepResults) {
                     setShowLoading(true)
+                    setLocalParams(null)
                     getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
             } else setStepResults(undefined)
