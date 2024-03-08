@@ -105,6 +105,7 @@ export default function ParametersModal(props) {
                                           params={props.params}
                                           setParams={props.setParams}
                                           intCol={props.intCol}
+                                          stepId={props.stepId}
                 ></ScatterPlotParams>
             case 'order-columns':
                 return <OrderColumnsParams commonResult={props.commonResult}

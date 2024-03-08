@@ -55,7 +55,7 @@ export default function BoxPlotParams(props) {
                     })}</Select>
                 <Divider />
                 <h3>Protein table</h3>
-                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable}></ProteinTable>
+                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProts"} target={"prot"}></ProteinTable>
             </Space>
         </>
     }

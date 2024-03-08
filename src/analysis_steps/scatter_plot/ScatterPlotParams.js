@@ -1,12 +1,26 @@
 import React, {useEffect, useState} from "react";
 import {Checkbox, Select, Space, Row, Col} from 'antd';
+import ProteinTable from "../../protein_table/ProteinTable";
+import {useDispatch, useSelector} from "react-redux";
+import {getProteinTable} from "../../protein_table/BackendProteinTable";
 
 const {Option} = Select;
 
 export default function ScatterPlotParams(props) {
+    const proteinTable = useSelector(state => state.proteinTable.data)
+    const proteinTableError = useSelector(state => state.proteinTable.error)
+    const dispatch = useDispatch();
+
     const [useColorBy, setUseColorBy] = useState()
 
     const dataCols = props.commonResult.headers.filter( h => h.type === "NUMBER").map(h => h.name)
+
+    useEffect(() => {
+        if(!proteinTable && !proteinTableError){
+            dispatch(getProteinTable({stepId: props.stepId}))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [proteinTable, proteinTableError])
 
     useEffect(() => {
         if (props.params) {
@@ -81,6 +95,8 @@ export default function ScatterPlotParams(props) {
                     {dataCols.map((n, i) => {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
+                <h3>Protein table</h3>
+                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"gene"}></ProteinTable>
             </Space>
         </>
     }

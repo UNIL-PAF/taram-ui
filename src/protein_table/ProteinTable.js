@@ -11,12 +11,15 @@ export default function ProteinTable(props) {
     const [columns, setColumns] = useState();
     const searchInput = useRef(null);
 
+    const param = props.paramName
+    const target = props.target
+
     useEffect(() => {
         if(props.tableData && !columns){
             setColumns(getColumns())
         }
 
-        if (props.tableData && props.params && props.params.selProts && props.params.selProts.length > 0 && selectedRowKeys.length === 0) {
+        if (props.tableData && props.params && props.params[param] && props.params[param].length > 0 && selectedRowKeys.length === 0) {
             const selRows = props.tableData.table.filter((r) => {return r.sel}).map((r) => {return r.key})
             setSelectedRowKeys(selRows)
         }
@@ -146,9 +149,11 @@ export default function ProteinTable(props) {
     const rowSelection = {
         selectedRowKeys,
         onChange: (a, b) => {
-            const selProts = b.map((r) => r.prot)
+            const selProts = b.map((r) => r[target])
             setSelectedRowKeys(a)
-            props.setParams({...props.params, selProts: selProts})
+            const newParams = {...props.params}
+            newParams[param] = selProts
+            props.setParams(newParams)
         }
     };
 
