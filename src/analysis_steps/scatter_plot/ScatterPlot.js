@@ -136,7 +136,7 @@ export default function ScatterPlot(props) {
     const computeLimits = (min, max) => {
         const newMin = Math.abs(min) > 0 ? Math.floor(min) : min
         const newMax = Math.abs(max) > 0 ? Math.ceil(max) : max
-        return [newMin, newMax]
+        return [newMin-Math.ceil(Math.abs(newMin*0.05)), newMax+Math.ceil(Math.abs(newMax*0.05))]
     }
 
     const computeLogData = (d, doCompute) => {
@@ -249,7 +249,7 @@ export default function ScatterPlot(props) {
             {...xyBase, coord: [xMin, compY(xMin, xYCurve)]},
             {...xyBase, coord: [xMax, compY(xMax, xYCurve)]}
         ]
-        
+
         return  (!reverseOrder ? myCoords : myCoords.reverse())
     }
 
