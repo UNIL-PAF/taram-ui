@@ -4,7 +4,7 @@
 
 let globalConfig = {};
 
-globalConfig.version = '1.7.0'
+globalConfig.version = '1.7.1'
 
 globalConfig.urlBackend = "http://localhost:8080/"
 //globalConfig.urlBackend = "http://taram-dev.dcsr.unil.ch/backend/"
