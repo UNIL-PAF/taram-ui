@@ -11,6 +11,7 @@ import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps"
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors"
+import renderDataPoints from "./renderDataPoints"
 
 const { Text } = Typography;
 
@@ -121,7 +122,21 @@ export default function BoxPlot(props) {
         }
     }
 
+    const prepareAllDatat = (myResults) => {
+        if(!myResults.allProtData) return null
+        console.log(myResults)
+        const myTab = myResults.allProtData.reduce((a, v, i) => {
+            const newPar = v.map( b => {
+                return {x: myResults.experimentNames[i], y: b.y, jiiter: b.j}
+            })
+            return a.concat(newPar)
+        }, [])
+        console.log(myTab)
+        return myTab
+    }
+
     const getOptions = (myResults) => {
+        const allProts = prepareAllDatat(myResults)
         const results = {...myResults}
         const params = localParams || JSON.parse(props.data.parameters)
         const newData = results.boxPlotData.map(d => {
@@ -151,25 +166,36 @@ export default function BoxPlot(props) {
 
         const range = yMax - yMin
 
+        console.log("allProts", allProts)
+
         const boxplotDatasets = parsedRes.boxPlotData.map(d => {
             return {
                 dimensions: boxplotDimensions,
                 source: d.data
             }
+        }).concat({
+            dimensions: ['x', 'y', 'jiiter'],
+            source: allProts
         })
 
         const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
             return {
                 name: "group_" + d.group,
-                type: type,
+                type: 'boxplot',
                 datasetIndex: i,
                 encode: {
                     y: boxplotDimensions.slice(1),
                     x: 'name',
                 },
-                xAxisIndex: i
+                xAxisIndex: i,
+                itemStyle: {
+                    opacity: 0.8
+                }
             }
         })
+
+        console.log("boxplotDatasets", boxplotDatasets)
+        console.log("boxplotSeries", boxplotSeries)
 
         const groupedByCondition = parsedRes.boxPlotData.reduce(
             (acc, curr) => acc.concat(curr.data.map(d => d[0])),
@@ -202,7 +228,27 @@ export default function BoxPlot(props) {
             })
         }
 
-        const series = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
+        const seriesXX = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
+
+        const allprotSeries = {
+            name: "all",
+            type: "custom",
+            renderItem: function(params, api) {
+                return renderDataPoints(api, "#989898");
+            },
+            datasetIndex: 2,
+            animation: false,
+            progressiveThreshold: 1,
+            progressive: 0,
+            large: true,
+            largeThreshold: 1,
+            silent: true
+        }
+
+        const series = seriesXX.concat(allprotSeries)
+
+        console.log(series)
+
         const legendNames = series.filter(a => a.name !== "group_null").map(a => a.name)
 
         const options = {
