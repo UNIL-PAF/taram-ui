@@ -28,6 +28,7 @@ export default function BoxPlot(props) {
     const [count, setCount] = useState(1)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
+    const [showAll, setShowAll] = useState(false)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -49,9 +50,9 @@ export default function BoxPlot(props) {
     // update if logScale or groupByCondition changed
     useEffect(() => {
        if(props.data && props.data.status === 'done' && stepResults){
-           const echartOptions = getOptions(stepResults)
+           const echartOptions = getOptions(stepResults, showAll)
            const withColors = {...echartOptions, color: defaultColors}
-           setOptions({...options, data: withColors})
+           setOptions({...options, data: withColors, count: count})
            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +61,7 @@ export default function BoxPlot(props) {
     // update if stepResults arrive
     useEffect(() => {
         if (props.data && props.data.status === 'done' && stepResults) {
-            const echartOptions = getOptions(stepResults, false)
+            const echartOptions = getOptions(stepResults, showAll)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
             setHeightAndBottom(getPlotHeightAndBottom(stepResults))
@@ -76,6 +77,7 @@ export default function BoxPlot(props) {
             setLocalParams(params)
             if(typeof params.logScale !== "undefined") setLogScale(params.logScale)
             if(typeof params.groupByCondition !== "undefined") setGroupByCondition(params.groupByCondition)
+            if(typeof params.showAll != "undefined") setShowAll(params.showAll)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data, localParams])
@@ -253,11 +255,11 @@ export default function BoxPlot(props) {
             silent: true
         } : null
 
-        const series = showAll ? series01.concat(allprotSeries) : series01
 
+        const series = showAll ? series01.concat(allprotSeries) : series01
         const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
 
-        const options = {
+        const myOptions = {
             dataset: boxplotDatasets,
             series: series,
             legend: {
@@ -298,7 +300,8 @@ export default function BoxPlot(props) {
                 right:  '10%',
             }
         };
-        return options
+
+        return myOptions
     }
 
     const checkboxChange = (e, field) => {
@@ -308,6 +311,7 @@ export default function BoxPlot(props) {
         setLocalParams(newLocalParams)
         if(field === "logScale") setLogScale(e.target.checked)
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
+        if(field === "showAll") setShowAll(e.target.checked)
     }
 
     return (
@@ -353,6 +357,12 @@ export default function BoxPlot(props) {
                 disabled={props.isLocked}
                 onChange={(e) => checkboxChange(e, "groupByCondition")}
                 checked={groupByCondition}>Group by condition
+            </Checkbox>
+            <Checkbox
+                className={"analysis-step-row"}
+                disabled={props.isLocked}
+                onChange={(e) => checkboxChange(e, "showAll")}
+                checked={showAll}>Show all data points
             </Checkbox>
             <div style={{margin: "13px"}}></div>
             {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
