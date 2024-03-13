@@ -11,20 +11,8 @@ import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps"
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors"
-import renderDataPoints from "./renderDataPoints"
 
 const { Text } = Typography;
-
-/*
-  Random with seed ?
-  Taken from: https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
-
-  var seed = 1;
-function random() {
-    var x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
-}
- */
 
 export default function BoxPlot(props) {
     const type = 'boxplot'
@@ -72,7 +60,7 @@ export default function BoxPlot(props) {
     // update if stepResults arrive
     useEffect(() => {
         if (props.data && props.data.status === 'done' && stepResults) {
-            const echartOptions = getOptions(stepResults)
+            const echartOptions = getOptions(stepResults, false)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
             setHeightAndBottom(getPlotHeightAndBottom(stepResults))
@@ -124,19 +112,17 @@ export default function BoxPlot(props) {
 
     const prepareAllDatat = (myResults) => {
         if(!myResults.allProtData) return null
-        console.log(myResults)
         const myTab = myResults.allProtData.reduce((a, v, i) => {
             const newPar = v.map( b => {
-                return {x: myResults.experimentNames[i], y: b.y, jiiter: b.j}
+                return [myResults.experimentNames[i], b.y, b.j]
             })
             return a.concat(newPar)
         }, [])
-        console.log(myTab)
         return myTab
     }
 
-    const getOptions = (myResults) => {
-        const allProts = prepareAllDatat(myResults)
+    const getOptions = (myResults, showAll) => {
+        const allProts = showAll ? prepareAllDatat({...myResults}) : null
         const results = {...myResults}
         const params = localParams || JSON.parse(props.data.parameters)
         const newData = results.boxPlotData.map(d => {
@@ -166,16 +152,11 @@ export default function BoxPlot(props) {
 
         const range = yMax - yMin
 
-        console.log("allProts", allProts)
-
         const boxplotDatasets = parsedRes.boxPlotData.map(d => {
             return {
                 dimensions: boxplotDimensions,
                 source: d.data
             }
-        }).concat({
-            dimensions: ['x', 'y', 'jiiter'],
-            source: allProts
         })
 
         const boxplotSeries = parsedRes.boxPlotData.map((d, i) => {
@@ -189,13 +170,10 @@ export default function BoxPlot(props) {
                 },
                 xAxisIndex: i,
                 itemStyle: {
-                    opacity: 0.8
+                    opacity: showAll ? 0.8 : 1.0
                 }
             }
         })
-
-        console.log("boxplotDatasets", boxplotDatasets)
-        console.log("boxplotSeries", boxplotSeries)
 
         const groupedByCondition = parsedRes.boxPlotData.reduce(
             (acc, curr) => acc.concat(curr.data.map(d => d[0])),
@@ -228,28 +206,56 @@ export default function BoxPlot(props) {
             })
         }
 
-        const seriesXX = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
+        const series01 = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
 
-        const allprotSeries = {
-            name: "all",
+        const allprotSeries = showAll ? {
+            name: "show_all_proteins",
             type: "custom",
             renderItem: function(params, api) {
-                return renderDataPoints(api, "#989898");
+                const xValue = api.value(0)
+
+                const barLayout = api.barLayout({
+                    barGap: "30%",
+                    barCategoryGap: "100%",
+                    count: 1,
+                });
+
+                const point = api.coord([xValue, api.value(1)]);
+
+                const jitterOffset = api.value(2) * barLayout[0].bandWidth / 1.5;
+
+                point[0] -= jitterOffset
+
+                return {
+                    type: "circle",
+                    shape: {
+                        cx: point[0],
+                        cy: point[1],
+                        r: 1.5,
+                    },
+                    style: {
+                        fill: "#989898",
+                        opacity: 0.2,
+                    },
+                    styleEmphasis: {
+                        fill: "#989898",
+                        opacity: 0.9,
+                    },
+                };
             },
-            datasetIndex: 2,
+            dimensions: ['x', 'y', 'jiiter'],
+            data: allProts,
             animation: false,
             progressiveThreshold: 1,
             progressive: 0,
             large: true,
             largeThreshold: 1,
             silent: true
-        }
+        } : null
 
-        const series = seriesXX.concat(allprotSeries)
+        const series = showAll ? series01.concat(allprotSeries) : series01
 
-        console.log(series)
-
-        const legendNames = series.filter(a => a.name !== "group_null").map(a => a.name)
+        const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
 
         const options = {
             dataset: boxplotDatasets,
