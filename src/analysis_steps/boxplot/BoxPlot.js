@@ -173,7 +173,7 @@ export default function BoxPlot(props) {
                 xAxisIndex: i,
                 itemStyle: {
                     opacity: showAll ? 0.8 : 1.0
-                }
+                },
             }
         })
 
@@ -298,7 +298,19 @@ export default function BoxPlot(props) {
                 bottom: heightAndBottom.bottom,
                 left:   '10%',
                 right:  '10%',
-            }
+            },
+            tooltip: {
+                showDelay: 0,
+                formatter: function (v) {
+                    return "<strong>" + v.seriesName.replace("group_", "") + "<br>"
+                        + v.value[0] + "</strong><br>" +
+                        "Min: " + v.value[1].toFixed(1) + "<br>" +
+                        "Q1: " + v.value[2].toFixed(1) + "<br>" +
+                        "Median: " + v.value[3].toFixed(1) + "<br>" +
+                        "Q3: " + v.value[4].toFixed(1) + "<br>" +
+                        "Max: " + v.value[5].toFixed(1) + "<br>"
+                },
+            },
         };
 
         return myOptions
