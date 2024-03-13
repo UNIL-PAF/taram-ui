@@ -302,6 +302,7 @@ export default function BoxPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function (v) {
+                    if(v.seriesType !== "boxplot") return null
                     return "<strong>" + v.seriesName.replace("group_", "") + "<br>"
                         + v.value[0] + "</strong><br>" +
                         "Min: " + v.value[1].toFixed(1) + "<br>" +
