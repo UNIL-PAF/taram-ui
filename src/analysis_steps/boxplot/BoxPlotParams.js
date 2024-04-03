@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Divider} from 'antd';
+import {Checkbox, Select, Space, Divider, Row, Col} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
@@ -10,6 +10,7 @@ const {Option} = Select;
 export default function BoxPlotParams(props) {
 
     const [useDefaultCol, setUseDefaultCol] = useState()
+    const [showAll, setShowAll] = useState()
     const numCols = getNumCols(props.commonResult.headers)
     const proteinTable = useSelector(state => state.proteinTable.data)
     const proteinTableError = useSelector(state => state.proteinTable.error)
@@ -24,11 +25,15 @@ export default function BoxPlotParams(props) {
 
     useEffect(() => {
         if (!props.params) {
-            props.setParams({logScale: false, groupByCondition: true})
+            props.setParams({logScale: false, groupByCondition: true, showAll: false})
             setUseDefaultCol(true)
+            setShowAll(false)
         }else{
             if(useDefaultCol === undefined){
                 setUseDefaultCol(props.params.column ? false: true)
+            }
+            if(showAll === undefined){
+                setShowAll(props.params.showAll)
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,9 +48,17 @@ export default function BoxPlotParams(props) {
         if(e.target.checked) props.setParams({...props.params, column: null})
     }
 
+    function changeUseShowAll(e){
+        setShowAll(e.target.checked)
+        props.setParams({...props.params, showAll: e.target.checked})
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
+                <Row>
+                    <Col span={12}>
+                        <h3>Select data column for Boxplot</h3>
                 <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
                 </Checkbox>
@@ -53,6 +66,14 @@ export default function BoxPlotParams(props) {
                     {numCols.map((n, i) => {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
+                    </Col>
+                    <Col span={12}>
+                        <h3>Show all data points</h3>
+                        <Checkbox
+                            onChange={changeUseShowAll} checked={showAll}><span style={{color: "red"}}><em><strong>Attention:</strong> this might slow down the interface in datasets with many protein groups.</em></span>
+                        </Checkbox>
+                    </Col>
+                </Row>
                 <Divider />
                 <h3>Protein table</h3>
                 <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProts"} target={"prot"}></ProteinTable>
@@ -62,7 +83,6 @@ export default function BoxPlotParams(props) {
 
     return (
         <>
-            <h3>Select data column for Boxplot</h3>
             {props.params && showOptions()}
         </>
     );

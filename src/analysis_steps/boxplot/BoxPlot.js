@@ -28,7 +28,6 @@ export default function BoxPlot(props) {
     const [count, setCount] = useState(1)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
-    const [showAll, setShowAll] = useState(false)
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -50,7 +49,7 @@ export default function BoxPlot(props) {
     // update if logScale or groupByCondition changed
     useEffect(() => {
        if(props.data && props.data.status === 'done' && stepResults){
-           const echartOptions = getOptions(stepResults, showAll)
+           const echartOptions = getOptions(stepResults)
            const withColors = {...echartOptions, color: defaultColors}
            setOptions({...options, data: withColors, count: count})
            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
@@ -61,7 +60,7 @@ export default function BoxPlot(props) {
     // update if stepResults arrive
     useEffect(() => {
         if (props.data && props.data.status === 'done' && stepResults) {
-            const echartOptions = getOptions(stepResults, showAll)
+            const echartOptions = getOptions(stepResults)
             const withColors = {...echartOptions, color: defaultColors}
             setOptions({...options, data: withColors})
             setHeightAndBottom(getPlotHeightAndBottom(stepResults))
@@ -77,7 +76,6 @@ export default function BoxPlot(props) {
             setLocalParams(params)
             if(typeof params.logScale !== "undefined") setLogScale(params.logScale)
             if(typeof params.groupByCondition !== "undefined") setGroupByCondition(params.groupByCondition)
-            if(typeof params.showAll != "undefined") setShowAll(params.showAll)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data, localParams])
@@ -123,10 +121,10 @@ export default function BoxPlot(props) {
         return myTab
     }
 
-    const getOptions = (myResults, showAll) => {
-        const allProts = showAll ? prepareAllDatat({...myResults}) : null
+    const getOptions = (myResults) => {
         const results = {...myResults}
         const params = localParams || JSON.parse(props.data.parameters)
+        const allProts = params.showAll ? prepareAllDatat({...myResults}) : null
         const newData = results.boxPlotData.map(d => {
             const dataWithName = d.groupData.map(box => {
                 const myData = params.logScale ? box.logData : box.data
@@ -172,7 +170,7 @@ export default function BoxPlot(props) {
                 },
                 xAxisIndex: i,
                 itemStyle: {
-                    opacity: showAll ? 0.8 : 1.0
+                    opacity: params.showAll ? 0.8 : 1.0
                 },
             }
         })
@@ -210,7 +208,7 @@ export default function BoxPlot(props) {
 
         const series01 = parsedRes.selProtData ? boxplotSeries.concat(selProtSeries()) : boxplotSeries
 
-        const allprotSeries = showAll ? {
+        const allprotSeries = params.showAll ? {
             name: "show_all_proteins",
             type: "custom",
             renderItem: function(params, api) {
@@ -256,7 +254,7 @@ export default function BoxPlot(props) {
         } : null
 
 
-        const series = showAll ? series01.concat(allprotSeries) : series01
+        const series = params.showAll ? series01.concat(allprotSeries) : series01
         const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
 
         const myOptions = {
@@ -324,7 +322,6 @@ export default function BoxPlot(props) {
         setLocalParams(newLocalParams)
         if(field === "logScale") setLogScale(e.target.checked)
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
-        if(field === "showAll") setShowAll(e.target.checked)
     }
 
     return (
@@ -370,12 +367,6 @@ export default function BoxPlot(props) {
                 disabled={props.isLocked}
                 onChange={(e) => checkboxChange(e, "groupByCondition")}
                 checked={groupByCondition}>Group by condition
-            </Checkbox>
-            <Checkbox
-                className={"analysis-step-row"}
-                disabled={props.isLocked}
-                onChange={(e) => checkboxChange(e, "showAll")}
-                checked={showAll}>Show all data points
             </Checkbox>
             <div style={{margin: "13px"}}></div>
             {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
