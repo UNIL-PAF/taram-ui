@@ -123,6 +123,7 @@ export default function BoxPlot(props) {
 
     const getOptions = (myResults) => {
         const results = {...myResults}
+
         const params = localParams || JSON.parse(props.data.parameters)
         const allProts = params.showAll ? prepareAllDatat({...myResults}) : null
         const newData = results.boxPlotData.map(d => {
@@ -135,6 +136,9 @@ export default function BoxPlot(props) {
                 data: dataWithName
             }
         })
+
+        const nrXLabels = results.boxPlotData.reduce((a, v) => a + v.groupData.length, 0)
+        const nrGroups = results.boxPlotData.length
 
         results.boxPlotData = newData
 
@@ -257,6 +261,12 @@ export default function BoxPlot(props) {
         const series = params.showAll ? series01.concat(allprotSeries) : series01
         const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
 
+        // special cases when many samples
+        const xFontSizeInt = nrXLabels > 40 ? 12 - Math.floor((nrXLabels - 40) / 6) : 12
+        const xFontSize = xFontSizeInt < 5 ? 5 : xFontSizeInt
+        const topSpaceInt = Math.floor(nrGroups / 5)
+        const topSpace =  topSpaceInt > 2 ? 60 + topSpaceInt * 10 : 60
+
         const myOptions = {
             dataset: boxplotDatasets,
             series: series,
@@ -273,7 +283,11 @@ export default function BoxPlot(props) {
                 return {
                     type: 'category',
                     scale: true,
-                    axisLabel: {interval: 0, rotate: 50},
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 50,
+                        fontSize: xFontSize
+                    },
                     show: (i === 0 ? true : false),
                     data: experimentNames,
                     axisLine: {onZero: false}
@@ -288,11 +302,11 @@ export default function BoxPlot(props) {
                 },
                 min: (yMin - range * 0.2).toFixed(1),
                 axisLabel: {
-                    showMinLabel: false
+                    showMinLabel: false,
                 }
             },
             grid: {
-                top:    60,
+                top:    topSpace,
                 bottom: heightAndBottom.bottom,
                 left:   '10%',
                 right:  '10%',

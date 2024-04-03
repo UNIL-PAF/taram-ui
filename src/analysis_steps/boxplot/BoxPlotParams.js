@@ -70,8 +70,10 @@ export default function BoxPlotParams(props) {
                     <Col span={12}>
                         <h3>Show all data points</h3>
                         <Checkbox
-                            onChange={changeUseShowAll} checked={showAll}><span style={{color: "red"}}><em><strong>Attention:</strong> this might slow down the interface in datasets with many protein groups.</em></span>
+                            onChange={changeUseShowAll} checked={showAll}><span>show all</span>
                         </Checkbox>
+                        <br></br>
+                        <span style={{color: "red"}}><em><strong>Attention:</strong> this might slow down the interface in datasets with many protein groups.</em></span>
                     </Col>
                 </Row>
                 <Divider />
