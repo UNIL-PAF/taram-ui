@@ -164,11 +164,16 @@ export default function VolcanoPlot(props) {
                             myParams.data.name + " threshold: " + (myParams.data.name.includes("Fold") ? myParams.data.value : params.pValThresh);
                         return text;
                     } else {
+                        const other = myParams.data.other ? myParams.data.other.map(a => {
+                            return a.name + ": <strong>" + a.value + "</strong><br>"
+                        }) : ""
+
                         return "Gene: <strong>" + myParams.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + myParams.data.prot + "</strong><br>" +
                             "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
                             (myParams.data.qVal ? "q-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
-                            "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong>"
+                            "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong><br>" + other
+
                     }
                 },
             },
