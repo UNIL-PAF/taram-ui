@@ -277,10 +277,10 @@ export default function OneDErichmentTableZoom(props) {
     }
 
     const sortByPValue = (a, b) => {
-        if(a.pvalue > b.pvalue){
-            return 1;
-        }else if(b.pvalue > a.pvalue){
+        if(a.median > b.median){
             return -1;
+        }else if(b.median > a.median){
+            return 1;
         }
         return 0;
     }
@@ -312,6 +312,7 @@ export default function OneDErichmentTableZoom(props) {
                                     type: 'checkbox',
                                     ...rowSelection,
                                 }}
+                                pagination={{ pageSize: 20}}
                             ></Table>
                         </Space>
                     }
