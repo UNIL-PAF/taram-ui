@@ -18,8 +18,10 @@ export default function OrderColumnsParams(props) {
                 }
             } else {
                 if (myCols) {
-                    const intFirst = (props.params.moveSelIntFirst) ? moveSelIntFirst(myCols) : myCols
-                    setColumns(intFirst.map(a => {return {...a, id: a.idx}}))
+                    const orderedCols = props.params.newOrder.map( idx => {
+                        return myCols.find(a => a.idx === idx)
+                    })
+                    setColumns(orderedCols.map((a, i) => {return {...a, id: i}}))
                 }
             }
         }
@@ -46,7 +48,10 @@ export default function OrderColumnsParams(props) {
 
     const moveSelIntFirst = (myCols) => {
         const selCols = myCols.filter( a => a.experiment && a.experiment.field === props.intCol)
-        const idxs = selCols.map(a => Number(a.idx)).sort()
+
+        const idxs = selCols.map(a => Number(a.idx)).sort(function(a, b) {
+            return a - b;
+        });
 
         const first = idxs[0]
         const last = 1 + Number(idxs.slice(-1))
