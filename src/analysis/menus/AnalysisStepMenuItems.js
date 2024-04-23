@@ -3,7 +3,7 @@ import {Button, Menu, message, Popconfirm} from "antd";
 import {useDispatch} from "react-redux";
 import '../analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
-import {addAnalysisStep, deleteAnalysisStep, setStepParameters} from "../../analysis_steps/BackendAnalysisSteps";
+import {addAnalysisStep, deleteAnalysisStep, setStepParameters, deleteFollowingSteps} from "../../analysis_steps/BackendAnalysisSteps";
 import {clearTable} from "../../protein_table/proteinTableSlice";
 import {prepareTTestParams} from "../../analysis_steps/t_test/TTestPrepareParams"
 import DownloadZipModal from "./DownloadZipModal"
@@ -138,6 +138,10 @@ export default function AnalysisStepMenuItems(props) {
     const confirmDelete = () => {
         dispatch(deleteAnalysisStep({stepId: props.stepId, resultId: props.resultId}))
         message.success('Delete ' + getType() + '.');
+    };
+
+    const confirmDeleteFollowing = () => {
+        dispatch(deleteFollowingSteps({stepId: props.stepId, resultId: props.resultId}))
     };
 
     const showModal = (name, newStepParams) => {
@@ -348,6 +352,16 @@ export default function AnalysisStepMenuItems(props) {
                         cancelText="Cancel"
                     >
                         <span>Delete {getType()}</span>
+                    </Popconfirm>
+                </Menu.Item>}
+                {<Menu.Item key={'delete-following'} danger={true} disabled={props.isLocked}>
+                    <Popconfirm
+                        title={"Are you sure you want to delete ALL STEPS coming after "+ getType() + "?"}
+                        onConfirm={() => confirmDeleteFollowing()}
+                        okText="Yes"
+                        cancelText="Cancel"
+                    >
+                        <span>Delete <strong>ALL</strong> following steps</span>
                     </Popconfirm>
                 </Menu.Item>}
             </Menu>

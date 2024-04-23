@@ -26,6 +26,29 @@ export const deleteAnalysisStep = createAsyncThunk(
     }
 )
 
+function deleteFollowingStepsCall(id) {
+    return axios.delete(globalConfig.urlBackend + "analysis-step/following/" + id)
+}
+
+export const deleteFollowingSteps = createAsyncThunk(
+    'analysis-step/delete',
+    async (stepObj, thunkApi) => {
+        try {
+            const response = await deleteFollowingStepsCall(stepObj.stepId)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        } finally {
+            thunkApi.dispatch(fetchAnalysisByResultId(stepObj.resultId))
+        }
+    }
+)
+
+
 function updatePlotOptionsCall(plotObj) {
     return axios.post(globalConfig.urlBackend + "analysis-step/plot-options/" + plotObj.stepId, plotObj.params)
 }
