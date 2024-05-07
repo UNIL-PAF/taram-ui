@@ -82,6 +82,10 @@ export default function TTestParams(props) {
         props.setParams({...props.params, columns: columns})
     }
 
+    function changePaired(){
+        props.setParams({...props.params, paired: !props.params.paired})
+    }
+
     function showOptions(){
         return <>
             <Space direction="vertical" size="middle">
@@ -109,6 +113,10 @@ export default function TTestParams(props) {
                 <Option value={'none'}>None</Option>
             </Select>
         </span>
+                <span><Checkbox
+                    onChange={changePaired} checked={props.params.paired}>Paired
+            </Checkbox></span>
+
                 <h3>Define pairs</h3>
                 {props.params && props.params.columns && <TTestGroupSelection columns={props.params.columns} setColumns={setColumns}></TTestGroupSelection>}
             </Space>
