@@ -267,6 +267,8 @@ export default function BoxPlot(props) {
         const topSpaceInt = Math.floor(nrGroups / 5)
         const topSpace =  topSpaceInt > 2 ? 60 + topSpaceInt * 10 : 60
 
+        const yAxisName = params.column || props.data.columnInfo.columnMapping.intCol
+
         const myOptions = {
             dataset: boxplotDatasets,
             series: series,
@@ -294,7 +296,7 @@ export default function BoxPlot(props) {
                 }
             }),
             yAxis: {
-                name: params.column || props.data.columnInfo.columnMapping.intCol,
+                name: yAxisName,
                 nameRotate: 90,
                 nameLocation: 'center',
                 nameTextStyle: {
@@ -314,14 +316,20 @@ export default function BoxPlot(props) {
             tooltip: {
                 showDelay: 0,
                 formatter: function (v) {
-                    if(v.seriesType !== "boxplot") return null
-                    return "<strong>" + v.seriesName.replace("group_", "") + "<br>"
-                        + v.value[0] + "</strong><br>" +
-                        "Min: " + v.value[1].toFixed(1) + "<br>" +
-                        "Q1: " + v.value[2].toFixed(1) + "<br>" +
-                        "Median: " + v.value[3].toFixed(1) + "<br>" +
-                        "Q3: " + v.value[4].toFixed(1) + "<br>" +
-                        "Max: " + v.value[5].toFixed(1) + "<br>"
+                    if(v.seriesType === "boxplot"){
+                        return "<strong>" + v.seriesName.replace("group_", "") + "<br>"
+                            + v.value[0] + "</strong><br>" +
+                            "Min: " + v.value[1].toFixed(1) + "<br>" +
+                            "Q1: " + v.value[2].toFixed(1) + "<br>" +
+                            "Median: " + v.value[3].toFixed(1) + "<br>" +
+                            "Q3: " + v.value[4].toFixed(1) + "<br>" +
+                            "Max: " + v.value[5].toFixed(1) + "<br>"
+
+                    }else if(v.seriesType === "line"){
+                        return "<strong>" + v.seriesName + "<br>"
+                            + v.name + "</strong><br>" +
+                            yAxisName + ": " + v.value.toFixed(1)
+                    }else return null
                 },
             },
         };
