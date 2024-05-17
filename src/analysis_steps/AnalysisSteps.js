@@ -15,6 +15,7 @@ import AnalysisTitle from "../analysis/AnalysisTitle";
 import RemoveImputed from "./remove_imputed/RemoveImputed";
 import RemoveColumns from "./remove_columns/RemoveColumns";
 import PcaPlot from "./pca/PcaPlot";
+import UmapPlot from "./umap/UmapPlot";
 import ScatterPlot from "./scatter_plot/ScatterPlot";
 import Normalization from "./normalization/Normalization";
 import SummaryStat from "./summary_stat/SummaryStat";
@@ -110,6 +111,10 @@ export default function AnalysisSteps(props) {
                                                 onSelect={onSelect} isSelected={selStep === i}/>
                             case 'pca':
                                 return <PcaPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                                data={stepWithNr} key={myKey} resType={props.resType}
+                                                onSelect={onSelect} isSelected={selStep === i}/>
+                            case 'umap':
+                                return <UmapPlot isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                                 data={stepWithNr} key={myKey} resType={props.resType}
                                                 onSelect={onSelect} isSelected={selStep === i}/>
                             case 'log-transformation':

@@ -18,6 +18,8 @@ export function typeToName(type) {
             return 'Order columns'
         case 'pca':
             return 'PCA'
+        case 'umap':
+            return 'UMAP'
         case "remove-columns":
             return "Remove columns"
         case 'remove-imputed':

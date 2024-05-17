@@ -309,6 +309,11 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'pca'}>
                             <span id={"menu-item"}>PCA</span>
                         </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("umap")}
+                                   className="narrow-menu"
+                                   key={'umap'}>
+                            <span id={"menu-item"}>UMAP</span>
+                        </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("volcano-plot")}
                                    className="narrow-menu"
                                    key={'volcano-plot'}>

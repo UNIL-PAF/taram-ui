@@ -11,6 +11,7 @@ import VolcanoPlotParams from "../../analysis_steps/volcano_plot/VolcanoPlotPara
 import RemoveImputedParams from "../../analysis_steps/remove_imputed/RemoveImputedParams"
 import RemoveColumnsParams from "../../analysis_steps/remove_columns/RemoveColumnsParams"
 import PcaPlotParams from "../../analysis_steps/pca/PcaPlotParams";
+import UmapPlotParams from "../../analysis_steps/umap/UmapPlotParams";
 import ScatterPlotParams from "../../analysis_steps/scatter_plot/ScatterPlotParams";
 import NormalizationParams from "../../analysis_steps/normalization/NormalizationParams";
 import SummaryStatParams from "../../analysis_steps/summary_stat/SummaryStatParams";
@@ -51,6 +52,13 @@ export default function ParametersModal(props) {
                                       intCol={props.intCol}
                                       stepId={props.stepId}
                 ></PcaPlotParams>
+            case 'umap':
+                return <UmapPlotParams commonResult={props.commonResult}
+                                      params={props.params}
+                                      setParams={props.setParams}
+                                      intCol={props.intCol}
+                                      stepId={props.stepId}
+                ></UmapPlotParams>
             case 'filter':
                 return <FilterParams commonResult={props.commonResult}
                                      params={props.params}
