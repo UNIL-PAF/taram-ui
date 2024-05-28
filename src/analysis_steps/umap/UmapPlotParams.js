@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, InputNumber, Select, Space} from 'antd';
+import {Button, Checkbox, InputNumber, Popover, Select, Space} from 'antd';
 import {getNumCols} from "../CommonStepUtils";
+import {InfoCircleOutlined} from "@ant-design/icons";
 
 const {Option} = Select;
 
@@ -17,7 +18,7 @@ export default function UmapPlotParams(props) {
                 setUseDefaultCol(props.params.column ? false : true)
             }
         }else{
-            props.setParams({scale: true})
+            props.setParams({scale: true, nrOfNeighbors: 2, minDistance: 0.1})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
@@ -38,6 +39,9 @@ export default function UmapPlotParams(props) {
     }
 
     function showOptions() {
+        const selField = props.params.column ? props.params.column : props.intCol
+        const nrPoints = props.commonResult.headers.filter( (a) => a.experiment && a.experiment.field === selField).length
+
         return <>
             <Space direction="vertical" size="middle">
                 <Checkbox
@@ -49,11 +53,30 @@ export default function UmapPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <span>
-                <span style={{paddingRight: "10px"}}>Number of neighbors</span>
+                <span>Number of neighbors</span>
+                    <Popover overlayStyle={{
+                        width: "40vw"
+                    }}  content={"This parameter controls how UMAP balances local versus global structure in the data. Low values will force UMAP to concentrate on very local structure (potentially to the detriment of the big picture), while large values will push UMAP to look at larger neighborhoods of each point when estimating the manifold structure of the data, losing fine detail structure for the sake of getting the broader of the data."} placement="right">
+                    <Button type="text" shape="circle" icon={<InfoCircleOutlined />} ></Button>
+                </Popover>
                 <InputNumber
-                    min={2} max={100}
+                    min={2} max={nrPoints}
                     value={props.params.nrOfNeighbors}
                     onChange={(val) => valueChange("nrOfNeighbors", val)}></InputNumber>
+                <span style={{margin: "10px"}}><em>Range: 2 to {nrPoints}</em></span>
+            </span>
+                <span>
+                <span>Minimum distance</span>
+                <Popover overlayStyle={{
+                    width: "40vw"
+                }}  content={"The minimum distance parameter controls how tightly UMAP is allowed to pack points together. It, quite literally, provides the minimum distance apart that points are allowed to be in the low dimensional representation. This means that low values will result in clumpier embeddings. This can be useful if you are interested in clustering, or in finer topological structure. Larger values will prevent UMAP from packing points together and will focus on the preservation of the broad topological structure instead. The default value is 0.1. You can use a range of values from 0.01 to 0.99."} placement="right">
+                    <Button type="text" shape="circle" icon={<InfoCircleOutlined />} ></Button>
+                </Popover>
+                <InputNumber
+                    min={0.0} max={0.99}
+                    value={props.params.minDistance}
+                    onChange={(val) => valueChange("minDistance", val)}></InputNumber>
+                <span style={{margin: "10px"}}><em>Range: 0.01 to 0.99</em></span>
             </span>
             </Space>
         </>
