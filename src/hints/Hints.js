@@ -25,7 +25,7 @@ export default function Hints(props) {
     }
 
     return (
-        <div id={"hints"}>
+        <div id={"hints"} className={myClass}>
             {props.data && <div id={"hints-box"} className={myClass}>
                 {
                     props.data.hintList.map(a => {
