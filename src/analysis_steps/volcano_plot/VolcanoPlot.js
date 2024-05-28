@@ -48,7 +48,7 @@ export default function VolcanoPlot(props) {
                     setLocalParams(null)
                     getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
                 }
-            } else setStepResults(undefined)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stepResults, isOnScreen, props.data])
