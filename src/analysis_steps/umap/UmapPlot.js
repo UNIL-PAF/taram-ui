@@ -1,9 +1,14 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
-import {Button, Card, Spin, Typography} from "antd";
+import {Button, Card, Col, Row, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import {useDispatch} from "react-redux";
-import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
+import {
+    getStepResults,
+    getStepTitle,
+    replacePlotIfChanged,
+    replaceProgressiveSeries
+} from "../CommonStepUtils";
 import StepComment from "../StepComment";
 import {FullscreenOutlined} from "@ant-design/icons";
 import EchartsZoom from "../EchartsZoom";
@@ -114,8 +119,8 @@ export default function PcaPlot(props) {
         const xAxisPc = 0
         const yAxisPc = 1
 
-        const topSpaceInt = Math.floor(results.groups.length / 5)
-        const topSpace =  topSpaceInt > 2 ? 30 + topSpaceInt * 20 : 30
+        const topSpaceInt = Math.floor(results.groups.length / 4)
+        const topSpace =  topSpaceInt >= 2 ? 15 + topSpaceInt * 22 : 30
 
         const transforms = results.groups.map((g) => {
             return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
@@ -163,9 +168,6 @@ export default function PcaPlot(props) {
         }))
 
         const defSelExps = (mySelExps ? mySelExps : params.selExps)
-
-        console.log(results)
-        console.log(defSelExps)
 
         const dataWithLabel = results.umapList.map(p => {
             const showLab = defSelExps && defSelExps.includes(p.expName)
@@ -240,6 +242,8 @@ export default function PcaPlot(props) {
         click: showToolTipOnClick,
     };
 
+    const params = JSON.parse(props.data.parameters)
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               ref={elementRef}
@@ -266,6 +270,19 @@ export default function PcaPlot(props) {
                               resType={props.resType}
             />
         }>
+
+            <Row className={"analysis-step-row"}>
+                <Col span={8}>
+                    <div className={"analysis-step-param-box"}>
+                        <div className={"analysis-step-param-content"}>
+                            {<p className={"analysis-step-param-line"}>Number of neighbors: {params.nrOfNeighbors}</p>}
+                            {<p className={"analysis-step-param-line"}>Minimum distance: {params.minDistance}</p>}
+                        </div>
+                    </div>
+                </Col>
+                <Col span={8} className={"analysis-step-middle-col"}>
+                </Col>
+            </Row>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>
                 <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                         icon={<FullscreenOutlined/>}>Expand</Button>

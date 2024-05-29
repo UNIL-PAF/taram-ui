@@ -114,8 +114,8 @@ export default function PcaPlot(props) {
         const xAxisPc = 0
         const yAxisPc = 1
 
-        const topSpaceInt = Math.floor(results.groups.length / 5)
-        const topSpace =  topSpaceInt > 2 ? 30 + topSpaceInt * 20 : 30
+        const topSpaceInt = Math.floor(results.groups.length / 4)
+        const topSpace =  topSpaceInt >= 2 ? 15 + topSpaceInt * 22 : 30
 
         const transforms = results.groups.map((g) => {
             return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
