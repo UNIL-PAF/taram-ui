@@ -53,6 +53,7 @@ export default function TTest(props) {
                                     threshold: {params.signThres}</p>}
                                 <p className={"analysis-step-param-line"}>Multiple testing
                                     correction: {multiTestCorrText[params.multiTestCorr]}</p>
+                                {params.filterOnValid && <p className={"analysis-step-param-line"}>Only compute comparisons when there are at least {params.minNrValid} valid (non-imputed) values in one group.</p>}
                             </div>
                         </div>
                     </Col>
@@ -60,7 +61,7 @@ export default function TTest(props) {
                         <h4>Nr of significant results:</h4>
                         {results.comparisions.map((comp, i) => {
                             return <p
-                                key={i}><strong>{comp.firstGroup} - {comp.secondGroup}:</strong> {comp.numberOfSignificant}
+                                key={i}><strong>{comp.firstGroup} - {comp.secondGroup}:</strong> {comp.numberOfSignificant} {comp.nrPassedFilter && <span>({comp.nrPassedFilter} passed filter)</span>}
                             </p>
                         })}
                     </Col>

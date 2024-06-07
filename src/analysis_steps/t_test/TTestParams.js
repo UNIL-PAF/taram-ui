@@ -64,6 +64,10 @@ export default function TTestParams(props) {
         if(e.target.checked) props.setParams({...props.params, field: null})
     }
 
+    function changeFilterOnValid(e){
+        props.setParams({...props.params, filterOnValid: e.target.checked})
+    }
+
     function handleChange(value) {
         props.setParams({...props.params, field: numCols[value]})
     }
@@ -113,6 +117,19 @@ export default function TTestParams(props) {
                 <Option value={'none'}>None</Option>
             </Select>
         </span>
+                <span>
+               <Checkbox
+                   onChange={changeFilterOnValid} checked={props.params.filterOnValid}>
+            </Checkbox>
+            <span style={{padding: "10px", color: props.params.filterOnValid ? "black" : "grey"}}>Compute only comparisons with at least </span>
+            <InputNumber
+                min={1}
+                disabled={!props.params.filterOnValid}
+                value={props.params.minNrValid}
+                onChange={(val) => valueChange("minNrValid", val)}></InputNumber>
+                    <span style={{paddingLeft: "10px", color: props.params.filterOnValid ? "black" : "grey"}}>valid (non-imputed) values in one group.</span>
+        </span>
+
                 <span><Checkbox
                     onChange={changePaired} checked={props.params.paired}>Paired
             </Checkbox></span>
