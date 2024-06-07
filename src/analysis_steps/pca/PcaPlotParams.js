@@ -41,7 +41,7 @@ export default function PcaPlotParams(props) {
     }
 
     function renderUseGroups(){
-        if(props.params.useAllGroups){
+        if(props.params.useAllGroups !== false){
             return <span>Use all groups</span>
         } else{
             return <>
@@ -70,7 +70,7 @@ export default function PcaPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <span>
-                    <Switch checked={props.params.useAllGroups} onChange={onChangeSwitch} style={{marginRight: '10px'}}/>
+                    <Switch checked={props.params.useAllGroups !== false} onChange={onChangeSwitch} style={{marginRight: '10px'}}/>
                     {renderUseGroups()}
                 </span>
             </Space>

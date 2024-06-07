@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, InputNumber, Popover, Select, Space} from 'antd';
+import {Button, Checkbox, InputNumber, Popover, Select, Space, Switch, Tree} from 'antd';
 import {getNumCols} from "../CommonStepUtils";
 import {InfoCircleOutlined} from "@ant-design/icons";
 
@@ -9,13 +9,16 @@ export default function UmapPlotParams(props) {
     const [useDefaultCol, setUseDefaultCol] = useState()
     const numCols = getNumCols(props.commonResult.headers)
 
+    const groups = Object.values(props.experimentDetails).map( a => a.group).reduce( (a, v) => (v !== null && a.indexOf(v) === -1) ? a.concat(v) : a, [])
+    const groupsTreeData = groups.map( group => {return {key: group, title: group}})
+
     useEffect(() => {
         if (props.params) {
             if (useDefaultCol === undefined) {
                 setUseDefaultCol(props.params.column ? false : true)
             }
         }else{
-            props.setParams({scale: true, nrOfNeighbors: 2, minDistance: 0.1})
+            props.setParams({nrOfNeighbors: 2, minDistance: 0.1, useAllGroups: true, selGroups: groups})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
@@ -33,6 +36,32 @@ export default function UmapPlotParams(props) {
     function changeUseDefaultCol(e) {
         setUseDefaultCol(e.target.checked)
         if (e.target.checked) props.setParams({...props.params, column: null})
+    }
+
+    function onChangeSwitch(e) {
+        props.setParams({...props.params, useAllGroups: e})
+    }
+
+    function changeGroupSelection(newSelGroups){
+        props.setParams({...props.params, selGroups: newSelGroups})
+    }
+
+    function renderUseGroups(){
+        if(props.params.useAllGroups !== false){
+            return <span>Use all groups</span>
+        } else{
+            return <>
+                    <span>Use only selected groups:
+                         <Tree
+                             style={{marginTop: '10px'}}
+                             checkable
+                             treeData={groupsTreeData}
+                             onCheck={changeGroupSelection}
+                             checkedKeys={props.params.selGroups}
+                         />
+                    </span>
+            </>
+        }
     }
 
     function showOptions() {
@@ -75,6 +104,10 @@ export default function UmapPlotParams(props) {
                     onChange={(val) => valueChange("minDistance", val)}></InputNumber>
                 <span style={{margin: "10px"}}><em>Range: 0.01 to 0.99</em></span>
             </span>
+                <span>
+                    <Switch checked={props.params.useAllGroups !== false} onChange={onChangeSwitch} style={{marginRight: '10px'}}/>
+                    {renderUseGroups()}
+                </span>
             </Space>
         </>
     }

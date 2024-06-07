@@ -59,6 +59,7 @@ export default function ParametersModal(props) {
                                       setParams={props.setParams}
                                       intCol={props.intCol}
                                       stepId={props.stepId}
+                                       experimentDetails={props.experimentDetails}
                 ></UmapPlotParams>
             case 'filter':
                 return <FilterParams commonResult={props.commonResult}

@@ -164,6 +164,9 @@ export default function PcaPlot(props) {
                     x: 'x',
                     y: 'y'
                 },
+                itemStyle:{
+                    color: results.groupColors ? results.groupColors[i] : null
+                }
             }
         }))
 
