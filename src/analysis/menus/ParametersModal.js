@@ -51,6 +51,7 @@ export default function ParametersModal(props) {
                                       setParams={props.setParams}
                                       intCol={props.intCol}
                                       stepId={props.stepId}
+                                      experimentDetails={props.experimentDetails}
                 ></PcaPlotParams>
             case 'umap':
                 return <UmapPlotParams commonResult={props.commonResult}

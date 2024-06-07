@@ -6,9 +6,6 @@ import {InfoCircleOutlined} from "@ant-design/icons";
 const {Option} = Select;
 
 export default function UmapPlotParams(props) {
-
-    console.log(props)
-
     const [useDefaultCol, setUseDefaultCol] = useState()
     const numCols = getNumCols(props.commonResult.headers)
 

@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space} from 'antd';
+import {Checkbox, Select, Space, Switch, Tree} from 'antd';
 import {getNumCols} from "../CommonStepUtils";
 
 const {Option} = Select;
 
 export default function PcaPlotParams(props) {
+
+    const groups = Object.values(props.experimentDetails).map( a => a.group).reduce( (a, v) => (v !== null && a.indexOf(v) === -1) ? a.concat(v) : a, [])
+    const groupsTreeData = groups.map( group => {return {key: group, title: group}})
 
     const [useDefaultCol, setUseDefaultCol] = useState()
     const numCols = getNumCols(props.commonResult.headers)
@@ -15,7 +18,7 @@ export default function PcaPlotParams(props) {
                 setUseDefaultCol(props.params.column ? false : true)
             }
         }else{
-            props.setParams({scale: true})
+            props.setParams({useAllGroups: true, selGroups: groups})
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
@@ -24,13 +27,35 @@ export default function PcaPlotParams(props) {
         props.setParams({...props.params, column: numCols[value]})
     }
 
-    function checkboxChange(e) {
-        props.setParams({...props.params, scale: e.target.checked})
+    function onChangeSwitch(e) {
+        props.setParams({...props.params, useAllGroups: e})
     }
 
     function changeUseDefaultCol(e) {
         setUseDefaultCol(e.target.checked)
         if (e.target.checked) props.setParams({...props.params, column: null})
+    }
+
+    function changeGroupSelection(newSelGroups){
+        props.setParams({...props.params, selGroups: newSelGroups})
+    }
+
+    function renderUseGroups(){
+        if(props.params.useAllGroups){
+            return <span>Use all groups</span>
+        } else{
+            return <>
+                    <span>Use only selected groups:
+                         <Tree
+                             style={{marginTop: '10px'}}
+                             checkable
+                             treeData={groupsTreeData}
+                             onCheck={changeGroupSelection}
+                             checkedKeys={props.params.selGroups}
+                         />
+                    </span>
+                </>
+        }
     }
 
     function showOptions() {
@@ -44,9 +69,10 @@ export default function PcaPlotParams(props) {
                     {numCols.map((n, i) => {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
-                <Checkbox
-                    onChange={checkboxChange} checked={props.params.scale}>Scale data to unit variance
-                </Checkbox>
+                <span>
+                    <Switch checked={props.params.useAllGroups} onChange={onChangeSwitch} style={{marginRight: '10px'}}/>
+                    {renderUseGroups()}
+                </span>
             </Space>
         </>
     }
