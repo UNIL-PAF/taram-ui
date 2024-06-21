@@ -121,6 +121,13 @@ export default function BoxPlot(props) {
         return myTab
     }
 
+    const computeTopSpace = (groupNames) => {
+        const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
+        const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
+        const defaultSpace = 50
+        return defaultSpace + nrLines * 15
+    }
+
     const getOptions = (myResults) => {
         const results = {...myResults}
 
@@ -138,8 +145,6 @@ export default function BoxPlot(props) {
         })
 
         const nrXLabels = results.boxPlotData.reduce((a, v) => a + v.groupData.length, 0)
-        const nrGroups = results.boxPlotData.length
-
         results.boxPlotData = newData
 
         const boxplotDimensions = ['name', 'min', 'Q1', 'median', 'Q3', 'max']
@@ -264,8 +269,8 @@ export default function BoxPlot(props) {
         // special cases when many samples
         const xFontSizeInt = nrXLabels > 40 ? 12 - Math.floor((nrXLabels - 40) / 6) : 12
         const xFontSize = xFontSizeInt < 5 ? 5 : xFontSizeInt
-        const topSpaceInt = Math.floor(nrGroups / 5)
-        const topSpace =  topSpaceInt > 2 ? 60 + topSpaceInt * 10 : 60
+
+        const topSpace =  computeTopSpace(parsedRes.boxPlotData.map(a => a.group))
 
         const yAxisName = params.column || props.data.columnInfo.columnMapping.intCol
 
