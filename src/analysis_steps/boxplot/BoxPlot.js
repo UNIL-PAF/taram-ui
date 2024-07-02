@@ -122,10 +122,14 @@ export default function BoxPlot(props) {
     }
 
     const computeTopSpace = (groupNames) => {
-        const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
-        const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
         const defaultSpace = 50
-        return defaultSpace + nrLines * 15
+        if(groupNames.length === 1 && groupNames[0] === null){
+            return defaultSpace
+        }else {
+            const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
+            const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
+            return defaultSpace + nrLines * 15
+        }
     }
 
     const getOptions = (myResults) => {
