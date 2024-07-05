@@ -36,19 +36,19 @@ export function getStepTitle(nr, type){
     return <div>
 
         <span style={{width: "100px", whiteSpace: "nowrap"}}>
-            <Avatar style={{
+            {nr && <Avatar style={{
                 backgroundColor: "white",
                 verticalAlign: 'middle',
                 color: "black",
                 border: "1px solid #8e8268",
                 marginBottom: "3px"
-            }} size={"small"}>{nr}</Avatar>
+            }} size={"small"}>{nr}</Avatar>}
             <span style={{
                 color: "black",
                 backgroundColor: "white",
                 border: "1px solid #8e8268",
                 padding: "5px 9px 5px 9px",
-                marginLeft: "10px",
+                marginLeft: (nr ? "10px" : "0px"),
                 borderRadius: "5px",
                 fontSize: "14px"
             }}>{type}</span>

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import InitialResult from "./initial_result/InitialResult";
 import Filter from "./filter/Filter"
-import {Alert, Badge, Button, Card, Col, Dropdown, Row} from "antd";
-import {CheckOutlined, LockTwoTone} from "@ant-design/icons";
+import {Alert, Badge, Button, Dropdown} from "antd";
+import {LockTwoTone} from "@ant-design/icons";
 import BoxPlot from "./boxplot/BoxPlot";
 import './AnalysisStep.css'
 import LogTransformation from "./log_transformation/LogTransformation";
@@ -24,10 +24,7 @@ import RenameColumns from "./rename_columns/RenameColumns";
 import DownloadZippedResults from "../analysis/menus/DownloadZippedResults";
 import AddColumn from "./add_column/AddColumn";
 import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
-import {getStepTitle, getTable, getTableCol} from "./CommonStepUtils";
-import {typeToName} from "./TypeNameMapping";
-import AnalysisStepMenu from "../analysis/menus/AnalysisStepMenu";
-import StepComment from "./StepComment";
+import Conclusion from "./conclusion/Conclusion"
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -149,13 +146,7 @@ export default function AnalysisSteps(props) {
 
     const getConclusion = () => {
         return (
-            <Card className={"analysis-step-card" }
-                  title={"Conclusion"}
-                  headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
-                  bodyStyle={{textAlign: 'left'}}
-            >
-               <p>Blibla</p>
-            </Card>
+            <Conclusion analysisId={props.data.id} conclusion={props.data.conclusion} resultId={props.data.result.id}></Conclusion>
         )
     }
 

@@ -26,6 +26,37 @@ export const deleteAnalysis = createAsyncThunk(
     }
 )
 
+function setConclusionCall(stepObj) {
+    if(stepObj.conclusion != null){
+        return axios.post(globalConfig.urlBackend + "analysis/conclusion/" + stepObj.analysisId, stepObj.conclusion,
+            {
+                headers: {
+                    'Content-Type': 'application/text'
+                }
+            })
+    }else{
+        return axios.delete(globalConfig.urlBackend + "analysis/conclusion/" + stepObj.analysisId)
+    }
+}
+
+export const setConclusion = createAsyncThunk(
+    'analysis/set-conclusion',
+    async (stepObj, thunkApi) => {
+        try {
+            const response = await setConclusionCall(stepObj)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return thunkApi.rejectWithValue(error.response.data)
+        } finally {
+            thunkApi.dispatch(fetchAnalysisByResultId(stepObj.resultId))
+        }
+    }
+)
+
 function getAnalysisByResultId(resultId){
     return axios.get(globalConfig.urlBackend + "analysis?resultId=" + resultId)
 }
