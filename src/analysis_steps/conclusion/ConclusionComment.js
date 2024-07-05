@@ -8,7 +8,6 @@ import '../AnalysisStep.css'
 const {TextArea} = Input;
 
 export default function ConclusionComment(props) {
-    const [isEditing, setIsEditing] = useState(false);
     const [conclusionText, setConclusionText] = useState(null)
     const [mouseOver, setMouseOver] = useState(false)
     const dispatch = useDispatch();
@@ -21,7 +20,7 @@ export default function ConclusionComment(props) {
 
     const save = () => {
         const stepObj = {analysisId: props.analysisId, conclusion: conclusionText, resultId: props.resultId}
-        setIsEditing(!isEditing)
+        props.setIsEditing(false)
         dispatch(setConclusion(stepObj))
     }
 
@@ -31,12 +30,12 @@ export default function ConclusionComment(props) {
     }
 
     const cancel = () => {
-        setIsEditing(!isEditing)
+        props.setIsEditing(false)
     }
 
     return (
         <>
-            {!isEditing &&
+            {!props.isEditing &&
                 <Row onMouseEnter={() => {if(!props.isLocked) setMouseOver(true)}}
                      onMouseLeave={() => setMouseOver(false)}
                      align="top"
@@ -48,8 +47,7 @@ export default function ConclusionComment(props) {
                             /*backgroundColor: "yellow",*/
                             color: "#006d75",
                             paddingLeft: "5px"
-                        }} onClick={() => {if(!props.isLocked) setIsEditing(true)}}>{props.conclusion}</p>}
-                        {!props.conclusion && <div><Button onClick={() => setIsEditing(true)} size={"small"} danger={true} type={"primary"} disabled={props.isLocked}>Add conclusion</Button></div>}
+                        }} onClick={() => {if(!props.isLocked) props.setIsEditing(true)}}>{props.conclusion}</p>}
                     </Col>
                     <Col span={1}>
                         {props.conclusion && mouseOver && <div>
@@ -59,7 +57,7 @@ export default function ConclusionComment(props) {
                     </Col>
                 </Row>
             }
-            {isEditing &&
+            {props.isEditing &&
                 <div>
                     <TextArea rows={3} style={{marginBottom: 8, width: '80%'}}
                               onChange={(e) => setConclusionText(e.target.value)}
