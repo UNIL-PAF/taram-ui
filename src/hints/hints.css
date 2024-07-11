@@ -1,10 +1,10 @@
 #hints {
     position: absolute;
     display: flex;
-    top: 10px;
-    left: 20px;
+    top: 70px;
+    left: 7px;
     width: 16%;
-    height: 100%;
+    height: calc(100% - 70px);
     transition: all 0.3s linear;
 }
 
