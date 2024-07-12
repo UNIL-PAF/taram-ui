@@ -241,11 +241,17 @@ export default function InitialResult(props) {
                                 </Col>
                             </Row>
                         }
-                        <Row className={"analysis-step-row"}>
-                            {results && results.maxQuantParameters &&
-                                <span><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}
-                </span>}
-                        </Row>
+                        {results && results.maxQuantParameters && <Row className={"analysis-step-row"}>
+                            <Col><strong>Match between runs: </strong>{results.maxQuantParameters.matchBetweenRuns ? "TRUE" : "FALSE"}</Col>
+                        </Row>}
+                        {results && results.maxQuantParameters && results.maxQuantParameters.someGenesParsedFromFasta &&
+                            <Row className={"analysis-step-row"}>
+                                <Col><strong>Some gene and protein names were parsed from column <em>Fasta.headers</em>.</strong></Col>
+                            </Row>}
+                        {results && results.maxQuantParameters && results.maxQuantParameters.allGenesParsedFromFasta &&
+                            <Row className={"analysis-step-row"}>
+                                <Col><strong><em>Gene.names</em> and <em>Protein.names</em> were parsed from column <em>Fasta.headers</em>.</strong></Col>
+                            </Row>}
                     </Col>
                         {isDone && getTableCol(results.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
