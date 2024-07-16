@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import GroupTitle from "./GroupTitle";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import {Button, Popover} from "antd";
+import {Button, Popover, Row, Col} from "antd";
 import {InfoOutlined, EditOutlined} from "@ant-design/icons";
 import ExpNameEdit from "./ExpNameEdit"
 import {onClick} from "./GroupSelectionUtils";
@@ -88,6 +88,13 @@ export default function GroupSelection(props) {
 
     return (
         <div>
+            <Row>
+                <Col>
+                    <Button style={{marginLeft: "8px"}} onClick={addGroup}>Add a group</Button>
+                    &nbsp;&nbsp;
+                    <span>Number of groups: {props.groupsOrdered.length}</span>
+                </Col>
+            </Row>
             <div
                 style={{display: "flex", justifyContent: "left", height: "100%"}}
             >
@@ -255,7 +262,6 @@ export default function GroupSelection(props) {
                         );
                     })}
                 </DragDropContext>
-                <Button style={{marginLeft: "8px"}} onClick={addGroup}>New group</Button>
             </div>
         </div>
     );

@@ -72,7 +72,6 @@ export default function BoxPlot(props) {
     // reset step results if status gets idle
     // update if stepResults arrive
     useEffect(() => {
-        console.log(props.data.status)
         if(props.data && props.data.status === 'idle' && stepResults){
             setStepResults(null)
             setOptions({count: 0})
