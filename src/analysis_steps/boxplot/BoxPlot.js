@@ -69,6 +69,17 @@ export default function BoxPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stepResults])
 
+    // reset step results if status gets idle
+    // update if stepResults arrive
+    useEffect(() => {
+        console.log(props.data.status)
+        if(props.data && props.data.status === 'idle' && stepResults){
+            setStepResults(null)
+            setOptions({count: 0})
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data])
+
     // set initial params
     useEffect(() => {
         if(!localParams && props.data && props.data.parameters){

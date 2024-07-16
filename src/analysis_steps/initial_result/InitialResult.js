@@ -146,6 +146,8 @@ export default function InitialResult(props) {
     }
 
     const handleGroupModalOk = () => {
+        console.log("handleGroupModalOk")
+
         dispatch(setStepParameters({
             resultId: props.resultId,
             stepId: props.data.id,
@@ -156,6 +158,8 @@ export default function InitialResult(props) {
     }
 
     const handleGroupModalCancel = (e) => {
+        console.log("handleGroupModalCancel", e)
+
         if(e.type !== "keydown"){
             setLocalParams(initializeLocalParams())
             setShowModal(false)
