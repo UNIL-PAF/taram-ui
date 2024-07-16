@@ -88,6 +88,8 @@ export default function InitialResult(props) {
     const prepareParams = (params) => {
         const colMapping = props.data.columnInfo.columnMapping
 
+        const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => (a || (v.name !== "Experiments" && v.items.length > 0)) ? true : false, false)
+
         const experimentDetails = Object.values(colMapping.experimentDetails).reduce((sum, d) => {
             const group = Object.values(params.groupData).reduce((acc, g) => {
                 const item = g.items.find((i) => {
@@ -97,8 +99,9 @@ export default function InitialResult(props) {
             }, {})
 
             const myName = group && group.item ? group.item.name : d.name
+            const isSelected = (anyGroupDefined && group.name === "Experiments") ? false : true
 
-            sum[myName] = {fileName: d.fileName, name: myName, isSelected: d.isSelected, originalName: d.originalName}
+            sum[myName] = {fileName: d.fileName, name: myName, isSelected: isSelected, originalName: d.originalName}
             if (group && group.name !== "Experiments") {
                 sum[myName].group = group.name
             }
