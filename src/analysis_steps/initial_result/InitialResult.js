@@ -80,37 +80,30 @@ export default function InitialResult(props) {
 
         const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
-        return {groupData: groupData, column: colMapping.intCol, groupsOrdered: myGroupsOrdered}
+        return {groupData: groupData, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
     }
 
 
     // format the data for the backend
     const prepareParams = (params) => {
-        const colMapping = props.data.columnInfo.columnMapping
-
         const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => (a || (v.name !== "Experiments" && v.items.length > 0)) ? true : false, false)
 
-        const experimentDetails = Object.values(colMapping.experimentDetails).reduce((sum, d) => {
-            const group = Object.values(params.groupData).reduce((acc, g) => {
-                const item = g.items.find((i) => {
-                    return i.name === d.name
+        const experimentDetails = Object.fromEntries(params.experimentNames.map(expName => {
+            const oneItem =  Object.keys(params.groupData).reduce((acc, k) => {
+                const v = params.groupData[k]
+                const item = v.items.find((i) => {
+                    return i.name === expName
                 })
-                return item ? {name: g.name, item: item} : acc
-            }, {})
+                const isSelected = (anyGroupDefined && k === "experiments") ? false : true
+                return !acc && item ? {...item, group: (k !== 'experiments' ? k : undefined), isSelected: isSelected} : acc
+            }, null)
 
-            const myName = group && group.item ? group.item.name : d.name
-            const isSelected = (anyGroupDefined && group.name === "Experiments") ? false : true
-
-            sum[myName] = {fileName: d.fileName, name: myName, isSelected: isSelected, originalName: d.originalName}
-            if (group && group.name !== "Experiments") {
-                sum[myName].group = group.name
-            }
-            return sum
-        }, {})
+           return [oneItem.name, oneItem]
+        }))
 
         // keep only unique
         const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i)
-        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered}
+        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: params.experimentNames}
     }
 
     const changeIntensity = (value) => {
@@ -121,45 +114,18 @@ export default function InitialResult(props) {
         }))
     }
 
-    const computeNewGroupData = (expIdx, newName) => {
-        return Object.entries(localParams.groupData).reduce((a, [key, v]) => {
-            const items = v.items.map(i => i.id === expIdx ? {...i, name: newName, id: newName} : i)
-            a[key] = {...v, items: items};
-            return a;
-        }, {});
-    }
-
-    const changeExpName = (expIdx, newName) => {
-        const newGroupData = computeNewGroupData(expIdx, newName)
-        const newLocalParams = {...localParams, groupData: newGroupData}
-        setLocalParams(newLocalParams)
-        const colMapping = props.data.columnInfo.columnMapping
-        const newExpNames = colMapping.experimentNames.map(e => e === expIdx ? newName : e)
-        let newExpDetails = {...colMapping.experimentDetails}
-        newExpDetails[expIdx] = {...newExpDetails[expIdx], name: newName}
-        const newParams = {...colMapping, experimentDetails: newExpDetails, experimentNames: newExpNames}
-        dispatch(setStepParameters({
-            resultId: props.resultId,
-            stepId: props.data.id,
-            params: newParams
-        }))
-    }
-
     const handleGroupModalOk = () => {
-        console.log("handleGroupModalOk")
-
         dispatch(setStepParameters({
             resultId: props.resultId,
             stepId: props.data.id,
             params: prepareParams(localGroupParams)
         }))
+
         setShowModal(false)
         setLocalGroupParams(undefined)
     }
 
     const handleGroupModalCancel = (e) => {
-        console.log("handleGroupModalCancel", e)
-
         if(e.type !== "keydown"){
             setLocalParams(initializeLocalParams())
             setShowModal(false)
@@ -277,7 +243,6 @@ export default function InitialResult(props) {
                                     commonResult={props.data.commonResult}
                                     prepareParams={prepareParams}
                                     setParams={setLocalGroupParams}
-                                    changeExpName={changeExpName}
                 >
                 </DefineGroupsParams>
             </Modal>

@@ -11,35 +11,61 @@ export default function GroupSelection(props) {
     const [selItems, setSelItems] = useState([])
     const [draggingItemId, setDraggingItemId] = useState()
 
+    const changeExpName = (expId, newName) => {
+        const myGroupData = {...props.params.groupData}
+
+        const newGroupData = Object.fromEntries(
+            Object.entries(myGroupData).map(
+                ([k, v]) => {
+                    const newItems = v.items.map(a => (a.id === expId) ? {...a, id: newName, name: newName} : a)
+                    return [k, {...v, items: newItems}]
+                }
+            )
+        )
+
+        const newExperimentNames = props.params.experimentNames.map( a => (a === expId) ? newName : a)
+        props.setParams({...props.params, groupData: newGroupData, experimentNames: newExperimentNames})
+    }
+
     const addGroup = () => {
-        let newCols = {...props.groupData}
-        let nextIdx = Object.keys(props.groupData).length
+        let newCols = {...props.params.groupData}
+        let nextIdx = Object.keys(props.params.groupData).length
         // if this name already exists, we have to go to the next nextIdx
-        while(newCols["Group-"+nextIdx]){ nextIdx = nextIdx + 1}
+        while (newCols["Group-" + nextIdx]) {
+            nextIdx = nextIdx + 1
+        }
         const newName = "Group-" + nextIdx
         newCols[newName] = {name: newName, items: []}
-        props.setParams({...props.params, groupsOrdered: props.groupsOrdered.concat(newName), groupData: newCols})
+        props.setParams({
+            ...props.params,
+            groupsOrdered: props.params.groupsOrdered.concat(newName),
+            groupData: newCols
+        })
     }
 
     const deleteGroup = (groupId) => {
-        var myGroups = props.groupData
+        var myGroups = props.params.groupData
         myGroups.experiments.items = myGroups.experiments.items.concat(myGroups[groupId].items)
         delete myGroups[groupId]
-        props.setParams({...props.params, groupsOrdered: props.groupsOrdered.filter(a => a !== groupId), groupData: myGroups})
+        props.setParams({
+            ...props.params,
+            groupsOrdered: props.params.groupsOrdered.filter(a => a !== groupId),
+            groupData: myGroups
+        })
     }
 
     const setGroupData = (gd) => {
         props.setParams({...props.params, groupData: gd})
     }
 
-    const changeGroupName =  (groupId, groupName) => {
-        if(groupId === groupName) return
-        const myName = groupName.trim().replace('\t','')
-        const newCols = {...props.groupData}
+    const changeGroupName = (groupId, groupName) => {
+        if (groupId === groupName) return
+        const myName = groupName.trim().replace('\t', '')
+        const newCols = {...props.params.groupData}
         newCols[myName] = newCols[groupId]
         newCols[myName].name = myName
         delete newCols[groupId]
-        const newGroupsOrdered = props.groupsOrdered.map(a => a === groupId ? groupName : a)
+        const newGroupsOrdered = props.params.groupsOrdered.map(a => a === groupId ? groupName : a)
         props.setParams({...props.params, groupsOrdered: newGroupsOrdered, groupData: newCols})
     }
 
@@ -53,37 +79,39 @@ export default function GroupSelection(props) {
 
         if (!result.destination || columns[result.destination.droppableId].items.some(a => a.id === result.draggableId)) return;
 
-        const movingItems = Object.values(columns).reduce( (acc, col) => {
-            const selIt = col.items.filter( a => (selItems.length > 0) ? selItems.includes(a.id) : result.draggableId === a.id)
+        const movingItems = Object.values(columns).reduce((acc, col) => {
+            const selIt = col.items.filter(a => (selItems.length > 0) ? selItems.includes(a.id) : result.draggableId === a.id)
             return acc.concat(selIt)
         }, [])
 
-        const newColumns = Object.fromEntries(Object.entries(columns).map( ([k, col]) => {
-            const filterBy = (a) => { return (selItems.length > 0) ? !selItems.includes(a.id) : result.draggableId !== a.id }
-            const newItems = (k === result.destination.droppableId) ? col.items.concat(movingItems) : col.items.filter( a => filterBy(a))
+        const newColumns = Object.fromEntries(Object.entries(columns).map(([k, col]) => {
+            const filterBy = (a) => {
+                return (selItems.length > 0) ? !selItems.includes(a.id) : result.draggableId !== a.id
+            }
+            const newItems = (k === result.destination.droppableId) ? col.items.concat(movingItems) : col.items.filter(a => filterBy(a))
             return [k, {...col, items: newItems}]
         }))
 
         setColumns(newColumns)
     };
 
-    const nrGroups = props.groupsOrdered && props.groupsOrdered.length
+    const nrGroups = props.params.groupsOrdered && props.params.groupsOrdered.length
 
-    const maxChars = Object.values(props.groupData).reduce( (acc, curr) => {
+    const maxChars = Object.values(props.params.groupData).reduce((acc, curr) => {
         const myNew = (curr.name.length > acc) ? curr.name.length : acc
         const myNewMax = Math.max.apply(Math, curr.items.map(a => a.name.length))
         return (myNewMax > myNew) ? myNewMax : myNew
     }, 0)
 
     const defaultWidth = 200
-    const myWidth = (maxChars > 10) ? defaultWidth + (maxChars-10) * 5 : defaultWidth
+    const myWidth = (maxChars > 10) ? defaultWidth + (maxChars - 10) * 5 : defaultWidth
 
     const backgroundColor = (isDragging, isSelected) => {
-        if(isDragging){
+        if (isDragging) {
             return "#91caff"
-        }else if(isSelected){
+        } else if (isSelected) {
             return "#bfe3ff"
-        }else return "#e6f4ff"
+        } else return "#e6f4ff"
     }
 
     return (
@@ -92,7 +120,7 @@ export default function GroupSelection(props) {
                 <Col>
                     <Button style={{marginLeft: "8px"}} onClick={addGroup}>Add a group</Button>
                     &nbsp;&nbsp;
-                    <span>Number of groups: {props.groupsOrdered.length}</span>
+                    <span>Number of groups: {props.params.groupsOrdered.length}</span>
                 </Col>
             </Row>
             <div
@@ -100,11 +128,13 @@ export default function GroupSelection(props) {
             >
                 <DragDropContext
                     onDragStart={(start) => onDragStart(start)}
-                    onDragEnd={(result) => onDragEnd(result, props.groupData, setGroupData)}
+                    onDragEnd={(result) => onDragEnd(result, props.params.groupData, setGroupData)}
                 >
-                    {['experiments'].concat(props.groupsOrdered).map((columnId, i) => {
-                        const column = props.groupData[columnId]
-                        if(!column){return null}
+                    {['experiments'].concat(props.params.groupsOrdered).map((columnId, i) => {
+                        const column = props.params.groupData[columnId]
+                        if (!column) {
+                            return null
+                        }
 
                         return (
                             <div
@@ -124,7 +154,7 @@ export default function GroupSelection(props) {
                                         {(provided, snapshot) => {
                                             const selectionCount = selItems.length
                                             const shouldShowSelection = selectionCount > 1;
-                                            const allItems = column.items.map( a => a.id)
+                                            const allItems = column.items.map(a => a.id)
 
                                             return (
                                                 <div
@@ -140,7 +170,6 @@ export default function GroupSelection(props) {
                                                     }}
                                                 >
                                                     {column.items.map((item, index) => {
-
                                                         const isSelected = selItems.includes(item.id)
                                                         const isGhosting = shouldShowSelection && isSelected && draggingItemId && draggingItemId !== item.id;
                                                         const showSelNr = shouldShowSelection && draggingItemId === item.id
@@ -225,7 +254,7 @@ export default function GroupSelection(props) {
                                                                             {showEdit && showEdit.col === i && showEdit.idx === index &&
                                                                                 <ExpNameEdit name={item.name}
                                                                                              expIdx={item.name}
-                                                                                             changeExpName={props.changeExpName}
+                                                                                             changeExpName={changeExpName}
                                                                                              cancel={() => setShowEdit(undefined)}></ExpNameEdit>}
                                                                             {showSelNr && <div
                                                                                 style={{
