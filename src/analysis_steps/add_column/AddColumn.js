@@ -34,6 +34,7 @@ export default function AddColumn(props) {
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
             <AnalysisStepMenu stepId={props.data.id}
+                              key={props.data.id + "-" + props.data.nextId ? props.data.nextId : ""}
                               resultId={props.resultId}
                               status={props.data.status}
                               error={props.data.error}

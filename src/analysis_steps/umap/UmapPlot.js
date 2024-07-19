@@ -254,7 +254,7 @@ export default function PcaPlot(props) {
               title={getStepTitle(props.data.nr, typeToName(type), props.data.nrProteinGroups, props.data.status === 'done')}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
               bodyStyle={{textAlign: 'left'}} extra={
-            <AnalysisStepMenu key={props.data.id + ':' + (options ? options.count : -1)}
+            <AnalysisStepMenu key={props.data.id + "-" + (props.data.nextId ? props.data.nextId : "") + ':' + (options ? options.count : -1)}
                               stepId={props.data.id}
                               resultId={props.resultId}
                               status={props.data.status}
