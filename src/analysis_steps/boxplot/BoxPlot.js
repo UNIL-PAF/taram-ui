@@ -132,13 +132,12 @@ export default function BoxPlot(props) {
     }
 
     const computeTopSpace = (groupNames) => {
-        const defaultSpace = 50
         if(groupNames.length === 1 && groupNames[0] === null){
-            return defaultSpace
+            return 0
         }else {
             const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
             const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
-            return defaultSpace + nrLines * 15
+            return nrLines * 15
         }
     }
 
@@ -221,8 +220,10 @@ export default function BoxPlot(props) {
             if (!parsedRes.selProtData) return null
 
             return sortByCondition().map(d => {
+                const asteriks = d.multiGenes ? "*" : ""
+
                 return {
-                    name: d.gene ? d.gene : d.prot,
+                    name: (d.gene ? d.gene : d.prot) + asteriks,
                     type: 'line',
                     data: d.ints
                 }
@@ -284,9 +285,12 @@ export default function BoxPlot(props) {
         const xFontSizeInt = nrXLabels > 40 ? 12 - Math.floor((nrXLabels - 40) / 6) : 12
         const xFontSize = xFontSizeInt < 5 ? 5 : xFontSizeInt
 
-        const topSpace =  computeTopSpace(parsedRes.boxPlotData.map(a => a.group))
+        const defaultSpace = 50
+        const topSpaceBase = computeTopSpace(parsedRes.boxPlotData.map(a => a.group))
+        const topSpace =  topSpaceBase + defaultSpace
 
         const yAxisName = params.column || props.data.columnInfo.columnMapping.intCol
+        const multiGeneText = (parsedRes.selProtData && parsedRes.selProtData.some(a => a.multiGenes))
 
         const myOptions = {
             dataset: boxplotDatasets,
@@ -353,7 +357,14 @@ export default function BoxPlot(props) {
             },
         };
 
-        return myOptions
+        const myOptionsWithText = (multiGeneText) ? {...myOptions, title: {
+                subtext: '* only the first of multiple gene names is displayed',
+                left: 'center',
+                textAlign: 'left',
+                top: 15 + topSpaceBase
+            }} : myOptions
+
+        return myOptionsWithText
     }
 
     const checkboxChange = (e, field) => {
