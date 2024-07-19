@@ -306,6 +306,10 @@ export default function BoxPlot(props) {
             },
             xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
+                    name: multiGeneText ? '* only the first of multiple gene names is displayed' : '',
+                    nameLocation: 'center',
+                    nameGap: 50,
+                    nameTextStyle: {fontSize: 8, align: 'center'},
                     type: 'category',
                     scale: true,
                     axisLabel: {
@@ -315,7 +319,7 @@ export default function BoxPlot(props) {
                     },
                     show: (i === 0 ? true : false),
                     data: experimentNames,
-                    axisLine: {onZero: false}
+                    axisLine: {onZero: false},
                 }
             }),
             yAxis: {
@@ -357,11 +361,27 @@ export default function BoxPlot(props) {
             },
         };
 
+        /*
         const myOptionsWithText = (multiGeneText) ? {...myOptions, title: {
                 subtext: '* only the first of multiple gene names is displayed',
                 left: 'center',
                 textAlign: 'left',
                 top: 15 + topSpaceBase
+            }} : myOptions
+
+         */
+
+        const myOptionsWithText = (multiGeneText) ? {...myOptions, scales: {
+                xAxes: [
+                    {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Party size',
+                            fontColor: '#C7C7CC',
+                            fontSize: 11
+                        }
+                    }
+                ]
             }} : myOptions
 
         return myOptionsWithText

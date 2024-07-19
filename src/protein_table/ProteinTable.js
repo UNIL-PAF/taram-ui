@@ -26,7 +26,7 @@ export default function ProteinTable(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selectedRowKeys.length, columns])
 
-    const getColumnSearchProps = (dataIndex) => ({
+    const getColumnSearchProps = (dataIndex) =>({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
             <div
                 style={{
@@ -112,15 +112,16 @@ export default function ProteinTable(props) {
     const defaultColumns = [
         {
             title: 'Protein group',
-            dataIndex: 'prot',
-            key: 'prot',
+            dataIndex: 'protGroup',
+            key: 'protGroup',
             ellipsis: true,
-            ...getColumnSearchProps('prot'),
+            ...getColumnSearchProps('protGroup'),
         },
         {
             title: 'Gene',
             dataIndex: 'gene',
             key: 'gene',
+            ellipsis: true,
             ...getColumnSearchProps('gene'),
         },
         {
