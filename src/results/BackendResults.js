@@ -29,7 +29,7 @@ function deleteResult(resultId, refreshResults){
     axios.delete(globalConfig.urlBackend + 'result/' + resultId)
         .then((response) => {
             // handle success
-            console.log("ok");
+            //console.log("ok");
         })
         .catch(function (error) {
             // handle error
