@@ -131,7 +131,7 @@ export default function VolcanoPlot(props) {
             return (params.useAdjustedPVal && qValExists) ? d.qVal : d.pVal
         }).map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
-            return {...d, showLab: showLab, isUp: d.fc > 0}
+            return {...d, showLab: showLab, isUp: d.fc > 0, gene: (d.multiGenes ? d.gene + '*' : d.gene)}
         })
 
         const valueName = (params.useAdjustedPVal && qValExists) ? "q-value" : "p-value"
@@ -143,11 +143,12 @@ export default function VolcanoPlot(props) {
                 left: "center",
                 textStyle: {fontSize: 14}
             },
-            xAxis: {
+            xAxis: [{
                 name: props.data.commonResult.intColIsLog ? "Log2 fold change" : "Fold change",
                 nameLocation: "center",
                 nameTextStyle: {padding: [8, 4, 5, 6]},
             },
+            ],
             yAxis: {
                 min: 0,
                 name: xAxisName,
@@ -408,6 +409,15 @@ export default function VolcanoPlot(props) {
         click: showToolTipOnClick,
     };
 
+    const showMultiGeneText = () => {
+        const params = JSON.parse(props.data.parameters)
+        const defSelProts = (selProts ? selProts : params.selProteins)
+        const hasMultiGenes = stepResults.data.some( a => a.multiGenes && defSelProts.includes(a.prot))
+        return <>
+            {hasMultiGenes && <span style={{fontSize: 'x-small', paddingLeft: '20px'}}>* only the first of multiple gene names is displayed</span>}
+        </>
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -451,6 +461,7 @@ export default function VolcanoPlot(props) {
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
+            {stepResults  && showMultiGeneText()}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
