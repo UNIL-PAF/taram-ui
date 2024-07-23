@@ -78,7 +78,8 @@ export default function AnalysisMenu(props) {
                         let url = window.URL.createObjectURL(blob);
                         let a = document.createElement('a');
                         a.href = url;
-                        a.download = props.resultName + '.pdf';
+                        const fileName = (props.resultName + (props.analysisName ? ("-" + props.analysisName) : "")).replace(/\s+/, "-").replace(/--+/, "-")
+                        a.download = fileName + '.pdf';
                         a.click();
                     })
                     dispatch(setIdle())

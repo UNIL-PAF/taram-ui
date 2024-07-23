@@ -112,7 +112,7 @@ export default function DownloadZippedResults(props) {
         const selSpecialTables = selItems.specialTables.filter(s => selRowKeys.includes(s))
         const mergedSelItems = {plots: selPlots, mainTables: selMainTables, specialTables: selSpecialTables, steps: selRowKeys, analysisId: props.analysisId}
         dispatch(setText("Prepare ZIP file.."))
-        const fileName = props.resultName + "-" + (props.analysisName ? props.analysisName : "").replace(/\\s+/, "-").replace(/--+/, "-")
+        const fileName = (props.resultName + (props.analysisName ? ("-" + props.analysisName) : "")).replace(/\s+/, "-").replace(/--+/, "-")
 
         fetch(globalConfig.urlBackend + 'analysis/zip/' + props.analysisId, {
             method: 'POST',
