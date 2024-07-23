@@ -290,7 +290,6 @@ export default function BoxPlot(props) {
         const topSpace =  topSpaceBase + defaultSpace
 
         const yAxisName = params.column || props.data.columnInfo.columnMapping.intCol
-        const multiGeneText = (parsedRes.selProtData && parsedRes.selProtData.some(a => a.multiGenes))
 
         const myOptions = {
             dataset: boxplotDatasets,
@@ -306,10 +305,6 @@ export default function BoxPlot(props) {
             },
             xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
-                    name: multiGeneText ? '* only the first of multiple gene names is displayed' : '',
-                    nameLocation: 'center',
-                    nameGap: 50,
-                    nameTextStyle: {fontSize: 8, align: 'center'},
                     type: 'category',
                     scale: true,
                     axisLabel: {
@@ -361,30 +356,7 @@ export default function BoxPlot(props) {
             },
         };
 
-        /*
-        const myOptionsWithText = (multiGeneText) ? {...myOptions, title: {
-                subtext: '* only the first of multiple gene names is displayed',
-                left: 'center',
-                textAlign: 'left',
-                top: 15 + topSpaceBase
-            }} : myOptions
-
-         */
-
-        const myOptionsWithText = (multiGeneText) ? {...myOptions, scales: {
-                xAxes: [
-                    {
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Party size',
-                            fontColor: '#C7C7CC',
-                            fontSize: 11
-                        }
-                    }
-                ]
-            }} : myOptions
-
-        return myOptionsWithText
+        return myOptions
     }
 
     const checkboxChange = (e, field) => {
@@ -394,6 +366,13 @@ export default function BoxPlot(props) {
         setLocalParams(newLocalParams)
         if(field === "logScale") setLogScale(e.target.checked)
         if(field === "groupByCondition") setGroupByCondition(e.target.checked)
+    }
+
+    const showMultiGeneText = () => {
+        const hasMultiGenes = (stepResults.selProtData && stepResults.selProtData.some(a => a.multiGenes))
+        return <>
+            {hasMultiGenes && <span style={{fontSize: 'x-small', paddingLeft: '20px'}}>* only the first of multiple gene names is displayed</span>}
+        </>
     }
 
     return (
@@ -450,6 +429,7 @@ export default function BoxPlot(props) {
                     height: heightAndBottom.height,
                     width: '100%',
                 }}/>}
+            {stepResults  && showMultiGeneText()}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}
                          isLocked={props.isLocked}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
