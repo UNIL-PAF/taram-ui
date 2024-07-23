@@ -48,12 +48,10 @@ export default function AnalysisSteps(props) {
         }
     }
 
-    const keyBase = (props.data.copyFromIdx ? props.data.copyFromIdx : "")
-
     const getAnalysisSteps = () => {
         return props.data.analysisSteps.map( (step, i) => {
             const stepWithNr = {...step, nr: i+1}
-            const myKey = keyBase + "-" + step.id
+            const myKey = step.id
             const onSelect = () => {
                 setSelStep(i)
             }
@@ -146,7 +144,7 @@ export default function AnalysisSteps(props) {
 
     const getConclusion = () => {
         return (
-            <Conclusion analysisId={props.data.id} conclusion={props.data.conclusion} resultId={props.data.result.id}></Conclusion>
+            <Conclusion key="conclusion" analysisId={props.data.id} conclusion={props.data.conclusion} resultId={props.data.result.id}></Conclusion>
         )
     }
 
