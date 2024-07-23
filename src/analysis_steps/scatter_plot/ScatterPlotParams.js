@@ -96,7 +96,7 @@ export default function ScatterPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <h3>Protein table</h3>
-                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"gene"}></ProteinTable>
+                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"prot"}></ProteinTable>
             </Space>
         </>
     }
