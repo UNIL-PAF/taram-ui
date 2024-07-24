@@ -133,7 +133,7 @@ export default function getOptionsV1(results, params, mySelProteins, logTrans, s
         const defSelProts = (mySelProteins ? mySelProteins : params.selProteins).map(a => a.split(";")[0])
 
         const dataWithLabel = myData.d.map(d => {
-            const showLab = defSelProts && defSelProts.includes(d.ac)
+            const showLab = defSelProts && defSelProts.includes(d.n)
             return {...d, showLab: showLab}
         })
 
