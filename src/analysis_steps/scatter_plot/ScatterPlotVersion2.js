@@ -89,7 +89,7 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
                 label: {
                     show: true,
                     formatter: function (v) {
-                        return v.value[2]
+                        return v.value[2] ? v.value[2] : v.value[3]
                     },
                     position: 'right',
                     minMargin: 2,

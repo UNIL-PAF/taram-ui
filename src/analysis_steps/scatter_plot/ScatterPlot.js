@@ -160,12 +160,8 @@ export default function ScatterPlot(props) {
     };
 
     const showMultiGeneText = () => {
-        const params = JSON.parse(props.data.parameters)
-        const defSelProts = (selProts ? selProts : params.selProteins)
-        const hasMultiGenes = stepResults.data.some(a => a.multiGenes && defSelProts.includes(a.prot))
         return <>
-            {hasMultiGenes &&
-                <span style={{fontSize: 'x-small', paddingLeft: '20px'}}>* only the first of multiple gene names is displayed</span>}
+                <span style={{fontSize: 'x-small', paddingLeft: '20px'}}>* only the first of multiple gene names is displayed</span>
         </>
     }
 
