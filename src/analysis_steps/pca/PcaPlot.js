@@ -202,14 +202,14 @@ export default function PcaPlot(props) {
                 }
             },
             legend: {},
-            series: series.length ? series : [{
+            series: (series.length > 1) ? series : series.concat([{
                 datasetIndex: 0,
                 type: 'scatter',
                 encode: {
                     x: 'x',
                     y: 'y'
                 }
-            }],
+            }]),
             grid: {
                 top:    topSpace,
             },
