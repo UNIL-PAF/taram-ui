@@ -111,7 +111,15 @@ export default function FullProteinTable(props) {
                 key: h.idx
             }
             if(h.type === "NUMBER"){
-                myCol.sorter = (a, b) => a[h.idx] - b[h.idx]
+                myCol.sorter = (a, b, sortOrder) => {
+                    const isAscend = sortOrder === "ascend"
+                    const selA = a[h.idx]
+                    const selB = b[h.idx]
+                    if(isNaN(selA) && isNaN(selB)) return 0
+                    if(isNaN(selA)) return isAscend ? 1 : -1
+                    if(isNaN(selB)) return isAscend ? -1 : 1
+                    return selA - selB
+                }
                 myCol.render = (text) => formNum(text)
             }else{
                 myCol = {...myCol, ...getColumnSearchProps(h.idx)}
