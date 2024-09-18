@@ -29,9 +29,9 @@ export default function SummaryTable(props) {
                 {plotTr("Mean", "mean", nrEntries)}
                 {plotTr("Median", "median", nrEntries)}
                 {plotTr("Sum", "sum", nrEntries)}
-                {plotTr("Std dev", "stdDev", nrEntries)}
+                {/*{plotTr("Std dev", "stdDev", nrEntries)}
                 {plotTr("Std err", "stdErr", nrEntries)}
-                {plotTr("Coef of var", "coefOfVar", nrEntries)}
+                {plotTr("Coef of var", "coefOfVar", nrEntries)}*/}
                 {plotTr("Nr of valid", "nrValid", nrEntries)}
                 {plotTr("Nr of NaN", "nrNaN", nrEntries)}
             </tbody>
