@@ -9,7 +9,7 @@ export default function OrderColumnsParams(props) {
         if(!columns) {
             const myCols = (props.commonResult && props.commonResult.headers) ? props.commonResult.headers : undefined
 
-            if (!props.params) {
+            if (!props.params || (props.params.newOrder && props.params.newOrder.length < myCols.length)) {
                 props.setParams({
                     moveSelIntFirst: false,
                 })
