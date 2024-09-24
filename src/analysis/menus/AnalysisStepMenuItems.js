@@ -150,6 +150,19 @@ export default function AnalysisStepMenuItems(props) {
         const myCommonRes = (!newStepParams && props.commonResBefore) ? props.commonResBefore : props.commonResult
 
         switch (name) {
+            case 'new-step-parameters':
+                return <ParameterModal
+                    type={showStepParams ? showStepParams : props.paramType}
+                    commonResult={props.commonResult}
+                    params={myParams}
+                    setParams={mySetParams}
+                    intCol={props.intCol}
+                    stepId={props.stepId}
+                    experimentDetails={props.experimentDetails}
+                    handleOk={handleParamsOk}
+                    handleCancel={handleCancel}
+                    resType={props.resType}
+                ></ParameterModal>
             case 'parameters':
                 return <ParameterModal
                     type={showStepParams ? showStepParams : props.paramType}
@@ -206,7 +219,7 @@ export default function AnalysisStepMenuItems(props) {
         }, 300);
         setShowStepParams(type)
         setPrepareParams(getPrepareParamsFunction(type))
-        setShowModalName('parameters')
+        setShowModalName('new-step-parameters')
     }
 
     const onOpenChange = (e) => {
