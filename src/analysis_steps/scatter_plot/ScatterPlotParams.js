@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Row, Col} from 'antd';
+import {Checkbox, Select, Space, Row, Col, Input} from 'antd';
 import ProteinTable from "../../protein_table/ProteinTable";
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
@@ -52,13 +52,43 @@ export default function ScatterPlotParams(props) {
         }
     }
 
+    function setTitleText(myText){
+        props.setParams({...props.params, title: myText})
+    }
+
+    function getTitleValue(){
+        if(props.params.title !== undefined){
+            return props.params.title
+        }else{
+            return props.params.xAxis + " - " + props.params.yAxis
+        }
+    }
+
+    function resetTitleValue(){
+        if(props.params.title === undefined){
+            props.setParams({...props.params, title: ""})
+        }
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
                 <Row>
                     <Space direction={"horizontal"}>
+                        <Col><span><strong>Plot title</strong></span></Col>
+                        <Col>
+                            <Input onChange={(e) => setTitleText(e.target.value)}
+                                   onSelect={()=>resetTitleValue()}
+                                   value={getTitleValue()}
+                                   style={{ width: 800 }}
+                            ></Input>
+                        </Col>
+                    </Space>
+                </Row>
+                <Row>
+                    <Space direction={"horizontal"}>
                         <Col><span><strong>X axis</strong></span></Col>
-                        <Col><Select value={props.params.xAxis} style={{width: 250}}
+                        <Col><Select value={props.params.xAxis} style={{width: 400}}
                                      showSearch={true}
                                      filterOption={(input, option) =>
                                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -72,7 +102,7 @@ export default function ScatterPlotParams(props) {
                 <Row>
                     <Space direction={"horizontal"}>
                         <Col><span><strong>Y axis</strong></span></Col>
-                        <Col><Select value={props.params.yAxis} style={{width: 250}}
+                        <Col><Select value={props.params.yAxis} style={{width: 400}}
                                      showSearch={true}
                                      filterOption={(input, option) =>
                                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -103,7 +133,6 @@ export default function ScatterPlotParams(props) {
 
     return (
         <>
-            <h3>Select data column for Scatter plot</h3>
             {props.params && showOptions()}
         </>
     );

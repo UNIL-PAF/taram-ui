@@ -13,7 +13,7 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
     const otherField = myData.d[0].other.length > 0 ? myData.d[0].other[0].name : undefined
 
     const options = {
-        title: {text: params.xAxis + " - " + params.yAxis, left: "center", textStyle: {fontSize: 14}},
+        title: {text: (params.title ? params.title : params.xAxis + " - " + params.yAxis), left: "center", textStyle: {fontSize: 14}},
         dataset: [
             {
                 dimensions: ["x", "y", "name", "ac", "col", "showLab"].concat(otherField ? 'peptides' : []),
