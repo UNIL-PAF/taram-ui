@@ -121,6 +121,7 @@ export default function VolcanoPlot(props) {
     }
 
     const getOptions = (results, mySelProts) => {
+
         const params = JSON.parse(props.data.parameters)
         const qValExists = results.data[0].qVal !== undefined
 
@@ -136,6 +137,7 @@ export default function VolcanoPlot(props) {
 
         const valueName = (params.useAdjustedPVal && qValExists) ? "q-value" : "p-value"
         const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
+        const comparisonText = " (" + params.comparison.group1 + "/" + params.comparison.group2 + ")"
 
         const opts = {
             title: {
@@ -144,7 +146,7 @@ export default function VolcanoPlot(props) {
                 textStyle: {fontSize: 14}
             },
             xAxis: [{
-                name: props.data.commonResult.intColIsLog ? "Log2 fold change" : "Fold change",
+                name: (props.data.commonResult.intColIsLog ? "Log2 fold change" : "Fold change") + comparisonText,
                 nameLocation: "center",
                 nameTextStyle: {padding: [8, 4, 5, 6]},
             },
