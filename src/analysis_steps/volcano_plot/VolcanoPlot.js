@@ -29,11 +29,14 @@ export default function VolcanoPlot(props) {
     const [showError, setShowError] = useState(false)
 
     const colPalette = {
-        "down1": "#91cc75",
+/*        "down1": "#91cc75",
         "down2": "#5470c6",
         "up1": "#fac858",
-        "up2": "#ee6666",
+        "up2": "#ee6666", */
+        "up1": "#fac858",
+        "up2": "#5470c6",
         "none": "silver"
+
     }
 
     // check if element is shown
@@ -135,7 +138,7 @@ export default function VolcanoPlot(props) {
             return {...d, showLab: showLab, isUp: d.fc > 0, gene: (d.multiGenes ? d.gene + '*' : d.gene)}
         })
 
-        const valueName = (params.useAdjustedPVal && qValExists) ? "q-value" : "p-value"
+        const valueName = (params.useAdjustedPVal && qValExists) ? "adj. p-value" : "p-value"
         const xAxisName = params.log10PVal ? ("-log10(" + valueName + ")") : valueName
         const comparisonText = " (" + params.comparison.group1 + "/" + params.comparison.group2 + ")"
 
@@ -174,7 +177,7 @@ export default function VolcanoPlot(props) {
                         return "Gene: <strong>" + myParams.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + myParams.data.prot + "</strong><br>" +
                             "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
-                            (myParams.data.qVal ? "q-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
+                            (myParams.data.qVal ? "adj. p-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
                             "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong><br>" + other
 
                     }
@@ -193,25 +196,6 @@ export default function VolcanoPlot(props) {
                                 dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign',
                                 value: true
                             }
-                        },
-                        {
-                            type: 'filter',
-                            config: {dimension: 'isUp', value: true}
-                        }
-                    ]
-                },
-                {
-                    transform: [
-                        {
-                            type: 'filter',
-                            config: {
-                                dimension: (params.useAdjustedPVal && qValExists) ? 'qIsSign' : 'isSign',
-                                value: true
-                            }
-                        },
-                        {
-                            type: 'filter',
-                            config: {dimension: 'isUp', value: false}
                         }
                     ]
                 },
@@ -232,22 +216,6 @@ export default function VolcanoPlot(props) {
                         {
                             type: 'filter',
                             config: {dimension: 'qIsSign', value: true}
-                        },
-                        {
-                            type: 'filter',
-                            config: {dimension: 'isUp', value: true}
-                        }
-                    ],
-                },
-                {
-                    transform: [
-                        {
-                            type: 'filter',
-                            config: {dimension: 'qIsSign', value: true}
-                        },
-                        {
-                            type: 'filter',
-                            config: {dimension: 'isUp', value: false}
                         }
                     ],
                 },
@@ -255,11 +223,11 @@ export default function VolcanoPlot(props) {
             ],
             legend: {
                 top: "30px",
-                data: ["Upregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")].concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Upregulated q-values"] : []).concat(["Downregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values")]).concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["Upregulated q-values", "Downregulated q-values"] : [])
+                data: [((params.useAdjustedPVal && qValExists) ? "adj. p-values" : "p-values") + " < " + params.pValThresh].concat((!params.useAdjustedPVal && params.showQVal && qValExists) ? ["adj. p-values < " + params.pValThresh] : [])
             },
             series: [
                 {
-                    name: "Upregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
+                    name: ((params.useAdjustedPVal && qValExists) ? "adj. p-values" : "p-values") + " < " + params.pValThresh,
                     label: {
                         show: false,
                     },
@@ -271,7 +239,8 @@ export default function VolcanoPlot(props) {
                         y: 'plotPVal'
                     },
                     itemStyle: {
-                        color: (params.useAdjustedPVal && qValExists) ? colPalette["up2"] : colPalette["up1"]
+                        color: (params.useAdjustedPVal && qValExists) ? colPalette["up2"] : colPalette["up1"],
+                        opacity: 1.0
                     },
                     markLine: {
                         lineStyle: {
@@ -289,26 +258,8 @@ export default function VolcanoPlot(props) {
                                 xAxis: params.fcThresh,
                                 name: "Fold change",
                             },
-                            {
-                                yAxis: -1 * Math.log10(params.pValThresh),
-                                name: (params.useAdjustedPVal ? " q-value" : "p-value")
-                            },
                         ],
                     },
-                },
-                {
-                    name: "Downregulated" + ((params.useAdjustedPVal && qValExists) ? " q-values" : " p-values"),
-                    itemStyle: {
-                        color: (params.useAdjustedPVal && qValExists) ? colPalette["down2"] : colPalette["down1"]
-                    },
-                    label: {show: false},
-                    symbolSize: 5,
-                    datasetIndex: 2,
-                    type: 'scatter',
-                    encode: {
-                        x: 'fc',
-                        y: 'plotPVal'
-                    }
                 },
                 {
                     itemStyle: {
@@ -316,7 +267,7 @@ export default function VolcanoPlot(props) {
                     },
                     label: {show: false},
                     symbolSize: 5,
-                    datasetIndex: 3,
+                    datasetIndex: 2,
                     large: true,
                     largeThreshold: 1,
                     type: 'scatter',
@@ -344,7 +295,7 @@ export default function VolcanoPlot(props) {
                         borderWidth: 1,
                         borderColor: 'green'
                     },
-                    datasetIndex: 4,
+                    datasetIndex: 3,
                     type: 'scatter',
                 },
             ]
@@ -352,33 +303,20 @@ export default function VolcanoPlot(props) {
 
         const qValSeries = [
             {
-                name: "Upregulated q-values",
+                name: "adj. p-values < " + params.pValThresh,
                 itemStyle: {
-                    color: colPalette["up2"]
+                    color: colPalette["up2"],
+                    opacity: 1.0
                 },
                 label: {show: false},
                 symbolSize: 5,
-                datasetIndex: 5,
+                datasetIndex: 4,
                 type: 'scatter',
                 encode: {
                     x: 'fc',
                     y: 'plotPVal'
                 }
             },
-            {
-                name: "Downregulated q-values",
-                itemStyle: {
-                    color: colPalette["down2"]
-                },
-                label: {show: false},
-                symbolSize: 5,
-                datasetIndex: 6,
-                type: 'scatter',
-                encode: {
-                    x: 'fc',
-                    y: 'plotPVal'
-                }
-            }
         ]
 
         const finalOpts = {

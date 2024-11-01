@@ -26,7 +26,7 @@ export default function VolcanoPlotParams(props) {
             props.setParams({
                 pValThresh: 0.05,
                 fcThresh: 2.0,
-                useAdjustedPVal: true,
+                useAdjustedPVal: false,
                 log10PVal: true,
                 comparison: comparison[0],
                 showQVal: true
@@ -74,7 +74,7 @@ export default function VolcanoPlotParams(props) {
     }
 
     function selValText(){
-        return props.params.useAdjustedPVal ? "q-values" : "p-values"
+        return props.params.useAdjustedPVal ? "adj. p-values" : "p-values"
     }
 
     function showOptions() {
@@ -101,7 +101,7 @@ export default function VolcanoPlotParams(props) {
                 <Checkbox
                     disabled={props.params.useAdjustedPVal}
                     onChange={(val) => checkboxChange("showQVal", val)} checked={props.params.showQVal}>
-                    Show significant q-values above the selected absolute {fcText()} fold change with a different color.
+                    Show significant adjusted p-values above the selected absolute {fcText()} fold change with a different color.
                 </Checkbox>
                 <Checkbox
                     onChange={(val) => checkboxChange("log10PVal", val)} checked={props.params.log10PVal}>Use
