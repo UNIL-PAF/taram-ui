@@ -32,7 +32,7 @@ export default function OneDEnrichmentTable(props) {
                 <th className={"sum-table-header"}>Size</th>
                 <th className={"sum-table-header"}>Score</th>
                 <th className={"sum-table-header"}>P-value</th>
-                <th className={"sum-table-header"}>Q-value</th>
+                <th className={"sum-table-header"}>Adj. p-value</th>
                 <th className={"sum-table-header"}>Mean</th>
                 <th className={"sum-table-header"}>Median</th>
             </tr>

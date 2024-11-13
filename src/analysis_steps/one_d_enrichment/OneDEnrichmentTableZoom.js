@@ -190,7 +190,7 @@ export default function OneDErichmentTableZoom(props) {
             render: (text) => formNum(text)
         },
         {
-            title: 'Q-value',
+            title: 'Adj. p-value',
             dataIndex: 'qvalue',
             key: 'qvalue',
             sorter: (a, b) =>
