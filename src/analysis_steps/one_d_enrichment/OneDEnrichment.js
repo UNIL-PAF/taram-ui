@@ -107,7 +107,7 @@ export default function OneDEnrichment(props) {
                    <span>
                         <h4>Selected results:</h4>
                 </span>
-                    <OneDEnrichmentTable results={localSelResults}></OneDEnrichmentTable>
+                    <OneDEnrichmentTable results={localSelResults} params={localParams}></OneDEnrichmentTable>
                 </>
             }
             <StepComment isLocked={props.isLocked || !isDone} stepId={props.data.id} resultId={props.resultId}
