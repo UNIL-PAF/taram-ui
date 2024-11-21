@@ -12,7 +12,7 @@ export default function VolcanoPlotParams(props) {
     const dispatch = useDispatch();
 
     const [selComp, setSelComp] = useState(0)
-    const comparison = props.commonResult.headers.filter( h => h.name.includes("p.value")).map( h => h.experiment.comp)
+    const comparison = props.commonResult.headers.filter( h => h.name.match("^p.value")).map( h => h.experiment.comp)
 
     useEffect(() => {
         if(!proteinTable && !proteinTableError){
