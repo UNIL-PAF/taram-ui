@@ -82,7 +82,7 @@ export default function VolcanoPlotParams(props) {
             <Space direction="vertical" size="middle">
 
                 <span style={{paddingLeft: "10px"}}>Select comparision &nbsp;<Select value={selComp}
-                                                                                     style={{width: 250}}
+                                                                                     style={{width: 400}}
                                                                                      onChange={handleChange}>
                     {comparison.map((comp, i) => {
                         const name = comp.group1 + " - " + comp.group2
