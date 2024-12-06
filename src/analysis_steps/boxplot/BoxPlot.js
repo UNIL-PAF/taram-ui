@@ -164,13 +164,8 @@ export default function BoxPlot(props) {
 
         const parsedRes = results
 
-        const [yMin, yMax] = parsedRes.boxPlotData.reduce((a, v) => {
-            const myMin = Math.min.apply(Math, v.data.map(x => x[1]))
-            const myMax = Math.max.apply(Math, v.data.map(x => x[5]))
-            if (typeof a[0] === "undefined" || a[0] < myMin) a[0] = myMin
-            if (typeof a[1] === "undefined" || a[1] > myMax) a[1] = myMax
-            return a
-        }, [undefined, undefined])
+        const yMin = Math.min.apply(Math, parsedRes.boxPlotData.flatMap( a => a.data.map( b => b[1])))
+        const yMax = Math.max.apply(Math, parsedRes.boxPlotData.flatMap( a => a.data.map( b => b[5])))
 
         const range = yMax - yMin
 
