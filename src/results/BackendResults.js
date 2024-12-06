@@ -42,7 +42,9 @@ function deleteResult(resultId, refreshResults){
 }
 
 function updateInfo(resultId, name, description, refreshResults){
-    axios.put(globalConfig.urlBackend + 'result/update-info/' + resultId + "?name=" + name + (description ? ("&description="+description) : ""))
+    const encodedName = encodeURIComponent(name);
+    const encodedDescription = description ? encodeURIComponent(description) : null;
+    axios.put(globalConfig.urlBackend + 'result/update-info/' + resultId + "?name=" + encodedName + (description ? ("&description="+encodedDescription) : ""))
         .then((response) => {
             // handle success
         })
