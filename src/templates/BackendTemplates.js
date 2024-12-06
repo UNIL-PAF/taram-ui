@@ -91,7 +91,9 @@ export const runTemplate = createAsyncThunk('templates/run', async (templateObj,
         }
         return thunkApi.rejectWithValue(error.response.data)
     } finally {
-        thunkApi.dispatch(fetchAnalysisByResultId(templateObj.resultsId))
+        setTimeout(() => {
+            thunkApi.dispatch(fetchAnalysisByResultId(templateObj.resultsId))
+        }, 2000);
     }
 })
 
