@@ -4,36 +4,37 @@ import "../AnalysisStep.css"
 
 export default function SummaryTable(props) {
 
-    const plotTr = (name, field, nrEntries) => {
-        const myData = (props.results[field] ? props.results[field] : Array.apply(null, Array(nrEntries)).map((x) => { return "" }))
-        const l = myData.map((a, i) => {
-            const v = typeof (a) === "number" ? formNum(a) : a
-            return <td className={"sum-table-cell"} key={i}>{v}</td>
-        })
-
-        return <tr key={field}>
-            <th className={"sum-table-header"}>{name}</th>
-            {l}
+    const plotHeaders = () => {
+        return <tr key={"header"}>
+            <th className={"sum-table-header"}>{"Name"}</th>
+            <th className={"sum-table-header"}>{"Group"}</th>
+            <th className={"sum-table-header"}>{"Min"}</th>
+            <th className={"sum-table-header"}>{"Max"}</th>
+            <th className={"sum-table-header"}>{"Median"}</th>
+            <th className={"sum-table-header"}>{"Nr of valid"}</th>
+            <th className={"sum-table-header"}>{"Nr of NaN"}</th>
         </tr>
     }
 
-    const nrEntries = props.results.min.length
+    const plotAllTr = () => {
+        return props.results.expNames.map((name, i) => {
+            return <tr key={name}>
+                <td className={"sum-table-cell"} key={i + "-1"}>{name}</td>
+                <td className={"sum-table-cell"} key={i + "-2"}>{props.results.groups[i]}</td>
+                <td className={"sum-table-cell"} key={i + "-3"}>{formNum(props.results.min[i])}</td>
+                <td className={"sum-table-cell"} key={i + "-4"}>{formNum(props.results.max[i])}</td>
+                <td className={"sum-table-cell"} key={i + "-5"}>{formNum(props.results.median[i])}</td>
+                <td className={"sum-table-cell"} key={i + "-6"}>{formNum(props.results.nrValid[i])}</td>
+                <td className={"sum-table-cell"} key={i + "-7"}>{formNum(props.results.nrNaN[i])}</td>
+            </tr>
+        })
+    }
 
     return (
         <table className={props.zoom ? "sum-table-zoom" : ""} >
             <tbody>
-                {plotTr("Name", "expNames", nrEntries)}
-                {plotTr("Group", "groups", nrEntries)}
-                {plotTr("Min", "min", nrEntries)}
-                {plotTr("Max", "max", nrEntries)}
-                {plotTr("Median", "median", nrEntries)}
-                {/*{plotTr("Std dev", "stdDev", nrEntries)}
-                {plotTr("Mean", "mean", nrEntries)}
-                {plotTr("Std err", "stdErr", nrEntries)}
-                {plotTr("Sum", "sum", nrEntries)}
-                {plotTr("Coef of var", "coefOfVar", nrEntries)}*/}
-                {plotTr("Nr of valid", "nrValid", nrEntries)}
-                {plotTr("Nr of NaN", "nrNaN", nrEntries)}
+                {plotHeaders()}
+                {plotAllTr()}
             </tbody>
         </table>
     );
