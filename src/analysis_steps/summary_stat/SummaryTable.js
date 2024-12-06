@@ -17,10 +17,15 @@ export default function SummaryTable(props) {
     }
 
     const plotAllTr = () => {
+        console.log(props.results)
+
         return props.results.expNames.map((name, i) => {
+            console.log(props.results.groups)
+
+
             return <tr key={name}>
                 <td className={"sum-table-cell"} key={i + "-1"}>{name}</td>
-                <td className={"sum-table-cell"} key={i + "-2"}>{props.results.groups[i]}</td>
+                <td className={"sum-table-cell"} key={i + "-2"}>{props.results.groups ? props.results.groups[i] : ""}</td>
                 <td className={"sum-table-cell"} key={i + "-3"}>{formNum(props.results.min[i])}</td>
                 <td className={"sum-table-cell"} key={i + "-4"}>{formNum(props.results.max[i])}</td>
                 <td className={"sum-table-cell"} key={i + "-5"}>{formNum(props.results.median[i])}</td>
