@@ -1,13 +1,16 @@
 import React, {useState, useRef, useEffect} from "react";
 import {Table, Spin, Input, Space, Button, Tooltip} from "antd";
-import {SearchOutlined} from '@ant-design/icons';
+import {DownloadOutlined, SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import {useDispatch} from "react-redux";
 import {getFullProteinTable} from "./BackendFullProteinTable";
 import {formNum} from "../common/NumberFormatting";
+import globalConfig from "../globalConfig";
+import SelectTableColumns from "./SelectTableColumns";
 
 export default function FullProteinTable(props) {
 
+    const [selectColumns, setSelectColumns] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +18,7 @@ export default function FullProteinTable(props) {
     const dispatch = useDispatch();
     const [columns, setColumns] = useState()
     const [rows, setRows] = useState()
+    const [headers, setHeaders] = useState()
 
     useEffect(() => {
         dispatch(getFullProteinTable({stepId: props.stepId, callback: (data) => setData(data)}))
@@ -25,7 +29,8 @@ export default function FullProteinTable(props) {
     }, [])
 
     const setData = (data) => {
-        setColumns(getColumns(data))
+        setHeaders(data.headers)
+        setColumns(getColumns(data.headers))
         setRows(getRows(data))
         setIsLoading(false)
     }
@@ -102,9 +107,9 @@ export default function FullProteinTable(props) {
             ),
     });
 
-    const getColumns = (data) => {
+    const getColumns = (headers) => {
         const elliThresh = 20
-        return data.headers.map( h => {
+        return headers.map( h => {
             let myCol =  {
                 title: h.name,
                 dataIndex: h.idx,
@@ -165,13 +170,46 @@ export default function FullProteinTable(props) {
         confirm();
     };
 
+    const clickSelectColumns = (stepId, tableNr) => {
+        setSelectColumns(true)
+    }
+
+    const selectColumnsOk = (selectedKeys) => {
+        const newColumns = (selectedKeys) ? getColumns(headers.filter(a => selectedKeys.includes(a.idx))) : undefined
+        setColumns(newColumns)
+        setSelectColumns(false)
+    }
+
+    const downloadTable = (stepId, tableNr) => {
+        fetch(globalConfig.urlBackend + 'analysis-step/table/' + stepId )
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Table-' + tableNr + '.txt';
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
+    }
+
     return (
         <>
             {isLoading && <Spin tip="Loading..."></Spin>}
+            <Button onClick={() => clickSelectColumns(props.stepId, props.tableNr)} type={"primary"} style={{marginLeft: "10px"}}>Select columns</Button>
+            <Button onClick={() => downloadTable(props.stepId, props.tableNr)} type={"primary"} style={{marginLeft: "10px"}} icon={<DownloadOutlined />}>Download table</Button>
             {!isLoading && columns && rows && <Table
+                style={{marginTop: "20px"}}
                 columns={columns}
                 dataSource={rows}
+                size="small"
             ></Table>}
+            {selectColumns && <SelectTableColumns
+                setSelectColumns={setSelectColumns}
+                headers={headers}
+                selectColumnsOk={selectColumnsOk}
+            ></SelectTableColumns>}
         </>
     );
 }

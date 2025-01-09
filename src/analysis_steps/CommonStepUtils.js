@@ -89,23 +89,10 @@ export function getStepResults(stepId, setStepResults, dispatch, callback, error
         })
 }
 
-const downloadTable = (stepId, tableNr) => {
-    fetch(globalConfig.urlBackend + 'analysis-step/table/' + stepId )
-        .then(response => {
-            response.blob().then(blob => {
-                let url = window.URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = 'Table-' + tableNr + '.txt';
-                a.click();
-            });
-            //window.location.href = response.url;
-        });
-}
 
 const getTableTitle = (stepId, tableNr) => {
     return <>
-        <span>Table-{tableNr} <Button onClick={() => downloadTable(stepId, tableNr)} type={"primary"} style={{marginLeft: "10px"}} icon={<DownloadOutlined />}>Download table</Button></span>
+        <span>Table-{tableNr}</span>
     </>
 }
 
