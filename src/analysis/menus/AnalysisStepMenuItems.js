@@ -355,6 +355,7 @@ export default function AnalysisStepMenuItems(props) {
                 {(props.type === 'boxplot' ||
                         props.type === 'volcano-plot' ||
                         props.type === 'pca' ||
+                        props.type === 'umap' ||
                         props.type === 'scatter-plot') &&
                     <Menu.Item onClick={() => setShowModalName('download-zip')}
                                key={'zip'}
