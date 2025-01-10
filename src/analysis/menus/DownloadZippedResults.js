@@ -62,7 +62,7 @@ export default function DownloadZippedResults(props) {
             render: greyItem
         },
         {
-            title: 'Save table',
+            title: 'Table',
             dataIndex: 'table',
             render: (text, item) => {
                 return <>
@@ -72,7 +72,7 @@ export default function DownloadZippedResults(props) {
             }
         },
         {
-            title: 'Save plot (SVG and PNG)',
+            title: 'Plots',
             dataIndex: 'plots',
             render: (text, item) => greyCheckbox(item, "plots")
         },
