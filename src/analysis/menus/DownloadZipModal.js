@@ -6,6 +6,7 @@ import {setError} from "../analysisSlice";
 
 export default function DownloadZipModal(props) {
     const [svg, setSvg] = useState(undefined)
+    const [html, setHtml] = useState(undefined)
     const [png, setPng] = useState(undefined)
     const dispatch = useDispatch();
 
@@ -18,6 +19,7 @@ export default function DownloadZipModal(props) {
             if(props.hasPlot){
                 setSvg(true)
                 setPng(true)
+                setHtml(true)
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,6 +29,7 @@ export default function DownloadZipModal(props) {
         fetch(globalConfig.urlBackend + 'analysis-step/zip/' + props.stepId
             + '?svg=' + svg
             + '&png=' + png
+            + '&html=' + html
         )
             .then(response => {
                 response.blob().then(blob => {
@@ -60,6 +63,11 @@ export default function DownloadZipModal(props) {
                     disabled={!props.hasPlot}
                     defaultChecked={props.hasPlot}
                     onChange={(val) => setPng(val.target.checked)}>PNG plot
+                </Checkbox>
+                <Checkbox
+                    disabled={!props.hasPlot}
+                    defaultChecked={props.hasPlot}
+                    onChange={(val) => setHtml(val.target.checked)}>HTML plot
                 </Checkbox>
             </Space>
         </Modal>
