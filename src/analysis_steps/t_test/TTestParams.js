@@ -10,6 +10,7 @@ export default function TTestParams(props) {
     const numCols = getNumCols(props.commonResult.headers)
     const intCol = props.commonResult.intCol
     const [useDefaultCol, setUseDefaultCol] = useState()
+    const [equalVariance, setEqualVariance] = useState(true)
 
     const groups = props.commonResult.headers.reduce((acc, cur) => {
         const expName = cur.experiment && cur.experiment.name ? cur.experiment.name : null
@@ -42,8 +43,10 @@ export default function TTestParams(props) {
                 field: intCol,
                 multiTestCorr: 'BH',
                 signThres: 0.05,
-                columns: initCols
+                columns: initCols,
+                equalVariance: false
             })
+            setEqualVariance(false)
             setUseDefaultCol(true)
         }else{
             if(!props.params.columns){
@@ -55,6 +58,7 @@ export default function TTestParams(props) {
             if(useDefaultCol === undefined){
                 setUseDefaultCol(props.params.field ? false: true)
             }
+            if(props.params.equalVariance === false) setEqualVariance(false)
     }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, useDefaultCol])
@@ -90,27 +94,40 @@ export default function TTestParams(props) {
         props.setParams({...props.params, paired: !props.params.paired})
     }
 
+    function equalVarianceChange(value) {
+        props.setParams({...props.params, equalVariance: value})
+        setEqualVariance(value)
+    }
+
     function showOptions(){
         return <>
             <Space direction="vertical" size="middle">
-            <Checkbox
+                <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
-            </Checkbox>
-            <Select
-                disabled={useDefaultCol}
-                value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
-                {numCols.map((n, i) => {
-                    return <Option key={i} value={i}>{n}</Option>
-                })}
-            </Select>
-            <span>
+                </Checkbox>
+                <Select
+                    disabled={useDefaultCol}
+                    value={props.params.field || props.intCol} style={{width: 250}} onChange={handleChange}>
+                    {numCols.map((n, i) => {
+                        return <Option key={i} value={i}>{n}</Option>
+                    })}
+                </Select>
+                <span>
             <span style={{paddingRight: "10px"}}>Significance threshold</span>
             <InputNumber
                 min={0.000001} max={0.999}
                 value={props.params.signThres}
                 onChange={(val) => valueChange("signThres", val)}></InputNumber>
         </span>
-            <span>
+        <span>
+            <span style={{paddingRight: "10px"}}>T-test</span>
+            <Select value={equalVariance} style={{width: 370}} onChange={equalVarianceChange}>
+                <Option value={false}>Welch's (assuming unequal variance)</Option>
+                <Option value={true}>Student's (assuming equal variance)</Option>
+            </Select>
+        </span>
+
+                <span>
             <span style={{paddingRight: "10px"}}>Multiple testing correction</span>
             <Select value={props.params.multiTestCorr} style={{width: 250}} onChange={multiTestCorrChange}>
                 <Option value={'BH'}>Benjamini & Hochberg (FDR)</Option>
@@ -135,7 +152,8 @@ export default function TTestParams(props) {
             </Checkbox></span>
 
                 <h3>Define pairs</h3>
-                {props.params && props.params.columns && <TTestGroupSelection columns={props.params.columns} setColumns={setColumns}></TTestGroupSelection>}
+                {props.params && props.params.columns &&
+                    <TTestGroupSelection columns={props.params.columns} setColumns={setColumns}></TTestGroupSelection>}
             </Space>
         </>
     }

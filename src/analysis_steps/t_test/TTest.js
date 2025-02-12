@@ -50,8 +50,9 @@ export default function TTest(props) {
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
-                                {<p className={"analysis-step-param-line"}>Significance
-                                    threshold: {params.signThres}</p>}
+                                <p className={"analysis-step-param-line"}>{params.equalVariance === false ? "Welch's t-test (unequal variances)" : "Student's t-test (equal variances)"}</p>
+                                <p className={"analysis-step-param-line"}>Significance
+                                    threshold: {params.signThres}</p>
                                 <p className={"analysis-step-param-line"}>Multiple testing
                                     correction: {multiTestCorrText[params.multiTestCorr]}</p>
                                 {params.filterOnValid && <p className={"analysis-step-param-line"}>Only compute comparisons when there are at least {params.minNrValid} valid (non-imputed) values in one group.</p>}
