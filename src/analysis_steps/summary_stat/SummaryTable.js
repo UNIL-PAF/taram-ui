@@ -11,25 +11,20 @@ export default function SummaryTable(props) {
             <th className={"sum-table-header"}>{"Min"}</th>
             <th className={"sum-table-header"}>{"Max"}</th>
             <th className={"sum-table-header"}>{"Median"}</th>
-            <th className={"sum-table-header"}>{"Nr of valid"}</th>
+            <th className={"sum-table-header"} style={{color: "#ff4d4f"}}>{"Nr of valid"}</th>
             <th className={"sum-table-header"}>{"Nr of NaN"}</th>
         </tr>
     }
 
     const plotAllTr = () => {
-        console.log(props.results)
-
         return props.results.expNames.map((name, i) => {
-            console.log(props.results.groups)
-
-
             return <tr key={name}>
                 <td className={"sum-table-cell"} key={i + "-1"}>{name}</td>
                 <td className={"sum-table-cell"} key={i + "-2"}>{props.results.groups ? props.results.groups[i] : ""}</td>
                 <td className={"sum-table-cell"} key={i + "-3"}>{formNum(props.results.min[i])}</td>
                 <td className={"sum-table-cell"} key={i + "-4"}>{formNum(props.results.max[i])}</td>
                 <td className={"sum-table-cell"} key={i + "-5"}>{formNum(props.results.median[i])}</td>
-                <td className={"sum-table-cell"} key={i + "-6"}>{formNum(props.results.nrValid[i])}</td>
+                <td className={"sum-table-cell"} style={{color: "#ff4d4f"}} key={i + "-6"}>{formNum(props.results.nrValid[i])}</td>
                 <td className={"sum-table-cell"} key={i + "-7"}>{formNum(props.results.nrNaN[i])}</td>
             </tr>
         })
