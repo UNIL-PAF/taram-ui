@@ -275,6 +275,8 @@ export default function BoxPlot(props) {
 
         const series = params.showAll ? series01.concat(allprotSeries) : series01
         const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
+        const groupLegendNames = legendNames.filter(a => a.includes("group_"))
+        const selProtLegendNames = legendNames.filter(a => !a.includes("group_"))
 
         // special cases when many samples
         const xFontSizeInt = nrXLabels > 40 ? 12 - Math.floor((nrXLabels - 40) / 6) : 12
@@ -283,21 +285,25 @@ export default function BoxPlot(props) {
         const defaultSpace = 50
         const topSpaceBase = computeTopSpace(parsedRes.boxPlotData.map(a => a.group))
         const topSpace =  topSpaceBase + defaultSpace
-
         const yAxisName = params.column || props.data.columnInfo.columnMapping.intCol
 
         const myOptions = {
             dataset: boxplotDatasets,
             series: series,
-            legend: {
+            legend: [{
+                orient: "horizontal",
                 formatter: function (name) {
-                    if (name.includes("group_")) {
-                        return name.substring(6)
-                    }
-                    return name;
+                    return name.substring(6)
                 },
-                data: legendNames
+                data: groupLegendNames
             },
+            {
+                    orient: 'vertical',
+                    right: 0,
+                    top: 'center',
+                    data: selProtLegendNames
+            }
+            ],
             xAxis: parsedRes.boxPlotData.map((d, i) => {
                 return {
                     type: 'category',
