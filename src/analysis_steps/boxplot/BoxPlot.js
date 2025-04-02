@@ -273,7 +273,7 @@ export default function BoxPlot(props) {
         } : null
 
 
-        const series = params.showAll ? series01.concat(allprotSeries) : series01
+        const series = (params.showAll ? series01.concat(allprotSeries) : series01).map( s => {return {...s, name: s.name.split("|").pop()}})
         const legendNames = series.filter(a => a.name !== "group_null" && a.name !== "show_all_proteins").map(a => a.name)
         const groupLegendNames = legendNames.filter(a => a.includes("group_"))
         const selProtLegendNames = legendNames.filter(a => !a.includes("group_"))
