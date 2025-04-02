@@ -19,6 +19,7 @@ export default function FullProteinTable(props) {
     const [columns, setColumns] = useState()
     const [rows, setRows] = useState()
     const [headers, setHeaders] = useState()
+    const [selColIdx, setSelColIdx] = useState(null)
 
     useEffect(() => {
         dispatch(getFullProteinTable({stepId: props.stepId, callback: (data) => setData(data)}))
@@ -178,10 +179,12 @@ export default function FullProteinTable(props) {
         const newColumns = (selectedKeys) ? getColumns(headers.filter(a => selectedKeys.includes(a.idx))) : undefined
         setColumns(newColumns)
         setSelectColumns(false)
+        setSelColIdx(newColumns.map(a => a.dataIndex))
     }
 
     const downloadTable = (stepId, tableNr) => {
-        fetch(globalConfig.urlBackend + 'analysis-step/table/' + stepId )
+        const selColStr = (selColIdx !== null) ? ("?sel-cols=" + selColIdx.join(",")) : ""
+        fetch(globalConfig.urlBackend + 'analysis-step/table/' + stepId + selColStr)
             .then(response => {
                 response.blob().then(blob => {
                     let url = window.URL.createObjectURL(blob);

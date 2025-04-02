@@ -195,7 +195,7 @@ export default function ScatterPlot(props) {
                 <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                         icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
-            {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
+            {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}<br></br></span>}
             <Checkbox
                 onChange={(e) => checkboxChange(e, "logTrans")}
                 checked={logTrans}
