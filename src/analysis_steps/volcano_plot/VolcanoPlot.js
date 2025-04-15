@@ -126,7 +126,7 @@ export default function VolcanoPlot(props) {
     const getOptions = (results, mySelProts) => {
 
         const params = JSON.parse(props.data.parameters)
-        const qValExists = results.data[0].qVal !== undefined
+        const qValExists = results.data.some(a => a.qVal !== undefined)
 
         // we set the default selProts
         const defSelProts = (mySelProts ? mySelProts : params.selProteins)
