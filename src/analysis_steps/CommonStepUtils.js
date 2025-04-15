@@ -2,7 +2,6 @@ import {updatePlotOptions} from "./BackendAnalysisSteps";
 import React from "react";
 import {Avatar, Button, Col, Modal, Row} from 'antd';
 import globalConfig from "../globalConfig";
-import {DownloadOutlined} from "@ant-design/icons";
 import FullProteinTable from "../full_protein_table/FullProteinTable";
 import "./AnalysisStep.css"
 import {setError} from "../navigation/loadingSlice";
