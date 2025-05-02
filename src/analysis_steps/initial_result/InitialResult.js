@@ -80,7 +80,13 @@ export default function InitialResult(props) {
 
         const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
-        return {groupData: groupData, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
+
+        const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v]) => {
+            const newItems = v.items.sort((x, y) => x.name.localeCompare(y.name))
+            return [k, {...v, items: newItems}]
+        }));
+
+        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
     }
 
 
