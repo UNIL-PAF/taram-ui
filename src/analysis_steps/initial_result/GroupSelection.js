@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import GroupTitle from "./GroupTitle";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-import {Button, Popover, Row, Col} from "antd";
-import {InfoOutlined, EditOutlined} from "@ant-design/icons";
+import {Button, Col, Popover, Row} from "antd";
+import {EditOutlined, InfoOutlined} from "@ant-design/icons";
 import ExpNameEdit from "./ExpNameEdit"
 import {onClick} from "./GroupSelectionUtils";
 
@@ -10,6 +10,7 @@ export default function GroupSelection(props) {
     const [showEdit, setShowEdit] = useState()
     const [selItems, setSelItems] = useState([])
     const [draggingItemId, setDraggingItemId] = useState()
+    const [editGroupName, setEditGroupName] = useState()
 
     const changeExpName = (expId, newName) => {
         const myGroupData = {...props.params.groupData}
@@ -60,12 +61,14 @@ export default function GroupSelection(props) {
 
     const changeGroupName = (groupId, groupName) => {
         if (groupId === groupName) return
-        const myName = groupName.trim().replace('\t', '')
+
+        const myName = groupName.trimStart().replace('\t', ' ')
         const newCols = {...props.params.groupData}
         newCols[myName] = newCols[groupId]
         newCols[myName].name = myName
         delete newCols[groupId]
-        const newGroupsOrdered = props.params.groupsOrdered.map(a => a === groupId ? groupName : a)
+        const newGroupsOrdered = props.params.groupsOrdered.map(a => a === groupId ? myName : a)
+        setEditGroupName(myName)
         props.setParams({...props.params, groupsOrdered: newGroupsOrdered, groupData: newCols})
     }
 
@@ -144,10 +147,10 @@ export default function GroupSelection(props) {
                                     alignItems: "top",
                                     borderRight: i === 0 ? "2px dashed lightgrey" : undefined
                                 }}
-                                key={columnId}
+                                key={i}
                             >
                                 <GroupTitle id={columnId} name={column.name} i={i} moveLeft={props.moveGroupLeft}
-                                            moveRight={props.moveGroupRight} isLast={i === nrGroups}
+                                            moveRight={props.moveGroupRight} isLast={i === nrGroups} editGroupName={editGroupName} setEditGroupName={setEditGroupName}
                                             changeGroupName={changeGroupName} deleteGroup={deleteGroup}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
