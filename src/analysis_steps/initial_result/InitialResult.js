@@ -95,9 +95,10 @@ export default function InitialResult(props) {
     // format the data for the backend
     const prepareParams = (params) => {
         const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => !!(a || (v.name !== "Experiments" && v.items.length > 0)), false)
+        const groups = ["experiments"].concat(params.groupsOrdered)
 
         const experimentDetails = Object.fromEntries(params.experimentNames.map(expName => {
-            const oneItem =  params.groupsOrdered.reduce((acc, k) => {
+            const oneItem =  groups.reduce((acc, k) => {
                 const v = params.groupData[k]
                 const item = v.items.find((i) => {
                     return i.name === expName
