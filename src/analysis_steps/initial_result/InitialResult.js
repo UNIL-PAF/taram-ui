@@ -89,23 +89,31 @@ export default function InitialResult(props) {
         return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
     }
 
-
     // format the data for the backend
     const prepareParams = (params) => {
         const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => (a || (v.name !== "Experiments" && v.items.length > 0)) ? true : false, false)
 
         const experimentDetails = Object.fromEntries(params.experimentNames.map(expName => {
-            const oneItem =  Object.keys(params.groupData).reduce((acc, k) => {
+            const oneItem =  params.groupsOrdered.reduce((acc, k) => {
                 const v = params.groupData[k]
                 const item = v.items.find((i) => {
                     return i.name === expName
                 })
                 const isSelected = (anyGroupDefined && k === "experiments") ? false : true
-                return !acc && item ? {...item, group: (k !== 'experiments' ? k : undefined), isSelected: isSelected} : acc
+                const newItem =  !acc && item ? {...item, group: (k !== 'experiments' ? k : undefined), isSelected: isSelected} : acc
+                return newItem
             }, null)
 
            return [oneItem.name, oneItem]
         }))
+
+        let idx = 0
+        params.groupsOrdered.forEach((a) => {
+            params.groupData[a].items.forEach((b) => {
+                experimentDetails[b.name].idx = idx
+                idx ++
+            })
+        })
 
         // keep only unique
         const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i)
