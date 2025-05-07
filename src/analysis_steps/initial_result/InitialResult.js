@@ -70,7 +70,8 @@ export default function InitialResult(props) {
                 id: cur.name,
                 name: cur.name,
                 fileName: cur.fileName,
-                originalName: cur.originalName
+                originalName: cur.originalName,
+                idx: cur.idx
             }
             groups.forEach((g) => {
                 if (g === cur.group) acc[g].items.push(cleaned)
@@ -82,7 +83,9 @@ export default function InitialResult(props) {
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
 
         const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v]) => {
-            const newItems = v.items.sort((x, y) => x.name.localeCompare(y.name))
+            const newItems = v.items.sort((x, y) => {
+                return (x.idx !== null && y.idx !== null) ? x.idx - y.idx : x.name.localeCompare(y.name)
+            })
             return [k, {...v, items: newItems}]
         }));
 
@@ -91,7 +94,7 @@ export default function InitialResult(props) {
 
     // format the data for the backend
     const prepareParams = (params) => {
-        const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => (a || (v.name !== "Experiments" && v.items.length > 0)) ? true : false, false)
+        const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => !!(a || (v.name !== "Experiments" && v.items.length > 0)), false)
 
         const experimentDetails = Object.fromEntries(params.experimentNames.map(expName => {
             const oneItem =  params.groupsOrdered.reduce((acc, k) => {
@@ -99,9 +102,12 @@ export default function InitialResult(props) {
                 const item = v.items.find((i) => {
                     return i.name === expName
                 })
-                const isSelected = (anyGroupDefined && k === "experiments") ? false : true
-                const newItem =  !acc && item ? {...item, group: (k !== 'experiments' ? k : undefined), isSelected: isSelected} : acc
-                return newItem
+                const isSelected = (!(anyGroupDefined && k === "experiments"))
+                return !acc && item ? {
+                    ...item,
+                    group: (k !== 'experiments' ? k : undefined),
+                    isSelected: isSelected
+                } : acc
             }, null)
 
            return [oneItem.name, oneItem]
