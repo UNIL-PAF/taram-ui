@@ -19,6 +19,11 @@ export default function TTest(props) {
         'none': "None"
     }
 
+    const testName = (myParams) => {
+        const myName = myParams.equalVariance === false ? "Welch's t-test (unequal variances)" : "Student's t-test (equal variances)"
+        return myParams.paired === true ? ("Paired " + myName) : myName
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -50,7 +55,7 @@ export default function TTest(props) {
                     <Col span={8}>
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
-                                <p className={"analysis-step-param-line"}>{params.equalVariance === false ? "Welch's t-test (unequal variances)" : "Student's t-test (equal variances)"}</p>
+                                <p className={"analysis-step-param-line"}>{testName(params)}</p>
                                 <p className={"analysis-step-param-line"}>Significance
                                     threshold: {params.signThres}</p>
                                 <p className={"analysis-step-param-line"}>Multiple testing
