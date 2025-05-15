@@ -153,7 +153,7 @@ export default function AnalysisSteps(props) {
             {props.data && props.data.analysisSteps && <div
                 style={{width: (props.multipleAnalysis ? "45%" : "65%")}}
                 className={"analysis-col"} >
-                <h3>
+                <h3 style={{marginBottom: "0px"}}>
                 <span style={{float: "left", marginLeft: "10px"}}>
                     <Badge status={badgeStatus()}/>
                     <span style={{fontSize: "large"}}>{props.data.idx + 1}</span>
@@ -181,6 +181,7 @@ export default function AnalysisSteps(props) {
 
             </span>
                 </h3>
+                <span style={{color: "gray"}}><em>{props.data.result.description}</em></span>
                 {(error) && <Alert
                     message="Error"
                     description={error}
