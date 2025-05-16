@@ -12,6 +12,8 @@ export default function GroupSelection(props) {
     const [draggingItemId, setDraggingItemId] = useState()
     const [editGroupName, setEditGroupName] = useState()
 
+    console.log(props)
+
     const changeExpName = (expId, newName) => {
         const myGroupData = {...props.params.groupData}
 
@@ -142,6 +144,7 @@ export default function GroupSelection(props) {
                 >
                     {['experiments'].concat(props.params.groupsOrdered).map((columnId, i) => {
                         const column = props.params.groupData[columnId]
+
                         if (!column) {
                             return null
                         }
@@ -158,7 +161,7 @@ export default function GroupSelection(props) {
                             >
                                 <GroupTitle id={columnId} name={column.name} i={i} moveLeft={props.moveGroupLeft}
                                             moveRight={props.moveGroupRight} isLast={i === nrGroups} editGroupName={editGroupName} setEditGroupName={setEditGroupName}
-                                            changeGroupName={changeGroupName} deleteGroup={deleteGroup}></GroupTitle>
+                                            changeGroupName={changeGroupName} deleteGroup={deleteGroup} color={i === 0 ? undefined : props.params.colors[i]}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
                                         {(provided, snapshot) => {

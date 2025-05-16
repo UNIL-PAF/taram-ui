@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
 import {getNumCols, getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
+import {defaultColors} from "../../common/PlotColors";
 
 export default function InitialResult(props) {
     const type = "initial-result"
@@ -47,7 +48,7 @@ export default function InitialResult(props) {
                 name: "Experiments",
                 items: expList.filter((d) => {
                     return !d.group
-                }).map((d) => {
+                }).map((d, i) => {
                     return {
                         id: d.name,
                         name: d.name,
@@ -82,14 +83,14 @@ export default function InitialResult(props) {
         const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
 
-        const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v]) => {
+        const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v], i) => {
             const newItems = v.items.sort((x, y) => {
                 return (x.idx !== null && y.idx !== null) ? x.idx - y.idx : x.name.localeCompare(y.name)
             })
             return [k, {...v, items: newItems}]
         }));
 
-        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
+        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames, colors: defaultColors}
     }
 
     // format the data for the backend

@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Input} from "antd";
 import {DeleteOutlined, LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 export default function GroupTitle(props) {
+
+    const [color, setColor] = useState(null);
 
     const save = () => {
         props.setEditGroupName(undefined)
@@ -39,31 +41,9 @@ export default function GroupTitle(props) {
         props.changeGroupName(props.id, e.target.value)
     }
 
-    /*
-     <div>
-                    <span style={{display: "block", float: "left", paddingTop: "5px"}}>
-                        {props.editGroupName === props.name &&
-                            <Input
-                                value={props.name}
-                                onBlur={(e) => save(e)}
-                                onPressEnter={(e) => save(e)}
-                                onChange={(e) => change(e)}
-                            />}
-                        {props.editGroupName !== props.name &&
-                        <h4 onClick={() => edit()} style={{paddingLeft: "18px"}}>
-                            {props.name}
-                        </h4>}
-                    </span>
-                {props.id !== "experiments" &&
-                    <span style={{display: "block", float: "right"}}>
-                        <Button onClick={(e) => deleteGroup(e)} type={"text"} icon={<DeleteOutlined/>}></Button>
-                    </span>}
-            </div>
-     */
-
     return (<>
             <div style={{minHeight: "35px"}}><span style={{float: "left"}}>{renderMoveLeft()}</span><span style={{float: "right"}}>{renderMoveRight()}</span></div>
-            <div>
+        <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
                         {props.editGroupName === props.name &&
                             <Input
@@ -73,14 +53,19 @@ export default function GroupTitle(props) {
                                 onChange={(e) => change(e)}
                             />}
                         {props.editGroupName !== props.name &&
-                        <h4 onClick={() => edit()} style={{paddingLeft: "18px"}}>
-                            {props.name}
-                        </h4>}
+                            <h4 onClick={() => edit()} style={{paddingLeft: "18px"}}>
+                                {props.name}
+                            </h4>}
                     </span>
-                {props.id !== "experiments" &&
-                    <span style={{display: "block", float: "right"}}>
+
+            {props.id !== "experiments" &&
+                <span style={{display: "block", float: "right"}}>
                         <Button onClick={(e) => deleteGroup(e)} type={"text"} icon={<DeleteOutlined/>}></Button>
                     </span>}
-            </div>
-        </>);
+
+            {props.color !== undefined && <span style={{display: "block", float: "right", paddingTop: "5px", marginRight: "10px"}}>
+                <input type="color" className={"color-input"} value={props.color} onChange={e => setColor(e.target.value)}/>
+            </span>}
+        </div>
+    </>);
 }
