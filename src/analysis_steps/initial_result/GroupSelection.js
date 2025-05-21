@@ -137,7 +137,7 @@ export default function GroupSelection(props) {
         } else if(props.params.groupData[columnId].color){
             return props.params.groupData[columnId].color
         }else {
-            return defaultColors[i]
+            return defaultColors[i-1]
         }
     }
 

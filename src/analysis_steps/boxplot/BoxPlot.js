@@ -222,7 +222,8 @@ export default function BoxPlot(props) {
                 return {
                     name: (d.gene ? d.gene : d.prot) + asteriks,
                     type: 'line',
-                    data: d.ints
+                    data: d.ints,
+                    color: d.color ? d.color : undefined,
                 }
             })
         }
