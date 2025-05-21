@@ -8,7 +8,6 @@ import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
 import {getNumCols, getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
-import {defaultColors} from "../../common/PlotColors";
 
 export default function InitialResult(props) {
     const type = "initial-result"
@@ -75,12 +74,18 @@ export default function InitialResult(props) {
                 idx: cur.idx
             }
             groups.forEach((g) => {
-                if (g === cur.group) acc[g].items.push(cleaned)
+                if (g === cur.group){
+                    acc[g].items.push(cleaned)
+                    if( (!acc[g].color) && cur.color){
+                        acc[g].color = cur.color
+                    }
+                }
             })
             return acc
         }, initialGroups)
 
         const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
+
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
 
         const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v], i) => {
@@ -90,7 +95,7 @@ export default function InitialResult(props) {
             return [k, {...v, items: newItems}]
         }));
 
-        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames, colors: defaultColors}
+        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
     }
 
     // format the data for the backend
@@ -108,7 +113,8 @@ export default function InitialResult(props) {
                 return !acc && item ? {
                     ...item,
                     group: (k !== 'experiments' ? k : undefined),
-                    isSelected: isSelected
+                    isSelected: isSelected,
+                    color: v.color
                 } : acc
             }, null)
 
@@ -142,7 +148,6 @@ export default function InitialResult(props) {
             stepId: props.data.id,
             params: prepareParams(localGroupParams)
         }))
-
         setShowModal(false)
         setLocalGroupParams(undefined)
     }

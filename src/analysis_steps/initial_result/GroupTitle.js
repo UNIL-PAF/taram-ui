@@ -4,8 +4,6 @@ import {DeleteOutlined, LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 export default function GroupTitle(props) {
 
-    const [color, setColor] = useState(null);
-
     const save = () => {
         props.setEditGroupName(undefined)
     }
@@ -64,7 +62,7 @@ export default function GroupTitle(props) {
                     </span>}
 
             {props.color !== undefined && <span style={{display: "block", float: "right", paddingTop: "5px", marginRight: "10px"}}>
-                <input type="color" className={"color-input"} value={props.color} onChange={e => setColor(e.target.value)}/>
+                <input type="color" className={"color-input"} value={props.color} onChange={e => props.setGroupColor(e.target.value)}/>
             </span>}
         </div>
     </>);

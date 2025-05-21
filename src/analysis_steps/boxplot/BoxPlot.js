@@ -153,6 +153,7 @@ export default function BoxPlot(props) {
             })
             return {
                 group: d.group ? d.group : null,
+                color: d.color ? d.color : undefined,
                 data: dataWithName
             }
         })
@@ -187,7 +188,8 @@ export default function BoxPlot(props) {
                 },
                 xAxisIndex: i,
                 itemStyle: {
-                    opacity: params.showAll ? 0.8 : 1.0
+                    opacity: params.showAll ? 0.8 : 1.0,
+                    borderColor: d.color ? d.color : undefined
                 },
             }
         })

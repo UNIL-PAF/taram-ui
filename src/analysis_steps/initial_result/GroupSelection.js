@@ -5,14 +5,13 @@ import {Button, Col, Popover, Row} from "antd";
 import {EditOutlined, InfoOutlined} from "@ant-design/icons";
 import ExpNameEdit from "./ExpNameEdit"
 import {onClick} from "./GroupSelectionUtils";
+import {defaultColors} from "../../common/PlotColors";
 
 export default function GroupSelection(props) {
     const [showEdit, setShowEdit] = useState()
     const [selItems, setSelItems] = useState([])
     const [draggingItemId, setDraggingItemId] = useState()
     const [editGroupName, setEditGroupName] = useState()
-
-    console.log(props)
 
     const changeExpName = (expId, newName) => {
         const myGroupData = {...props.params.groupData}
@@ -59,6 +58,12 @@ export default function GroupSelection(props) {
 
     const setGroupData = (gd) => {
         props.setParams({...props.params, groupData: gd})
+    }
+
+    const setGroupColor = (columnId, color) => {
+        const newCols = {...props.params.groupData}
+        newCols[columnId].color = color
+        props.setParams({...props.params, groupData: newCols})
     }
 
     const changeGroupName = (groupId, groupName) => {
@@ -126,6 +131,16 @@ export default function GroupSelection(props) {
         } else return "#e6f4ff"
     }
 
+    const getGroupColor = (columnId, i) => {
+        if(i === 0){
+            return undefined
+        } else if(props.params.groupData[columnId].color){
+            return props.params.groupData[columnId].color
+        }else {
+            return defaultColors[i]
+        }
+    }
+
     return (
         <div>
             <Row>
@@ -161,7 +176,7 @@ export default function GroupSelection(props) {
                             >
                                 <GroupTitle id={columnId} name={column.name} i={i} moveLeft={props.moveGroupLeft}
                                             moveRight={props.moveGroupRight} isLast={i === nrGroups} editGroupName={editGroupName} setEditGroupName={setEditGroupName}
-                                            changeGroupName={changeGroupName} deleteGroup={deleteGroup} color={i === 0 ? undefined : props.params.colors[i]}></GroupTitle>
+                                            changeGroupName={changeGroupName} deleteGroup={deleteGroup} color={getGroupColor(columnId, i)} setGroupColor={(color) => setGroupColor(columnId, color)}></GroupTitle>
                                 <div style={{margin: 8}}>
                                     <Droppable droppableId={columnId} key={columnId}>
                                         {(provided, snapshot) => {
