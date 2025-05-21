@@ -119,12 +119,11 @@ export default function VolcanoPlot(props) {
         newOpts.series.forEach((s, i) => {
             if (s.itemStyle) newOpts.series[i].itemStyle = {color: greyCol}
         })
-        newOpts.series[0].markLine.lineStyle.color = greyCol
+        //newOpts.series[0].markLine.lineStyle.color = greyCol
         return newOpts
     }
 
     const getOptions = (results, mySelProts) => {
-
         const params = JSON.parse(props.data.parameters)
         const qValExists = results.data.some(a => a.qVal !== undefined)
 
@@ -251,11 +250,11 @@ export default function VolcanoPlot(props) {
                         symbol: ["none", "none"],
                         data: [
                             {
-                                xAxis: -1 * params.fcThresh,
+                                xAxis: -1 * (params.fcThresh ? params.fcThresh : 0),
                                 name: "Fold change",
                             },
                             {
-                                xAxis: params.fcThresh,
+                                xAxis: (params.fcThresh ? params.fcThresh : 0),
                                 name: "Fold change",
                             },
                         ],
