@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {InputNumber, Row, Select, Space, Switch, Tree, Col} from 'antd';
+import {InputNumber, Row, Select, Space, Switch, Tree, Col, Checkbox} from 'antd';
 
 const {Option} = Select;
 
@@ -17,7 +17,15 @@ export default function ImputationParams(props) {
                         width: 0.3,
                         downshift: 1.8,
                         seed: 1
-                    }
+                    },
+                    forestImputationParams: {
+                        maxIter: 1000,
+                        nTree: 100,
+                        fixedRes: true
+                    },
+                    qrilcImputationParams: {
+                        fixedRes: true
+                    },
                 })
                 setUseDefaultCol(true)
                 setCheckedKeys([props.intCol])
@@ -49,6 +57,27 @@ export default function ImputationParams(props) {
                 setCheckedKeys([props.params.intCol])
             }
         }
+
+        console.log(props.params)
+        // add forest and qrlic params if missing
+        if(!props.params.forestImputationParams){
+            let newParams = {...props.params}
+            newParams.forestImputationParams = {
+                maxIter: 1000,
+                nTree: 100,
+                fixedRes: true
+            }
+            props.setParams(newParams)
+        }
+        if(!props.params.qrilcImputationParams){
+            let newParams = {...props.params}
+            newParams.qrilcImputationParams = {
+                fixedRes: true
+            }
+            props.setParams(newParams)
+        }
+
+
     }
 
     const computeColData = () => {
@@ -98,17 +127,35 @@ export default function ImputationParams(props) {
     }
 
     function normalParams() {
-        return <span style={{paddingLeft: "10px"}}>
+        return <span style={{paddingLeft: "10px", paddingTop: "20px", display: "grid"}}>
                 <span style={{paddingLeft: "10px"}}>Width <InputNumber
                     value={props.params.normImputationParams.width}
                     onChange={(val) => valueChange("width", val)}></InputNumber></span>
-                <span style={{paddingLeft: "10px"}}>Downshift <InputNumber
+                <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Downshift <InputNumber
                     value={props.params.normImputationParams.downshift}
                     onChange={(val) => valueChange("downshift", val)}></InputNumber></span>
-                <span style={{paddingLeft: "10px"}}>Seed <InputNumber
+                <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Seed <InputNumber
                     value={props.params.normImputationParams.seed}
                     onChange={(val) => valueChange("seed", val)}></InputNumber></span>
             </span>
+    }
+
+    function forestParams(){
+        return <div style={{paddingLeft: "10px", paddingTop: "20px", display: "grid"}}>
+                <span style={{paddingLeft: "10px"}}>Maximum number of iterations <InputNumber
+                    value={props.params.forestImputationParams.maxIter}
+                    onChange={(val) => valueChange("width", val)}></InputNumber></span>
+                <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Number of trees <InputNumber
+                    value={props.params.forestImputationParams.nTree}
+                    onChange={(val) => valueChange("downshift", val)}></InputNumber></span>
+                <span style={{paddingLeft: "10px", paddingTop: "5px"}}><Checkbox checked={props.params.forestImputationParams.fixedRes}> Reproducible result (set fixed seed)</Checkbox></span>
+            </div>
+    }
+
+    function qrilcParams(){
+        return <div style={{paddingLeft: "10px", paddingTop: "20px", display: "grid"}}>
+            <span style={{paddingLeft: "10px", paddingTop: "5px"}}><Checkbox checked={props.params.qrilcImputationParams.fixedRes}> Reproducible result (set fixed seed)</Checkbox></span>
+        </div>
     }
 
     const onCheck = (e) => {
@@ -149,13 +196,17 @@ export default function ImputationParams(props) {
                 <Space direction="vertical" size="middle">
                     <h3>Imputation</h3>
                     <span>
-                <Select value={props.params.imputationType} style={{width: 250}} onChange={impChange}>
+                <Select value={props.params.imputationType} style={{width: 440}} onChange={impChange}>
                     <Option value={'normal'}>Normal distribution</Option>
                     <Option value={'nan'}>Replace by NaN</Option>
                     <Option value={'value'}>Fix value</Option>
+                    <Option value={'forest'}>Random forest imputation (missForest)</Option>
+                    <Option value={'qrilc'}>QRILC (Quantile Regression Imputation of Left-Censored data)</Option>
                 </Select>
                         {props.params.imputationType === "value" && valueParams()}
                         {props.params.imputationType === "normal" && normalParams()}
+                        {props.params.imputationType === "forest" && forestParams()}
+                        {props.params.imputationType === "qrilc" && qrilcParams()}
                 </span>
                 </Space>
             </Col>

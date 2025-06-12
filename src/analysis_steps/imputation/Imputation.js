@@ -19,7 +19,9 @@ export default function Imputation(props) {
         return {
             "normal": "Replace missing values in column(s) [" + selColTxt + "] by random numbers drawn from a normal distribution:",
             "nan": "Replace missing values in column(s) [" + selColTxt + "] by NaN.",
-            "value": "Replace missing values in column(s) [" + selColTxt + "] by " + localParams.replaceValue + "."
+            "value": "Replace missing values in column(s) [" + selColTxt + "] by " + localParams.replaceValue + ".",
+            "forest": "Replace missing values in column(s) [" + selColTxt + "] by predictions with random forest models (missForest).",
+            "qrilc": "Replace missing values in column(s) [" + selColTxt + "] by QRILC (Quantile Regression Imputation of Left-Censored data).",
         }
     }
 
