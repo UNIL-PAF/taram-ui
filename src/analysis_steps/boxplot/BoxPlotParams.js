@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
 import {getNumCols} from "../CommonStepUtils";
+import {defaultColors} from "../../common/PlotColors";
 
 const {Option} = Select;
 
@@ -15,6 +16,12 @@ export default function BoxPlotParams(props) {
     const proteinTable = useSelector(state => state.proteinTable.data)
     const proteinTableError = useSelector(state => state.proteinTable.error)
     const dispatch = useDispatch();
+    const nrGroups = Object.values(props.experimentDetails).reduce((a, v) => {
+        if(v.group && !a.includes(v.group)) {
+            return a.concat(v.group)
+        }
+       return a
+    }, []).length
 
     useEffect(() => {
         if(!proteinTable && !proteinTableError){
@@ -78,7 +85,14 @@ export default function BoxPlotParams(props) {
                 </Row>
                 <Divider />
                 <h3>Protein table</h3>
-                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProts"} target={"prot"}></ProteinTable>
+                <ProteinTable
+                    params={props.params}
+                    setParams={props.setParams}
+                    tableData={proteinTable}
+                    paramName={"selProts"}
+                    target={"prot"}
+                    protColors={defaultColors.slice(nrGroups)}>
+                </ProteinTable>
             </Space>
         </>
     }

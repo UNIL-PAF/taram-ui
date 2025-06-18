@@ -5,6 +5,7 @@ import Highlighter from 'react-highlight-words';
 
 export default function ProteinTable(props) {
 
+    const [proteinTable, setProteinTable] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -15,18 +16,23 @@ export default function ProteinTable(props) {
     const target = props.target
 
     useEffect(() => {
-        if(props.tableData && !columns){
+        if (props.tableData && !columns) {
             setColumns(getColumns())
         }
 
         if (props.tableData && props.params && props.params[param] && props.params[param].length > 0 && selectedRowKeys.length === 0) {
-            const selRows = props.tableData.table.filter((r) => {return r.sel}).map((r) => {return r.key})
+            const selRows = props.tableData.table.filter((r) => {
+                return r.sel
+            }).map((r) => {
+                return r.key
+            })
             setSelectedRowKeys(selRows)
+            setProteinTable(props.tableData.table)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selectedRowKeys.length, columns])
 
-    const getColumnSearchProps = (dataIndex) =>({
+    const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
             <div
                 style={{
@@ -99,14 +105,29 @@ export default function ProteinTable(props) {
     });
 
     const getColumns = () => {
-        return defaultColumns.concat( {
-            title: props.tableData.intField,
-            dataIndex: 'int',
-            key: 'int',
-            //defaultSortOrder: 'descend',
-            sorter: (a, b) => a.int - b.int,
-            render: (text) => text ? text.toExponential(2) : 0,
-        })
+        return defaultColumns.concat({
+                title: props.tableData.intField,
+                dataIndex: 'int',
+                key: 'int',
+                //defaultSortOrder: 'descend',
+                sorter: (a, b) => a.int - b.int,
+                render: (text) => text ? text.toExponential(2) : 0,
+            },
+            {
+                title: "Color",
+                dataIndex: 'color',
+                key: 'color',
+                width: 70,
+                //defaultSortOrder: 'descend',
+                render: (text, a, b) => {
+                    console.log(a.color);
+                    if (a.sel) {
+                        return <input type="color" className={"color-input"} value={a.color}
+                                      onChange={e => props.setGroupColor(e.target.value)}/>
+                    }
+                },
+            },
+        )
     }
 
     const defaultColumns = [
@@ -150,23 +171,38 @@ export default function ProteinTable(props) {
     const rowSelection = {
         selectedRowKeys,
         onChange: (a, b) => {
+            console.log(a, b, props.protColors)
             const selProts = b.map((r) => r[target])
             setSelectedRowKeys(a)
             const newParams = {...props.params}
             newParams[param] = selProts
             props.setParams(newParams)
+            let newTable = [...proteinTable].map((row) => {return {...row, sel: false}})
+            a.forEach(aKey => {
+                const i = newTable.findIndex((e) => e.key === aKey)
+                newTable[i] = {...newTable[i], sel: true}
+            })
+            let colIdx = 0
+            newTable.map((row) => {
+                if(row.color) console.log(row.color)
+                const newRow = {...row, color: (row.color ? row.color: props.protColors[colIdx])}
+                if(row.sel) colIdx = colIdx + 1
+                return newRow
+            })
+            console.log(newTable)
+            setProteinTable(newTable)
         }
     };
 
     return (
         <>
             {!props.tableData && <Spin tip="Loading..."></Spin>}
-            {props.tableData && <Table
+            {proteinTable && <Table
                 rowSelection={{
                     type: 'checkbox',
                     ...rowSelection,
                 }}
-                dataSource={props.tableData.table}
+                dataSource={proteinTable}
                 columns={columns}
                 size={"small"}/>}
         </>

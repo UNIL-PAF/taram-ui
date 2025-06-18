@@ -21,6 +21,7 @@ import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
 import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
 
 export default function ParametersModal(props) {
+
     const getParamContent = (type) => {
         // eslint-disable-next-line
         switch (type) {
@@ -44,6 +45,7 @@ export default function ParametersModal(props) {
                                       setParams={props.setParams}
                                       intCol={props.intCol}
                                       stepId={props.stepId}
+                                      experimentDetails={props.experimentDetails}
                 ></BoxPlotParams>
             case 'pca':
                 return <PcaPlotParams commonResult={props.commonResult}
@@ -55,10 +57,10 @@ export default function ParametersModal(props) {
                 ></PcaPlotParams>
             case 'umap':
                 return <UmapPlotParams commonResult={props.commonResult}
-                                      params={props.params}
-                                      setParams={props.setParams}
-                                      intCol={props.intCol}
-                                      stepId={props.stepId}
+                                       params={props.params}
+                                       setParams={props.setParams}
+                                       intCol={props.intCol}
+                                       stepId={props.stepId}
                                        experimentDetails={props.experimentDetails}
                 ></UmapPlotParams>
             case 'filter':
@@ -127,10 +129,10 @@ export default function ParametersModal(props) {
                 ></OrderColumnsParams>
             case 'rename-columns':
                 return <RenameColumnsParams commonResult={props.commonResult}
-                                           params={props.params}
-                                           setParams={props.setParams}
-                                           experimentDetails={props.experimentDetails}
-                                           intCol={props.intCol}
+                                            params={props.params}
+                                            setParams={props.setParams}
+                                            experimentDetails={props.experimentDetails}
+                                            intCol={props.intCol}
                 ></RenameColumnsParams>
             case 'add-column':
                 return <AddColumnParams
