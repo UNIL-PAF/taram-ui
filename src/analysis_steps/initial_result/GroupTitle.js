@@ -13,11 +13,11 @@ export default function GroupTitle(props) {
     }
 
     const moveLeft = () => {
-        props.moveLeft(props.name, props.i)
+        props.moveLeft(props.id, props.i)
     }
 
     const moveRight = () => {
-        props.moveRight(props.name, props.i)
+        props.moveRight(props.id, props.i)
     }
 
     const renderMoveLeft = () => {
@@ -31,7 +31,7 @@ export default function GroupTitle(props) {
 
     const edit = () => {
         if(props.name !== "Experiments"){
-            props.setEditGroupName(props.name)
+            props.setEditGroupName(props.id)
         }
     }
 
@@ -65,14 +65,14 @@ export default function GroupTitle(props) {
             <div style={{minHeight: "35px"}}><span style={{float: "left"}}>{renderMoveLeft()}</span><span style={{float: "right"}}>{renderMoveRight()}</span></div>
             <div>
                     <span style={{display: "block", float: "left", paddingTop: "5px"}}>
-                        {props.editGroupName === props.name &&
+                        {props.editGroupName === props.id &&
                             <Input
                                 value={props.name}
                                 onBlur={(e) => save(e)}
                                 onPressEnter={(e) => save(e)}
                                 onChange={(e) => change(e)}
                             />}
-                        {props.editGroupName !== props.name &&
+                        {props.editGroupName !== props.id &&
                         <h4 onClick={() => edit()} style={{paddingLeft: "18px"}}>
                             {props.name}
                         </h4>}
