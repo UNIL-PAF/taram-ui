@@ -58,7 +58,6 @@ export default function ImputationParams(props) {
             }
         }
 
-        console.log(props.params)
         // add forest and qrlic params if missing
         if(!props.params.forestImputationParams){
             let newParams = {...props.params}
@@ -114,9 +113,14 @@ export default function ImputationParams(props) {
         props.setParams({...props.params, imputationType: value})
     }
 
-    function valueChange(field, value) {
+    function valueChange(field, value, type=null) {
         let newParams = {...props.params}
-        newParams[[field]] = value
+        if(type !== null){
+            newParams[[type]][[field]] = value
+        } else {
+            newParams[[field]] = value
+        }
+
         props.setParams(newParams)
     }
 
@@ -130,13 +134,13 @@ export default function ImputationParams(props) {
         return <span style={{paddingLeft: "10px", paddingTop: "20px", display: "grid"}}>
                 <span style={{paddingLeft: "10px"}}>Width <InputNumber
                     value={props.params.normImputationParams.width}
-                    onChange={(val) => valueChange("width", val)}></InputNumber></span>
+                    onChange={(val) => valueChange("width", val, "normImputationParams")}></InputNumber></span>
                 <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Downshift <InputNumber
                     value={props.params.normImputationParams.downshift}
-                    onChange={(val) => valueChange("downshift", val)}></InputNumber></span>
+                    onChange={(val) => valueChange("downshift", val, "normImputationParams")}></InputNumber></span>
                 <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Seed <InputNumber
                     value={props.params.normImputationParams.seed}
-                    onChange={(val) => valueChange("seed", val)}></InputNumber></span>
+                    onChange={(val) => valueChange("seed", val, "normImputationParams")}></InputNumber></span>
             </span>
     }
 
@@ -144,10 +148,10 @@ export default function ImputationParams(props) {
         return <div style={{paddingLeft: "10px", paddingTop: "20px", display: "grid"}}>
                 <span style={{paddingLeft: "10px"}}>Maximum number of iterations <InputNumber
                     value={props.params.forestImputationParams.maxIter}
-                    onChange={(val) => valueChange("width", val)}></InputNumber></span>
+                    onChange={(val) => valueChange("maxIter", val, "forestImputationParams")}></InputNumber></span>
                 <span style={{paddingLeft: "10px", paddingTop: "5px"}}>Number of trees <InputNumber
                     value={props.params.forestImputationParams.nTree}
-                    onChange={(val) => valueChange("downshift", val)}></InputNumber></span>
+                    onChange={(val) => valueChange("nTree", val, "forestImputationParams")}></InputNumber></span>
                 <span style={{paddingLeft: "10px", paddingTop: "5px"}}><Checkbox checked={props.params.forestImputationParams.fixedRes}> Reproducible result (set fixed seed)</Checkbox></span>
             </div>
     }
