@@ -37,10 +37,10 @@ export default function GroupSelection(props) {
             nextIdx = nextIdx + 1
         }
         const newName = "Group-" + nextIdx
-        newCols[newName] = {name: newName, items: []}
+        newCols[(nextIdx-1)+"-"+newName] = {name: newName, items: []}
         props.setParams({
             ...props.params,
-            groupsOrdered: props.params.groupsOrdered.concat(newName),
+            groupsOrdered: props.params.groupsOrdered.concat((nextIdx-1)+"-"+newName),
             groupData: newCols
         })
     }

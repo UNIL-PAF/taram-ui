@@ -92,10 +92,12 @@ export default function InitialResult(props) {
             const newItems = v.items.sort((x, y) => {
                 return (x.idx !== null && y.idx !== null) ? x.idx - y.idx : x.name.localeCompare(y.name)
             })
-            return [k, {...v, items: newItems}]
+            const name = (k === "experiments") ? "experiments" : (i-1)+"-"+k
+            return [name, {...v, items: newItems}]
         }));
 
-        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: myGroupsOrdered, experimentNames: colMapping.experimentNames}
+        const groupsOrderedIdx = myGroupsOrdered.map((a, i) => i + "-" + a)
+        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: groupsOrderedIdx, experimentNames: colMapping.experimentNames}
     }
 
     // format the data for the backend
@@ -112,7 +114,7 @@ export default function InitialResult(props) {
                 const isSelected = (!(anyGroupDefined && k === "experiments"))
                 return !acc && item ? {
                     ...item,
-                    group: (k !== 'experiments' ? k : undefined),
+                    group: (k !== 'experiments' ? k.replace(/^\d+-/, "") : undefined),
                     isSelected: isSelected,
                     color: v.color
                 } : acc
@@ -130,7 +132,8 @@ export default function InitialResult(props) {
         })
 
         // keep only unique
-        const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i)
+        const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i).map(g => g.replace(/^\d+-/, ""))
+
         return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: params.experimentNames}
     }
 
@@ -146,7 +149,7 @@ export default function InitialResult(props) {
         dispatch(setStepParameters({
             resultId: props.resultId,
             stepId: props.data.id,
-            params: prepareParams(localGroupParams)
+            params:prepareParams(localGroupParams)
         }))
         setShowModal(false)
         setLocalGroupParams(undefined)

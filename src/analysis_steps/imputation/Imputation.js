@@ -20,7 +20,7 @@ export default function Imputation(props) {
             "normal": "Replace missing values in column(s) [" + selColTxt + "] by random numbers drawn from a normal distribution:",
             "nan": "Replace missing values in column(s) [" + selColTxt + "] by NaN.",
             "value": "Replace missing values in column(s) [" + selColTxt + "] by " + localParams.replaceValue + ".",
-            "forest": "Replace missing values in column(s) [" + selColTxt + "] by predictions with random forest models (missForest).",
+            "forest": "Replace missing values in column(s) [" + selColTxt + "] by predictions with random forest models (missForest):",
             "qrilc": "Replace missing values in column(s) [" + selColTxt + "] by QRILC (Quantile Regression Imputation of Left-Censored data).",
         }
     }
@@ -41,6 +41,13 @@ export default function Imputation(props) {
             <p className={"analysis-step-param-line"}>Width: {params.normImputationParams.width}</p>
             <p className={"analysis-step-param-line"}>Down shift: {params.normImputationParams.downshift}</p>
             <p className={"analysis-step-param-line"}>Seed: {params.normImputationParams.seed}</p>
+        </>
+    }
+
+    const getForestParams = () => {
+        return <>
+            <p className={"analysis-step-param-line"}>Max nr of iterations: {params.forestImputationParams.maxIter}</p>
+            <p className={"analysis-step-param-line"}>Number of trees: {params.forestImputationParams.nTree}</p>
         </>
     }
 
@@ -76,6 +83,7 @@ export default function Imputation(props) {
                             <div className={"analysis-step-param-content"}>
                                 <p className={"analysis-step-param-line"}>{imputationText()[params.imputationType]}</p>
                                 {params.imputationType === "normal" && getNormParams()}
+                                {params.imputationType === "forest" && getForestParams()}
                             </div>
                         </div>
                     </Col>
