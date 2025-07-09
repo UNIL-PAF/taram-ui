@@ -70,13 +70,27 @@ export default function GroupSelection(props) {
         if (groupId === groupName) return
 
         const myName = groupName.trimStart().replace('\t', ' ')
+        const groupIdNr = groupId.match(/^(\d+)-/)
+        const newGroupId = groupIdNr ? (groupIdNr[0] + myName) : myName
         const newCols = {...props.params.groupData}
-        newCols[myName] = newCols[groupId]
-        newCols[myName].name = myName
+        newCols[newGroupId] = newCols[groupId]
+        newCols[newGroupId].name = myName
         delete newCols[groupId]
-        const newGroupsOrdered = props.params.groupsOrdered.map(a => a === groupId ? myName : a)
-        setEditGroupName(myName)
-        props.setParams({...props.params, groupsOrdered: newGroupsOrdered, groupData: newCols})
+        const newGroupsOrdered = props.params.groupsOrdered.map(a => a === groupId ? newGroupId : a)
+
+        // update indexes
+        const newGroupsOrderedUpdated = newGroupsOrdered.map((a, i) => {
+            const idMatch = a.match(/^\d+-(.+)/)
+            return idMatch ? (i + "-" + idMatch[1]) : a
+        })
+
+        const newColsUpdated = newGroupsOrdered.reduce((acc, key, i) => {
+            acc[newGroupsOrderedUpdated[i]] = newCols[key];
+            return acc;
+        }, {experiments: newCols['experiments']});
+
+        setEditGroupName(newGroupsOrderedUpdated[newGroupsOrdered.indexOf(newGroupId)])
+        props.setParams({...props.params, groupsOrdered: newGroupsOrderedUpdated, groupData: newColsUpdated})
     }
 
     const onDragStart = (start) => {
