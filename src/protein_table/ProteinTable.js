@@ -24,13 +24,15 @@ export default function ProteinTable(props) {
             })
             setSelectedRowKeys(selRows)
 
-            // let's create selProtColors if they aren't already
-            const mySelColors = props.params.selProts.map((p, i) => {
-                return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
-            })
-            const newParams = {...props.params}
-            newParams['selProtColors'] = mySelColors
-            props.setParams(newParams)
+            if(props.defaultColors){
+                // let's create selProtColors if they aren't already
+                const mySelColors = props.params.selProts.map((p, i) => {
+                    return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
+                })
+                const newParams = {...props.params}
+                newParams['selProtColors'] = mySelColors
+                props.setParams(newParams)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selectedRowKeys.length])
@@ -116,15 +118,16 @@ export default function ProteinTable(props) {
     }
 
     const getColumns = () => {
-        return defaultColumns.concat({
-                title: props.tableData.intField,
-                dataIndex: 'int',
-                key: 'int',
-                //defaultSortOrder: 'descend',
-                sorter: (a, b) => a.int - b.int,
-                render: (text) => text ? text.toExponential(2) : 0,
-            },
-            {
+        const myCols = defaultColumns.concat({
+            title: props.tableData.intField,
+            dataIndex: 'int',
+            key: 'int',
+            //defaultSortOrder: 'descend',
+            sorter: (a, b) => a.int - b.int,
+            render: (text) => text ? text.toExponential(2) : 0,
+        })
+
+        return props.defaultColors ? myCols.concat({
                 title: "Color",
                 dataIndex: 'color',
                 key: 'color',
@@ -136,8 +139,7 @@ export default function ProteinTable(props) {
                     return (selProtIdx >= 0 ? <input type="color" className={"color-input"} value={selProtColor}
                                       onChange={e => setProtColor(selProtIdx, e.target.value)}/> : null)
                 },
-            },
-        )
+            }) : myCols
     }
 
     const defaultColumns = [
@@ -185,15 +187,17 @@ export default function ProteinTable(props) {
         onChange: (a, b) => {
             const selProts = b.map((r) => r[target])
             setSelectedRowKeys(a)
-
-            // let's create selProtColors if they aren't already
-            const mySelColors = props.params.selProts ? props.params.selProts.map((p, i) => {
-                return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
-            }) : null
-
             const newParams = {...props.params}
             newParams[param] = selProts
-            newParams['selProtColors'] = mySelColors
+
+            if(props.defaultColors){
+                // let's create selProtColors if they aren't already
+                const mySelColors = props.params.selProts ? props.params.selProts.map((p, i) => {
+                    return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
+                }) : null
+                newParams['selProtColors'] = mySelColors
+            }
+
             props.setParams(newParams)
         }
     };
