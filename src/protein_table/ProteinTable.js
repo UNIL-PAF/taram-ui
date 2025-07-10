@@ -5,21 +5,17 @@ import Highlighter from 'react-highlight-words';
 
 export default function ProteinTable(props) {
 
-    const [proteinTable, setProteinTable] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [columns, setColumns] = useState();
     const searchInput = useRef(null);
 
     const param = props.paramName
     const target = props.target
 
-    useEffect(() => {
-        if (props.tableData && !columns) {
-            setColumns(getColumns())
-        }
 
+
+    useEffect(() => {
         if (props.tableData && props.params && props.params[param] && props.params[param].length > 0 && selectedRowKeys.length === 0) {
             const selRows = props.tableData.table.filter((r) => {
                 return r.sel
@@ -27,10 +23,17 @@ export default function ProteinTable(props) {
                 return r.key
             })
             setSelectedRowKeys(selRows)
-            setProteinTable(props.tableData.table)
+
+            // let's create selProtColors if they aren't already
+            const mySelColors = props.params.selProts.map((p, i) => {
+                return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
+            })
+            const newParams = {...props.params}
+            newParams['selProtColors'] = mySelColors
+            props.setParams(newParams)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, selectedRowKeys.length, columns])
+    }, [props, selectedRowKeys.length])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -104,6 +107,14 @@ export default function ProteinTable(props) {
             ),
     });
 
+    const setProtColor = (idx, color) => {
+        const newParams = {...props.params}
+        const myCols = props.params.selProtColors
+        myCols[idx] = color
+        newParams['selProtColors'] = myCols
+        props.setParams(newParams)
+    }
+
     const getColumns = () => {
         return defaultColumns.concat({
                 title: props.tableData.intField,
@@ -120,11 +131,10 @@ export default function ProteinTable(props) {
                 width: 70,
                 //defaultSortOrder: 'descend',
                 render: (text, a, b) => {
-                    console.log(a.color);
-                    if (a.sel) {
-                        return <input type="color" className={"color-input"} value={a.color}
-                                      onChange={e => props.setGroupColor(e.target.value)}/>
-                    }
+                    const selProtIdx = props.params.selProts.indexOf(a[target]);
+                    const selProtColor = selProtIdx >= 0 ? (props.params.selProtColors && props.params.selProtColors.length >= (selProtIdx+1) ? props.params.selProtColors[selProtIdx] : props.defaultColors[selProtIdx]): a.color
+                    return (selProtIdx >= 0 ? <input type="color" className={"color-input"} value={selProtColor}
+                                      onChange={e => setProtColor(selProtIdx, e.target.value)}/> : null)
                 },
             },
         )
@@ -154,6 +164,8 @@ export default function ProteinTable(props) {
         }
     ];
 
+    const columns = props.tableData ? getColumns() : undefined
+
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -171,38 +183,30 @@ export default function ProteinTable(props) {
     const rowSelection = {
         selectedRowKeys,
         onChange: (a, b) => {
-            console.log(a, b, props.protColors)
             const selProts = b.map((r) => r[target])
             setSelectedRowKeys(a)
+
+            // let's create selProtColors if they aren't already
+            const mySelColors = props.params.selProts.map((p, i) => {
+                return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
+            })
+
             const newParams = {...props.params}
             newParams[param] = selProts
+            newParams['selProtColors'] = mySelColors
             props.setParams(newParams)
-            let newTable = [...proteinTable].map((row) => {return {...row, sel: false}})
-            a.forEach(aKey => {
-                const i = newTable.findIndex((e) => e.key === aKey)
-                newTable[i] = {...newTable[i], sel: true}
-            })
-            let colIdx = 0
-            newTable.map((row) => {
-                if(row.color) console.log(row.color)
-                const newRow = {...row, color: (row.color ? row.color: props.protColors[colIdx])}
-                if(row.sel) colIdx = colIdx + 1
-                return newRow
-            })
-            console.log(newTable)
-            setProteinTable(newTable)
         }
     };
 
     return (
         <>
             {!props.tableData && <Spin tip="Loading..."></Spin>}
-            {proteinTable && <Table
+            {props.tableData && props.tableData.table && <Table
                 rowSelection={{
                     type: 'checkbox',
                     ...rowSelection,
                 }}
-                dataSource={proteinTable}
+                dataSource={props.tableData.table}
                 columns={columns}
                 size={"small"}/>}
         </>

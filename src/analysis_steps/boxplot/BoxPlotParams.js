@@ -37,7 +37,7 @@ export default function BoxPlotParams(props) {
             setShowAll(false)
         }else{
             if(useDefaultCol === undefined){
-                setUseDefaultCol(props.params.column ? false: true)
+                setUseDefaultCol(!props.params.column)
             }
             if(showAll === undefined){
                 setShowAll(props.params.showAll)
@@ -91,7 +91,7 @@ export default function BoxPlotParams(props) {
                     tableData={proteinTable}
                     paramName={"selProts"}
                     target={"prot"}
-                    protColors={defaultColors.slice(nrGroups)}>
+                    defaultColors={defaultColors.slice(nrGroups)}>
                 </ProteinTable>
             </Space>
         </>
