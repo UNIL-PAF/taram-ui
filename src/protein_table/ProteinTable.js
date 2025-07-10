@@ -131,7 +131,7 @@ export default function ProteinTable(props) {
                 width: 70,
                 //defaultSortOrder: 'descend',
                 render: (text, a, b) => {
-                    const selProtIdx = props.params.selProts.indexOf(a[target]);
+                    const selProtIdx = props.params.selProts ? props.params.selProts.indexOf(a[target]) : -1
                     const selProtColor = selProtIdx >= 0 ? (props.params.selProtColors && props.params.selProtColors.length >= (selProtIdx+1) ? props.params.selProtColors[selProtIdx] : props.defaultColors[selProtIdx]): a.color
                     return (selProtIdx >= 0 ? <input type="color" className={"color-input"} value={selProtColor}
                                       onChange={e => setProtColor(selProtIdx, e.target.value)}/> : null)
@@ -187,9 +187,9 @@ export default function ProteinTable(props) {
             setSelectedRowKeys(a)
 
             // let's create selProtColors if they aren't already
-            const mySelColors = props.params.selProts.map((p, i) => {
+            const mySelColors = props.params.selProts ? props.params.selProts.map((p, i) => {
                 return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
-            })
+            }) : null
 
             const newParams = {...props.params}
             newParams[param] = selProts
