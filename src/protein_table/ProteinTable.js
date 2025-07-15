@@ -192,9 +192,9 @@ export default function ProteinTable(props) {
 
             if(props.defaultColors){
                 // first we have to check if there is a row removed or added
-                const missingIndexes = props.params[param]
+                const missingIndexes = props.params[param] ? props.params[param]
                     .map((item, index) => selProts.includes(item) ? null : index)
-                    .filter(index => index !== null);
+                    .filter(index => index !== null) : []
 
                 let mySelColors = props.params.selProts ? props.params.selProts.map((p, i) => {
                     return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
