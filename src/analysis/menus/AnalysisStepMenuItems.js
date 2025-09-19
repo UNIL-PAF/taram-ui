@@ -339,6 +339,11 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'summary-stat'}>
                             <span id={"menu-item"}>Summary</span>
                         </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("correlation-table")}
+                                   className="narrow-menu"
+                                   key={'correlation-table'}>
+                            <span id={"menu-item"}>Correlations</span>
+                        </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("t-test")}
                                    className="narrow-menu"
                                    key={'t-test'}>

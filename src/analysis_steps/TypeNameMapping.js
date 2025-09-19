@@ -38,6 +38,8 @@ export function typeToName(type) {
             return 'Add column'
         case 'one-d-enrichment':
             return '1D Enrichment'
+        case 'correlation-table':
+            return 'Correlations'
         default: return "Missing type: [" + type + "]?!"
     }
 }

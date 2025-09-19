@@ -25,6 +25,7 @@ import DownloadZippedResults from "../analysis/menus/DownloadZippedResults";
 import AddColumn from "./add_column/AddColumn";
 import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
 import Conclusion from "./conclusion/Conclusion"
+import CorrelationTable from "./correlation_table/CorrelationTable";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -134,6 +135,10 @@ export default function AnalysisSteps(props) {
                                       onSelect={onSelect} isSelected={selStep === i}/>
                 case 'one-d-enrichment':
                     return <OneDEnrichment isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                           data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
+                                           onSelect={onSelect} isSelected={selStep === i}/>
+                case 'correlation-table':
+                    return <CorrelationTable isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                            data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                            onSelect={onSelect} isSelected={selStep === i}/>
                 default:

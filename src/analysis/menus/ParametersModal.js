@@ -19,6 +19,7 @@ import OrderColumnsParams from "../../analysis_steps/order_columns/OrderColumnsP
 import RenameColumnsParams from "../../analysis_steps/rename_columns/RenameColumnsParams";
 import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
 import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
+import CorrelationTableParams from "../../analysis_steps/correlation_table/CorrelationTableParams";
 
 export default function ParametersModal(props) {
 
@@ -150,6 +151,13 @@ export default function ParametersModal(props) {
                     experimentDetails={props.experimentDetails}
                     intCol={props.intCol}
                 ></OneDEnrichmentParams>
+            case 'correlation-table':
+                return <CorrelationTableParams
+                    commonResult={props.commonResult}
+                    params={props.params}
+                    setParams={props.setParams}
+                    intCol={props.intCol}
+                ></CorrelationTableParams>
 
         }
     }
