@@ -2,7 +2,6 @@ import React, {useState, useRef, useEffect} from "react";
 import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {formNum} from "../../common/NumberFormatting";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import EchartsZoom from "../EchartsZoom";
@@ -22,12 +21,15 @@ export default function CorrelationTable(props) {
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
-
     useEffect(() => {
         if(myChart.current){
             setChartInstance(myChart.current.getEchartsInstance())
         }
     });
+
+    const corrTypeNames = (name) => {
+        return (name === "pearson" ? "Pearson" : "Spearman")
+    }
 
     const computeOptions = () => {
 
@@ -46,11 +48,11 @@ export default function CorrelationTable(props) {
         const minVal = Math.min(...results.correlationMatrix.map(item => item.v))
 
         const axisElementsX = results.experimentNames.map((n, i) => {
-            return [i, 0, n, "x", results.colors ? results.colors[i] : null]
+            return [i, 0, n, "x", results.colors ? results.colors[i] : null, results.groupNames ? results.groupNames[i] : null]
         })
 
         const axisElementsY = results.experimentNames.map((n, i) => {
-            return [0, i, n, "y", results.colors ? results.colors[i] : null]
+            return [0, i, n, "y", results.colors ? results.colors[i] : null, results.groupNames ? results.groupNames[i] : null]
         })
 
         const myOption = {
@@ -71,7 +73,8 @@ export default function CorrelationTable(props) {
                     data: yData,
                     show: false
                 },
-                top: 110
+                top: 110,
+                left: 80
             },
             visualMap: {
                 type: 'continuous',
@@ -87,7 +90,7 @@ export default function CorrelationTable(props) {
             tooltip: {
                 position: 'top',
                 formatter: function (x) {
-                    return "" + x.value[0] + "<br>" + x.value[1] + "<br>" + x.value[2]
+                    return "x: <strong>" + x.value[0] + "</strong><br>y: <strong>" + x.value[1] + "</strong><br>R2: <strong>" + x.value[2].toFixed(2) + "</strong>"
                 }
             },
             series: [{
@@ -116,6 +119,12 @@ export default function CorrelationTable(props) {
     }
 
     const myOh = results ? computeOptions() : null
+
+
+    function shortenString(s) {
+        return s.length > 10 ? s.slice(0, 10) + ".." : s;
+    }
+
 
     if(chartInstance){
         setTimeout(function () {
@@ -152,7 +161,7 @@ export default function CorrelationTable(props) {
                 return {
                     type: 'text',
                     style: {
-                        text: row[2],
+                        text: shortenString(row[2]),
                         fill: row[4] || '#333',
                         font: 'bold 12px sans-serif',
                         textAlign: row[3] === 'x' ? 'left' : "right",
@@ -164,7 +173,10 @@ export default function CorrelationTable(props) {
 
                     tooltip: {
                         show: true,
-                        formatter: 'This is a tooltip on a graphic element'
+                        position: 'right',
+                        formatter: () => {
+                            return row[2] + "<br>" + row[5]
+                        }
                     }
 
                 };
@@ -178,8 +190,8 @@ export default function CorrelationTable(props) {
                                 left: 'center',
                                 top: 5,
                                 style: {
-                                    text: 'Pearson R2',
-                                    font: 'bold 14px sans-serif',
+                                    text: corrTypeNames(localParams.correlationType) + ' R2',
+                                    font: 'bold 12px sans-serif',
                                     fill: '#333'
                                 },
                                 rotation: 0

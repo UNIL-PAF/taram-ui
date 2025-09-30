@@ -14,7 +14,6 @@ export default function CorrelationTableParams(props) {
 
     useEffect(() => {
         if (!props.params) {
-            console.log("here?", props.commonResult)
             props.setParams({
                 intCol: intColName,
                 correlationType: 'pearson',
@@ -89,7 +88,7 @@ export default function CorrelationTableParams(props) {
     }
 
     function transChange(value) {
-        props.setParams({...props.params, transformationType: value})
+        props.setParams({...props.params, correlationType: value})
     }
 
     const switchDefault = (e) => {
