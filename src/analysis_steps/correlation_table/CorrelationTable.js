@@ -22,6 +22,27 @@ export default function CorrelationTable(props) {
     const isDone = props.data.status === "done"
 
     useEffect(() => {
+        const handleResize = () => {
+
+            setTimeout(() => {
+                addChartLabels()
+            }, 500)
+
+
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup on unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+
+
+    useEffect(() => {
         if(myChart.current){
             setChartInstance(myChart.current.getEchartsInstance())
         }
@@ -125,8 +146,7 @@ export default function CorrelationTable(props) {
         return s.length > 10 ? s.slice(0, 10) + ".." : s;
     }
 
-
-    if(chartInstance){
+    const addChartLabels = () => {
         setTimeout(function () {
             const elements = myOh.x.concat(myOh.y).map((row) => {
                 const center = chartInstance.convertToPixel(
@@ -163,13 +183,13 @@ export default function CorrelationTable(props) {
                     style: {
                         text: shortenString(row[2]),
                         fill: row[4] || '#333',
-                        font: 'bold 12px sans-serif',
+                        font: '12px sans-serif',
                         textAlign: row[3] === 'x' ? 'left' : "right",
                         textVerticalAlign: 'middle',
                     },
-                    x: row[3] === 'x' ? center[0] - 15  : left[0] - cellWidth - 5,
+                    x: row[3] === 'x' ? center[0] - cellWidth  : left[0] - cellWidth - 5,
                     y: center[1] + (row[3] === 'x' ? - cellHeight - 5 : 0),
-                    rotation: row[3] === "x" ? (Math.PI / 8) : 0,
+                    rotation: row[3] === "x" ? (Math.PI / 7) : 0,
 
                     tooltip: {
                         show: true,
@@ -184,24 +204,28 @@ export default function CorrelationTable(props) {
 
             chartInstance.setOption({
                 graphic: {
-                        elements: [
-                            {
-                                type: 'text',
-                                left: 'center',
-                                top: 5,
-                                style: {
-                                    text: corrTypeNames(localParams.correlationType) + ' R2',
-                                    font: 'bold 12px sans-serif',
-                                    fill: '#333'
-                                },
-                                rotation: 0
+                    elements: [
+                        {
+                            type: 'text',
+                            left: 'center',
+                            top: 5,
+                            style: {
+                                text: corrTypeNames(localParams.correlationType) + ' R2',
+                                font: 'bold 12px sans-serif',
+                                fill: '#333'
                             },
+                            rotation: 0
+                        },
 
-                        ].concat(elements)
+                    ].concat(elements)
                 },
             });
         });
+    }
 
+
+    if(chartInstance){
+        addChartLabels()
     }
 
     return (
