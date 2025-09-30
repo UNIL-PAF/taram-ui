@@ -11,7 +11,6 @@ export default function CorrelationTable(props) {
     const type = "correlation-table"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
-    const [options, setOptions] = useState(params)
     const [showZoom, setShowZoom] = useState(null)
     const [chartInstance, setChartInstance] = useState(null)
     const myChart = useRef(null);
@@ -22,13 +21,15 @@ export default function CorrelationTable(props) {
     const isDone = props.data.status === "done"
 
     useEffect(() => {
+        if(isDone && chartInstance) addChartLabels()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isDone, chartInstance])
+
+    useEffect(() => {
         const handleResize = () => {
-
             setTimeout(() => {
-                addChartLabels()
+                if(isDone && chartInstance) addChartLabels()
             }, 500)
-
-
         };
 
         window.addEventListener('resize', handleResize);
@@ -38,15 +39,15 @@ export default function CorrelationTable(props) {
             window.removeEventListener('resize', handleResize);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-
+    }, [isDone, chartInstance]);
 
     useEffect(() => {
-        if(myChart.current){
+        if(isDone && myChart.current){
             setChartInstance(myChart.current.getEchartsInstance())
+        }else if(isDone === false){
+            setChartInstance(null)
         }
-    });
+    }, [myChart, isDone]);
 
     const corrTypeNames = (name) => {
         return (name === "pearson" ? "Pearson" : "Spearman")
@@ -141,7 +142,6 @@ export default function CorrelationTable(props) {
 
     const myOh = results ? computeOptions() : null
 
-
     function shortenString(s) {
         return s.length > 10 ? s.slice(0, 10) + ".." : s;
     }
@@ -223,11 +223,6 @@ export default function CorrelationTable(props) {
         });
     }
 
-
-    if(chartInstance){
-        addChartLabels()
-    }
-
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -263,7 +258,7 @@ export default function CorrelationTable(props) {
                     {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
             }
-            { myOh &&
+            { isDone && myOh &&
                 <ReactECharts ref={myChart} option={myOh.options} style={{
                     height: "400px",
                     width: '100%',
