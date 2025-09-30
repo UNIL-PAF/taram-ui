@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Button, Card, Checkbox, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
@@ -122,13 +122,12 @@ export default function BoxPlot(props) {
 
     const prepareAllDatat = (myResults) => {
         if(!myResults.allProtData) return null
-        const myTab = myResults.allProtData.reduce((a, v, i) => {
-            const newPar = v.map( b => {
+        return myResults.allProtData.reduce((a, v, i) => {
+            const newPar = v.map(b => {
                 return [myResults.experimentNames[i], b.y, b.j]
             })
             return a.concat(newPar)
         }, [])
-        return myTab
     }
 
     const computeTopSpace = (groupNames) => {
@@ -294,6 +293,7 @@ export default function BoxPlot(props) {
             dataset: boxplotDatasets,
             series: series,
             legend: [{
+                top: 'top',
                 orient: "horizontal",
                 formatter: function (name) {
                     return name.substring(6)

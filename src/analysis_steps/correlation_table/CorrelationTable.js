@@ -1,21 +1,196 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {formNum} from "../../common/NumberFormatting";
 import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
+import EchartsZoom from "../EchartsZoom";
+import ReactECharts from "echarts-for-react";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
-    const results = JSON.parse(props.data.results)
+    const [options, setOptions] = useState(params)
+    const [showZoom, setShowZoom] = useState(null)
+    const [chartInstance, setChartInstance] = useState(null)
+    const myChart = useRef(null);
 
-    const transText = { "log2": "Log2"}
+    const results = JSON.parse(props.data.results)
 
     const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
+
+
+    useEffect(() => {
+        if(myChart.current){
+            setChartInstance(myChart.current.getEchartsInstance())
+        }
+    });
+
+    const computeOptions = () => {
+
+        const xData = results.experimentNames.map(n => {
+            return {
+                value: n
+            }
+        })
+
+        const yData = [...xData]
+
+        const data = results.correlationMatrix.map(row => {
+            return [results.experimentNames[row.x], results.experimentNames[row.y], row.v]
+        })
+
+        const minVal = Math.min(...results.correlationMatrix.map(item => item.v))
+
+        const axisElementsX = results.experimentNames.map((n, i) => {
+            return [i, 0, n, "x", results.colors ? results.colors[i] : null]
+        })
+
+        const axisElementsY = results.experimentNames.map((n, i) => {
+            return [0, i, n, "y", results.colors ? results.colors[i] : null]
+        })
+
+        const myOption = {
+            legend: {
+                orient: 'horizontal',
+                left: 'center',
+                bottom: 10,
+                data: results.groupsAndColors && results.groupsAndColors.map(a => a.group),
+                selectedMode: false
+            },
+
+            matrix: {
+                x: {
+                    data: xData,
+                    show: false
+                },
+                y: {
+                    data: yData,
+                    show: false
+                },
+                top: 110
+            },
+            visualMap: {
+                type: 'continuous',
+                min: minVal,
+                max: 1,
+                dimension: 2,
+                calculable: true,
+                orient: 'horizontal',
+                top: 5,
+                left: 'center',
+                formatter: (value) => value.toFixed(2),
+            },
+            tooltip: {
+                position: 'top',
+                formatter: function (x) {
+                    return "" + x.value[0] + "<br>" + x.value[1] + "<br>" + x.value[2]
+                }
+            },
+            series: [{
+                type: 'heatmap',
+                coordinateSystem: 'matrix',
+                data,
+                label: {
+                    show: false,
+                    formatter: (params) => params.value[2].toFixed(2)
+                }
+            }].concat(results.groupsAndColors ? results.groupsAndColors.map( g => {
+                return {
+                    name: g.group,
+                    type: 'heatmap', // must use a type compatible with 'matrix'
+                    coordinateSystem: 'matrix',
+                    data: [], // empty data
+                    itemStyle: {color: g.color}
+                }
+            }) : [])
+        };
+        return {
+            x: axisElementsX,
+            y: axisElementsY,
+            options: myOption
+        }
+    }
+
+    const myOh = results ? computeOptions() : null
+
+    if(chartInstance){
+        setTimeout(function () {
+            const elements = myOh.x.concat(myOh.y).map((row) => {
+                const center = chartInstance.convertToPixel(
+                    {
+                        matrixIndex: 0
+                    },
+                    row.slice(0, 2)
+                );
+
+                const left = chartInstance.convertToPixel(
+                    {
+                        matrixIndex: 0
+                    },
+                    [0,0]
+                );
+
+                const cellWidth = (chartInstance.convertToPixel(
+                    {
+                        matrixIndex: 0
+                    },
+                    [1,0]
+                )[0] - left[0]) / 2
+
+                const cellHeight = (chartInstance.convertToPixel(
+                    {
+                        matrixIndex: 0
+                    },
+                    [0,1]
+                )[1] - left[1]) / 2
+
+
+                return {
+                    type: 'text',
+                    style: {
+                        text: row[2],
+                        fill: row[4] || '#333',
+                        font: 'bold 12px sans-serif',
+                        textAlign: row[3] === 'x' ? 'left' : "right",
+                        textVerticalAlign: 'middle',
+                    },
+                    x: row[3] === 'x' ? center[0] - 15  : left[0] - cellWidth - 5,
+                    y: center[1] + (row[3] === 'x' ? - cellHeight - 5 : 0),
+                    rotation: row[3] === "x" ? (Math.PI / 8) : 0,
+
+                    tooltip: {
+                        show: true,
+                        formatter: 'This is a tooltip on a graphic element'
+                    }
+
+                };
+            });
+
+            chartInstance.setOption({
+                graphic: {
+                        elements: [
+                            {
+                                type: 'text',
+                                left: 'center',
+                                top: 5,
+                                style: {
+                                    text: 'Pearson R2',
+                                    font: 'bold 14px sans-serif',
+                                    fill: '#333'
+                                },
+                                rotation: 0
+                            },
+
+                        ].concat(elements)
+                },
+            });
+        });
+
+    }
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -46,21 +221,20 @@ export default function CorrelationTable(props) {
             {results &&
                 <Row className={"analysis-step-row"}>
                     <Col span={8}>
-                        <div className={"analysis-step-param-box"}>
-                            <div className={"analysis-step-param-content"}>
-                                {transText[params.transformationType]} transformation
-                            </div>
-                        </div>
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
-                        <Row><span><strong>Min: </strong>{results.min && formNum(results.min)}</span></Row>
-                        <Row><span><strong>Max: </strong>{results.max && formNum(results.max)}</span></Row>
                     </Col>
                     {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
             }
+            { myOh &&
+                <ReactECharts ref={myChart} option={myOh.options} style={{
+                    height: "400px",
+                    width: '100%',
+                }}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
+
         </Card>
     );
 }
