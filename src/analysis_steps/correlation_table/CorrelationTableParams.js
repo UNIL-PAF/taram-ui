@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Col, Row, Select, Space, Switch, Tree} from 'antd';
+import {Checkbox, Col, Row, Select, Space} from 'antd';
 import {getNumCols} from "../CommonStepUtils";
 
 const {Option} = Select;

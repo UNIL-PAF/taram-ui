@@ -1,11 +1,12 @@
 import React, {useState, useRef, useEffect} from "react";
-import {Card, Col, Row} from "antd";
+import {Button, Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
+import {getStepTitle} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import EchartsZoom from "../EchartsZoom";
 import ReactECharts from "echarts-for-react";
+import {FullscreenOutlined} from "@ant-design/icons";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
@@ -16,19 +17,17 @@ export default function CorrelationTable(props) {
     const myChart = useRef(null);
 
     const results = JSON.parse(props.data.results)
-
-    const [showTable, setShowTable] = useState(false)
     const isDone = props.data.status === "done"
 
     useEffect(() => {
-        if(isDone && chartInstance) addChartLabels()
+        if(isDone && chartInstance && myOh) addChartLabels(chartInstance, myOh)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDone, chartInstance])
 
     useEffect(() => {
         const handleResize = () => {
             setTimeout(() => {
-                if(isDone && chartInstance) addChartLabels()
+                if(isDone && chartInstance && myOh) addChartLabels(chartInstance, myOh)
             }, 500)
         };
 
@@ -136,7 +135,8 @@ export default function CorrelationTable(props) {
         return {
             x: axisElementsX,
             y: axisElementsY,
-            options: myOption
+            options: myOption,
+            name: corrTypeNames(localParams.correlationType)
         }
     }
 
@@ -146,31 +146,31 @@ export default function CorrelationTable(props) {
         return s.length > 10 ? s.slice(0, 10) + ".." : s;
     }
 
-    const addChartLabels = () => {
+    const addChartLabels = (echartInstance, myData) => {
         setTimeout(function () {
-            const elements = myOh.x.concat(myOh.y).map((row) => {
-                const center = chartInstance.convertToPixel(
+            const elements = myData.x.concat(myData.y).map((row) => {
+                const center = echartInstance.convertToPixel(
                     {
                         matrixIndex: 0
                     },
                     row.slice(0, 2)
                 );
 
-                const left = chartInstance.convertToPixel(
+                const left = echartInstance.convertToPixel(
                     {
                         matrixIndex: 0
                     },
                     [0,0]
                 );
 
-                const cellWidth = (chartInstance.convertToPixel(
+                const cellWidth = (echartInstance.convertToPixel(
                     {
                         matrixIndex: 0
                     },
                     [1,0]
                 )[0] - left[0]) / 2
 
-                const cellHeight = (chartInstance.convertToPixel(
+                const cellHeight = (echartInstance.convertToPixel(
                     {
                         matrixIndex: 0
                     },
@@ -202,7 +202,7 @@ export default function CorrelationTable(props) {
                 };
             });
 
-            chartInstance.setOption({
+            echartInstance.setOption({
                 graphic: {
                     elements: [
                         {
@@ -210,7 +210,7 @@ export default function CorrelationTable(props) {
                             left: 'center',
                             top: 5,
                             style: {
-                                text: corrTypeNames(localParams.correlationType) + ' R2',
+                                text: myData.name + ' R2',
                                 font: 'bold 12px sans-serif',
                                 fill: '#333'
                             },
@@ -248,6 +248,10 @@ export default function CorrelationTable(props) {
                               resType={props.resType}
             />
         }>
+            {isDone && myOh && <div style={{textAlign: 'right'}}>
+                <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
+                        icon={<FullscreenOutlined/>}>Expand</Button>
+            </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row className={"analysis-step-row"}>
@@ -255,7 +259,6 @@ export default function CorrelationTable(props) {
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
                     </Col>
-                    {isDone && getTableCol(props.data.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
             }
             { isDone && myOh &&
@@ -264,8 +267,8 @@ export default function CorrelationTable(props) {
                     width: '100%',
                 }}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {showTable && getTable(props.data.id, props.data.nr, setShowTable)}
-
+            {isDone && myOh && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={myOh.options}
+                                     paramType={type} stepId={props.data.id} minHeight={"800px"} postRendering={(echart) => addChartLabels(echart, myOh)}></EchartsZoom>}
         </Card>
     );
 }

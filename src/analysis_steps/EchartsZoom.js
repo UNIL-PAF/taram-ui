@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {Modal} from "antd";
 import '../analysis/analysis.css'
 import ReactECharts from "echarts-for-react";
@@ -6,6 +6,7 @@ import ReactECharts from "echarts-for-react";
 export default function EchartsZoom(props) {
 
     const [myTimeout, setMyTimeout] = useState(true)
+    const myChart = useRef(null);
 
     useEffect(() => {
         if(props.showZoom && myTimeout && props.echartsOptions){
@@ -15,11 +16,18 @@ export default function EchartsZoom(props) {
         }
     }, [props, myTimeout])
 
+    useEffect(() => {
+        if(props.postRendering && myChart.current){
+            props.postRendering(myChart.current.getEchartsInstance())
+        }
+    });
+
     const showZoomModal = () => {
         return <>
             {props.echartsOptions &&
                 <div style={{height: '100%'}}>
                     <ReactECharts
+                        ref={myChart}
                         onEvents={props.onEvents}
                         option={{
                             ...props.echartsOptions, toolbox: {
