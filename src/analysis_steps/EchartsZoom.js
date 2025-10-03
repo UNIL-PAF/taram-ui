@@ -16,12 +16,6 @@ export default function EchartsZoom(props) {
         }
     }, [props, myTimeout])
 
-    useEffect(() => {
-        if(props.postRendering && myChart.current){
-            props.postRendering(myChart.current.getEchartsInstance())
-        }
-    });
-
     const showZoomModal = () => {
         return <>
             {props.echartsOptions &&
