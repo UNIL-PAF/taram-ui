@@ -1,27 +1,39 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Row} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {getStepTitle} from "../CommonStepUtils";
+import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import EchartsZoom from "../EchartsZoom";
 import ReactECharts from "echarts-for-react";
 import {FullscreenOutlined} from "@ant-design/icons";
+import {useDispatch} from "react-redux";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
     const params = JSON.parse(props.data.parameters)
     const [localParams, setLocalParams] = useState(params)
     const [showZoom, setShowZoom] = useState(null)
-
+    const [options, setOptions] = useState({count: 0})
     const results = JSON.parse(props.data.results)
     const isDone = props.data.status === "done"
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (isDone && props.data && results) {
+            const echartOptions = computeOptions(results)
+            setOptions({...options, data: echartOptions})
+            replacePlotIfChanged(props.data.id, results, echartOptions, dispatch)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.data])
+
 
     const corrTypeNames = (name) => {
         return (name === "pearson" ? "Pearson" : "Spearman")
     }
 
-    const computeOptions = () => {
+    const computeOptions = (results) => {
         const data = results.correlationMatrix.map(row => {
             return [
                 results.experimentNames[row.x],
@@ -35,9 +47,25 @@ export default function CorrelationTable(props) {
         })
 
         const minVal = Math.min(...results.correlationMatrix.map(item => item.v))
+        const title = corrTypeNames(localParams.correlationType) + " R2"
+        const groupColors = results.groupsAndColors.map(a => a.group)
+
+        const xAxisData = results.experimentNames;
+        const richAxis = {};
+        xAxisData.forEach((name, i) => {
+            richAxis[`label${i}`] = {
+                color: results.colors[i] || '#6f6f6f'
+            };
+        });
+
+        const groupSeries = results.groupsAndColors.map(g => ({
+            name: g.group,
+            type: 'heatmap',
+            data: [], // empty data
+            itemStyle: { color: g.color }
+        }));
 
         const myOption = {
-
             graphic: {
                 elements: [
                     {
@@ -45,7 +73,7 @@ export default function CorrelationTable(props) {
                         top: 65,
                         left: "25%",
                         style: {
-                            text: corrTypeNames(localParams.correlationType) + " R2",
+                            text: title,
                             font: 'bold 12px sans-serif',
                             fill: '#333'
                         }
@@ -55,7 +83,7 @@ export default function CorrelationTable(props) {
                 orient: 'horizontal',
                 left:'center',
                 top: 10,
-                data: results.groupsAndColors && results.groupsAndColors.map(a => a.group),
+                data: groupColors,
                 selectedMode: false
             },
             xAxis: {
@@ -64,9 +92,11 @@ export default function CorrelationTable(props) {
                 axisLabel: {
                     interval: 0,
                     rotate: 50,
-                    color: function (_, i) {
-                        return results.colors ? results.colors[i] : "black"
+                    formatter: function (value, index) {
+                        return `{label${index}|${value}}`;
                     },
+                    rich: richAxis
+
                 },
             },
             yAxis: {
@@ -74,9 +104,10 @@ export default function CorrelationTable(props) {
                 data: results.experimentNames,
                 axisLabel: {
                     interval: 0,
-                    color: function (_, i) {
-                        return results.colors ? results.colors[i] : "black"
+                    formatter: function (value, index) {
+                        return `{label${index}|${value}}`;
                     },
+                    rich: richAxis
                 },
             },
 
@@ -89,7 +120,9 @@ export default function CorrelationTable(props) {
                 orient: 'horizontal',
                 top: 65,
                 left: "20%",
-                formatter: (value) => value.toFixed(2),
+                formatter: function(value){
+                    return value.toFixed(2)
+                },
             },
 
             tooltip: {
@@ -105,22 +138,17 @@ export default function CorrelationTable(props) {
                 data,
                 label: {
                     show: false,
-                    formatter: (params) => params.value[2].toFixed(2)
+                    formatter: function(params){
+                        return params.value[2].toFixed(2)
+                    }
                 }
-            }].concat(results.groupsAndColors ? results.groupsAndColors.map( g => {
-                return {
-                    name: g.group,
-                    type: 'heatmap',
-                    data: [], // empty data
-                    itemStyle: {color: g.color}
-                }
-            }) : [])
+            },
+                ...groupSeries
+            ]
         };
 
         return myOption
     }
-
-    const myOh = results ? computeOptions() : null
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
@@ -145,9 +173,10 @@ export default function CorrelationTable(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              hasPlot={true}
             />
         }>
-            {isDone && myOh && <div style={{textAlign: 'right'}}>
+            {isDone && options && <div style={{textAlign: 'right'}}>
                 <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                         icon={<FullscreenOutlined/>}>Expand</Button>
             </div>}
@@ -160,13 +189,13 @@ export default function CorrelationTable(props) {
                     </Col>
                 </Row>
             }
-            { isDone && myOh &&
-                <ReactECharts option={myOh} style={{
+            { isDone && options && options.data &&
+                <ReactECharts option={options.data} style={{
                     height: "400px",
                     width: '100%',
                 }}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {isDone && myOh && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={myOh}
+            {isDone && options && options.data && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );
