@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Row} from "antd";
+import {Button, Card, Col, Row, Space} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
 import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import EchartsZoom from "../EchartsZoom";
 import ReactECharts from "echarts-for-react";
-import {FullscreenOutlined} from "@ant-design/icons";
+import {DownloadOutlined, FullscreenOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
+import globalConfig from "../../globalConfig";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
@@ -31,6 +32,22 @@ export default function CorrelationTable(props) {
 
     const corrTypeNames = (name) => {
         return (name === "pearson" ? "Pearson" : "Spearman")
+    }
+
+    const downloadTable = () => {
+        console.log(props)
+
+        fetch(globalConfig.urlBackend + 'analysis-step/result/' + props.data.id)
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Correlation_table-' + props.data.nr + '.txt';
+                    a.click();
+                });
+                //window.location.href = response.url;
+            });
     }
 
     const computeOptions = (results) => {
@@ -177,15 +194,26 @@ export default function CorrelationTable(props) {
             />
         }>
             {isDone && options && <div style={{textAlign: 'right'}}>
-                <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
-                        icon={<FullscreenOutlined/>}>Expand</Button>
+
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
             {results &&
                 <Row className={"analysis-step-row"}>
-                    <Col span={8}>
+                    <Col span={16}>
                     </Col>
                     <Col span={8} className={"analysis-step-middle-col"}>
+                        <Row className={"analysis-step-row-end"} style={{marginTop: "10px"}}>
+                            <Space direction={"vertical"}>
+                            <span><Button
+                                className={"table-download-button"}
+                                icon={<DownloadOutlined/>}
+                                onClick={() => downloadTable()}
+                                size={'small'}><span>{'Correlation-table-' + props.data.nr}</span>
+                            </Button></span>
+                                <span><Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
+                                              icon={<FullscreenOutlined/>}>Expand</Button></span>
+                            </Space>
+                        </Row>
                     </Col>
                 </Row>
             }
