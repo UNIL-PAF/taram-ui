@@ -24,7 +24,9 @@ export default function DownloadZippedResults(props) {
     }, [props, selRowKeys])
 
     const hasOtherTable = (step) => {
-        return (step.type === "summary-stat" || step.type === "one-d-enrichment") ? true : false
+        return (step.type === "summary-stat" ||
+            step.type === "correlation-table" ||
+            step.type === "one-d-enrichment")
     }
 
     const greyItem = (text, item) => {
@@ -83,6 +85,8 @@ export default function DownloadZippedResults(props) {
             return "Summary-table-" + idx
         }else if(step.type === "one-d-enrichment"){
             return "Enrichment-table-" + idx
+        }else if(step.type === "correlation-table"){
+            return "Correlation-table-" + idx
         }
         return undefined
     }
