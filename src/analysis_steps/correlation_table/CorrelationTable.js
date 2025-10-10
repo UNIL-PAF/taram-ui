@@ -65,22 +65,34 @@ export default function CorrelationTable(props) {
 
         const minVal = Math.min(...results.correlationMatrix.map(item => item.v))
         const title = corrTypeNames(localParams.correlationType) + " R2"
-        const groupColors = results.groupsAndColors.map(a => a.group)
+        const groupColors = results.groupsAndColors && results.groupsAndColors.map(a => a.group)
 
         const xAxisData = results.experimentNames;
         const richAxis = {};
         xAxisData.forEach((name, i) => {
             richAxis[`label${i}`] = {
-                color: results.colors[i] || '#6f6f6f'
+                color: (results.colors && results.colors[i]) || '#6f6f6f'
             };
         });
 
-        const groupSeries = results.groupsAndColors.map(g => ({
+        const groupSeries = results.groupsAndColors ? results.groupsAndColors.map(g => ({
             name: g.group,
             type: 'heatmap',
             data: [], // empty data
             itemStyle: { color: g.color }
-        }));
+        })) : []
+
+        const chunkSize = 500;
+        const series = [];
+
+        for (let i = 0; i < data.length; i += chunkSize) {
+            series.push({
+                type: 'heatmap',
+                data: data.slice(i, i + chunkSize),
+                label: { show: false }
+            });
+        }
+
 
         const myOption = {
             graphic: {
@@ -150,18 +162,7 @@ export default function CorrelationTable(props) {
                         `R2: <strong>${params.value[2].toFixed(2)}</strong>`
                 }
             },
-            series: [{
-                type: 'heatmap',
-                data,
-                label: {
-                    show: false,
-                    formatter: function(params){
-                        return params.value[2].toFixed(2)
-                    }
-                }
-            },
-                ...groupSeries
-            ]
+            series: series.concat(groupSeries)
         };
 
         return myOption

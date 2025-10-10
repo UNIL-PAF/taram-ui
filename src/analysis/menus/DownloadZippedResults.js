@@ -92,6 +92,7 @@ export default function DownloadZippedResults(props) {
     }
 
     const data = props.data.analysisSteps.map((s, i) => {
+        console.log(s)
         const hasPlot = (s.results == null) ? true : false
         const idx = i + 1
         return {
