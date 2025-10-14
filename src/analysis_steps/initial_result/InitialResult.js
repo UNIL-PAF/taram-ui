@@ -21,7 +21,7 @@ export default function InitialResult(props) {
     const dispatch = useDispatch();
 
     const defineGroupButton = {danger: true, text: "Define groups"}
-    const ChangeGroupButton = {danger: false, text: "Edit groups"}
+    const ChangeGroupButton = {danger: false, text: "Edit and order groups"}
 
     const results = JSON.parse(props.data.results)
     const colInfo = props.data.columnInfo
@@ -102,10 +102,11 @@ export default function InitialResult(props) {
 
     // format the data for the backend
     const prepareParams = (params) => {
+        const expNames = Object.values(localGroupParams.groupData).flatMap(g => g.items ? g.items.map(a => a.name) : [])
         const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => !!(a || (v.name !== "Experiments" && v.items.length > 0)), false)
         const groups = ["experiments"].concat(params.groupsOrdered)
 
-        const experimentDetails = Object.fromEntries(params.experimentNames.map(expName => {
+        const experimentDetails = Object.fromEntries(expNames.map(expName => {
             const oneItem =  groups.reduce((acc, k) => {
                 const v = params.groupData[k]
                 const item = v.items.find((i) => {
@@ -134,7 +135,7 @@ export default function InitialResult(props) {
         // keep only unique
         const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i).map(g => g.replace(/^\d+-/, ""))
 
-        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: params.experimentNames}
+        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: expNames}
     }
 
     const changeIntensity = (value) => {
