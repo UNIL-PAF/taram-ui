@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Row, Space} from "antd";
+import React, {useEffect, useRef, useState} from "react";
+import {Button, Card, Col, Row, Space, Spin} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import StepComment from "../StepComment";
-import {getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
+import {getStepResults, getStepTitle, replacePlotIfChanged} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import EchartsZoom from "../EchartsZoom";
 import ReactECharts from "echarts-for-react";
 import {DownloadOutlined, FullscreenOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import globalConfig from "../../globalConfig";
+import {useOnScreen} from "../../common/UseOnScreen";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
@@ -19,6 +20,53 @@ export default function CorrelationTable(props) {
     const results = JSON.parse(props.data.results)
     const isDone = props.data.status === "done"
     const dispatch = useDispatch();
+    const [stepResults, setStepResults] = useState()
+    const [isWaiting, setIsWaiting] = useState(true)
+    const [showLoading, setShowLoading] = useState(false)
+    const [showError, setShowError] = useState(false)
+
+    // check if element is shown
+    const elementRef = useRef(null);
+    const isOnScreen = useOnScreen(elementRef);
+
+    useEffect(() => {
+        if(props.data && props.data.status === "done") {
+            if (isOnScreen) {
+                if (!stepResults) {
+                    setShowLoading(true)
+                    getStepResults(props.data.id, setStepResults, dispatch, () => setShowLoading(false), () => setShowError(true))
+                }
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults, isOnScreen, props.data])
+
+    // update if stepResults arrive
+    useEffect(() => {
+        if (localParams && props.data && props.data.status === 'done' && stepResults) {
+            const echartOptions = computeOptions(stepResults, localParams)
+            setOptions(echartOptions)
+            replacePlotIfChanged(props.data.id, stepResults, echartOptions, dispatch)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stepResults])
+
+
+    useEffect(() => {
+        if (props.data && stepResults) {
+            if (isWaiting && props.data.status === 'done') {
+                setIsWaiting(false)
+                setStepResults(undefined)
+                setOptions(null)
+            }
+
+            if (!isWaiting && props.data && props.data.status !== 'done') {
+                setIsWaiting(true)
+                setOptions(null)
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props, isWaiting, stepResults])
 
     useEffect(() => {
         if (isDone && props.data && results) {
@@ -35,8 +83,6 @@ export default function CorrelationTable(props) {
     }
 
     const downloadTable = () => {
-        console.log(props)
-
         fetch(globalConfig.urlBackend + 'analysis-step/result/' + props.data.id)
             .then(response => {
                 response.blob().then(blob => {
@@ -50,28 +96,37 @@ export default function CorrelationTable(props) {
             });
     }
 
-    const computeOptions = (results) => {
+    const computeOptions = (results, myParams) => {
         const data = results.correlationMatrix.map(row => {
             return [
-                results.experimentNames[row.x],
                 results.experimentNames[row.y],
+                results.experimentNames[row.x],
                 row.v,
-                (results.groupNames ? (" (" + results.groupNames[row.x] + ")") : ""),
                 (results.groupNames ? (" (" + results.groupNames[row.y] + ")") : ""),
-                (results.colors ? (results.colors[row.x]) : "#6f6f6f"),
+                (results.groupNames ? (" (" + results.groupNames[row.x] + ")") : ""),
                 (results.colors ? (results.colors[row.y]) : "#6f6f6f"),
+                (results.colors ? (results.colors[row.x]) : "#6f6f6f"),
             ]
         })
 
         const minVal = Math.min(...results.correlationMatrix.map(item => item.v))
-        const title = corrTypeNames(localParams.correlationType) + " R2"
+        const title = corrTypeNames(myParams.correlationType) + " R2"
         const groupColors = results.groupsAndColors && results.groupsAndColors.map(a => a.group)
 
         const xAxisData = results.experimentNames;
-        const richAxis = {};
+        const richAxisX = {};
         xAxisData.forEach((name, i) => {
-            richAxis[`label${i}`] = {
+            richAxisX[`label${i}`] = {
                 color: (results.colors && results.colors[i]) || '#6f6f6f'
+            };
+        });
+
+        const resReverseColors = results.colors.slice().reverse()
+        const yAxisData = results.experimentNames.slice().reverse()
+        const richAxisY = {};
+        yAxisData.forEach((name, i) => {
+            richAxisY[`label${i}`] = {
+                color: (results.colors && resReverseColors[i]) || '#6f6f6f'
             };
         });
 
@@ -93,14 +148,13 @@ export default function CorrelationTable(props) {
             });
         }
 
-
         const myOption = {
             graphic: {
                 elements: [
                     {
                         type: 'text',
                         top: 65,
-                        left: "25%",
+                        right: "25%",
                         style: {
                             text: title,
                             font: 'bold 12px sans-serif',
@@ -117,26 +171,26 @@ export default function CorrelationTable(props) {
             },
             xAxis: {
                 type: 'category',
-                data: results.experimentNames,
+                data: xAxisData,
                 axisLabel: {
                     interval: 0,
                     rotate: 50,
                     formatter: function (value, index) {
                         return `{label${index}|${value}}`;
                     },
-                    rich: richAxis
+                    rich: richAxisX
 
                 },
             },
             yAxis: {
                 type: 'category',
-                data: results.experimentNames,
+                data: yAxisData,
                 axisLabel: {
                     interval: 0,
                     formatter: function (value, index) {
                         return `{label${index}|${value}}`;
                     },
-                    rich: richAxis
+                    rich: richAxisY
                 },
             },
 
@@ -148,7 +202,7 @@ export default function CorrelationTable(props) {
                 calculable: true,
                 orient: 'horizontal',
                 top: 65,
-                left: "20%",
+                right: "20%",
                 formatter: function(value){
                     return value.toFixed(2)
                 },
@@ -170,6 +224,7 @@ export default function CorrelationTable(props) {
 
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
+              ref={elementRef}
               onClick={props.onSelect}
               title={getStepTitle(props.data.nr, typeToName(type))}
               headStyle={{textAlign: 'left', backgroundColor: '#f4f0ec'}}
@@ -194,11 +249,13 @@ export default function CorrelationTable(props) {
                               hasPlot={true}
             />
         }>
-            {isDone && options && <div style={{textAlign: 'right'}}>
-
+            {options && <div style={{textAlign: 'right'}}>
             </div>}
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}
-            {results &&
+            {showLoading && !(options && options.data) && !showError && <Spin tip="Loading" style={{marginLeft: "20px"}}>
+                <div className="content"/>
+            </Spin>}
+            {options &&
                 <Row className={"analysis-step-row"}>
                     <Col span={16}>
                     </Col>
@@ -218,13 +275,13 @@ export default function CorrelationTable(props) {
                     </Col>
                 </Row>
             }
-            { isDone && options && options.data &&
-                <ReactECharts option={options.data} style={{
+            { options &&
+                <ReactECharts option={options} style={{
                     height: "400px",
                     width: '100%',
                 }}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
-            {isDone && options && options.data && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
+            {isDone && options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}
         </Card>
     );

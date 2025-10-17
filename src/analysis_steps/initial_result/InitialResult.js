@@ -102,7 +102,7 @@ export default function InitialResult(props) {
 
     // format the data for the backend
     const prepareParams = (params) => {
-        const expNames = Object.values(localGroupParams.groupData).flatMap(g => g.items ? g.items.map(a => a.name) : [])
+        const expNames = Object.values(params.groupData).flatMap(g => g.items ? g.items.map(a => a.name) : [])
         const anyGroupDefined = Object.values(params.groupData).reduce( (a, v) => !!(a || (v.name !== "Experiments" && v.items.length > 0)), false)
         const groups = ["experiments"].concat(params.groupsOrdered)
 
