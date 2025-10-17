@@ -91,8 +91,15 @@ export default function DownloadZippedResults(props) {
         return undefined
     }
 
+    const getPlotName = (type) => {
+        if(type === "correlation-table"){
+            return "Correlations"
+        }else {
+            return type.charAt(0).toUpperCase() + type.slice(1)
+        }
+    }
+
     const data = props.data.analysisSteps.map((s, i) => {
-        console.log(s)
         const hasPlot = (s.results == null) ? true : false
         const idx = i + 1
         return {
@@ -101,7 +108,7 @@ export default function DownloadZippedResults(props) {
             idx: idx,
             mainTables: (s.modifiesResult && idx) ? "Table-" + idx : undefined,
             specialTables: getSpecialTable(s, idx),
-            plots: hasPlot ? s.type + "-" + idx : undefined,
+            plots: hasPlot ? getPlotName(s.type) + "-" + idx : undefined,
         }
     })
 
