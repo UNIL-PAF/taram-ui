@@ -201,7 +201,7 @@ export default function PcaPlot(props) {
                     return params.data[0]
                 }
             },
-            legend: {},
+            legend: {top: 'top'},
             series: (series.length > 1) ? series : series.concat([{
                 datasetIndex: 0,
                 type: 'scatter',
