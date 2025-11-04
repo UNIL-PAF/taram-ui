@@ -79,9 +79,14 @@ export default function AnalysisStepMenuItems(props) {
          * Alert if clicked on outside of element
          */
         function handleClickOutside(event) {
-            if (menuRef.current && event.target.id !== "menu-item" && event.target.role !== "menuitem" && !menuRef.current.contains(event.target) && !event.target.querySelector("#menu-item")) {
-                closeMenu()
-            }
+            const dropdownElement = event.target.closest('[class^="ant-dropdown-menu"]');
+            if (menuRef.current && event.target.id !== "menu-item" &&
+                event.target.role !== "menuitem" &&
+                !menuRef.current.contains(event.target) &&
+                !event.target.querySelector("#menu-item") &&
+                !dropdownElement) {
+                    closeMenu()
+                }
         }
 
         // Bind the event listener
@@ -376,7 +381,7 @@ export default function AnalysisStepMenuItems(props) {
                         okText="Yes"
                         cancelText="Cancel"
                     >
-                        <span>Delete {getType()}</span>
+                        <div style={{ width: '100%' }}>Delete {getType()}</div>
                     </Popconfirm>
                 </Menu.Item>}
                 {<Menu.Item key={'delete-following'} danger={true} disabled={props.isLocked}>
@@ -386,7 +391,7 @@ export default function AnalysisStepMenuItems(props) {
                         okText="Yes"
                         cancelText="Cancel"
                     >
-                        <span>Delete <strong>ALL</strong> following steps</span>
+                        <div style={{ width: '100%' }}>Delete <strong>ALL</strong> following steps</div>
                     </Popconfirm>
                 </Menu.Item>}
             </Menu>
