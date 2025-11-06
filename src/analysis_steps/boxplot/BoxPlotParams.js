@@ -9,7 +9,6 @@ import {defaultColors} from "../../common/PlotColors";
 const {Option} = Select;
 
 export default function BoxPlotParams(props) {
-
     const [useDefaultCol, setUseDefaultCol] = useState()
     const [showAll, setShowAll] = useState()
     const numCols = getNumCols(props.commonResult.headers)
@@ -24,11 +23,9 @@ export default function BoxPlotParams(props) {
     }, []).length
 
     useEffect(() => {
-        if(!proteinTable && !proteinTableError){
-            dispatch(getProteinTable({stepId: props.stepId}))
-        }
+        dispatch(getProteinTable({stepId: props.stepId}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proteinTable, proteinTableError])
+    }, [])
 
     useEffect(() => {
         if (!props.params) {
@@ -86,6 +83,8 @@ export default function BoxPlotParams(props) {
                 <Divider />
                 <h3>Protein table</h3>
                 <ProteinTable
+                    key={props.stepId}
+                    stepId={props.stepId}
                     params={props.params}
                     setParams={props.setParams}
                     tableData={proteinTable}
@@ -93,6 +92,7 @@ export default function BoxPlotParams(props) {
                     target={"prot"}
                     defaultColors={defaultColors.slice(nrGroups)}>
                 </ProteinTable>
+                {proteinTableError && <span className="alert alert-danger">{proteinTableError}</span>}
             </Space>
         </>
     }

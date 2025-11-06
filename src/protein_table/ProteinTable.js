@@ -13,8 +13,6 @@ export default function ProteinTable(props) {
     const param = props.paramName
     const target = props.target
 
-
-
     useEffect(() => {
         if (props.tableData && props.params && props.params[param] && props.params[param].length > 0 && selectedRowKeys.length === 0) {
             const selRows = props.tableData.table.filter((r) => {
