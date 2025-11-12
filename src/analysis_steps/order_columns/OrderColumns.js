@@ -38,6 +38,7 @@ export default function OrderColumns(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

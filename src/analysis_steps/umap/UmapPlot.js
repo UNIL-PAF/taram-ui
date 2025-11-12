@@ -271,6 +271,7 @@ export default function PcaPlot(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
 

@@ -30,10 +30,11 @@ export default function AnalysisStepMenu(props) {
         });
     };
 
+    const menuButtonDisabled = props.analysisStatus === "running" || props.status === "idle"
+
     return (
         <>
             {props.status !== 'done' && <span style={{marginRight: "180px"}}>{statusTag()}</span>}
-
             <Dropdown open={menuIsVisible} onClick={() => setMenuIsVisible(true)}
                       overlay={<AnalysisStepMenuItems
                                                       type={props.paramType}
@@ -56,10 +57,17 @@ export default function AnalysisStepMenu(props) {
                                                       experimentDetails={props.experimentDetails}
                                                       resType={props.resType}
                                                       isLocked={props.isLocked}
+                                                      analysisStatus={props.analysisStatus}
+                                                      stepStatus={props.status}
                                                       resultId={props.resultId}></AnalysisStepMenuItems>}
                       placement="bottomLeft"
+                      disabled={menuButtonDisabled}
                       arrow>
-                <Button type={"primary"} icon={<MenuUnfoldOutlined />}></Button>
+                <Button
+                    type={"primary"}
+                    icon={<MenuUnfoldOutlined />}
+                >
+                </Button>
             </Dropdown>
         </>
 

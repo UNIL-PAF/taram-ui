@@ -190,6 +190,7 @@ export default function InitialResult(props) {
                               isSelected={props.isSelected}
                               isLocked={props.isLocked}
                               error={props.data.error}
+                              analysisStatus={props.data.analysisStatus}
                               hasImputed={false}/>
         }>
             {colInfo && results && <div>

@@ -52,6 +52,7 @@ export default function Filter(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

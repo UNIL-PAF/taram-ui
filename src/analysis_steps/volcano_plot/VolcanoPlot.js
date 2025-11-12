@@ -381,6 +381,7 @@ export default function VolcanoPlot(props) {
                               hasImputed={props.data.imputationTablePath != null}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {props.data.status === 'done' && <Row>

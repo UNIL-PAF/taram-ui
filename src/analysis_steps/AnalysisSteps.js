@@ -51,7 +51,7 @@ export default function AnalysisSteps(props) {
 
     const getAnalysisSteps = () => {
         return props.data.analysisSteps.map( (step, i) => {
-            const stepWithNr = {...step, nr: i+1}
+            const stepWithNr = {...step, nr: i+1, analysisStatus: props.data.status}
             const myKey = step.id
             const onSelect = () => {
                 setSelStep(i)

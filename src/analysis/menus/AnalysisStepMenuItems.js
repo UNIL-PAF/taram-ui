@@ -254,7 +254,7 @@ export default function AnalysisStepMenuItems(props) {
                 >
                     <span>Change parameters..</span>
                 </Menu.Item>}
-                <Menu.SubMenu key={"add-step"} title={followingStepTitle} disabled={props.isLocked}>
+                <Menu.SubMenu key={"add-step"} title={followingStepTitle} disabled={props.isLocked || props.stepStatus !== 'done'}>
                     <Menu.SubMenu key={"columns"} title={"Columns"}>
                         <Menu.Item onClick={() => clickAddStep("remove-columns")}
                                    className="narrow-menu"

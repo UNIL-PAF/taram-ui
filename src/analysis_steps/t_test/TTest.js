@@ -47,6 +47,7 @@ export default function TTest(props) {
                               prepareParams={prepareTTestParams}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {props.data.copyDifference && <span className={'copy-difference'}>{props.data.copyDifference}</span>}

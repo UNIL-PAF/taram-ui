@@ -189,6 +189,7 @@ export default function ScatterPlot(props) {
                               experimentDetails={props.data.columnInfo.columnMapping.experimentDetails}
                               isLocked={props.isLocked}
                               resType={props.resType}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {props.data.status === 'done' && <div style={{textAlign: 'right'}}>

@@ -247,6 +247,7 @@ export default function CorrelationTable(props) {
                               isLocked={props.isLocked}
                               resType={props.resType}
                               hasPlot={true}
+                              analysisStatus={props.data.analysisStatus}
             />
         }>
             {options && <div style={{textAlign: 'right'}}>
@@ -266,6 +267,7 @@ export default function CorrelationTable(props) {
                                 className={"table-download-button"}
                                 icon={<DownloadOutlined/>}
                                 onClick={() => downloadTable()}
+                                disabled={!isDone}
                                 size={'small'}><span>{'Correlation-table-' + props.data.nr}</span>
                             </Button></span>
                                 <span><Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
