@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import GroupSelection from "./GroupSelection";
-import {Button, Switch} from "antd";
+import {Switch} from "antd";
 import TabularGroupSelection from "./TabularGroupSelection";
 
 export default function DefineGroupsParams(props) {

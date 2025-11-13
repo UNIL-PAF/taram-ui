@@ -188,7 +188,6 @@ export default function InitialResult(props) {
             stepId: props.data.id,
             params:prepareParams(localGroupParams)
         }))
-        console.log(prepareParams(localGroupParams))
         setShowModal(false)
         setLocalGroupParams(undefined)
     }
