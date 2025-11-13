@@ -28,11 +28,14 @@ export default function TabularGroupSelection(props) {
 
     return (
         <>
-            <h1>Tabular view</h1>
+            <br></br>
+            <br></br>
             <TextArea
                 rows={24}
                 value={text}
-                onChange={e => {changeText(e.target.value)}}
+                onChange={e => {
+                    changeText(e.target.value)
+                }}
             >
             </TextArea>
         </>

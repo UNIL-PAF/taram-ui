@@ -42,11 +42,10 @@ export default function DefineGroupsParams(props) {
     return (
         <>
             <span>
-                <h3>Edit and order groups</h3>
+                <h3 style={{display: 'inline', marginRight: 40}}>Edit and order groups</h3>
                 <Switch onChange={switchTabularTable}
                         checked={tabularView}></Switch> Switch to tabular view
             </span>
-
             {props.params &&
                 <>
                     {tabularView && <TabularGroupSelection
@@ -54,10 +53,10 @@ export default function DefineGroupsParams(props) {
                         params={props.params}
                     ></TabularGroupSelection>}
                     {tabularView || <GroupSelection
-                                    moveGroupLeft={moveGroupLeft}
-                                    moveGroupRight={moveGroupRight}
-                                    setParams={props.setParams}
-                                    params={props.params}
+                        moveGroupLeft={moveGroupLeft}
+                        moveGroupRight={moveGroupRight}
+                        setParams={props.setParams}
+                        params={props.params}
                     ></GroupSelection>}
                 </>
             }
