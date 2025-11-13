@@ -1,7 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import GroupSelection from "./GroupSelection";
+import {Button, Switch} from "antd";
+import TabularGroupSelection from "./TabularGroupSelection";
 
 export default function DefineGroupsParams(props) {
+
+    const [tabularView, setTabularView] = useState(false)
+
+    const switchTabularTable = () => {
+        const newTabularView = !tabularView;
+        setTabularView(newTabularView);
+        props.setParams({...props.params, tabularData: newTabularView})
+    }
 
     const moveGroupLeft = (groupName, currentPos) => {
         const newGroupsOrdered =  [
@@ -31,16 +41,24 @@ export default function DefineGroupsParams(props) {
 
     return (
         <>
-            <h3>Experiments</h3>
+            <span>
+                <h3>Edit and order groups</h3>
+                <Switch onChange={switchTabularTable}
+                        checked={tabularView}></Switch> Switch to tabular view
+            </span>
+
             {props.params &&
                 <>
-                    <h3>Group selection</h3>
-                    <GroupSelection
+                    {tabularView && <TabularGroupSelection
+                        setParams={props.setParams}
+                        params={props.params}
+                    ></TabularGroupSelection>}
+                    {tabularView || <GroupSelection
                                     moveGroupLeft={moveGroupLeft}
                                     moveGroupRight={moveGroupRight}
                                     setParams={props.setParams}
                                     params={props.params}
-                    ></GroupSelection>
+                    ></GroupSelection>}
                 </>
             }
         </>

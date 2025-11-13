@@ -97,7 +97,13 @@ export default function InitialResult(props) {
         }));
 
         const groupsOrderedIdx = myGroupsOrdered.map((a, i) => i + "-" + a)
-        return {groupData: groupDataOrderedExps, column: colMapping.intCol, groupsOrdered: groupsOrderedIdx, experimentNames: colMapping.experimentNames}
+        return {
+            groupData: groupDataOrderedExps,
+            column: colMapping.intCol,
+            groupsOrdered: groupsOrderedIdx,
+            experimentNames: colMapping.experimentNames,
+            tabularData: false
+        }
     }
 
     // format the data for the backend
@@ -135,7 +141,37 @@ export default function InitialResult(props) {
         // keep only unique
         const groupsOrdered = params.groupsOrdered.filter((v,i,a) => a.indexOf(v) === i).map(g => g.replace(/^\d+-/, ""))
 
-        return {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: expNames}
+        var newParams = {experimentDetails: experimentDetails, intCol: params.column, groupsOrdered: groupsOrdered, experimentNames: expNames}
+
+        if(params.tabularData && params.tabTxt){
+            const paramsFromTxt = prepareGroupsFromTxt(params.tabTxt, params.groupData)
+            newParams = {...newParams, experimentDetails: paramsFromTxt.experimentDetails, groupsOrdered: paramsFromTxt.groupsOrdered}
+        }
+
+        return newParams;
+    }
+
+    const prepareGroupsFromTxt = (tabTxt, groupData) => {
+        const rows = tabTxt.split("\n").map(line => line.trim().split("\t"))
+
+        const orderedGroups = rows.reduce((acc, row) => {
+            return (row[1] && !acc.includes(row[1])) ? acc.concat(row[1]) : acc
+        }, [])
+
+        const experimentDetails = Object.values(groupData).flatMap(group => group.items).reduce((acc, v, i) => {
+            acc[v.name] = v
+            return acc
+        }, {})
+
+        rows.forEach((v, i) => {
+            experimentDetails[v[0]] = {...experimentDetails[v[0]],
+                idx: i,
+                group: v[1] ? v[1] : undefined,
+                isSelected: !!v[1]
+            }
+        })
+
+        return {experimentDetails: experimentDetails, groupsOrdered: orderedGroups}
     }
 
     const changeIntensity = (value) => {
@@ -152,6 +188,7 @@ export default function InitialResult(props) {
             stepId: props.data.id,
             params:prepareParams(localGroupParams)
         }))
+        console.log(prepareParams(localGroupParams))
         setShowModal(false)
         setLocalGroupParams(undefined)
     }
