@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Row, Col, Input} from 'antd';
+import {Checkbox, Select, Space, Row, Col, Input, Slider} from 'antd';
 import ProteinTable from "../../protein_table/ProteinTable";
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
@@ -124,6 +124,7 @@ export default function ScatterPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <h3>Protein table</h3>
+
                 <ProteinTable
                     params={props.params}
                     setParams={props.setParams}

@@ -125,6 +125,7 @@ export default function VolcanoPlot(props) {
 
     const getOptions = (results, mySelProts) => {
         const params = JSON.parse(props.data.parameters)
+
         const qValExists = results.data.some(a => a.qVal !== undefined)
 
         // we set the default selProts
@@ -279,6 +280,7 @@ export default function VolcanoPlot(props) {
                     label: {
                         show: true,
                         formatter: function (v) {
+                            if(params.showProteinACs) return v.data.prot
                             return v.data.gene ? v.data.gene : v.data.prot
                         },
                         position: 'right',
