@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Row, Col, Input, Slider} from 'antd';
+import {Checkbox, Select, Space, Row, Col, Input, Switch} from 'antd';
 import ProteinTable from "../../protein_table/ProteinTable";
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
@@ -68,6 +68,11 @@ export default function ScatterPlotParams(props) {
         }
     }
 
+    function changeLabelSwitch(val){
+        let newParams = {...props.params, showProteinACs: val}
+        props.setParams(newParams)
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
@@ -76,9 +81,9 @@ export default function ScatterPlotParams(props) {
                         <Col><span><strong>Plot title</strong></span></Col>
                         <Col>
                             <Input onChange={(e) => setTitleText(e.target.value)}
-                                   onSelect={()=>resetTitleValue()}
+                                   onSelect={() => resetTitleValue()}
                                    value={getTitleValue()}
-                                   style={{ width: 800 }}
+                                   style={{width: 800}}
                             ></Input>
                         </Col>
                     </Space>
@@ -124,7 +129,9 @@ export default function ScatterPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <h3>Protein table</h3>
-
+                <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
+                                               unCheckedChildren="Protein AC"
+                                               checked={!props.params.showProteinACs}/></span>
                 <ProteinTable
                     params={props.params}
                     setParams={props.setParams}
