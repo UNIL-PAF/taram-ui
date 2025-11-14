@@ -87,16 +87,18 @@ export default function InitialResult(props) {
         const groupData = (groups.length >= 1) ? {...newGroupData, ...loadedGroupData} : newGroupData
 
         const myGroupsOrdered = colMapping.groupsOrdered ? colMapping.groupsOrdered : Object.keys(groupData).filter(a => a !== "experiments") || []
+        const groupsOrderedIdx = myGroupsOrdered.map((a, i) => i + "-" + a)
 
         const groupDataOrderedExps = Object.fromEntries(Object.entries(groupData).map(([k, v], i) => {
             const newItems = v.items.sort((x, y) => {
                 return (x.idx !== null && y.idx !== null) ? x.idx - y.idx : x.name.localeCompare(y.name)
             })
-            const name = (k === "experiments") ? "experiments" : (i-1)+"-"+k
+            const name = (k === "experiments") ? "experiments" : groupsOrderedIdx[myGroupsOrdered.indexOf(k)]
             return [name, {...v, items: newItems}]
         }));
 
-        const groupsOrderedIdx = myGroupsOrdered.map((a, i) => i + "-" + a)
+
+
         return {
             groupData: groupDataOrderedExps,
             column: colMapping.intCol,
