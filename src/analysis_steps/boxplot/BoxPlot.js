@@ -142,7 +142,6 @@ export default function BoxPlot(props) {
 
     const getOptions = (myResults) => {
         const results = {...myResults}
-
         const params = localParams || JSON.parse(props.data.parameters)
         const allProts = params.showAll ? prepareAllDatat({...myResults}) : null
         const newData = results.boxPlotData.map(d => {
@@ -217,9 +216,11 @@ export default function BoxPlot(props) {
 
             return sortByCondition().map(d => {
                 const asteriks = d.multiGenes ? "*" : ""
+                const name = params.showProteinACs ? d.prot : (d.gene ? d.gene : d.prot)
+
 
                 return {
-                    name: (d.gene ? d.gene : d.prot) + asteriks,
+                    name: name + asteriks,
                     type: 'line',
                     data: d.ints,
                     color: d.color ? d.color : undefined,

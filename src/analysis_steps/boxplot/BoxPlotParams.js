@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Divider, Row, Col} from 'antd';
+import {Checkbox, Select, Space, Divider, Row, Col, Switch} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
@@ -57,19 +57,26 @@ export default function BoxPlotParams(props) {
         props.setParams({...props.params, showAll: e.target.checked})
     }
 
+    function changeLabelSwitch(val){
+        let newParams = {...props.params, showProteinACs: val}
+        props.setParams(newParams)
+    }
+
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
                 <Row>
                     <Col span={12}>
                         <h3>Select data column for Boxplot</h3>
-                <Checkbox
-                    onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
-                </Checkbox>
-                <Select disabled={useDefaultCol} value={props.params.column || props.intCol} style={{width: 250}} onChange={handleChange}>
-                    {numCols.map((n, i) => {
-                        return <Option key={i} value={i}>{n}</Option>
-                    })}</Select>
+                        <Checkbox
+                            onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values
+                            [{props.intCol}]
+                        </Checkbox>
+                        <Select disabled={useDefaultCol} value={props.params.column || props.intCol}
+                                style={{width: 250}} onChange={handleChange}>
+                            {numCols.map((n, i) => {
+                                return <Option key={i} value={i}>{n}</Option>
+                            })}</Select>
                     </Col>
                     <Col span={12}>
                         <h3>Show all data points</h3>
@@ -80,8 +87,11 @@ export default function BoxPlotParams(props) {
                         <span style={{color: "red"}}><em><strong>Attention:</strong> this might slow down the interface in datasets with many protein groups.</em></span>
                     </Col>
                 </Row>
-                <Divider />
+                <Divider/>
                 <h3>Protein table</h3>
+                <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
+                                               unCheckedChildren="Protein AC"
+                                               checked={!props.params.showProteinACs}/></span>
                 <ProteinTable
                     key={props.stepId}
                     stepId={props.stepId}
