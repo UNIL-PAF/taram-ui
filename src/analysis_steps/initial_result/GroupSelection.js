@@ -130,7 +130,7 @@ export default function GroupSelection(props) {
 
     const maxChars = Object.values(props.params.groupData).reduce((acc, curr) => {
         const myNew = (curr.name.length > acc) ? curr.name.length : acc
-        const myNewMax = Math.max.apply(Math, curr.items.map(a => a.name.length))
+        const myNewMax = Math.max.apply(Math, curr.items.map(a => a.name ? a.name.length : 0))
         return (myNewMax > myNew) ? myNewMax : myNew
     }, 0)
 

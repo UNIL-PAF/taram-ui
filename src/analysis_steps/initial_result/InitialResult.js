@@ -152,7 +152,7 @@ export default function InitialResult(props) {
     }
 
     const prepareGroupsFromTxt = (tabTxt, groupData) => {
-        const rows = tabTxt.split("\n").map(line => line.trim().split("\t"))
+        const rows = tabTxt.split("\n").map(line => line === "" ? null : line.trim().split("\t")).filter(a => a)
 
         const orderedGroups = rows.reduce((acc, row) => {
             return (row[1] && !acc.includes(row[1])) ? acc.concat(row[1]) : acc
