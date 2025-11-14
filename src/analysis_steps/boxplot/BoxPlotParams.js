@@ -88,11 +88,11 @@ export default function BoxPlotParams(props) {
                     params={props.params}
                     setParams={props.setParams}
                     tableData={proteinTable}
+                    loadingError={proteinTableError}
                     paramName={"selProts"}
                     target={"prot"}
                     defaultColors={defaultColors.slice(nrGroups)}>
                 </ProteinTable>
-                {proteinTableError && <span className="alert alert-danger">{proteinTableError}</span>}
             </Space>
         </>
     }

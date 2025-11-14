@@ -16,7 +16,8 @@ export const proteinTableSlice = createSlice({
     },
     reducers: {
         clearTable(state){
-            state.data = undefined
+            state.data = null
+            state.error = null
         }
     },
     extraReducers: (builder) => {

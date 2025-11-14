@@ -15,11 +15,9 @@ export default function VolcanoPlotParams(props) {
     const comparison = props.commonResult.headers.filter( h => h.name.match("^p.value")).map( h => h.experiment.comp)
 
     useEffect(() => {
-        if(!proteinTable && !proteinTableError){
-            dispatch(getProteinTable({stepId: props.stepId}))
-        }
+        dispatch(getProteinTable({stepId: props.stepId}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proteinTable, proteinTableError])
+    }, [])
 
     useEffect(() => {
         if (!props.params) {
@@ -109,7 +107,13 @@ export default function VolcanoPlotParams(props) {
                 </Checkbox>
                 <Divider />
                 <h3>Protein table</h3>
-                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"prot"}></ProteinTable>
+                <ProteinTable
+                    params={props.params}
+                    setParams={props.setParams}
+                    tableData={proteinTable}
+                    loadingError={proteinTableError}
+                    paramName={"selProteins"}
+                    target={"prot"}></ProteinTable>
             </Space>
         </>
     }

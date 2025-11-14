@@ -16,11 +16,9 @@ export default function ScatterPlotParams(props) {
     const dataCols = props.commonResult.headers.filter( h => h.type === "NUMBER").map(h => h.name)
 
     useEffect(() => {
-        if(!proteinTable && !proteinTableError){
-            dispatch(getProteinTable({stepId: props.stepId}))
-        }
+        dispatch(getProteinTable({stepId: props.stepId}))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [proteinTable, proteinTableError])
+    }, [])
 
     useEffect(() => {
         if (props.params) {
@@ -126,7 +124,13 @@ export default function ScatterPlotParams(props) {
                         return <Option key={i} value={i}>{n}</Option>
                     })}</Select>
                 <h3>Protein table</h3>
-                <ProteinTable params={props.params} setParams={props.setParams} tableData={proteinTable} paramName={"selProteins"} target={"prot"}></ProteinTable>
+                <ProteinTable
+                    params={props.params}
+                    setParams={props.setParams}
+                    tableData={proteinTable}
+                    paramName={"selProteins"}
+                    loadingError={proteinTableError}
+                    target={"prot"}></ProteinTable>
             </Space>
         </>
     }

@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import {Table, Spin, Input, Space, Button} from "antd";
+import {Table, Spin, Input, Space, Button, Alert} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -209,9 +209,12 @@ export default function ProteinTable(props) {
         }
     };
 
+    const errorMessage = props.loadingError ? "Could not load table: " + props.loadingError : ""
+
     return (
         <>
-            {!props.tableData && <Spin tip="Loading..."></Spin>}
+            {(!props.tableData && !props.loadingError) && <Spin tip="Loading..."></Spin>}
+            {props.loadingError && <Alert message={errorMessage} type="error"></Alert>}
             {props.tableData && props.tableData.table && <Table
                 rowSelection={{
                     type: 'checkbox',
