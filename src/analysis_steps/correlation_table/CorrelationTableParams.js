@@ -40,7 +40,7 @@ export default function CorrelationTableParams(props) {
     function showOptions() {
         return <Row>
             <Col span={12}>
-                <h3>Select data column for Boxplot</h3>
+                <h3>Select data column</h3>
                 <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
                 </Checkbox>
@@ -51,7 +51,7 @@ export default function CorrelationTableParams(props) {
             </Col>
             <Col span={12}>
                         <Space direction="vertical" size="middle">
-                            <h3>Transformation</h3>
+                            <h3>Correlation type</h3>
                             <Select value={props.params.correlationType} style={{width: 250}} onChange={transChange}>
                                 <Option value={'pearson'}>Pearson</Option>
                                 <Option value={'spearman'}>Spearman</Option>
@@ -63,7 +63,6 @@ export default function CorrelationTableParams(props) {
 
     return (
         <>
-            <h3>Select value to transform</h3>
             {props.params && showOptions()}
         </>
     );
