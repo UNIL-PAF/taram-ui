@@ -47,7 +47,7 @@ export default function SummaryStat(props) {
                         <Button size={'small'} type='primary' onClick={() => setShowZoom(true)}
                                 icon={<FullscreenOutlined/>}>Expand</Button>
                     </div>
-                    <SummaryTable results={results}></SummaryTable>
+                    <SummaryTable results={results} resType={props.resType}></SummaryTable>
                 </div>
             }
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
