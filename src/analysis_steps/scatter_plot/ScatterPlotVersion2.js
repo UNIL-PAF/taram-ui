@@ -16,9 +16,10 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
         title: {text: (params.title ? params.title : params.xAxis + " - " + params.yAxis), left: "center", textStyle: {fontSize: 14}},
         dataset: [
             {
-                dimensions: ["x", "y", "name", "ac", "col", "showLab"].concat(otherField ? 'peptides' : []),
+                dimensions: ["x", "y", "name", "ac", "col", "showLab", "label"].concat(otherField ? 'peptides' : []),
                 source: dataWithLabel.map(p => {
-                    return [p.x, p.y, p.n, p.ac, p.d, p.showLab].concat(otherField ? p.other[0].value : [])
+                    const label =  params.showProteinACs ? p.ac : (p.n ? p.n : p.ac)
+                    return [p.x, p.y, p.n, p.ac, p.d, p.showLab, label].concat(otherField ? p.other[0].value : [])
                 }),
             },
             {
@@ -66,7 +67,7 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
                 const text3 = params.xAxis + ": <strong>" + String(p.data[0].length > 5 ? p.data[0].toExponential(1) : p.data[0].toFixed(1)) + "</strong><br>"
                 const text4 = params.yAxis + ": <strong>" + String(p.data[1].length > 5 ? p.data[1].toExponential(1) : p.data[1].toFixed(1)) + "</strong><br>"
                 const text5 = (params.colorBy && params.colorBy !== "null") ? (params.colorBy + ": <strong>" + p.data[4].toFixed(1) + "</strong><br>") : ""
-                const text6 = otherField ? (otherField + ": <strong>" + p.data[6] + "</strong><br>") : ""
+                const text6 = otherField ? (otherField + ": <strong>" + p.data[7] + "</strong><br>") : ""
                 return text1 + text2 + text3 + text4 + text5 + text6
             },
         },
@@ -82,15 +83,14 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
                 itemStyle: {
                     color: '#fac858'
                 },
-                symbolSize: 5,
+                symbolSize: 4,
                 markLine: logTrans ? null : getXYLines(results.linearRegression, myData.lims, params, showRegrLine, showXYLine)
             },
             {
                 label: {
                     show: true,
                     formatter: function (v) {
-                        if(params.showProteinACs) return v.value[3]
-                        return v.value[2] ? v.value[2] : v.value[3]
+                        return v.value[6]
                     },
                     position: 'right',
                     minMargin: 2,
