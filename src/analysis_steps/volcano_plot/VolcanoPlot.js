@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useRef, useCallback} from "react";
-import {Button, Card, Row, Col, Spin, Typography} from "antd";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {Button, Card, Col, Row, Spin, Typography} from "antd";
 import AnalysisStepMenu from "../../analysis/menus/AnalysisStepMenu";
 import ReactECharts from 'echarts-for-react';
 import StepComment from "../StepComment";
@@ -7,7 +7,7 @@ import {switchSel} from "../BackendAnalysisSteps";
 import {useDispatch} from "react-redux";
 import EchartsZoom from "../EchartsZoom";
 import {FullscreenOutlined} from "@ant-design/icons";
-import {getStepTitle, replacePlotIfChanged, replaceProgressiveSeries, getStepResults} from "../CommonStepUtils";
+import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSeries} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
@@ -135,7 +135,8 @@ export default function VolcanoPlot(props) {
             return (params.useAdjustedPVal && qValExists) ? d.qVal : d.pVal
         }).map(d => {
             const showLab = defSelProts && defSelProts.includes(d.prot)
-            return {...d, showLab: showLab, isUp: d.fc > 0, gene: (d.multiGenes ? d.gene + '*' : d.gene)}
+            const label = params.showProteinACs ? d.prot : (d.gene ? d.gene : d.prot)
+            return {...d, showLab: showLab, isUp: d.fc > 0, gene: (d.multiGenes ? d.gene + '*' : d.gene), label: label}
         })
 
         const valueName = (params.useAdjustedPVal && qValExists) ? "adj. p-value" : "p-value"
@@ -166,9 +167,7 @@ export default function VolcanoPlot(props) {
                 showDelay: 0,
                 formatter: function (myParams) {
                     if (myParams.componentType === "markLine") {
-                        const text =
-                            myParams.data.name + " threshold: " + (myParams.data.name.includes("Fold") ? myParams.data.value : params.pValThresh);
-                        return text;
+                        return myParams.data.name + " threshold: " + (myParams.data.name.includes("Fold") ? myParams.data.value : params.pValThresh);
                     } else {
                         const other = myParams.data.other ? myParams.data.other.map(a => {
                             return a.name + ": <strong>" + a.value + "</strong><br>"
@@ -179,7 +178,6 @@ export default function VolcanoPlot(props) {
                             "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
                             (myParams.data.qVal ? "adj. p-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
                             "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong><br>" + other
-
                     }
                 },
             },
@@ -280,8 +278,7 @@ export default function VolcanoPlot(props) {
                     label: {
                         show: true,
                         formatter: function (v) {
-                            if(params.showProteinACs) return v.data.prot
-                            return v.data.gene ? v.data.gene : v.data.prot
+                            return v.data.label
                         },
                         position: 'right',
                         minMargin: 2,
