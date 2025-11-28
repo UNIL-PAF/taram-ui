@@ -202,7 +202,7 @@ export default function AnalysisMenu(props) {
                         okText="Yes"
                         cancelText="Cancel"
                     >
-                        <span>Delete analysis</span>
+                        <div style={{width: '100%'}}>Delete analysis</div>
                     </Popconfirm>
                 </Menu.Item>
             </Menu>
