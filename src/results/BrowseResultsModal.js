@@ -196,15 +196,10 @@ export function BrowseResultsModal({buttonText, refreshResults}) {
     };
 
     return (
-        <div>
-            <span style={{display: "inline-flex"}}>
-                    <Button
-                        type="primary"
-                        onClick={() => setVisible(true)}
-                    >
-                        {buttonText}
-                    </Button>
-            </span>
+        <>
+            <Button type="primary" onClick={() => setVisible(true)}>
+                {buttonText}
+            </Button>
             <CollectionCreateForm
                 selResDir={selResDir}
                 setSelResDir={setSelResDir}
@@ -223,6 +218,6 @@ export function BrowseResultsModal({buttonText, refreshResults}) {
                 }}
                 availableDirs={availableDirs}
             />
-        </div>
+        </>
     );
 };

@@ -1,17 +1,16 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import {Button, message, Modal, Popconfirm, Space, Table, Form, Input} from 'antd';
-import {DeleteOutlined, LockTwoTone, EditOutlined, SearchOutlined} from "@ant-design/icons";
+import {DeleteOutlined, LockTwoTone, EditOutlined} from "@ant-design/icons";
 import {deleteResult, updateInfo} from "./BackendResults";
 import Highlighter from "react-highlight-words";
+import {BrowseResultsModal} from "./BrowseResultsModal";
 
 export default function ResultsTable(props) {
 
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
+    const [globalSearchText, setGlobalSearchText] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
     const [currentResult, setCurrentResult] = useState()
     const [hasFormError, setHasFormError] = useState();
-    const searchInput = useRef(null);
     const [resultForm] = Form.useForm();
 
     useEffect(() => {
@@ -56,103 +55,62 @@ export default function ResultsTable(props) {
         setCurrentResult(undefined)
     }
 
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
+    const searchGlobalText = (searchText) => {
+        setGlobalSearchText(searchText);
+
+    }
+
+    const getGlobalSearchProps = (dataIndex, isTitle) => {
+        return {
+            render: (text, record) => {
+                const searchWords = globalSearchText.trim() ? [globalSearchText] : [];
+
+                const highlighter = (
+                    <Highlighter
+                        highlightStyle={{
+                            backgroundColor: '#ffc069',
+                            padding: 0,
+                        }}
+                        searchWords={searchWords}
+                        autoEscape
+                        textToHighlight={text ? text.toString() : ''}
+                    />
+                );
+
+                if (isTitle) {
+                    return <a href={'/viewer/' + record.id}>
+                        {highlighter}
+                        {record.status === "done" ?
+                            <>&nbsp;<LockTwoTone style={{fontSize: "large"}} twoToneColor={"#d4b106"}/></> : <></>}
+                    </a>;
+                }
+
+                return highlighter;
+            },
+        };
     };
 
-    const handleReset = (clearFilters, confirm, dataIndex) => {
-        setSearchText('');
-        setSearchedColumn(dataIndex);
-        clearFilters();
-        confirm();
-    };
+    const filteredResults = useMemo(() => {
+        if (!globalSearchText.trim()) {
+            return props.results;
+        }
 
-    const getColumnSearchProps = (dataIndex, isTitle) => ({
-        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
-            <div
-                style={{
-                    padding: 8,
-                }}
-            >
-                <Input
-                    ref={searchInput}
-                    placeholder={`Search`}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{
-                        marginBottom: 8,
-                        display: 'block',
-                    }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined/>}
-                        size="small"
-                        style={{
-                            width: 90,
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        onClick={() => clearFilters && handleReset(clearFilters, confirm, dataIndex)}
-                        size="small"
-                        style={{
-                            width: 90,
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered) => (
-            <SearchOutlined
-                style={{
-                    color: filtered ? '#1890ff' : undefined,
-                }}
-            />
-        ),
-        onFilter: (value, record) => {
-            const myRec = record[dataIndex]
-            return myRec ? myRec.toString().toLowerCase().includes(value.toLowerCase()) : false
-        },
-        onFilterDropdownOpenChange: (visible) => {
-            if (visible) {
-                setTimeout(() => searchInput.current?.select(), 100);
-            }
-        },
-        render: (text, record) => {
-            const myText = searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{
-                        backgroundColor: '#ffc069',
-                        padding: 0,
-                    }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            )
-            return isTitle ? <a href={'/viewer/' + record.id}>{myText} {record.status === "done" ?
-                <>&nbsp;<LockTwoTone style={{fontSize: "large"}} twoToneColor={"#d4b106"}/></>: <></>}</a> : myText
-        },
-    });
+        const lowerCaseSearch = globalSearchText.toLowerCase().trim();
 
+        return props.results.filter(record =>
+            // Check Name
+            (record.name && record.name.toLowerCase().includes(lowerCaseSearch)) ||
+            // Check Description
+            (record.description && record.description.toLowerCase().includes(lowerCaseSearch))
+        );
+    }, [props.results, globalSearchText]);
 
     const columns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            ...getColumnSearchProps('name', true)
+            ...getGlobalSearchProps('name', true)
         },
         {
             title: 'Type',
@@ -163,7 +121,7 @@ export default function ResultsTable(props) {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            ...getColumnSearchProps('description')
+            ...getGlobalSearchProps('description')
         },
         {
             title: 'File path',
@@ -207,17 +165,23 @@ export default function ResultsTable(props) {
         },
     ]
 
-    /*
-    initialValues={{
-        ["name"]: currentResult.name,
-            ["description"]: currentResult.description,
-    }}
-
-     */
-
     return (
         <>
-            <Table dataSource={props.results} columns={columns}/>
+            <div style={{display: 'flex', lineHeight: "normal", marginTop: "20px"}}>
+                <div style={{marginLeft: '10px', marginRight: '10px'}}>
+                    <Input
+                        placeholder="Search by Name or Description..."
+                        size="large"
+                        value={globalSearchText}
+                        onChange={(e) => searchGlobalText(e.target.value)}
+                        style={{marginBottom: 16, width: 300}}
+                    />
+                </div>
+                <div style={{marginLeft: '10px'}}>
+                    <BrowseResultsModal buttonText={'Add new analysis'} refreshResults={props.refreshResults}/>
+                </div>
+            </div>
+            <Table dataSource={filteredResults} columns={columns}/>
             {currentResult && <Modal open={showEditModal} title={"Edit analysis info"} onCancel={() => cancelModal()} onOk={() => saveResult()}
             >
                 <Form

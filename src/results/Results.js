@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Alert, Layout, Space} from 'antd';
 import ResultsTable from "./ResultsTable";
-import BrowseResults from "./BrowseResults";
 import {getResults} from "./BackendResults"
 import {useSelector} from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -32,10 +31,9 @@ export default function Results(props) {
                 closable
             />}
             {newResultsId && <Navigate to={"/viewer/"+newResultsId} replace={true} />}
-            <Space direction="vertical" style={{marginLeft: "20px", marginRight: "20px"}}>
-                <BrowseResults refreshResults={refreshResults}/>
+            <div>
                 <ResultsTable results={results} refreshResults={refreshResults}/>
-            </Space>
+            </div>
         </Content>
     );
 
