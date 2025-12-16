@@ -10,7 +10,7 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
         return {...d, showLab: showLab}
     })
 
-    const otherField = myData.d[0].other.length > 0 ? myData.d[0].other[0].name : undefined
+    const otherField = (myData.d[0].other && myData.d[0].other.length > 0) ? myData.d[0].other[0].name : undefined
 
     const options = {
         title: {text: (params.title ? params.title : params.xAxis + " - " + params.yAxis), left: "center", textStyle: {fontSize: 14}},
