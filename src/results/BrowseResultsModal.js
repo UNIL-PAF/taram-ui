@@ -116,7 +116,7 @@ const CollectionCreateForm = (props) => {
                     <Select
                         disabled={isDisabled}
                         placeholder="Select a result file"
-                        style={{width: "50%"}}
+                        style={{width: "100%"}}
                         options={resultFiles}
                         value={props.selFile}
                         onSelect={props.setSelFile}
