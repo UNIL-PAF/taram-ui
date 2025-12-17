@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Layout, Space} from 'antd';
+import {Alert, Layout} from 'antd';
 import ResultsTable from "./ResultsTable";
 import {getResults} from "./BackendResults"
 import {useSelector} from "react-redux";

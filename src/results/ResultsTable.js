@@ -167,8 +167,8 @@ export default function ResultsTable(props) {
 
     return (
         <>
-            <div style={{display: 'flex', lineHeight: "normal", marginTop: "20px"}}>
-                <div style={{marginLeft: '10px', marginRight: '10px'}}>
+            <div style={{display: 'flex'}}>
+                <div style={{marginLeft: '18px', marginRight: '10px'}}>
                     <Input
                         placeholder="Search by Name or Description..."
                         size="large"
