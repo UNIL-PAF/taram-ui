@@ -67,11 +67,6 @@ export default function VolcanoPlotParams(props) {
         props.setParams(newParams)
     }
 
-    function changeLabelSwitch(val){
-        let newParams = {...props.params, showProteinACs: val}
-        props.setParams(newParams)
-    }
-
     function fcText(){
         return props.commonResult.intColIsLog ? "log2 " : ""
     }
@@ -111,14 +106,13 @@ export default function VolcanoPlotParams(props) {
                     -log10 {selValText()} on the y-axis.
                 </Checkbox>
                 <Divider />
-                <h3>Protein table</h3>
-                <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name" unCheckedChildren="Protein AC" checked={!props.params.showProteinACs} /></span>
                 <ProteinTable
                     params={props.params}
                     setParams={props.setParams}
                     tableData={proteinTable}
                     loadingError={proteinTableError}
                     paramName={"selProteins"}
+                    showProteinACs={props.params.showProteinACs}
                     target={"prot"}></ProteinTable>
             </Space>
         </>

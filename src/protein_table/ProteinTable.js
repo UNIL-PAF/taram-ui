@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-import {Table, Spin, Input, Space, Button, Alert} from "antd";
+import {Table, Spin, Input, Space, Button, Alert, Switch} from "antd";
 import {SearchOutlined} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -34,6 +34,11 @@ export default function ProteinTable(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, selectedRowKeys.length])
+
+    function changeLabelSwitch(val){
+        let newParams = {...props.params, showProteinACs: val}
+        props.setParams(newParams)
+    }
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -213,6 +218,10 @@ export default function ProteinTable(props) {
 
     return (
         <>
+            <h3>Protein table</h3>
+            <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
+                                           unCheckedChildren="Protein AC"
+                                           checked={!props.showProteinACs}/></span>
             {(!props.tableData && !props.loadingError) && <Spin tip="Loading..."></Spin>}
             {props.loadingError && <Alert message={errorMessage} type="error"></Alert>}
             {props.tableData && props.tableData.table && <Table

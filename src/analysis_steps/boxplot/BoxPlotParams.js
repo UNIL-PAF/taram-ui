@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Select, Space, Divider, Row, Col, Switch} from 'antd';
+import {Checkbox, Select, Space, Divider, Row, Col} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {getProteinTable} from "../../protein_table/BackendProteinTable";
 import ProteinTable from "../../protein_table/ProteinTable";
@@ -57,11 +57,6 @@ export default function BoxPlotParams(props) {
         props.setParams({...props.params, showAll: e.target.checked})
     }
 
-    function changeLabelSwitch(val){
-        let newParams = {...props.params, showProteinACs: val}
-        props.setParams(newParams)
-    }
-
     function showOptions() {
         return <>
             <Space direction="vertical" size="middle">
@@ -88,10 +83,6 @@ export default function BoxPlotParams(props) {
                     </Col>
                 </Row>
                 <Divider/>
-                <h3>Protein table</h3>
-                <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
-                                               unCheckedChildren="Protein AC"
-                                               checked={!props.params.showProteinACs}/></span>
                 <ProteinTable
                     key={props.stepId}
                     stepId={props.stepId}
@@ -101,6 +92,7 @@ export default function BoxPlotParams(props) {
                     loadingError={proteinTableError}
                     paramName={"selProts"}
                     target={"prot"}
+                    showProteinACs={props.params.showProteinACs}
                     defaultColors={defaultColors.slice(nrGroups)}>
                 </ProteinTable>
             </Space>
