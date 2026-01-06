@@ -1,14 +1,11 @@
-import React, {useState, useRef, useEffect} from "react";
-import {Table, Spin, Input, Space, Button, Alert, Switch} from "antd";
-import {SearchOutlined} from '@ant-design/icons';
+import React, {useState, useEffect, useMemo} from "react";
+import {Table, Spin, Input, Alert, Switch} from "antd";
 import Highlighter from 'react-highlight-words';
 
 export default function ProteinTable(props) {
 
-    const [searchText, setSearchText] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInput = useRef(null);
+    const [globalSearchText, setGlobalSearchText] = useState('');
 
     const param = props.paramName
     const target = props.target
@@ -40,77 +37,9 @@ export default function ProteinTable(props) {
         props.setParams(newParams)
     }
 
-    const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
-            <div
-                style={{
-                    padding: 8,
-                }}
-            >
-                <Input
-                    ref={searchInput}
-                    placeholder={`Search ${dataIndex}`}
-                    value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{
-                        marginBottom: 8,
-                        display: 'block',
-                    }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined/>}
-                        size="small"
-                        style={{
-                            width: 90,
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        onClick={() => clearFilters && handleReset(clearFilters, confirm, dataIndex)}
-                        size="small"
-                        style={{
-                            width: 90,
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: (filtered) => (
-            <SearchOutlined
-                style={{
-                    color: filtered ? '#1890ff' : undefined,
-                }}
-            />
-        ),
-        onFilter: (value, record) =>
-            record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-        onFilterDropdownOpenChange: (visible) => {
-            if (visible) {
-                setTimeout(() => searchInput.current?.select(), 100);
-            }
-        },
-        render: (text) =>
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{
-                        backgroundColor: '#ffc069',
-                        padding: 0,
-                    }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            ),
-    });
+    const searchGlobalText = (searchText) => {
+        setGlobalSearchText(searchText);
+    }
 
     const setProtColor = (idx, color) => {
         const newParams = {...props.params}
@@ -145,44 +74,71 @@ export default function ProteinTable(props) {
             }) : myCols
     }
 
+    const getGlobalSearchProps = (dataIndex) => {
+        return {
+            render: (text, record) => {
+                const searchWords = globalSearchText.trim() ? [globalSearchText] : [];
+
+                const highlighter = (
+                    <Highlighter
+                        highlightStyle={{
+                            backgroundColor: '#ffc069',
+                            padding: 0,
+                        }}
+                        searchWords={searchWords}
+                        autoEscape
+                        textToHighlight={text ? text.toString() : ''}
+                    />
+                );
+
+                return highlighter;
+            },
+        };
+    };
+
     const defaultColumns = [
         {
             title: 'Protein group',
             dataIndex: 'protGroup',
             key: 'protGroup',
             ellipsis: true,
-            ...getColumnSearchProps('protGroup'),
+            ...getGlobalSearchProps('protGroup'),
         },
         {
             title: 'Gene',
             dataIndex: 'gene',
             key: 'gene',
             ellipsis: true,
-            ...getColumnSearchProps('gene'),
+            ...getGlobalSearchProps('gene'),
         },
         {
             title: 'Description',
             dataIndex: 'desc',
             key: 'desc',
             ellipsis: true,
-            ...getColumnSearchProps('desc'),
+            ...getGlobalSearchProps('desc'),
         }
     ];
 
     const columns = props.tableData ? getColumns() : undefined
 
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
+    const filteredResults = useMemo(() => {
+        if(!props.tableData) return null
 
-    const handleReset = (clearFilters, confirm, dataIndex) => {
-        setSearchText('');
-        setSearchedColumn(dataIndex);
-        clearFilters();
-        confirm();
-    };
+        if (!globalSearchText.trim()) {
+            return props.tableData.table;
+        }
+
+        const lowerCaseSearch = globalSearchText.toLowerCase().trim();
+
+        return props.tableData.table.filter(record =>
+            // Check Gene
+            (record.gene && record.gene.toLowerCase().includes(lowerCaseSearch)) ||
+            (record.protGroup && record.protGroup.toLowerCase().includes(lowerCaseSearch)) ||
+            // Check Description
+            (record.desc && record.desc.toLowerCase().includes(lowerCaseSearch))
+        );
+    }, [props.tableData, globalSearchText]);
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
@@ -222,6 +178,15 @@ export default function ProteinTable(props) {
             <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
                                            unCheckedChildren="Protein AC"
                                            checked={!props.showProteinACs}/></span>
+            <div style={{marginTop: '10px'}}>
+                <Input
+                    placeholder="Search by Protein group, Gene or Description..."
+                    size="normal"
+                    value={globalSearchText}
+                    onChange={(e) => searchGlobalText(e.target.value)}
+                    style={{marginBottom: 16, width: 330}}
+                />
+            </div>
             {(!props.tableData && !props.loadingError) && <Spin tip="Loading..."></Spin>}
             {props.loadingError && <Alert message={errorMessage} type="error"></Alert>}
             {props.tableData && props.tableData.table && <Table
@@ -229,7 +194,7 @@ export default function ProteinTable(props) {
                     type: 'checkbox',
                     ...rowSelection,
                 }}
-                dataSource={props.tableData.table}
+                dataSource={filteredResults}
                 columns={columns}
                 size={"small"}/>}
         </>

@@ -57,7 +57,6 @@ export default function ResultsTable(props) {
 
     const searchGlobalText = (searchText) => {
         setGlobalSearchText(searchText);
-
     }
 
     const getGlobalSearchProps = (dataIndex, isTitle) => {
