@@ -175,18 +175,28 @@ export default function ProteinTable(props) {
     return (
         <>
             <h3>Protein table</h3>
-            <span>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
-                                           unCheckedChildren="Protein AC"
-                                           checked={!props.showProteinACs}/></span>
-            <div style={{marginTop: '10px'}}>
-                <Input
-                    placeholder="Search by Protein group, Gene or Description..."
-                    size="normal"
-                    value={globalSearchText}
-                    onChange={(e) => searchGlobalText(e.target.value)}
-                    style={{marginBottom: 16, width: 330}}
-                />
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}
+            >
+                <div style={{marginTop: '10px'}}>
+                    <Input
+                        placeholder="Search by Protein group, Gene or Description..."
+                        size="normal"
+                        value={globalSearchText}
+                        onChange={(e) => searchGlobalText(e.target.value)}
+                        style={{marginBottom: 16, width: 330}}
+                    />
+                </div>
+                <div>Label with &nbsp;<Switch onChange={(val) => changeLabelSwitch(!val)} checkedChildren="Gene name"
+                                              unCheckedChildren="Protein AC"
+                                              checked={!props.showProteinACs}/>
+                </div>
             </div>
+
             {(!props.tableData && !props.loadingError) && <Spin tip="Loading..."></Spin>}
             {props.loadingError && <Alert message={errorMessage} type="error"></Alert>}
             {props.tableData && props.tableData.table && <Table
