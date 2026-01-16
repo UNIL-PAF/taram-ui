@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useState, useMemo} from "react";
 import {Table, Spin, Input, Alert, Switch} from "antd";
 import Highlighter from 'react-highlight-words';
 
@@ -7,30 +7,7 @@ export default function ProteinTable(props) {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [globalSearchText, setGlobalSearchText] = useState('');
 
-    const param = props.paramName
     const target = props.target
-
-    useEffect(() => {
-        if (props.tableData && props.params && props.params[param] && props.params[param].length > 0 && selectedRowKeys.length === 0) {
-            const selRows = props.tableData.table.filter((r) => {
-                return r.sel
-            }).map((r) => {
-                return r.key
-            })
-            setSelectedRowKeys(selRows)
-
-            if(props.defaultColors){
-                // let's create selProtColors if they aren't already
-                const mySelColors = props.params.selProts.map((p, i) => {
-                    return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
-                })
-                const newParams = {...props.params}
-                newParams['selProtColors'] = mySelColors
-                props.setParams(newParams)
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props, selectedRowKeys.length])
 
     function changeLabelSwitch(val){
         let newParams = {...props.params, showProteinACs: val}
@@ -65,7 +42,7 @@ export default function ProteinTable(props) {
                 key: 'color',
                 width: 70,
                 //defaultSortOrder: 'descend',
-                render: (text, a, b) => {
+                render: (text, a, _) => {
                     const selProtIdx = props.params.selProts ? props.params.selProts.indexOf(a[target]) : -1
                     const selProtColor = selProtIdx >= 0 ? (props.params.selProtColors && props.params.selProtColors.length >= (selProtIdx+1) ? props.params.selProtColors[selProtIdx] : props.defaultColors[selProtIdx]): a.color
                     return (selProtIdx >= 0 ? <input type="color" className={"color-input"} value={selProtColor}
@@ -76,7 +53,7 @@ export default function ProteinTable(props) {
 
     const getGlobalSearchProps = (dataIndex) => {
         return {
-            render: (text, record) => {
+            render: (text, _) => {
                 const searchWords = globalSearchText.trim() ? [globalSearchText] : [];
 
                 const highlighter = (
@@ -122,48 +99,80 @@ export default function ProteinTable(props) {
 
     const columns = props.tableData ? getColumns() : undefined
 
+    const setRowKeysAfterFiltering = (myResults) => {
+        const selProts = new Set(props.params[props.paramName])
+        const newRowKeys = myResults.filter(a => selProts.has(a.prot)).map(a => a.key)
+        setSelectedRowKeys(newRowKeys)
+    }
+
     const filteredResults = useMemo(() => {
         if(!props.tableData) return null
 
         if (!globalSearchText.trim()) {
+            setRowKeysAfterFiltering(props.tableData.table)
             return props.tableData.table;
         }
 
         const lowerCaseSearch = globalSearchText.toLowerCase().trim();
 
-        return props.tableData.table.filter(record =>
+        const newResults =  props.tableData.table.filter(record =>
             // Check Gene
             (record.gene && record.gene.toLowerCase().includes(lowerCaseSearch)) ||
             (record.protGroup && record.protGroup.toLowerCase().includes(lowerCaseSearch)) ||
             // Check Description
             (record.desc && record.desc.toLowerCase().includes(lowerCaseSearch))
         );
+
+        setRowKeysAfterFiltering(newResults)
+
+        return newResults
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.tableData, globalSearchText]);
 
     // rowSelection object indicates the need for row selection
     const rowSelection = {
         selectedRowKeys,
         onChange: (a, b) => {
+            const oldSelProts = props.params[props.paramName] ? props.params[props.paramName] : []
+
+            // we have to keep the entries which are not in the current filteredResults
+            const currentFilteredRes = new Set(filteredResults.map(a => a.prot))
+
             const selProts = b.map((r) => r[target])
+            const oldProtsStillHere = oldSelProts.filter(x => x !== undefined && (selProts.includes(x) || !currentFilteredRes.has(x)))
+
+            // the new prot, if one was added
+            const newProt = selProts.find(a => !oldProtsStillHere.includes(a))
+            const newSelProts = newProt ? oldProtsStillHere.concat(newProt) : oldProtsStillHere
+
             setSelectedRowKeys(a)
             const newParams = {...props.params}
-            newParams[param] = selProts
+            newParams[props.paramName] = newSelProts
 
             if(props.defaultColors){
                 // first we have to check if there is a row removed or added
-                const missingIndexes = props.params[param] ? props.params[param]
-                    .map((item, index) => selProts.includes(item) ? null : index)
-                    .filter(index => index !== null) : []
+                const missingIndexes = oldSelProts.reduce((a, v, i) => newSelProts.includes(v) ? a : a.concat(i), [])
 
-                let mySelColors = props.params.selProts ? props.params.selProts.map((p, i) => {
-                    return (props.params.selProtColors && props.params.selProtColors.length >= (i + 1)) ? props.params.selProtColors[i] : props.defaultColors[i]
-                }) : null
-
-                if(missingIndexes.length >= 1) {
-                    mySelColors.splice(1, missingIndexes[0]);
+                const nextColor = (colorArray) => {
+                    const used = new Set(colorArray);
+                    return props.defaultColors.find(c => !used.has(c));
                 }
 
-                newParams['selProtColors'] = mySelColors
+                const mySelProts = missingIndexes.length > 0 ? oldSelProts : newSelProts
+
+                const newColors = mySelProts.reduce((a,_,i) => {
+                    if(missingIndexes.includes(i)) return a
+                    if(props.params.selProtColors && props.params.selProtColors[i]){
+                        a.push(props.params.selProtColors[i])
+                        return a
+                    }
+
+                    a.push(nextColor(a))
+                    return a
+                }, [])
+
+                newParams['selProtColors'] = newColors
             }
 
             props.setParams(newParams)
