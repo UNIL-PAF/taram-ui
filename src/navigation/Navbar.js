@@ -26,6 +26,19 @@ export default function Navbar() {
 
     return (
         <Row>
+
+            <Col flex="none" style={{ display: 'flex', alignItems: 'center' }}>
+                <a
+                    href="https://www.unil.ch/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Go to UNIL"
+                    style={{display: 'inline-flex', alignItems: 'center', gap: 8}}
+                >
+                    <img style={{ height: 25 }} src="/UNIL-LOGOTYPE-WHITE-CMYK.svg" alt="UNIL logo"/>
+                </a>
+            </Col>
+
             <Col span={6} style={{display: 'flex', justifyContent: 'flex-start'}}>
                 <Menu theme="dark" mode="horizontal" selectedKeys={[]} disabledOverflow={true}>
                     <Menu.Item key={"home"} onClick={() => clickHome()}>
