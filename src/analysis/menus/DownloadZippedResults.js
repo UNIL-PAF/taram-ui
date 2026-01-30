@@ -147,7 +147,7 @@ export default function DownloadZippedResults(props) {
                     response.text().then(text => {
                         const err = JSON.parse(text).message
                         console.error("ZIP download error: " + err)
-                        dispatch(setError({title: "Error while creating ZIP file", text: text}))
+                        dispatch(setError({title: "Error while creating ZIP file", text: err}))
                         //props.setError(err)
                     })
                 }

@@ -88,7 +88,7 @@ export default function AnalysisMenu(props) {
                         const err = JSON.parse(text).message
                         console.error("PDF download error: " + err)
                         props.setError(err)
-                        dispatch(setError({title: "Error while creating ZIP file", text: text}))
+                        dispatch(setError({title: "Error while creating PDF", text: err}))
                     })
                 }
             })

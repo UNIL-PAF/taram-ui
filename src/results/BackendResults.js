@@ -41,10 +41,11 @@ function deleteResult(resultId, refreshResults){
         });
 }
 
-function updateInfo(resultId, name, description, refreshResults){
+function updateInfo(resultId, name, description, path, refreshResults){
     const encodedName = encodeURIComponent(name);
     const encodedDescription = description ? encodeURIComponent(description) : null;
-    axios.put(globalConfig.urlBackend + 'result/update-info/' + resultId + "?name=" + encodedName + (description ? ("&description="+encodedDescription) : ""))
+    const encodePath = encodeURIComponent(path)
+    axios.put(globalConfig.urlBackend + 'result/update-info/' + resultId + "?name=" + encodedName + "&path=" + encodePath + (description ? ("&description="+encodedDescription) : ""))
         .then((response) => {
             // handle success
         })

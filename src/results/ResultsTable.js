@@ -17,7 +17,8 @@ export default function ResultsTable(props) {
         if(hasFormError === false){
             const newName = resultForm.getFieldValue("name")
             const newDesc = resultForm.getFieldValue("description")
-            updateInfo(currentResult.id, newName, newDesc, props.refreshResults)
+            const newPath = resultForm.getFieldValue("path")
+            updateInfo(currentResult.id, newName, newDesc, newPath, props.refreshResults)
             setShowEditModal(false)
             setHasFormError(undefined)
             setCurrentResult(undefined)
@@ -34,6 +35,7 @@ export default function ResultsTable(props) {
         setCurrentResult(result)
         resultForm.setFieldValue("name", result.name)
         resultForm.setFieldValue("description", result.description)
+        resultForm.setFieldValue("path", result.path)
         setShowEditModal(true)
     }
 
@@ -210,6 +212,12 @@ export default function ResultsTable(props) {
                     <Form.Item
                         label="Description"
                         name="description"
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="File path"
+                        name="path"
                     >
                         <Input />
                     </Form.Item>
