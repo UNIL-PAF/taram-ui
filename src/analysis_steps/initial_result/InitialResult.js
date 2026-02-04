@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import "../AnalysisStep.css"
 import {getNumCols, getStepTitle, getTable, getTableCol} from "../CommonStepUtils";
 import {typeToName} from "../TypeNameMapping"
+import globalConfig from "../../globalConfig";
 
 export default function InitialResult(props) {
     const type = "initial-result"
@@ -296,6 +297,13 @@ export default function InitialResult(props) {
                             <Row className={"analysis-step-row"}>
                                 <Col><strong><em>Gene.names</em> and <em>Protein.names</em> were parsed from column <em>Fasta.headers</em>.</strong></Col>
                             </Row>}
+                        {results && results.qcPath && <Row className={"analysis-step-row"}>
+                            <Col>
+                                <a href={globalConfig.urlBackend + `analysis-step/generated-file/` + props.data.id} target="_blank" rel="noopener noreferrer">
+                                Open PTXQC report
+                            </a>
+                            </Col>
+                        </Row>}
                     </Col>
                         {isDone && getTableCol(results.nrProteinGroups, props.data.nr, setShowTable)}
                 </Row>
