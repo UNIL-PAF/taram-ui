@@ -33,8 +33,8 @@ export default function  BrowseResultForm(props) {
             return {value: f, label: f}
         }))
         props.setSelResDir(resDir.path)
-
-        const name = resDir.path.replaceAll("/", "-").slice(0,-1)
+        
+        const name = resDir.path.replaceAll("/", "-")
         form.setFieldsValue({name: name})
     }
 
