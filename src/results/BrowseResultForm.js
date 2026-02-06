@@ -82,7 +82,7 @@ export default function  BrowseResultForm(props) {
                     name="form_in_modal"
                     initialValues={{
                         modifier: 'public',
-                        runPTXQC: true
+                        runPTXQC: false
                     }}
                 >
                     <Form.Item
