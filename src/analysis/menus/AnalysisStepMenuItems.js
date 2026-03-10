@@ -8,6 +8,7 @@ import {clearTable} from "../../protein_table/proteinTableSlice";
 import {prepareTTestParams} from "../../analysis_steps/t_test/TTestPrepareParams"
 import DownloadZipModal from "./DownloadZipModal"
 import ParameterModal from "./ParametersModal"
+import {prepareLimmaParams} from "../../analysis_steps/limma/LimmaPrepareParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -215,7 +216,9 @@ export default function AnalysisStepMenuItems(props) {
     const getPrepareParamsFunction = (type) => {
         if (type === "t-test") {
             return () => (params) => prepareTTestParams(params)
-        } else return undefined
+        } else if (type === "limma") {
+            return () => (params) => prepareLimmaParams(params)
+        }else return undefined
     }
 
     const clickAddStep = function (type) {
@@ -353,6 +356,11 @@ export default function AnalysisStepMenuItems(props) {
                                    className="narrow-menu"
                                    key={'t-test'}>
                             <span id={"menu-item"}>t Test</span>
+                        </Menu.Item>
+                        <Menu.Item onClick={() => clickAddStep("limma")}
+                                   className="narrow-menu"
+                                   key={'limma'}>
+                            <span id={"menu-item"}>Limma</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("one-d-enrichment")}
                                    className="narrow-menu"

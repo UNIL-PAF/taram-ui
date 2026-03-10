@@ -26,6 +26,7 @@ import AddColumn from "./add_column/AddColumn";
 import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
 import Conclusion from "./conclusion/Conclusion"
 import CorrelationTable from "./correlation_table/CorrelationTable";
+import Limma from "./limma/Limma";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -141,6 +142,10 @@ export default function AnalysisSteps(props) {
                     return <CorrelationTable isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                            data={stepWithNr} key={myKey} commonResBefore={commonResBefore} resType={props.resType}
                                            onSelect={onSelect} isSelected={selStep === i}/>
+                case 'limma':
+                    return <Limma isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                  data={stepWithNr} key={myKey} resType={props.resType}
+                                  onSelect={onSelect} isSelected={selStep === i}/>
                 default:
                     return null
             }

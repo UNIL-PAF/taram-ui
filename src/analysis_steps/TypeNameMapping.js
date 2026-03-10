@@ -40,6 +40,8 @@ export function typeToName(type) {
             return '1D Enrichment'
         case 'correlation-table':
             return 'Correlations'
+        case 'limma':
+            return 'Limma'
         default: return "Missing type: [" + type + "]?!"
     }
 }

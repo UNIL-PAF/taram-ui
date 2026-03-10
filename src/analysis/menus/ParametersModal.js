@@ -20,6 +20,7 @@ import RenameColumnsParams from "../../analysis_steps/rename_columns/RenameColum
 import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
 import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
 import CorrelationTableParams from "../../analysis_steps/correlation_table/CorrelationTableParams";
+import LimmaParams from "../../analysis_steps/limma/LimmaParams";
 
 export default function ParametersModal(props) {
 
@@ -158,7 +159,13 @@ export default function ParametersModal(props) {
                     setParams={props.setParams}
                     intCol={props.intCol}
                 ></CorrelationTableParams>
-
+            case 'limma':
+                return <LimmaParams commonResult={props.commonResult}
+                                    params={props.params}
+                                    setParams={props.setParams}
+                                    experimentDetails={props.experimentDetails}
+                                    intCol={props.intCol}
+                ></LimmaParams>
         }
     }
 
