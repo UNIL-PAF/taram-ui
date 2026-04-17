@@ -5,10 +5,9 @@ import '../analysis.css'
 import {CloseOutlined} from "@ant-design/icons";
 import {addAnalysisStep, deleteAnalysisStep, setStepParameters, deleteFollowingSteps} from "../../analysis_steps/BackendAnalysisSteps";
 import {clearTable} from "../../protein_table/proteinTableSlice";
-import {prepareTTestParams} from "../../analysis_steps/t_test/TTestPrepareParams"
+import {prepareStatTestParams} from "../../analysis_steps/stat_test/StatTestPrepareParams"
 import DownloadZipModal from "./DownloadZipModal"
 import ParameterModal from "./ParametersModal"
-import {prepareLimmaParams} from "../../analysis_steps/limma/LimmaPrepareParams";
 
 export default function AnalysisStepMenuItems(props) {
     const [showModalName, setShowModalName] = useState()
@@ -214,10 +213,8 @@ export default function AnalysisStepMenuItems(props) {
     }
 
     const getPrepareParamsFunction = (type) => {
-        if (type === "t-test") {
-            return () => (params) => prepareTTestParams(params)
-        } else if (type === "limma") {
-            return () => (params) => prepareLimmaParams(params)
+        if (type === "stat-test") {
+            return () => (params) => prepareStatTestParams(params)
         }else return undefined
     }
 
@@ -352,15 +349,10 @@ export default function AnalysisStepMenuItems(props) {
                                    key={'correlation-table'}>
                             <span id={"menu-item"}>Correlations</span>
                         </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("t-test")}
+                        <Menu.Item onClick={() => clickAddStep("stat-test")}
                                    className="narrow-menu"
-                                   key={'t-test'}>
-                            <span id={"menu-item"}>t Test</span>
-                        </Menu.Item>
-                        <Menu.Item onClick={() => clickAddStep("limma")}
-                                   className="narrow-menu"
-                                   key={'limma'}>
-                            <span id={"menu-item"}>Limma</span>
+                                   key={'stat-test'}>
+                            <span id={"menu-item"}>Statistical Test</span>
                         </Menu.Item>
                         <Menu.Item onClick={() => clickAddStep("one-d-enrichment")}
                                    className="narrow-menu"

@@ -6,7 +6,7 @@ import FilterParams from "../../analysis_steps/filter/FilterParams";
 import GroupFilterParams from "../../analysis_steps/group_filter/GroupFilterParams";
 import LogTransformationParams from "../../analysis_steps/log_transformation/LogTransformationParams";
 import ImputationParams from "../../analysis_steps/imputation/ImputationParams";
-import TTestParams from "../../analysis_steps/t_test/TTestParams";
+import StatTestParams from "../../analysis_steps/stat_test/StatTestParams";
 import VolcanoPlotParams from "../../analysis_steps/volcano_plot/VolcanoPlotParams";
 import RemoveImputedParams from "../../analysis_steps/remove_imputed/RemoveImputedParams"
 import RemoveColumnsParams from "../../analysis_steps/remove_columns/RemoveColumnsParams"
@@ -20,7 +20,6 @@ import RenameColumnsParams from "../../analysis_steps/rename_columns/RenameColum
 import AddColumnParams from "../../analysis_steps/add_column/AddColumnParams";
 import OneDEnrichmentParams from "../../analysis_steps/one_d_enrichment/OneDEnrichmentParams";
 import CorrelationTableParams from "../../analysis_steps/correlation_table/CorrelationTableParams";
-import LimmaParams from "../../analysis_steps/limma/LimmaParams";
 
 export default function ParametersModal(props) {
 
@@ -102,13 +101,6 @@ export default function ParametersModal(props) {
                                          setParams={props.setParams}
                                          intCol={props.intCol}
                 ></ImputationParams>
-            case 't-test':
-                return <TTestParams commonResult={props.commonResult}
-                                    params={props.params}
-                                    setParams={props.setParams}
-                                    experimentDetails={props.experimentDetails}
-                                    intCol={props.intCol}
-                ></TTestParams>
             case 'volcano-plot':
                 return <VolcanoPlotParams commonResult={props.commonResult}
                                           params={props.params}
@@ -159,13 +151,13 @@ export default function ParametersModal(props) {
                     setParams={props.setParams}
                     intCol={props.intCol}
                 ></CorrelationTableParams>
-            case 'limma':
-                return <LimmaParams commonResult={props.commonResult}
+            case 'stat-test':
+                return <StatTestParams commonResult={props.commonResult}
                                     params={props.params}
                                     setParams={props.setParams}
                                     experimentDetails={props.experimentDetails}
                                     intCol={props.intCol}
-                ></LimmaParams>
+                ></StatTestParams>
         }
     }
 
