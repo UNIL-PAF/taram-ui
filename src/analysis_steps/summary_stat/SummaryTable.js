@@ -35,7 +35,11 @@ export default function SummaryTable(props) {
     }
 
     const addPeptideSource = () => {
-        const pepSource = (props.resType === "MaxQuant") ? "Razor.unique.peptides" : "NrOfPrecursorsIdentified"
+        const pepSource =
+            props.results.pepField ??
+            (props.resType === "MaxQuant"
+                ? "Razor.unique.peptides"
+                : "NrOfPrecursorsIdentified");
         return <div style={{textAlign: "left", fontSize: "small"}}>
             <span><em>* {pepSource}</em></span>
         </div>
