@@ -27,6 +27,7 @@ import OneDEnrichment from "./one_d_enrichment/OneDEnrichment";
 import Conclusion from "./conclusion/Conclusion"
 import CorrelationTable from "./correlation_table/CorrelationTable";
 import Limma from "./limma/Limma";
+import StatTest from "./stat_test/StatTest";
 
 export default function AnalysisSteps(props) {
     const [menuIsVisible, setMenuIsVisible] = useState(false)
@@ -144,6 +145,10 @@ export default function AnalysisSteps(props) {
                                            onSelect={onSelect} isSelected={selStep === i}/>
                 case 'limma':
                     return <Limma isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
+                                  data={stepWithNr} key={myKey} resType={props.resType}
+                                  onSelect={onSelect} isSelected={selStep === i}/>
+                case 'stat-test':
+                    return <StatTest isLocked={isLocked} analysisIdx={props.analysisIdx} resultId={props.data.result.id}
                                   data={stepWithNr} key={myKey} resType={props.resType}
                                   onSelect={onSelect} isSelected={selStep === i}/>
                 default:

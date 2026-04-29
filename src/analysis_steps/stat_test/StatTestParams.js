@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, InputNumber, Select, Space} from 'antd';
+import {Card, Checkbox, InputNumber, Select, Space} from 'antd';
 import {getNumCols} from "../CommonStepUtils";
 import StatTestGroupSelection from "./StatTestGroupSelection";
+import {getStatTestName} from "./StatTestType";
 
 const {Option} = Select;
 
@@ -40,9 +41,13 @@ export default function StatTestParams(props) {
         if(!props.params){
             props.setParams({
                 field: intCol,
+                statTestType: 'welch_t_test',
                 multiTestCorr: 'BH',
                 signThres: 0.05,
                 columns: initCols,
+                limmaParams: {
+                    trend: true
+                }
             })
             setUseDefaultCol(true)
         }else{
@@ -82,13 +87,50 @@ export default function StatTestParams(props) {
         props.setParams({...props.params, multiTestCorr: value})
     }
 
+    function statTestTypeChange(value) {
+        props.setParams({...props.params, statTestType: value})
+    }
+
     function setColumns(columns){
         props.setParams({...props.params, columns: columns})
     }
 
-    function showOptions(){
+    function changePaired(){
+        props.setParams({...props.params, paired: !props.params.paired})
+    }
+
+    function changeLimmaParams(field, newVal){
+        const newLimmaParams = {...props.params.limmaParams}
+        newLimmaParams[field] = newVal
+        props.setParams({...props.params, limmaParams: newLimmaParams})
+    }
+
+    function showLimmaParams() {
         return <>
-            <Space direction="vertical" size="middle">
+            <Checkbox
+                onChange={(a) => changeLimmaParams("trend", a)} checked={props.params.limmaParams.trend}>TREND
+            </Checkbox>
+        </>
+    }
+
+    function showOptions(){
+        const types = ["welch_t_test", "student_t_test", "limma"]
+
+        return <>
+                <Card title={"Statistical test"}>
+                    <Space direction="vertical" size="middle">
+                     <div>
+                        <Select value={props.params.statTestType} style={{width: 250}} onChange={statTestTypeChange}>
+                            {types.map(type => (
+                                <Option key={type} value={type}>{getStatTestName(type)}</Option>
+                            ))}
+                        </Select>
+                    </div>
+                {props.params.statTestType === "limma" && showLimmaParams()}
+                        </Space>
+                </Card>
+                <Card style={{marginTop: "20px"}} >
+                    <Space direction="vertical" size="middle">
                 <Checkbox
                     onChange={changeUseDefaultCol} checked={useDefaultCol}>Use default intensity values [{props.intCol}]
                 </Checkbox>
@@ -125,10 +167,16 @@ export default function StatTestParams(props) {
                 onChange={(val) => valueChange("minNrValid", val)}></InputNumber>
                     <span style={{paddingLeft: "10px", color: props.params.filterOnValid ? "black" : "grey"}}>valid (non-imputed) values in one group.</span>
         </span>
-                <h3>Define pairs</h3>
+                        { props.params.statTestType !== "limma" &&
+                            <span><Checkbox
+                            onChange={changePaired} checked={props.params.paired}>Paired
+            </Checkbox></span>
+                        }
+                <h3>Define groups</h3>
                 {props.params && props.params.columns &&
                     <StatTestGroupSelection columns={props.params.columns} setColumns={setColumns}></StatTestGroupSelection>}
-            </Space>
+                    </Space>
+                </Card>
         </>
     }
 

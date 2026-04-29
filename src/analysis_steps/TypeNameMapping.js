@@ -42,6 +42,8 @@ export function typeToName(type) {
             return 'Correlations'
         case 'limma':
             return 'Limma'
+        case 'stat-test':
+            return 'Statistical test'
         default: return "Missing type: [" + type + "]?!"
     }
 }
