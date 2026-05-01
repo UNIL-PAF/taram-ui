@@ -88,7 +88,8 @@ export default function StatTestParams(props) {
     }
 
     function statTestTypeChange(value) {
-        props.setParams({...props.params, statTestType: value})
+        const paired = props.params.paired && value === "limma" ? false : props.params.paired
+        props.setParams({...props.params, statTestType: value, paired: paired})
     }
 
     function setColumns(columns){
