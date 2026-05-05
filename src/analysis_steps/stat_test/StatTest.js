@@ -25,6 +25,13 @@ export default function StatTest(props) {
         return myParams.paired === true ? ("Paired " + myName) : myName
     }
 
+    const limmaParams = (myParams) => {
+        const trend = myParams.limmaParams.trend === true ? "true" : "false"
+        return <>
+            <p className={"analysis-step-param-line"}>Trend: {trend}</p>
+        </>
+    }
+
     return (
         <Card className={"analysis-step-card" + (props.isSelected ? " analysis-step-sel" : "")}
               onClick={props.onSelect}
@@ -58,6 +65,7 @@ export default function StatTest(props) {
                         <div className={"analysis-step-param-box"}>
                             <div className={"analysis-step-param-content"}>
                                 <p className={"analysis-step-param-line"}><strong>{testName(params)}</strong></p>
+                                {params.statTestType === "limma" && limmaParams(params)}
                                 <p className={"analysis-step-param-line"}>Significance
                                     threshold: {params.signThres}</p>
                                 <p className={"analysis-step-param-line"}>Multiple testing
