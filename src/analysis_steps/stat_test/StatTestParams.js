@@ -109,7 +109,7 @@ export default function StatTestParams(props) {
     function showLimmaParams() {
         return <>
             <Checkbox
-                onChange={(a) => changeLimmaParams("trend", a)} checked={props.params.limmaParams.trend}>TREND
+                onChange={(a) => changeLimmaParams("trend", a.target.checked)} checked={props.params.limmaParams.trend}>TREND
             </Checkbox>
         </>
     }
