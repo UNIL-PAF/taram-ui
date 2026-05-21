@@ -96,6 +96,16 @@ export default function CorrelationTable(props) {
             });
     }
 
+    const computeTopSpace = (groupAndColors) => {
+        if(groupAndColors.length === 1 && groupAndColors[0] === null){
+            return 0
+        }else {
+            const totCharsSpace = groupAndColors.reduce( (a, v) => a + v.group.length, 0)
+            const nrLines = Math.ceil((totCharsSpace / 5 + groupAndColors.length) / 15) - 1
+            return nrLines * 15
+        }
+    }
+
     const computeOptions = (results, myParams) => {
         const data = results.correlationMatrix.map(row => {
             return [
@@ -148,13 +158,17 @@ export default function CorrelationTable(props) {
             });
         }
 
+        const defaultSpace = 50
+        const topSpaceBase = computeTopSpace(results.groupsAndColors)
+        const topSpace =  topSpaceBase + defaultSpace
+
         const myOption = {
             graphic: {
                 elements: [
                     {
                         type: 'text',
-                        top: 65,
-                        right: "25%",
+                        top: 120,
+                        right: "35%",
                         style: {
                             text: title,
                             font: 'bold 12px sans-serif',
@@ -201,8 +215,8 @@ export default function CorrelationTable(props) {
                 dimension: 2,
                 calculable: true,
                 orient: 'horizontal',
-                top: 65,
-                right: "20%",
+                top: 120,
+                right: "30%",
                 formatter: function(value){
                     return value.toFixed(2)
                 },
@@ -216,7 +230,10 @@ export default function CorrelationTable(props) {
                         `R2: <strong>${params.value[2].toFixed(2)}</strong>`
                 }
             },
-            series: series.concat(groupSeries)
+            series: series.concat(groupSeries),
+            grid: {
+                top:    topSpace,
+            },
         };
 
         return myOption
@@ -279,7 +296,7 @@ export default function CorrelationTable(props) {
             }
             { options &&
                 <ReactECharts option={options} style={{
-                    height: "400px",
+                    height: "700px",
                     width: '100%',
                 }}/>}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
