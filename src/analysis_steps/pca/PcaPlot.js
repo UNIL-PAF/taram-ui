@@ -101,6 +101,16 @@ export default function PcaPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting, stepResults])
 
+    const computeTopSpace = (groupNames) => {
+        if(groupNames.length === 1 && groupNames[0] === null){
+            return 0
+        }else {
+            const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
+            const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
+            return nrLines * 15
+        }
+    }
+
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
         let newOpts = {...options, color: Array(30).fill(greyCol), visualMap: null}
@@ -114,8 +124,9 @@ export default function PcaPlot(props) {
         const xAxisPc = 0
         const yAxisPc = 1
 
-        const topSpaceInt = Math.floor(results.groups.length / 4)
-        const topSpace =  topSpaceInt >= 2 ? 15 + topSpaceInt * 22 : 30
+        const defaultSpace = 50
+        const topSpaceBase = computeTopSpace(results.groups)
+        const topSpace =  topSpaceBase + defaultSpace
 
         const transforms = results.groups.map((g) => {
             return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
@@ -277,7 +288,11 @@ export default function PcaPlot(props) {
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
+                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
+                              style={{
+                                  height: '700px',
+                              }}
+                />}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}
