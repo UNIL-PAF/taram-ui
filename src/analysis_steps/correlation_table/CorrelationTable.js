@@ -10,6 +10,7 @@ import {DownloadOutlined, FullscreenOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import globalConfig from "../../globalConfig";
 import {useOnScreen} from "../../common/UseOnScreen";
+import {useResponsiveChartSize} from "../../common/useResponsiveChartSize";
 
 export default function CorrelationTable(props) {
     const type = "correlation-table"
@@ -24,6 +25,11 @@ export default function CorrelationTable(props) {
     const [isWaiting, setIsWaiting] = useState(true)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.7,
+        minHeight: 300,
+    });
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -294,11 +300,13 @@ export default function CorrelationTable(props) {
                     </Col>
                 </Row>
             }
+            <div ref={containerRef} style={{ width: '100%' }}>
             { options &&
                 <ReactECharts option={options} style={{
-                    height: "700px",
+                    height: height,
                     width: '100%',
                 }}/>}
+            </div>
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {isDone && options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}></EchartsZoom>}

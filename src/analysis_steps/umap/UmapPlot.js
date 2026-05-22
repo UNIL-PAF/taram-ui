@@ -16,6 +16,7 @@ import {typeToName} from "../TypeNameMapping"
 import {switchSel} from "../BackendAnalysisSteps";
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
+import {useResponsiveChartSize} from "../../common/useResponsiveChartSize";
 
 const { Text } = Typography;
 
@@ -31,6 +32,11 @@ export default function PcaPlot(props) {
     const [count, setCount] = useState(1)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.7,
+        minHeight: 300,
+    });
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -106,6 +112,16 @@ export default function PcaPlot(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props, isWaiting, stepResults])
 
+    const computeTopSpace = (groupNames) => {
+        if(groupNames.length === 1 && groupNames[0] === null){
+            return 0
+        }else {
+            const totCharsSpace = groupNames.reduce( (a, v) => a + v.length, 0)
+            const nrLines = Math.ceil((totCharsSpace / 5 + groupNames.length) / 15) - 1
+            return nrLines * 15
+        }
+    }
+
     const greyOptions = (options) => {
         const greyCol = 'lightgrey'
         let newOpts = {...options, color: Array(30).fill(greyCol), visualMap: null}
@@ -119,8 +135,9 @@ export default function PcaPlot(props) {
         const xAxisPc = 0
         const yAxisPc = 1
 
-        const topSpaceInt = Math.floor(results.groups.length / 4)
-        const topSpace =  topSpaceInt >= 2 ? 15 + topSpaceInt * 22 : 30
+        const defaultSpace = 50
+        const topSpaceBase = computeTopSpace(results.groups)
+        const topSpace =  topSpaceBase + defaultSpace
 
         const transforms = results.groups.map((g) => {
             return {transform: {type: 'filter', config: {dimension: 'group', value: g}}}
@@ -206,7 +223,7 @@ export default function PcaPlot(props) {
                     return params.data[0]
                 }
             },
-            legend: {},
+            legend: {top: 'top'},
             series: (series.length > 1) ? series : series.concat([{
                 datasetIndex: 0,
                 type: 'scatter',
@@ -296,8 +313,15 @@ export default function PcaPlot(props) {
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
-            {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
+            <div ref={containerRef} style={{width: '100%'}}>
+                {options && options.data && options.data.series.length > 0 &&
+                    <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
+                                  style={{
+                                      width: '100%',
+                                      height: height
+                                  }}
+                    />}
+            </div>
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}

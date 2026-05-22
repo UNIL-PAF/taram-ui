@@ -11,6 +11,7 @@ import {typeToName} from "../TypeNameMapping"
 import {switchSel} from "../BackendAnalysisSteps";
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
+import {useResponsiveChartSize} from '../../common/useResponsiveChartSize';
 
 const { Text } = Typography;
 
@@ -26,6 +27,11 @@ export default function PcaPlot(props) {
     const [count, setCount] = useState(1)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.7,
+        minHeight: 300,
+    });
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -287,12 +293,16 @@ export default function PcaPlot(props) {
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
+            <div ref={containerRef} style={{ width: '100%' }}>
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
+                    <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
                               style={{
-                                  height: '700px',
+                                  width: '100%',
+                                  height: height
                               }}
-                />}
+                    />
+                }
+            </div>
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}></StepComment>
             {options && <EchartsZoom showZoom={showZoom} setShowZoom={setShowZoom} echartsOptions={options.data}
                                      paramType={type} stepId={props.data.id} minHeight={"800px"}

@@ -13,6 +13,7 @@ import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
 import getOptionsV1 from "./ScatterPlotVersion1";
 import getOptionsV2 from "./ScatterPlotVersion2";
+import {useResponsiveChartSize} from "../../common/useResponsiveChartSize";
 
 const {Text} = Typography;
 
@@ -36,6 +37,11 @@ export default function ScatterPlot(props) {
     // check if element is shown
     const elementRef = useRef(null);
     const isOnScreen = useOnScreen(elementRef);
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.7,
+        minHeight: 300,
+    });
 
     useEffect(() => {
         if (props.data && props.data.status === "done") {
@@ -220,13 +226,15 @@ export default function ScatterPlot(props) {
                     <div className="content"/>
                 </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
+            <div ref={containerRef} style={{width:'100%'}}>
             {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
                               style={{
-                                  height: '700px',
+                                  height: height,
                                   width: '100%',
                               }}
                 />}
+            </div>
             {stepResults  && showMultiGeneText()}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>

@@ -11,6 +11,7 @@ import {setStepParametersWithoutRunning} from "../BackendAnalysisSteps"
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors"
+import {useResponsiveChartSize} from "../../common/useResponsiveChartSize";
 
 const { Text } = Typography;
 
@@ -28,6 +29,11 @@ export default function BoxPlot(props) {
     const [count, setCount] = useState(1)
     const [showLoading, setShowLoading] = useState(false)
     const [showError, setShowError] = useState(false)
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.5,
+        minHeight: 300,
+    });
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -430,11 +436,13 @@ export default function BoxPlot(props) {
                 <div className="content"/>
             </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
+            <div ref={containerRef} style={{width:'100%'}}>
             {options && options.data && options.data.series.length > 0 && options.data.dataset.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} style={{
-                    height: heightAndBottom.height,
+                    height: height,
                     width: '100%',
                 }}/>}
+            </div>
             {stepResults  && showMultiGeneText()}
             <StepComment stepId={props.data.id} resultId={props.resultId} comment={props.data.comments}
                          isLocked={props.isLocked}></StepComment>

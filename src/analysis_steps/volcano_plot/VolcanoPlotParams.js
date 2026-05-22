@@ -23,7 +23,7 @@ export default function VolcanoPlotParams(props) {
         if (!props.params) {
             props.setParams({
                 pValThresh: 0.05,
-                fcThresh: 2.0,
+                fcThresh: 1.0,
                 useAdjustedPVal: false,
                 log10PVal: true,
                 comparison: comparison[0],

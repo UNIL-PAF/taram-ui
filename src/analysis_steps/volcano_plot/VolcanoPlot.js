@@ -11,6 +11,7 @@ import {getStepResults, getStepTitle, replacePlotIfChanged, replaceProgressiveSe
 import {typeToName} from "../TypeNameMapping"
 import {useOnScreen} from "../../common/UseOnScreen";
 import {defaultColors} from "../../common/PlotColors";
+import {useResponsiveChartSize} from '../../common/useResponsiveChartSize';
 
 const {Text} = Typography;
 
@@ -38,6 +39,11 @@ export default function VolcanoPlot(props) {
         "none": "silver"
 
     }
+
+    const { containerRef, height } = useResponsiveChartSize({
+        ratio: 0.5,
+        minHeight: 300,
+    });
 
     // check if element is shown
     const elementRef = useRef(null);
@@ -398,12 +404,16 @@ export default function VolcanoPlot(props) {
                     <div className="content"/>
                 </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
-            {options && options.data && options.data.series.length > 0 &&
+            <div ref={containerRef} style={{width:'100%'}}>
+                {options && options.data && options.data.series.length > 0 &&
                 <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
                               style={{
-                                  height: '500px',
+                                  width: '100%',
+                                  height: height,
                               }}
-                />}
+                />
+                }
+            </div>
             {stepResults  && showMultiGeneText()}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
