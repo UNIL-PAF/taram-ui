@@ -114,7 +114,8 @@ export default function getOptionsV2(results, params, mySelProteins, logTrans, s
             },
         ],
         grid: {
-            left: 75
+            left: 75,
+            right: 120
         }
     };
 

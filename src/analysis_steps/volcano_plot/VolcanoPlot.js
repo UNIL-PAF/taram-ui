@@ -399,7 +399,11 @@ export default function VolcanoPlot(props) {
                 </Spin>}
             {showError && <Text type="danger">Unable to load plot from server.</Text>}
             {options && options.data && options.data.series.length > 0 &&
-                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}/>}
+                <ReactECharts key={options.count} option={options.data} onEvents={onEvents}
+                              style={{
+                                  height: '500px',
+                              }}
+                />}
             {stepResults  && showMultiGeneText()}
             <StepComment isLocked={props.isLocked} stepId={props.data.id} resultId={props.resultId}
                          comment={props.data.comments}></StepComment>
