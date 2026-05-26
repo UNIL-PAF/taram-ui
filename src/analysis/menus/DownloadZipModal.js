@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Modal, Space} from "antd";
+import {Checkbox, Modal, Space, Slider} from "antd";
 import globalConfig from "../../globalConfig";
 import {useDispatch} from "react-redux";
 import {setError} from "../analysisSlice";
@@ -8,6 +8,7 @@ export default function DownloadZipModal(props) {
     const [svg, setSvg] = useState(undefined)
     const [html, setHtml] = useState(undefined)
     const [png, setPng] = useState(undefined)
+    const [zoom, setZoom] = useState(4)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -30,6 +31,7 @@ export default function DownloadZipModal(props) {
             + '?svg=' + svg
             + '&png=' + png
             + '&html=' + html
+            + '&zoom=' + zoom
         )
             .then(response => {
                 response.blob().then(blob => {
@@ -49,11 +51,22 @@ export default function DownloadZipModal(props) {
     return (
         <Modal title={"Download ZIP"} onOk={() => props.handleOk()}
                onCancel={() => props.handleCancel()}
-               width={300}
+               width={500}
                open={true}
         >
             <h3>Download ZIP file</h3>
-            <Space direction={'vertical'}>
+            <Space direction={'vertical'} style={{width:'100%'}}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span>Zoom</span>
+                    <Slider
+                        min={1}
+                        max={10}
+                        onChange={a => setZoom(a)}
+                        value={zoom}
+                        style={{ flex: 1 }}
+                    />
+                </div>
+
                 <Checkbox
                     disabled={!props.hasPlot}
                     defaultChecked={props.hasPlot}
