@@ -15,8 +15,6 @@ export function useResponsiveChartSize({
         const element = containerRef.current;
         if (!element) return;
 
-        console.log(element);
-
         const observer = new ResizeObserver(entries => {
             const entry = entries[0];
             const width = entry.contentRect.width;

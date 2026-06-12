@@ -181,6 +181,7 @@ export default function VolcanoPlot(props) {
 
                         return "Gene: <strong>" + myParams.data.gene + "</strong><br>" +
                             "Protein AC: <strong>" + myParams.data.prot + "</strong><br>" +
+                            (myParams.data.desc ? "Description: <strong>" + myParams.data.desc + "</strong><br>" : "") +
                             "p-value: <strong>" + myParams.data.pVal.toPrecision(3) + "</strong><br>" +
                             (myParams.data.qVal ? "adj. p-value: <strong>" + myParams.data.qVal.toPrecision(3) + "</strong><br>" : "") +
                             "fold change: <strong>" + myParams.data.fc.toFixed(2) + "</strong><br>" + other
