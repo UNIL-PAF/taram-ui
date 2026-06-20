@@ -88,7 +88,7 @@ export default function StatTestParams(props) {
     }
 
     function statTestTypeChange(value) {
-        const paired = props.params.paired && value === "limma" ? false : props.params.paired
+        const paired = props.params.paired ? false : props.params.paired
         props.setParams({...props.params, statTestType: value, paired: paired})
     }
 
@@ -168,11 +168,9 @@ export default function StatTestParams(props) {
                 onChange={(val) => valueChange("minNrValid", val)}></InputNumber>
                     <span style={{paddingLeft: "10px", color: props.params.filterOnValid ? "black" : "grey"}}>valid (non-imputed) values in one group.</span>
         </span>
-                        { props.params.statTestType !== "limma" &&
                             <span><Checkbox
                             onChange={changePaired} checked={props.params.paired}>Paired
             </Checkbox></span>
-                        }
                 <h3>Define groups</h3>
                 {props.params && props.params.columns &&
                     <StatTestGroupSelection columns={props.params.columns} setColumns={setColumns}></StatTestGroupSelection>}
