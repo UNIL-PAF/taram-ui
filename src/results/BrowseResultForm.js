@@ -127,6 +127,7 @@ export default function  BrowseResultForm(props) {
                         <Radio.Group onChange={selType} disabled={isDisabled}>
                             <Radio value="MaxQuant">MaxQuant</Radio>
                             <Radio value="Spectronaut">Spectronaut</Radio>
+                            <Radio value="FragPipe">FragPipe</Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item
