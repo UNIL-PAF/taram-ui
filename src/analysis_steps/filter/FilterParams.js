@@ -11,9 +11,9 @@ export default function FilterParams(props) {
     useEffect(() => {
         if (!props.params) {
             props.setParams({
-                removeOnlyIdentifiedBySite: props.resType !== "Spectronaut",
-                removeReverse: props.resType !== "Spectronaut",
-                removePotentialContaminant: true,
+                removeOnlyIdentifiedBySite: props.resType === "MaxQuant",
+                removeReverse: props.resType === "MaxQuant",
+                removePotentialContaminant: props.resType === "MaxQuant" || props.resType === "Spectronaut",
                 colFilters: []
             })
         }else{
